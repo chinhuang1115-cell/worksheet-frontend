@@ -30,7 +30,7 @@
   --shadow-lg: 0 8px 32px rgba(26,18,8,.12);
   --r: 12px;
   --r-sm: 8px;
-  --trial-limit: 5;
+  --trial-limit: 9999;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -817,7 +817,7 @@ body {
   </div>
   <div class="trial-badge">
     試用版　剩餘
-    <span class="trial-count" id="trialLeft">5</span>
+    <span class="trial-count" id="trialLeft">9999</span>
     次
   </div>
 </div>
@@ -1175,7 +1175,7 @@ let curOps = new Set(['all']);
 let newKws = [];
 let saves = [];
 let history = [];
-const TRIAL_LIMIT = 5;
+const TRIAL_LIMIT = 9999;
 
 // ── TRIAL ──
 function getTrialUsed() {
@@ -1194,7 +1194,7 @@ function renderTrialBar() {
   const left = getTrialLeft();
   document.getElementById('trialLeft').textContent = left;
   const dots = document.getElementById('trialDots');
-  dots.innerHTML = Array(TRIAL_LIMIT).fill(0).map((_,i) =>
+  dots.innerHTML = Array(Math.min(TRIAL_LIMIT, 10)).fill(0).map((_,i) =>
     `<div class="trial-dot ${i < used ? 'used' : ''}"></div>`).join('');
   document.getElementById('trialText').textContent =
     left > 0
