@@ -1464,7 +1464,7 @@ function calc() {
 function hasWarnings() {
   const a = calc();
   const p0=S.items[0]?.price||0, p1=S.items[1]?.price||0;
-  return !a.ok1 || !a.ok2 || !a.ok3 || a.maxQ>=6 || a.maxQ<=1;
+  return !a.ok1 || !a.ok2 || !a.ok3 || a.maxQ>=6 || a.maxQ<=2;
 }
 
 // ── UPDATE ──
@@ -1510,7 +1510,7 @@ function update() {
   if(!a.ok2) warns.push(`題2：${n0}×3＝${a.t2}元，超過付款${a.pay2}元`);
   if(!a.ok3) warns.push(`題3：${n0}×5＝${a.t3}元，超過付款${a.pay3}元`);
   if(a.maxQ>=6) warns.push('答案是6（上限），建議提高單價或降低預算');
-  if(a.maxQ<=1) warns.push('答案是0或1個，建議降低單價或提高預算');
+  if(a.maxQ<=2) warns.push('答案是2個或更少，建議降低單價或提高預算');
   const wb = document.getElementById('warnBox');
   wb.style.display = warns.length ? 'block' : 'none';
   if(warns.length) wb.innerHTML = '⚠️ <strong>需要調整：</strong><br>' + warns.map(w=>'• '+w).join('<br>');
