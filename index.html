@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學習單產生器 — 資源班數學教材工具</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1208;
+  --cream: #faf7f0;
+  --warm-white: #fffef9;
+  --amber: #f59e0b;
+  --amber-light: #fef3c7;
+  --amber-dark: #92400e;
+  --teal: #0d9488;
+  --teal-light: #ccfbf1;
+  --teal-dark: #134e4a;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --gray: #6b7280;
+  --gray-light: #f3f4f6;
+  --border: #e5e0d5;
+  --shadow-sm: 0 1px 3px rgba(26,18,8,.08);
+  --shadow-md: 0 4px 16px rgba(26,18,8,.10);
+  --shadow-lg: 0 8px 32px rgba(26,18,8,.12);
+  --r: 12px;
+  --r-sm: 8px;
+  --trial-limit: 9999;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 0 24px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -.02em;
+}
+.topbar-logo .dot {
+  width: 28px; height: 28px;
+  background: var(--amber);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.trial-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 99px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+}
+.trial-count { color: var(--amber); font-weight: 700; }
+
+/* ── LAYOUT ── */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── STEPS ── */
+.steps-header {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 24px;
+  margin-bottom: 4px;
+  overflow-x: auto;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--gray-light);
+  color: var(--gray);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace;
+  transition: all .2s;
+}
+.step-item.active .step-num { background: var(--ink); color: var(--cream); }
+.step-item.done .step-num { background: var(--teal); color: white; }
+.step-label { font-size: 12px; font-weight: 500; color: var(--gray); transition: color .2s; }
+.step-item.active .step-label { color: var(--ink); }
+.step-item.done .step-label { color: var(--teal-dark); }
+.step-arrow { margin: 0 12px; color: var(--border); font-size: 16px; flex-shrink: 0; }
+
+/* ── CARD ── */
+.card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.card-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.card-body { padding: 16px 18px; }
+.card-section {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.card-section:last-child { border-bottom: none; }
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* ── THEME GRID ── */
+.theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.theme-btn {
+  padding: 10px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--cream);
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Noto Sans TC', sans-serif;
+  color: var(--ink);
+}
+.theme-btn:hover { border-color: var(--amber); background: var(--amber-light); }
+.theme-btn.active {
+  border-color: var(--amber);
+  background: var(--amber-light);
+  box-shadow: 0 0 0 3px rgba(245,158,11,.15);
+}
+.theme-emoji { font-size: 18px; line-height: 1; }
+
+/* ── DIFFICULTY ── */
+.diff-pills { display: flex; gap: 6px; }
+.diff-pill {
+  flex: 1;
+  padding: 7px 0;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--cream);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer;
+  text-align: center;
+  transition: all .15s;
+  color: var(--gray);
+}
+.diff-pill:hover { border-color: var(--gray); color: var(--ink); }
+.diff-pill.easy.active { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.diff-pill.mid.active  { background: var(--amber-light); border-color: var(--amber); color: var(--amber-dark); }
+.diff-pill.hard.active { background: var(--red-light); border-color: var(--red); color: var(--red); }
+.diff-hint { font-size: 11px; color: var(--gray); margin-top: 8px; line-height: 1.6; padding: 8px 10px; background: var(--gray-light); border-radius: var(--r-sm); }
+
+/* ── ITEM ROWS ── */
+.item-rows { display: flex; flex-direction: column; gap: 6px; }
+.item-row { display: grid; grid-template-columns: 1fr 64px 24px; gap: 6px; align-items: center; }
+.item-row input {
+  height: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0 8px;
+  font-size: 12px;
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--warm-white);
+  color: var(--ink);
+  transition: border-color .15s;
+  width: 100%;
+}
+.item-row input:focus { outline: none; border-color: var(--amber); }
+.del-btn {
+  width: 24px; height: 24px;
+  border: none; background: none;
+  cursor: pointer;
+  color: #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.del-btn:hover { color: var(--red); background: var(--red-light); }
+.counter-tag {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 99px;
+  font-size: 10px;
+  background: var(--teal-light);
+  color: var(--teal-dark);
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+/* ── BUDGET ── */
+.budget-row { display: flex; align-items: center; gap: 10px; }
+.budget-row label { font-size: 13px; color: var(--gray); white-space: nowrap; }
+.budget-row input {
+  width: 90px;
+  height: 36px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Space Mono', monospace;
+  background: var(--warm-white);
+  color: var(--ink);
+}
+.budget-row input:focus { outline: none; border-color: var(--amber); }
+
+/* ── TYPE BROWSER ── */
+.search-wrap { display: flex; gap: 8px; margin-bottom: 10px; }
+.search-wrap input {
+  flex: 1;
+  height: 34px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0 10px;
+  font-size: 13px;
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--warm-white);
+  color: var(--ink);
+}
+.search-wrap input:focus { outline: none; border-color: var(--amber); }
+.filter-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.filter-pill {
+  padding: 3px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  font-size: 11px;
+  cursor: pointer;
+  background: var(--cream);
+  color: var(--gray);
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .12s;
+}
+.filter-pill:hover { border-color: var(--gray); color: var(--ink); }
+.filter-pill.active { font-weight: 700; }
+.filter-pill.f-all.active    { background: var(--ink); border-color: var(--ink); color: var(--cream); }
+.filter-pill.f-add.active    { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.filter-pill.f-sub.active    { background: #dbeafe; border-color: #3b82f6; color: #1e40af; }
+.filter-pill.f-mul.active    { background: var(--amber-light); border-color: var(--amber); color: var(--amber-dark); }
+.filter-pill.f-div.active    { background: #fce7f3; border-color: #ec4899; color: #9d174d; }
+.filter-pill.f-mix.active    { background: #ede9fe; border-color: #7c3aed; color: #4c1d95; }
+.grade-tabs { display: flex; border-bottom: 1.5px solid var(--border); margin-bottom: 0; }
+.grade-tab {
+  padding: 7px 12px;
+  border: none;
+  background: none;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--gray);
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .15s;
+}
+.grade-tab:hover { color: var(--ink); }
+.grade-tab.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 700; }
+.type-list-wrap { max-height: 300px; overflow-y: auto; }
+.grade-section-hd {
+  padding: 6px 12px;
+  background: var(--gray-light);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.grade-chip {
+  padding: 1px 8px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.g1 { background: #dbeafe; color: #1e40af; }
+.g2 { background: var(--teal-light); color: var(--teal-dark); }
+.g3 { background: var(--amber-light); color: var(--amber-dark); }
+.type-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .1s;
+}
+.type-item:last-child { border-bottom: none; }
+.type-item:hover { background: var(--cream); }
+.type-item.active { background: var(--teal-light); }
+.type-meta { flex: 1; min-width: 0; }
+.type-code { font-size: 10px; color: var(--gray); font-family: 'Space Mono', monospace; margin-bottom: 2px; }
+.type-name { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.type-desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
+.type-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+.ttag {
+  padding: 1px 7px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.ttag-add { background: var(--green-light); color: var(--green); }
+.ttag-sub { background: #dbeafe; color: #1e40af; }
+.ttag-mul { background: var(--amber-light); color: var(--amber-dark); }
+.ttag-div { background: #fce7f3; color: #9d174d; }
+.ttag-mix { background: #ede9fe; color: #4c1d95; }
+.ttag-kw  { background: var(--gray-light); color: var(--gray); }
+.type-actions { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; }
+.type-actions button {
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: none;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--gray);
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .12s;
+}
+.type-actions button:hover { background: var(--gray-light); color: var(--ink); }
+.type-actions .del-type:hover { background: var(--red-light); color: var(--red); border-color: var(--red); }
+.add-type-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--gray);
+  font-size: 12px;
+  cursor: pointer;
+  width: 100%;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .15s;
+  margin-top: 8px;
+}
+.add-type-btn:hover { border-color: var(--teal); color: var(--teal); }
+.no-result {
+  padding: 24px;
+  text-align: center;
+  color: var(--gray);
+  font-size: 13px;
+}
+
+/* ── RIGHT PANEL TABS ── */
+.rtabs { display: flex; border-bottom: 1.5px solid var(--border); }
+.rtab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: var(--gray-light);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--gray);
+  border-bottom: 2.5px solid transparent;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .15s;
+}
+.rtab.active {
+  background: var(--warm-white);
+  color: var(--ink);
+  font-weight: 700;
+  border-bottom-color: var(--amber);
+}
+
+/* ── VERIFY CARDS ── */
+.verify-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.verify-card {
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  background: var(--cream);
+  transition: all .2s;
+}
+.verify-card.ok { border-color: var(--green); background: var(--green-light); }
+.verify-card.warn { border-color: var(--red); background: var(--red-light); }
+.vc-q { font-size: 10px; color: var(--gray); margin-bottom: 3px; }
+.vc-q.ok { color: var(--green); }
+.vc-q.warn { color: var(--red); }
+.vc-eq { font-size: 12px; color: var(--ink); margin-bottom: 2px; font-family: 'Space Mono', monospace; }
+.vc-ans { font-size: 14px; font-weight: 700; }
+.vc-ans.ok { color: var(--teal-dark); }
+.vc-ans.warn { color: var(--red); }
+
+/* ── PREVIEW TABLE ── */
+.preview-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.preview-table th {
+  background: var(--gray-light);
+  padding: 7px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--gray);
+  border-bottom: 1.5px solid var(--border);
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+.preview-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.preview-table tr:last-child td { border-bottom: none; }
+.preview-table .eq { font-family: 'Space Mono', monospace; font-size: 12px; }
+.tag-ok { display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;background:var(--green-light);color:var(--green);font-weight:600; }
+.tag-warn { display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;background:var(--red-light);color:var(--red);font-weight:600; }
+.answer-box {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: var(--teal-light);
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--teal);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--teal-dark);
+}
+.answer-box span { font-size: 22px; font-weight: 900; font-family: 'Space Mono', monospace; margin: 0 4px; }
+
+/* ── GALLERY ── */
+.gallery-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.gallery-item {
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 8px;
+  text-align: center;
+  background: var(--cream);
+  cursor: pointer;
+  transition: all .15s;
+}
+.gallery-item:hover { border-color: var(--amber); }
+.gallery-item.selected { border-color: var(--amber); background: var(--amber-light); box-shadow: 0 0 0 3px rgba(245,158,11,.2); }
+.gi-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+.gi-name { font-size: 11px; font-weight: 600; color: var(--ink); display: block; margin-bottom: 2px; }
+.gi-price { font-size: 10px; color: var(--gray); }
+.gi-counter { display:inline-block;font-size:9px;padding:1px 5px;border-radius:99px;background:var(--teal-light);color:var(--teal-dark);margin-top:2px; }
+.gallery-info {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--gray-light);
+  border-radius: var(--r-sm);
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.7;
+}
+
+/* ── HISTORY ── */
+.history-list { display: flex; flex-direction: column; gap: 6px; }
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--cream);
+  cursor: pointer;
+  transition: all .15s;
+}
+.history-item:hover { border-color: var(--amber); background: var(--amber-light); }
+.history-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+.history-name { flex: 1; font-size: 13px; font-weight: 600; }
+.history-meta { font-size: 11px; color: var(--gray); }
+.history-empty { padding: 20px; text-align: center; color: var(--gray); font-size: 13px; }
+
+/* ── SAVE PANEL ── */
+.save-row { display: flex; gap: 8px; margin-top: 10px; }
+.save-row input {
+  flex: 1;
+  height: 34px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0 10px;
+  font-size: 13px;
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--warm-white);
+  color: var(--ink);
+}
+.save-row input:focus { outline: none; border-color: var(--amber); }
+.save-btn {
+  height: 34px;
+  padding: 0 14px;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: opacity .15s;
+}
+.save-btn:hover { opacity: .85; }
+
+/* ── WARN BOX ── */
+.warn-box {
+  background: var(--red-light);
+  border: 1.5px solid var(--red);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--red);
+  line-height: 1.7;
+}
+
+/* ── GENERATE BUTTON ── */
+.gen-section {
+  grid-column: 1/-1;
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+.gen-btn {
+  flex: 1;
+  padding: 16px 24px;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  border-radius: var(--r);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all .2s;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+.gen-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(245,158,11,.15), transparent);
+}
+.gen-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+.gen-btn:active:not(:disabled) { transform: translateY(0); }
+.gen-btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+.gen-btn .arrow { font-size: 20px; transition: transform .2s; }
+.gen-btn:hover:not(:disabled) .arrow { transform: translateX(4px); }
+.gen-meta {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 18px;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.gen-meta-row { display: flex; justify-content: space-between; font-size: 12px; }
+.gen-meta-label { color: var(--gray); }
+.gen-meta-val { font-weight: 600; color: var(--ink); }
+
+/* ── TRIAL BAR ── */
+.trial-bar-wrap {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--amber-light);
+  border: 1.5px solid var(--amber);
+  border-radius: var(--r);
+}
+.trial-dots { display: flex; gap: 6px; }
+.trial-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--amber);
+  transition: opacity .2s;
+}
+.trial-dot.used { opacity: .2; }
+.trial-text { flex: 1; font-size: 12px; color: var(--amber-dark); font-weight: 500; }
+.upgrade-btn {
+  padding: 6px 14px;
+  background: var(--amber-dark);
+  color: white;
+  border: none;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: opacity .15s;
+}
+.upgrade-btn:hover { opacity: .85; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,18,8,.5);
+  z-index: 200;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 60px;
+  backdrop-filter: blur(2px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--warm-white);
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  padding: 24px;
+  width: 400px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+.modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 18px; }
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 6px;
+}
+.field input, .field select, .field textarea {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--warm-white);
+  color: var(--ink);
+}
+.field textarea { height: 64px; resize: none; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--amber); }
+.op-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.op-tag {
+  padding: 5px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  font-size: 12px;
+  cursor: pointer;
+  background: var(--cream);
+  color: var(--gray);
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .12s;
+  user-select: none;
+}
+.op-tag.sel { font-weight: 700; }
+.op-tag[data-op=add].sel { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.op-tag[data-op=sub].sel { background: #dbeafe; border-color: #3b82f6; color: #1e40af; }
+.op-tag[data-op=mul].sel { background: var(--amber-light); border-color: var(--amber); color: var(--amber-dark); }
+.op-tag[data-op=div].sel { background: #fce7f3; border-color: #ec4899; color: #9d174d; }
+.op-tag[data-op=mix].sel { background: #ede9fe; border-color: #7c3aed; color: #4c1d95; }
+.kw-input { display: flex; gap: 6px; margin-bottom: 6px; }
+.kw-input input { flex: 1; height: 32px; font-size: 12px; }
+.kw-input button {
+  height: 32px; padding: 0 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--cream);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.kw-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.kw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  background: var(--gray-light);
+  border-radius: 99px;
+  font-size: 11px;
+  color: var(--gray);
+}
+.kw-chip button { border: none; background: none; cursor: pointer; font-size: 13px; line-height: 1; color: var(--gray); padding: 0; height: auto; }
+.kw-chip button:hover { color: var(--red); }
+.modal-btns { display: flex; gap: 8px; margin-top: 18px; }
+.modal-btns button {
+  flex: 1; padding: 10px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.btn-cancel { background: none; border: 1.5px solid var(--border); color: var(--gray); }
+.btn-save { background: var(--ink); border: none; color: var(--cream); }
+
+/* ── UPGRADE MODAL ── */
+.upgrade-modal {
+  background: var(--warm-white);
+  border-radius: var(--r);
+  padding: 32px;
+  width: 420px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+.upgrade-modal h2 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+.upgrade-modal p { font-size: 14px; color: var(--gray); margin-bottom: 20px; line-height: 1.7; }
+.plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.plan-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  text-align: left;
+}
+.plan-card.featured {
+  border-color: var(--amber);
+  background: var(--amber-light);
+}
+.plan-name { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
+.plan-card.featured .plan-name { color: var(--amber-dark); }
+.plan-price { font-size: 22px; font-weight: 900; font-family: 'Space Mono', monospace; margin-bottom: 8px; }
+.plan-feature { font-size: 11px; color: var(--gray); margin-bottom: 3px; display: flex; align-items: center; gap: 5px; }
+.plan-feature::before { content: '✓'; color: var(--green); font-weight: 700; }
+.close-upgrade {
+  background: none; border: 1.5px solid var(--border);
+  border-radius: var(--r-sm); padding: 8px 20px;
+  font-size: 13px; cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  color: var(--gray);
+}
+
+/* ── SPINNER ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── PREVIEW MODAL ── */
+.preview-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,18,8,.65);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+.preview-overlay.open { display: flex; }
+.preview-modal {
+  background: var(--warm-white);
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  width: min(860px, 100%);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.preview-title {
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.preview-title .badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray);
+  background: var(--gray-light);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+.preview-close {
+  width: 32px; height: 32px;
+  border: none; background: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--gray);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.preview-close:hover { background: var(--gray-light); }
+.preview-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: #e8e4dc;
+  position: relative;
+}
+.preview-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 300px;
+  color: var(--gray);
+}
+.preview-loading .big-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+#docxPreviewContainer {
+  background: white;
+  box-shadow: 0 4px 24px rgba(0,0,0,.15);
+  border-radius: 4px;
+  min-height: 400px;
+}
+#docxPreviewContainer .docx-wrapper {
+  padding: 0 !important;
+  background: white !important;
+}
+.preview-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--warm-white);
+  flex-shrink: 0;
+  gap: 10px;
+}
+.preview-footer-info {
+  font-size: 12px;
+  color: var(--gray);
+}
+.preview-footer-btns {
+  display: flex;
+  gap: 8px;
+}
+.btn-preview-cancel {
+  padding: 9px 18px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--gray);
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .12s;
+}
+.btn-preview-cancel:hover { border-color: var(--gray); color: var(--ink); }
+.btn-download {
+  padding: 9px 22px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all .15s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-download::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(245,158,11,.2), transparent);
+}
+.btn-download:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-download:active { transform: translateY(0); }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="dot">✏️</div>
+    學習單產生器
+  </div>
+  <div class="trial-badge">
+    試用版　剩餘
+    <span class="trial-count" id="trialLeft">9999</span>
+    次
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="steps-header">
+    <div class="step-item active" id="step1-item">
+      <div class="step-num">1</div>
+      <div class="step-label">選主題與題型</div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step-item" id="step2-item">
+      <div class="step-num">2</div>
+      <div class="step-label">設定商品與難度</div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step-item" id="step3-item">
+      <div class="step-num">3</div>
+      <div class="step-label">驗算確認</div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step-item" id="step4-item">
+      <div class="step-num">4</div>
+      <div class="step-label">產出下載</div>
+    </div>
+  </div>
+
+  <!-- ── LEFT COL ── -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">購物主題</span>
+      </div>
+      <div class="card-body">
+        <div class="theme-grid" id="themeGrid"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">難度建議</span></div>
+      <div class="card-section">
+        <div class="diff-pills" id="diffPills">
+          <button class="diff-pill easy" onclick="applyDiff('easy')">🟢 簡單</button>
+          <button class="diff-pill mid active" onclick="applyDiff('mid')">🟡 中等</button>
+          <button class="diff-pill hard" onclick="applyDiff('hard')">🔴 困難</button>
+        </div>
+        <div class="diff-hint" id="diffHint"></div>
+      </div>
+      <div class="card-section">
+        <div class="section-label">商品與單價</div>
+        <div style="display:grid;grid-template-columns:1fr 64px 24px;gap:6px;margin-bottom:6px;">
+          <span style="font-size:10px;color:var(--gray);padding-left:4px;">名稱</span>
+          <span style="font-size:10px;color:var(--gray);">單價（元）</span>
+          <span></span>
+        </div>
+        <div class="item-rows" id="itemRows"></div>
+      </div>
+      <div class="card-section">
+        <div class="section-label">預算</div>
+        <div class="budget-row">
+          <label>口袋裡有</label>
+          <input type="number" id="budget" value="150" min="1" step="10" oninput="update()">
+          <span style="font-size:13px;color:var(--gray);">元</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">儲存的設定</span></div>
+      <div class="card-body">
+        <div class="history-list" id="savedList"></div>
+        <div class="save-row">
+          <input type="text" id="saveName" placeholder="設定名稱…">
+          <button class="save-btn" onclick="saveConfig()">儲存</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── RIGHT COL ── -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+
+    <div class="card">
+      <div class="rtabs">
+        <button class="rtab active" onclick="switchTab('types',this)">題型選擇</button>
+        <button class="rtab" onclick="switchTab('preview',this)">答案預覽</button>
+        <button class="rtab" onclick="switchTab('gallery',this)">圖庫瀏覽</button>
+        <button class="rtab" onclick="switchTab('history',this)">產出記錄</button>
+      </div>
+
+      <div id="tab-types">
+        <div style="padding:10px 16px 8px;font-size:12px;color:var(--teal-dark);background:var(--teal-light);border-bottom:1px solid var(--border);">
+          ✦ 三步驟加減混合（新）— 選主題後自動產生題目，其他題型開發中。
+        </div>
+        <div style="display:none;">
+          <input type="text" id="typeSearch" value="">
+          <div id="opFilters"></div>
+          <div id="gradeTabs"></div>
+        </div>
+        <div class="type-list-wrap" id="typeList"></div>
+      </div>
+
+      <div id="tab-preview" style="display:none;" class="card-body">
+        <div class="verify-grid" id="verifyGrid"></div>
+        <div style="margin-top:14px;">
+          <div style="font-size:12px;color:var(--gray);margin-bottom:8px;">
+            預算 <strong id="pv-budget" style="color:var(--ink)"></strong> 元，
+            買 <strong id="pv-item" style="color:var(--ink)"></strong>（<span id="pv-price"></span> 元／<span id="pv-unit"></span>）
+          </div>
+          <table class="preview-table" id="previewTable"></table>
+          <div class="answer-box" id="answerBox"></div>
+        </div>
+      </div>
+
+      <div id="tab-gallery" style="display:none;" class="card-body">
+        <div style="font-size:11px;color:var(--gray);margin-bottom:10px;">
+          目前主題：<strong id="gallery-theme" style="color:var(--ink)"></strong>
+          　點選商品可加入學單
+        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+        <div class="gallery-info">
+          圖庫目前共 <strong>37 張</strong>裁切好的商品圖（飲料店 6、文具店 13、玩具店 6、甜點店 6、便當店 6），之後將加入 Gemini AI 生成圖片功能，可依需求客製圖片風格。
+        </div>
+      </div>
+
+      <div id="tab-history" style="display:none;" class="card-body">
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- ── 三步驟專屬面板（選了 sanbushu 題型才顯示）── -->
+    <div id="sanbushuPanel" style="display:none;">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">三步驟設定</span>
+          <span id="sanbushuStatus" style="font-size:11px;color:var(--teal-dark);">自動產生</span>
+        </div>
+        <div class="card-body" style="padding:12px 16px;">
+          <div style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.7;">
+            選好主題後，系統自動為 <strong>第1頁</strong>（5個Menu）和
+            <strong>第3頁</strong>（8個合併Menu）各產生2道題。
+          </div>
+          <div id="sanbushuPreview" style="display:flex;flex-direction:column;gap:6px;">
+            <div style="padding:10px;background:var(--gray-light);border-radius:8px;font-size:12px;color:var(--gray);text-align:center;">
+              載入中…
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="warnBox" class="warn-box" style="display:none;"></div>
+
+    <div class="trial-bar-wrap" id="trialBar">
+      <div class="trial-dots" id="trialDots"></div>
+      <div class="trial-text" id="trialText"></div>
+      <button class="upgrade-btn" onclick="openUpgrade()">升級完整版</button>
+    </div>
+
+    <div class="gen-section">
+      <div class="gen-meta" id="genMeta"></div>
+      <button class="gen-btn" id="genBtn" onclick="preview()">
+        預覽學習單
+        <span class="arrow">→</span>
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ── PREVIEW MODAL ── -->
+<div class="preview-overlay" id="previewOverlay">
+  <div class="preview-modal">
+    <div class="preview-header">
+      <div class="preview-title">
+        📄 學習單預覽
+        <span class="badge" id="previewBadge">載入中…</span>
+      </div>
+      <button class="preview-close" onclick="closePreview()">×</button>
+    </div>
+    <div class="preview-body">
+      <div class="preview-loading" id="previewLoading">
+        <div class="big-spinner"></div>
+        <div>正在產生學習單預覽…</div>
+      </div>
+      <div id="docxPreviewContainer" style="display:none;"></div>
+    </div>
+    <div class="preview-footer">
+      <div class="preview-footer-info" id="previewFooterInfo">確認內容後再下載</div>
+      <div class="preview-footer-btns">
+        <button class="btn-preview-cancel" onclick="closePreview()">取消</button>
+        <button class="btn-download" id="downloadBtn" onclick="downloadDocx()" disabled>
+          ⬇ 下載學習單
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TYPE MODAL ── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">新增題型</h3>
+    <div class="field">
+      <label>課綱代碼（選填）</label>
+      <input type="text" id="nCode" placeholder="如 N-2-6">
+    </div>
+    <div class="field">
+      <label>題型名稱</label>
+      <input type="text" id="nName" placeholder="如：等組型乘法、購物找零">
+    </div>
+    <div class="field">
+      <label>年級</label>
+      <select id="nGrade">
+        <option value="1">一年級</option>
+        <option value="2" selected>二年級</option>
+        <option value="3">三年級</option>
+        <option value="custom">自訂</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>運算類型</label>
+      <div class="op-tags" id="opTagsEdit">
+        <span class="op-tag" data-op="add" onclick="this.classList.toggle('sel')">加法</span>
+        <span class="op-tag" data-op="sub" onclick="this.classList.toggle('sel')">減法</span>
+        <span class="op-tag" data-op="mul" onclick="this.classList.toggle('sel')">乘法</span>
+        <span class="op-tag" data-op="div" onclick="this.classList.toggle('sel')">除法</span>
+        <span class="op-tag" data-op="mix" onclick="this.classList.toggle('sel')">混合運算</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>關鍵字（按 Enter 新增）</label>
+      <div class="kw-input">
+        <input type="text" id="kwInput" placeholder="找零、最多幾個…"
+          onkeydown="if(event.key==='Enter'){addKw();event.preventDefault();}">
+        <button onclick="addKw()">新增</button>
+      </div>
+      <div class="kw-chips" id="kwChips"></div>
+    </div>
+    <div class="field">
+      <label>說明</label>
+      <textarea id="nDesc" placeholder="簡述解題情境與策略…"></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-save" onclick="saveNewType()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── UPGRADE MODAL ── -->
+<div class="modal-overlay" id="upgradeOverlay">
+  <div class="upgrade-modal">
+    <div style="font-size:36px;margin-bottom:12px;">🚀</div>
+    <h2>升級完整版</h2>
+    <p>試用版每月限 5 次產出。升級後無限次數，並解鎖更多主題、題型與 AI 生圖功能。</p>
+    <div class="plan-grid">
+      <div class="plan-card">
+        <div class="plan-name">月費方案</div>
+        <div class="plan-price">$299<span style="font-size:13px;font-weight:400;">/月</span></div>
+        <div class="plan-feature">無限次產出</div>
+        <div class="plan-feature">全部題型</div>
+        <div class="plan-feature">全部主題</div>
+        <div class="plan-feature">PDF + Word 下載</div>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-name">年費方案</div>
+        <div class="plan-price">$199<span style="font-size:13px;font-weight:400;">/月</span></div>
+        <div class="plan-feature">月費方案全部功能</div>
+        <div class="plan-feature">AI 客製化生圖</div>
+        <div class="plan-feature">多年級題型庫</div>
+        <div class="plan-feature">優先技術支援</div>
+      </div>
+    </div>
+    <button class="close-upgrade" onclick="closeUpgrade()">先繼續試用</button>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+const THEMES = {
+  飲料店: { emoji:'🧋', items:[
+    {name:'原味奶茶',counter:'杯',price:35,icon:'🧋',file:'飲料店/珍奶_原味.png'},
+    {name:'黑糖珍奶',counter:'杯',price:45,icon:'🧋',file:'飲料店/珍奶_黑糖.png'},
+    {name:'芋頭珍奶',counter:'杯',price:50,icon:'🧋',file:'飲料店/珍奶_芋頭.png'},
+    {name:'百香果茶',counter:'杯',price:30,icon:'🥤',file:'飲料店/珍奶_百香果.png'},
+    {name:'抹茶珍奶',counter:'杯',price:55,icon:'🍵',file:'飲料店/珍奶_抹茶.png'},
+    {name:'奶茶',counter:'杯',price:40,icon:'☕',file:'飲料店/珍奶_奶茶.png'},
+  ]},
+  文具店: { emoji:'✏️', items:[
+    {name:'訂書機',counter:'個',price:75,icon:'🖇️',file:'文具店/訂書機.png'},
+    {name:'鉛筆盒',counter:'個',price:95,icon:'📦',file:'文具店/鉛筆盒_閉.png'},
+    {name:'橡皮擦',counter:'塊',price:10,icon:'🧹',file:'文具店/橡皮擦.png'},
+    {name:'鉛筆',counter:'枝',price:5,icon:'✏️',file:'文具店/鉛筆.png'},
+    {name:'剪刀',counter:'把',price:25,icon:'✂️',file:'文具店/剪刀.png'},
+    {name:'尺',counter:'把',price:15,icon:'📏',file:'文具店/尺.png'},
+    {name:'膠水棒',counter:'條',price:20,icon:'🖊️',file:'文具店/膠水棒.png'},
+    {name:'削鉛筆機',counter:'個',price:50,icon:'⚙️',file:'文具店/削鉛筆機.png'},
+    {name:'色鉛筆組',counter:'盒',price:80,icon:'🖍️',file:'文具店/色鉛筆組.png'},
+    {name:'蠟筆盒',counter:'盒',price:60,icon:'🖍️',file:'文具店/蠟筆盒_笑臉.png'},
+    {name:'手持風扇',counter:'個',price:120,icon:'🌀',file:'文具店/手持風扇.png'},
+    {name:'玩具手機',counter:'個',price:150,icon:'📱',file:'文具店/玩具手機.png'},
+    {name:'筆袋_圓點',counter:'個',price:80,icon:'👜',file:'文具店/筆袋_圓點.png'},
+  ]},
+  玩具店: { emoji:'🧸', items:[
+    {name:'積木組',counter:'套',price:50,icon:'🧱',file:'玩具店/積木.png'},
+    {name:'玩具熊',counter:'隻',price:80,icon:'🧸',file:'玩具店/熊.png'},
+    {name:'玩具車',counter:'輛',price:60,icon:'🚗',file:'玩具店/玩具車.png'},
+    {name:'疊疊環',counter:'套',price:45,icon:'🔄',file:'玩具店/疊疊環.png'},
+    {name:'保齡球組',counter:'組',price:70,icon:'🎳',file:'玩具店/保齡球.png'},
+    {name:'玩具火車',counter:'組',price:90,icon:'🚂',file:'玩具店/火車.png'},
+  ]},
+  甜點店: { emoji:'🍦', items:[
+    {name:'冰淇淋',counter:'球',price:40,icon:'🍦',file:'甜點店/冰淇淋.png'},
+    {name:'棒棒糖',counter:'支',price:15,icon:'🍭',file:'甜點店/棒棒糖.png'},
+    {name:'杯子蛋糕',counter:'個',price:55,icon:'🧁',file:'甜點店/杯子蛋糕.png'},
+    {name:'鯛魚燒',counter:'個',price:35,icon:'🐟',file:'甜點店/鯛魚燒.png'},
+    {name:'棉花糖',counter:'包',price:20,icon:'☁️',file:'甜點店/棉花糖.png'},
+    {name:'珍珠奶茶',counter:'杯',price:45,icon:'🧋',file:'甜點店/珍奶_可愛.png'},
+  ]},
+  便當店: { emoji:'🍱', items:[
+    {name:'日式便當',counter:'個',price:80,icon:'🍱',file:'便當店/便當_日式.png'},
+    {name:'雞腿便當',counter:'個',price:70,icon:'🍗',file:'便當店/便當_雞腿.png'},
+    {name:'兒童便當',counter:'個',price:60,icon:'🍱',file:'便當店/便當_兒童.png'},
+    {name:'沙拉便當',counter:'個',price:65,icon:'🥗',file:'便當店/便當_沙拉.png'},
+    {name:'韓式便當',counter:'個',price:75,icon:'🫙',file:'便當店/便當_韓式.png'},
+    {name:'咖哩飯',counter:'份',price:55,icon:'🍛',file:'便當店/咖哩飯.png'},
+  ]},
+};
+
+const DIFF_CFG = {
+  easy: {label:'簡單',hint:'單價 10～30 元，預算 50～100 元，答案落在 3～4 個。適合剛接觸乘法的學生。',range:[10,30],budgetFn:p=>Math.round(p*3.5/10)*10},
+  mid:  {label:'中等',hint:'單價 30～60 元，預算 100～200 元，答案落在 3～5 個。適合已學九九乘法的學生。',range:[30,60],budgetFn:p=>Math.round(p*3.8/10)*10},
+  hard: {label:'困難',hint:'單價 60～120 元，預算 200～500 元，答案落在 3～5 個。適合進階挑戰。',range:[60,120],budgetFn:p=>Math.round(p*4.2/50)*50},
+};
+
+const OP_META = {
+  all:{label:'全部',cls:'f-all'},add:{label:'加法',cls:'f-add'},
+  sub:{label:'減法',cls:'f-sub'},mul:{label:'乘法',cls:'f-mul'},
+  div:{label:'除法',cls:'f-div'},mix:{label:'混合',cls:'f-mix'},
+};
+const OP_TAG_CLS = {add:'ttag-add',sub:'ttag-sub',mul:'ttag-mul',div:'ttag-div',mix:'ttag-mix'};
+
+let TYPES = [
+  {id:'n2-change',code:'N-2-7',name:'購物找零（乘法＋減法）',grade:'2',ops:['mul','sub','mix'],
+   keywords:['找零','付款','買幾個','兩步驟乘減'],
+   desc:'第1頁：買1件＋1件找零、買3件找零、買5件找零（乘法＋減法）。第2頁：口袋有N元最多能買幾件（預算判斷）。'},
+  {id:'sanbushu',code:'N-2-7',name:'三步驟加減混合（乘法＋找零）',grade:'2',ops:['mul','add','sub','mix'],
+   keywords:['三步驟','加減混合','買兩種','合計找零'],
+   desc:'第1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。第2頁：8個Menu商品（兩組合併）＋2道題。只需選主題，題目自動產生。'},
+];
+
+// ── STATE ──
+let S = {
+  themeId: '飲料店',
+  typeId: 'n2-change',
+  items: [],
+  budget: 150,
+  diff: 'mid',
+};
+let curGrade = 'all';
+let curOps = new Set(['all']);
+let newKws = [];
+let saves = [];
+let history = [];
+const TRIAL_LIMIT = 9999;
+
+// ── TRIAL ──
+function getTrialUsed() {
+  return parseInt(localStorage.getItem('trial_used') || '0');
+}
+function incTrial() {
+  const n = getTrialUsed() + 1;
+  localStorage.setItem('trial_used', String(n));
+  return n;
+}
+function getTrialLeft() {
+  return Math.max(0, TRIAL_LIMIT - getTrialUsed());
+}
+function renderTrialBar() {
+  const used = getTrialUsed();
+  const left = getTrialLeft();
+  document.getElementById('trialLeft').textContent = left;
+  const dots = document.getElementById('trialDots');
+  dots.innerHTML = Array(Math.min(TRIAL_LIMIT, 10)).fill(0).map((_,i) =>
+    `<div class="trial-dot ${i < used ? 'used' : ''}"></div>`).join('');
+  document.getElementById('trialText').textContent =
+    left > 0
+      ? `本月剩餘 ${left} 次免費產出（共 ${TRIAL_LIMIT} 次）`
+      : '本月試用次數已用完，升級後繼續使用';
+  const _isSb = getType().id === 'sanbushu';
+  document.getElementById('genBtn').disabled = left === 0 || (!_isSb && hasWarnings());
+}
+
+// ── INIT ──
+function getTheme() { return THEMES[S.themeId]; }
+function getType()  { return TYPES.find(t=>t.id===S.typeId) || TYPES[0]; }
+
+function initTheme(id) {
+  S.themeId = id;
+  const t = THEMES[id];
+  S.items = t.items.slice(0,4).map(it=>({...it}));
+  applyDiff(S.diff, false);
+}
+
+function applyDiff(d, reCalcPrices=true) {
+  S.diff = d;
+  document.querySelectorAll('.diff-pill').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.diff-pill.'+d).classList.add('active');
+  document.getElementById('diffHint').textContent = DIFF_CFG[d].hint;
+  if (reCalcPrices) {
+    const [lo,hi] = DIFF_CFG[d].range;
+    S.items = S.items.map((it,i)=>{
+      const base = lo + Math.round((hi-lo)*[0,.35,.6,.15][i%4]);
+      return {...it, price: Math.round(base/5)*5};
+    });
+    S.budget = DIFF_CFG[d].budgetFn(S.items[0].price);
+    document.getElementById('budget').value = S.budget;
+  }
+  renderItems();
+  update();
+}
+
+// ── RENDER THEMES ──
+function renderThemes() {
+  document.getElementById('themeGrid').innerHTML = Object.entries(THEMES).map(([id,t])=>`
+    <button class="theme-btn ${S.themeId===id?'active':''}" onclick="selectTheme('${id}')">
+      <span class="theme-emoji">${t.emoji}</span>${id}
+    </button>`).join('');
+}
+
+function selectTheme(id) {
+  _sanbushuCache = {};  // 清除快取，強制重新載入
+  initTheme(id); renderThemes(); renderGallery();
+}
+
+// ── RENDER ITEMS ──
+function renderItems() {
+  document.getElementById('itemRows').innerHTML = S.items.map((it,i)=>`
+    <div class="item-row">
+      <input type="text" value="${it.name}" oninput="S.items[${i}].name=this.value;update()">
+      <input type="number" value="${it.price}" min="1" step="5"
+        oninput="S.items[${i}].price=+this.value||0;update()">
+      <button class="del-btn" onclick="delItem(${i})" aria-label="刪除">×</button>
+    </div>`).join('') +
+    `<div style="margin-top:6px;font-size:11px;color:var(--gray);">
+      量詞：${S.items.map(it=>`${it.name}<span class="counter-tag">${it.counter}</span>`).join(' ')}
+    </div>`;
+}
+
+function delItem(i) {
+  if (S.items.length <= 2) return;
+  S.items.splice(i,1);
+  renderItems();
+  update();
+}
+
+// ── CALC ──
+function calc() {
+  const p0 = S.items[0]?.price||0, p1 = S.items[1]?.price||0;
+  const bgt = +document.getElementById('budget').value || S.budget;
+  const t1=p0+p1, t2=p0*3, t3=p0*5;
+  const pay1=Math.ceil((t1||1)/100)*100;
+  const pay2=Math.ceil((t2||1)/100)*100;
+  const pay3=Math.ceil((t3||1)/100)*100;
+  const qtys=[2,3,4,5,6];
+  const maxQ = qtys.filter(q=>p0*q<=bgt).at(-1)||0;
+  return {
+    t1,t2,t3, pay1,pay2,pay3,
+    c1:pay1-t1, c2:pay2-t2, c3:pay3-t3,
+    ok1:pay1>t1, ok2:pay2>t2, ok3:pay3>t3,
+    maxQ, bgt, p0, p1,
+    rows: qtys.map(q=>({q,total:p0*q,ok:p0*q<=bgt})),
+  };
+}
+
+function hasWarnings() {
+  const a = calc();
+  const p0=S.items[0]?.price||0, p1=S.items[1]?.price||0;
+  return !a.ok1 || !a.ok2 || !a.ok3 || a.maxQ>=6 || a.maxQ<=2;
+}
+
+// ── UPDATE ──
+function update() {
+  S.budget = +document.getElementById('budget').value || S.budget;
+  const a = calc();
+  const n0=S.items[0]?.name||'商品1', n1=S.items[1]?.name||'商品2';
+  const c0=S.items[0]?.counter||'個';
+
+  // Verify cards
+  const vcards = [
+    {q:`買1${c0}${n0}＋1${c0}${n1}`,eq:`${a.p0}＋${a.p1}＝${a.t1}`,ans:`付${a.pay1}元，找${a.c1}元`,ok:a.ok1},
+    {q:`買3${c0}${n0}`,eq:`${a.p0}×3＝${a.t2}`,ans:`付${a.pay2}元，找${a.c2}元`,ok:a.ok2},
+    {q:`買5${c0}${n0}`,eq:`${a.p0}×5＝${a.t3}`,ans:`付${a.pay3}元，找${a.c3}元`,ok:a.ok3},
+  ];
+  document.getElementById('verifyGrid').innerHTML = vcards.map(c=>`
+    <div class="verify-card ${c.ok?'ok':'warn'}">
+      <div class="vc-q ${c.ok?'ok':'warn'}">${c.q}</div>
+      <div class="vc-eq">${c.eq}</div>
+      <div class="vc-ans ${c.ok?'ok':'warn'}">${c.ans}</div>
+    </div>`).join('');
+
+  // Preview table
+  document.getElementById('pv-budget').textContent = a.bgt;
+  document.getElementById('pv-item').textContent = n0;
+  document.getElementById('pv-price').textContent = a.p0;
+  document.getElementById('pv-unit').textContent = c0;
+  document.getElementById('previewTable').innerHTML = `
+    <thead><tr><th>數量</th><th>計算式</th><th>結果</th></tr></thead>
+    <tbody>${a.rows.map(r=>`
+      <tr>
+        <td>買 ${r.q} ${c0}</td>
+        <td class="eq">${a.p0} × ${r.q} ＝ <strong>${r.total}</strong> 元</td>
+        <td><span class="${r.ok?'tag-ok':'tag-warn'}">${r.ok?'買得到':'超出預算'}</span></td>
+      </tr>`).join('')}
+    </tbody>`;
+  document.getElementById('answerBox').innerHTML =
+    `答：最多可以買 <span>${a.maxQ}</span> ${c0}${n0}`;
+
+  // Warnings
+  const warns = [];
+  if(!a.ok1) warns.push(`題1：${n0}＋${n1}＝${a.t1}元，付款${a.pay1}元不足，請降低單價`);
+  if(!a.ok2) warns.push(`題2：${n0}×3＝${a.t2}元，超過付款${a.pay2}元`);
+  if(!a.ok3) warns.push(`題3：${n0}×5＝${a.t3}元，超過付款${a.pay3}元`);
+  if(a.maxQ>=6) warns.push('答案是6（上限），建議提高單價或降低預算');
+  if(a.maxQ<=2) warns.push('答案是2個或更少，建議降低單價或提高預算');
+  const isSanbushu = (getType().id === 'sanbushu');
+  const wb = document.getElementById('warnBox');
+  // 三步驟不用顯示購物找零的警告
+  wb.style.display = (!isSanbushu && warns.length) ? 'block' : 'none';
+  if(!isSanbushu && warns.length) wb.innerHTML = '⚠️ <strong>需要調整：</strong><br>' + warns.map(w=>'• '+w).join('<br>');
+  // 三步驟面板
+  document.getElementById('sanbushuPanel').style.display = isSanbushu ? '' : 'none';
+  if (isSanbushu) loadSanbushuPreview(S.themeId);
+
+  // Gen meta
+  document.getElementById('genMeta').innerHTML = `
+    <div class="gen-meta-row"><span class="gen-meta-label">主題</span><span class="gen-meta-val">${S.themeId}</span></div>
+    <div class="gen-meta-row"><span class="gen-meta-label">題型</span><span class="gen-meta-val">${getType().name}</span></div>
+    <div class="gen-meta-row"><span class="gen-meta-label">難度</span><span class="gen-meta-val">${DIFF_CFG[S.diff].label}</span></div>
+    <div class="gen-meta-row"><span class="gen-meta-label">答案</span><span class="gen-meta-val" style="color:var(--teal)">最多買 ${a.maxQ} ${c0}</span></div>`;
+
+  // Update steps
+  updateSteps();
+
+  // Gen btn
+  const left = getTrialLeft();
+  document.getElementById('genBtn').disabled = warns.length>0 || left===0;
+  renderTrialBar();
+}
+
+// ── STEPS ──
+function updateSteps() {
+  const hasType = !!S.typeId;
+  const hasItems = S.items.length >= 2;
+  const noWarn = !hasWarnings();
+  ['step1-item','step2-item','step3-item','step4-item'].forEach((id,i)=>{
+    const el = document.getElementById(id);
+    el.classList.remove('active','done');
+    if(i===0){ if(hasType) el.classList.add('done'); else el.classList.add('active'); }
+    if(i===1){ if(hasItems&&noWarn) el.classList.add('done'); else if(hasType) el.classList.add('active'); }
+    if(i===2){ if(noWarn&&hasItems) el.classList.add('done'); else if(hasItems) el.classList.add('active'); }
+    if(i===3){ if(noWarn&&hasItems&&hasType) el.classList.add('active'); }
+  });
+}
+
+// ── TABS ──
+function switchTab(id, btn) {
+  document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  ['types','preview','gallery','history'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===id ? 'block' : 'none';
+  });
+}
+
+// ── GALLERY ──
+function renderGallery() {
+  document.getElementById('gallery-theme').textContent = S.themeId;
+  const items = THEMES[S.themeId].items;
+  document.getElementById('galleryGrid').innerHTML = items.map((it,i)=>`
+    <div class="gallery-item ${S.items.findIndex(x=>x.name===it.name)>=0?'selected':''}"
+      onclick="toggleGalleryItem(${i})">
+      <span class="gi-icon">${it.icon}</span>
+      <span class="gi-name">${it.name}</span>
+      <span class="gi-price">${it.price} 元</span>
+      <span class="gi-counter">${it.counter}</span>
+    </div>`).join('');
+}
+
+function toggleGalleryItem(i) {
+  const it = THEMES[S.themeId].items[i];
+  const idx = S.items.findIndex(x=>x.name===it.name);
+  if(idx>=0) {
+    if(S.items.length>2) S.items.splice(idx,1);
+  } else {
+    if(S.items.length<6) S.items.push({...it});
+  }
+  renderItems(); renderGallery(); update();
+}
+
+// ── TYPE BROWSER ──
+function renderGradeTabs() {
+  const grades = [{id:'all',label:'全部'},{id:'1',label:'一年級'},{id:'2',label:'二年級'},{id:'3',label:'三年級'},{id:'custom',label:'自訂'}];
+  document.getElementById('gradeTabs').innerHTML = grades.map(g=>`
+    <button class="grade-tab ${curGrade===g.id?'active':''}" onclick="setGrade('${g.id}')">${g.label}</button>`).join('');
+}
+
+function setGrade(g) { curGrade=g; renderGradeTabs(); renderTypeList(); }
+
+function renderOpFilters() {
+  document.getElementById('opFilters').innerHTML = Object.entries(OP_META).map(([op,m])=>`
+    <button class="filter-pill ${m.cls} ${curOps.has(op)?'active':''}" onclick="toggleOp('${op}')">${m.label}</button>`).join('');
+}
+
+function toggleOp(op) {
+  if(op==='all'){ curOps=new Set(['all']); }
+  else { curOps.delete('all'); curOps.has(op)?curOps.delete(op):curOps.add(op); if(!curOps.size)curOps.add('all'); }
+  renderOpFilters(); renderTypeList();
+}
+
+function renderTypeList() {
+  const q = (document.getElementById('typeSearch').value||'').trim().toLowerCase();
+  const filtered = TYPES.filter(t=>{
+    const gOk = curGrade==='all' || String(t.grade)===curGrade;
+    const opOk = curOps.has('all') || t.ops.some(o=>curOps.has(o));
+    if(!gOk||!opOk) return false;
+    if(!q) return true;
+    return (t.code||'').toLowerCase().includes(q) || t.name.includes(q) || t.desc.includes(q) || (t.keywords||[]).some(k=>k.includes(q));
+  });
+
+  const gradeLabel={'1':'一年級','2':'二年級','3':'三年級','custom':'自訂'};
+  const gradeCls={'1':'g1','2':'g2','3':'g3','custom':'g3'};
+  const groups={};
+  filtered.forEach(t=>{ const g=String(t.grade); (groups[g]=groups[g]||[]).push(t); });
+
+  if(!filtered.length){
+    document.getElementById('typeList').innerHTML='<div class="no-result">找不到符合的題型</div>';
+    return;
+  }
+
+  let html='';
+  ['1','2','3','custom'].forEach(g=>{
+    if(!groups[g]) return;
+    html+=`<div class="grade-section-hd">
+      <span class="grade-chip ${gradeCls[g]||'g3'}">${gradeLabel[g]||g}</span>
+      ${groups[g].length} 個題型
+    </div>`;
+    groups[g].forEach(t=>{
+      html+=`<div class="type-item ${S.typeId===t.id?'active':''}" onclick="selectType('${t.id}')">
+        <div class="type-meta">
+          ${t.code?`<div class="type-code">${t.code}</div>`:''}
+          <div class="type-name">${hl(t.name,q)}</div>
+          <div class="type-desc">${hl(t.desc,q)}</div>
+          <div class="type-tags">
+            ${t.ops.map(op=>`<span class="ttag ${OP_TAG_CLS[op]||''}">${OP_META[op]?.label||op}</span>`).join('')}
+            ${(t.keywords||[]).slice(0,3).map(k=>`<span class="ttag ttag-kw">${hl(k,q)}</span>`).join('')}
+          </div>
+        </div>
+        <div class="type-actions">
+          <button onclick="event.stopPropagation();editType('${t.id}')">編輯</button>
+          <button class="del-type" onclick="event.stopPropagation();delType('${t.id}')">刪除</button>
+        </div>
+      </div>`;
+    });
+  });
+  document.getElementById('typeList').innerHTML = html;
+}
+
+function hl(text,q) {
+  if(!q||!text) return text||'';
+  const esc = q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return text.replace(new RegExp(esc,'gi'),m=>`<mark style="background:#fef08a;border-radius:2px;">${m}</mark>`);
+}
+
+function selectType(id) { S.typeId=id; renderTypeList(); update(); }
+
+function delType(id) {
+  if(TYPES.length<=1) return;
+  TYPES = TYPES.filter(t=>t.id!==id);
+  if(S.typeId===id) S.typeId=TYPES[0].id;
+  renderTypeList();
+}
+
+function editType(id) {
+  const t = TYPES.find(x=>x.id===id); if(!t) return;
+  document.getElementById('modalTitle').textContent = '編輯題型';
+  document.getElementById('nCode').value = t.code||'';
+  document.getElementById('nName').value = t.name;
+  document.getElementById('nDesc').value = t.desc||'';
+  document.getElementById('nGrade').value = String(t.grade);
+  newKws = [...(t.keywords||[])];
+  document.querySelectorAll('#opTagsEdit .op-tag').forEach(el=>el.classList.toggle('sel',t.ops.includes(el.dataset.op)));
+  renderKwChips();
+  document.getElementById('modalOverlay')._editId = id;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+// ── HISTORY ──
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if(!history.length){
+    el.innerHTML='<div class="history-empty">尚無產出記錄<br><span style="font-size:11px;">設定完成後按「產出學習單」</span></div>';
+    return;
+  }
+  el.innerHTML = history.slice().reverse().map((h,i)=>`
+    <div class="history-item" onclick="loadHistory(${history.length-1-i})">
+      <div class="history-dot"></div>
+      <div>
+        <div class="history-name">${h.theme}｜${h.type}</div>
+        <div class="history-meta">${h.diff} 難度・${h.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+function loadHistory(i) {
+  const h = history[i];
+  S.themeId = h.themeId;
+  S.items = JSON.parse(JSON.stringify(h.items));
+  S.budget = h.budget;
+  S.diff = h.diff;
+  S.typeId = h.typeId;
+  document.getElementById('budget').value = S.budget;
+  document.querySelectorAll('.diff-pill').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.diff-pill.'+S.diff).classList.add('active');
+  document.getElementById('diffHint').textContent = DIFF_CFG[S.diff].hint;
+  renderThemes(); renderItems(); renderGallery(); renderTypeList(); update();
+}
+
+// ── SAVES ──
+function renderSaved() {
+  const el = document.getElementById('savedList');
+  if(!saves.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--gray);padding:4px 0;">尚無儲存的設定</div>';
+    return;
+  }
+  el.innerHTML = saves.map((sv,i)=>`
+    <div class="history-item" onclick="loadSave(${i})" style="margin-bottom:0;">
+      <div class="history-dot"></div>
+      <div style="flex:1;">
+        <div class="history-name">${sv.name}</div>
+        <div class="history-meta">${sv.theme}・${DIFF_CFG[sv.diff].label}</div>
+      </div>
+      <button onclick="event.stopPropagation();delSave(${i})"
+        style="border:none;background:none;color:var(--gray);cursor:pointer;font-size:16px;padding:2px 4px;">×</button>
+    </div>`).join('');
+}
+
+function saveConfig() {
+  const name = document.getElementById('saveName').value.trim();
+  if(!name) return;
+  saves.push({name,themeId:S.themeId,typeId:S.typeId,items:JSON.parse(JSON.stringify(S.items)),budget:S.budget,diff:S.diff,theme:S.themeId});
+  document.getElementById('saveName').value='';
+  renderSaved();
+}
+
+function loadSave(i) {
+  const sv=saves[i];
+  S={themeId:sv.themeId,typeId:sv.typeId,items:JSON.parse(JSON.stringify(sv.items)),budget:sv.budget,diff:sv.diff};
+  document.getElementById('budget').value=S.budget;
+  document.querySelectorAll('.diff-pill').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.diff-pill.'+S.diff).classList.add('active');
+  document.getElementById('diffHint').textContent=DIFF_CFG[S.diff].hint;
+  renderThemes();renderItems();renderGallery();renderTypeList();update();
+}
+
+function delSave(i) { saves.splice(i,1); renderSaved(); }
+
+// ── API 設定（部署後改成你的 Railway 網址）──
+const API_URL = window.WORKSHEET_API_URL || 'https://web-production-0542f.up.railway.app';
+
+// ── PREVIEW STATE ──
+let _previewBlob = null;
+let _previewFilename = '';
+
+// ── PREVIEW ──
+async function preview() {
+  if(getTrialLeft()<=0){ openUpgrade(); return; }
+
+  const btn = document.getElementById('genBtn');
+  const origHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> 產生中…';
+
+  const type = getType();
+  const now = new Date();
+  const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  // 三步驟走獨立 endpoint
+  if (type.id === 'sanbushu') {
+    const res = await fetch(`${API_URL}/generate/sanbushu`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: S.themeId }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
+      btn.innerHTML = `❌ ${err.detail||'HTTP '+res.status}`;
+      setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; }, 3000);
+      return;
+    }
+    const blob = await res.blob();
+    _previewBlob = blob;
+    _previewFilename = `${S.themeId}_三步驟加減混合.docx`;
+    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
+      themeId:S.themeId,typeId:S.typeId,items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
+    incTrial(); renderTrialBar(); renderHistory();
+    openPreview(blob, type.name);
+    btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar();
+    return;
+  }
+
+  const payload = {
+    theme: S.themeId,
+    type_name: type.name,
+    difficulty: S.diff,
+    items: S.items.map(it=>({
+      name: it.name,
+      counter: it.counter,
+      price: it.price,
+      file: it.file || '',
+    })),
+    budget: S.budget,
+  };
+
+  try {
+    const res = await fetch(`${API_URL}/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+
+    const blob = await res.blob();
+    _previewBlob = blob;
+    _previewFilename = `${S.themeId}_${type.name}_${DIFF_CFG[S.diff].label}.docx`;
+
+    // 記錄
+    const a = calc();
+    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
+      themeId:S.themeId,typeId:S.typeId,
+      items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
+    incTrial();
+    renderTrialBar();
+    renderHistory();
+
+    // 開啟預覽
+    openPreview(blob, type.name);
+
+    btn.innerHTML = origHTML;
+    btn.disabled = false;
+    renderTrialBar();
+
+  } catch(e) {
+    btn.innerHTML = `❌ ${e.message}`;
+    setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar(); }, 3000);
+  }
+}
+
+async function openPreview(blob, typeName) {
+  const overlay = document.getElementById('previewOverlay');
+  const loading = document.getElementById('previewLoading');
+  const container = document.getElementById('docxPreviewContainer');
+  const badge = document.getElementById('previewBadge');
+  const footerInfo = document.getElementById('previewFooterInfo');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  // 重置狀態
+  loading.style.display = 'flex';
+  container.style.display = 'none';
+  container.innerHTML = '';
+  badge.textContent = '載入中…';
+  downloadBtn.disabled = true;
+  overlay.classList.add('open');
+
+  try {
+    await docx.renderAsync(blob, container, null, {
+      className: 'docx',
+      inWrapper: true,
+      ignoreWidth: false,
+      ignoreHeight: false,
+      ignoreFonts: false,
+      breakPages: true,
+      useBase64URL: true,
+      renderChanges: false,
+      renderHeaders: true,
+      renderFooters: true,
+      renderFootnotes: true,
+      renderEndnotes: true,
+      experimental: false,
+    });
+
+    loading.style.display = 'none';
+    container.style.display = 'block';
+    badge.textContent = `${S.themeId}・${typeName}・${DIFF_CFG[S.diff].label}`;
+    footerInfo.textContent = '確認內容後點「下載學習單」';
+    downloadBtn.disabled = false;
+  } catch(e) {
+    loading.innerHTML = `<div style="color:var(--red);text-align:center;">預覽失敗：${e.message}<br><small style="color:var(--gray);margin-top:8px;display:block;">仍可直接下載學習單</small></div>`;
+    badge.textContent = '預覽失敗';
+    footerInfo.textContent = '預覽載入失敗，仍可直接下載';
+    downloadBtn.disabled = false;
+  }
+}
+
+function closePreview() {
+  document.getElementById('previewOverlay').classList.remove('open');
+}
+
+function downloadDocx() {
+  if(!_previewBlob) return;
+  const url = URL.createObjectURL(_previewBlob);
+  const a_el = document.createElement('a');
+  a_el.href = url;
+  a_el.download = _previewFilename;
+  document.body.appendChild(a_el);
+  a_el.click();
+  document.body.removeChild(a_el);
+  URL.revokeObjectURL(url);
+
+  // 關閉預覽並顯示成功
+  closePreview();
+  const btn = document.getElementById('genBtn');
+  const origHTML = btn.innerHTML;
+  btn.innerHTML = '✅ 下載完成！';
+  setTimeout(()=>{ btn.innerHTML = origHTML; }, 2500);
+}
+
+// ── GENERATE（保留，供直接呼叫）──
+async function generate() {
+  if(getTrialLeft()<=0){ openUpgrade(); return; }
+
+  const btn = document.getElementById('genBtn');
+  const origHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> 產出中…';
+
+  const a = calc();
+  const type = getType();
+  const now = new Date();
+  const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  // 三步驟走獨立 endpoint
+  if (type.id === 'sanbushu') {
+    const res = await fetch(`${API_URL}/generate/sanbushu`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: S.themeId }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
+      btn.innerHTML = `❌ ${err.detail||'HTTP '+res.status}`;
+      setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; }, 3000);
+      return;
+    }
+    const blob = await res.blob();
+    _previewBlob = blob;
+    _previewFilename = `${S.themeId}_三步驟加減混合.docx`;
+    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
+      themeId:S.themeId,typeId:S.typeId,items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
+    incTrial(); renderTrialBar(); renderHistory();
+    openPreview(blob, type.name);
+    btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar();
+    return;
+  }
+
+  const payload = {
+    theme: S.themeId,
+    type_name: type.name,
+    difficulty: S.diff,
+    items: S.items.map(it=>({
+      name: it.name,
+      counter: it.counter,
+      price: it.price,
+      file: it.file || '',
+    })),
+    budget: S.budget,
+  };
+
+  try {
+    const res = await fetch(`${API_URL}/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+
+    // 下載 .docx
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a_el = document.createElement('a');
+    a_el.href = url;
+    a_el.download = `${S.themeId}_${type.name}_${DIFF_CFG[S.diff].label}.docx`;
+    document.body.appendChild(a_el);
+    a_el.click();
+    document.body.removeChild(a_el);
+    URL.revokeObjectURL(url);
+
+    // 記錄
+    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
+      themeId:S.themeId,typeId:S.typeId,
+      items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
+    incTrial();
+    renderTrialBar();
+    renderHistory();
+
+    // 成功提示
+    btn.innerHTML = '✅ 下載完成！';
+    setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar(); }, 2500);
+
+  } catch(e) {
+    btn.innerHTML = `❌ ${e.message}`;
+    setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar(); }, 3000);
+  }
+}
+
+// ── MODAL ──
+function openModal() {
+  document.getElementById('modalTitle').textContent='新增題型';
+  ['nCode','nName','nDesc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nGrade').value='2';
+  newKws=[];
+  document.querySelectorAll('#opTagsEdit .op-tag').forEach(el=>el.classList.remove('sel'));
+  renderKwChips();
+  document.getElementById('modalOverlay')._editId=null;
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('nName').focus(),50);
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+function saveNewType() {
+  const name=document.getElementById('nName').value.trim();
+  if(!name) return;
+  const ops=[...document.querySelectorAll('#opTagsEdit .op-tag.sel')].map(el=>el.dataset.op);
+  const data={
+    code:document.getElementById('nCode').value.trim(),
+    name, ops, keywords:[...newKws],
+    desc:document.getElementById('nDesc').value.trim(),
+    grade:document.getElementById('nGrade').value,
+  };
+  const editId=document.getElementById('modalOverlay')._editId;
+  if(editId){ const idx=TYPES.findIndex(t=>t.id===editId); if(idx>=0) TYPES[idx]={...TYPES[idx],...data}; }
+  else TYPES.push({id:'c'+Date.now(),...data});
+  closeModal(); renderTypeList();
+}
+
+function addKw() {
+  const inp=document.getElementById('kwInput');
+  const v=inp.value.trim();
+  if(v&&!newKws.includes(v)){ newKws.push(v); renderKwChips(); }
+  inp.value=''; inp.focus();
+}
+function removeKw(k){ newKws=newKws.filter(x=>x!==k); renderKwChips(); }
+function renderKwChips(){
+  document.getElementById('kwChips').innerHTML=newKws.map(k=>`
+    <span class="kw-chip">${k}<button onclick="removeKw('${k}')" aria-label="移除">×</button></span>`).join('');
+}
+
+// ── UPGRADE ──
+function openUpgrade() { document.getElementById('upgradeOverlay').classList.add('open'); }
+function closeUpgrade() { document.getElementById('upgradeOverlay').classList.remove('open'); }
+
+// ── 三步驟 Preview ──
+let _sanbushuCache = {};
+async function loadSanbushuPreview(theme) {
+  const container = document.getElementById('sanbushuPreview');
+  const status    = document.getElementById('sanbushuStatus');
+  if (_sanbushuCache[theme]) {
+    renderSanbushuPreview(_sanbushuCache[theme]); return;
+  }
+  status.textContent = '載入中…';
+  container.innerHTML = '<div style="padding:10px;background:var(--gray-light);border-radius:8px;font-size:12px;color:var(--gray);text-align:center;">載入中…</div>';
+  try {
+    const res = await fetch(`${API_URL}/sanbushu/preview/${encodeURIComponent(theme)}`);
+    if (!res.ok) throw new Error('無法取得預覽');
+    const data = await res.json();
+    _sanbushuCache[theme] = data;
+    renderSanbushuPreview(data);
+    status.textContent = '自動產生 ✓';
+  } catch(e) {
+    status.textContent = '預覽失敗';
+    container.innerHTML = `<div style="color:var(--red);font-size:12px;padding:8px;">${e.message}</div>`;
+  }
+}
+
+function renderSanbushuPreview(data) {
+  const container = document.getElementById('sanbushuPreview');
+  function qHtml(q, label) {
+    return `<div style="padding:8px 10px;background:var(--warm-white);border:1px solid var(--border);border-radius:8px;">
+      <div style="font-size:10px;font-weight:700;color:var(--gray);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;">${label}</div>
+      <div style="font-size:13px;font-weight:600;color:var(--ink);">
+        ${q.item_a.name}×${q.item_a.qty} + ${q.item_b.name}×${q.item_b.qty}
+      </div>
+      <div style="font-size:12px;color:var(--gray);margin-top:3px;">
+        ${q.item_a.price}×${q.item_a.qty} + ${q.item_b.price}×${q.item_b.qty}
+        = <strong style="color:var(--ink);">${q.total}元</strong>
+        ，付${q.pay}元
+        找<strong style="color:var(--teal-dark);">${q.change}元</strong>
+      </div>
+    </div>`;
+  }
+  container.innerHTML = `
+    <div style="font-size:11px;font-weight:700;color:var(--gray);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px;">第1頁 Menu（5個）</div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">${data.p1_menu.map(it=>`${it.name} ${it.price}元`).join('・')}</div>
+    ${qHtml(data.p1_q1,'第1頁 題1')}
+    ${qHtml(data.p1_q2,'第1頁 題2')}
+    <div style="font-size:11px;font-weight:700;color:var(--gray);letter-spacing:.04em;text-transform:uppercase;margin:8px 0 4px;">第2頁 Menu（8個合併）</div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">${data.p3_menu.map(it=>`${it.name} ${it.price}元`).join('・')}</div>
+    ${qHtml(data.p3_q1,'第2頁 題1')}
+    ${qHtml(data.p3_q2,'第2頁 題2')}
+  `;
+}
+
+// ── BOOT ──
+initTheme('飲料店');
+renderThemes();
+renderGradeTabs();
+renderOpFilters();
+renderTypeList();
+renderGallery();
+renderSaved();
+renderHistory();
+renderTrialBar();
+update();
+</script>
+<script>
+// 🔧 開發者設定：部署後將此行改成你的 Railway API 網址
+// window.WORKSHEET_API_URL = 'https://your-api-name.railway.app';
+</script>
+</body>
+</html>
