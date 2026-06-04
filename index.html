@@ -1062,17 +1062,15 @@ body {
       </div>
 
       <div id="tab-types">
-        <div style="padding:14px 16px 0;">
-          <div class="search-wrap">
-            <input type="text" id="typeSearch" placeholder="搜尋題型名稱、課綱代碼或關鍵字…" oninput="renderTypeList()">
-          </div>
-          <div class="filter-pills" id="opFilters"></div>
-          <div class="grade-tabs" id="gradeTabs"></div>
+        <div style="padding:10px 16px 8px;font-size:12px;color:var(--teal-dark);background:var(--teal-light);border-bottom:1px solid var(--border);">
+          目前後端僅支援以下一種題型，其他題型開發中。
+        </div>
+        <div style="display:none;">
+          <input type="text" id="typeSearch" value="">
+          <div id="opFilters"></div>
+          <div id="gradeTabs"></div>
         </div>
         <div class="type-list-wrap" id="typeList"></div>
-        <div style="padding:10px 16px;">
-          <button class="add-type-btn" onclick="openModal()">＋ 新增自訂題型</button>
-        </div>
       </div>
 
       <div id="tab-preview" style="display:none;" class="card-body">
@@ -1297,51 +1295,9 @@ const OP_META = {
 const OP_TAG_CLS = {add:'ttag-add',sub:'ttag-sub',mul:'ttag-mul',div:'ttag-div',mix:'ttag-mix'};
 
 let TYPES = [
-  {id:'n1-add-a',code:'N-1-2',name:'添加型加法',grade:'1',ops:['add'],
-   keywords:['添加','又來','再加','增加'],
-   desc:'原本有N個，又加進M個，共有幾個？動態增加，最直覺的加法情境。'},
-  {id:'n1-add-b',code:'N-1-2',name:'併加型加法',grade:'1',ops:['add'],
-   keywords:['合計','一共','兩組合併'],
-   desc:'甲有N個，乙有M個，一共有幾個？兩個靜態量合併。'},
-  {id:'n1-sub-a',code:'N-1-2',name:'拿走型減法',grade:'1',ops:['sub'],
-   keywords:['拿走','用掉','剩下','還剩'],
-   desc:'原有N個，拿走M個，還剩幾個？最直覺的減法情境。'},
-  {id:'n1-sub-b',code:'N-1-2',name:'比較型減法（多幾個）',grade:'1',ops:['sub'],
-   keywords:['多幾個','多幾元','比較','差距'],
-   desc:'甲有N個，乙有M個，甲比乙多幾個？'},
-  {id:'n1-sub-c',code:'N-1-2',name:'比較型減法（少幾個）',grade:'1',ops:['sub'],
-   keywords:['少幾個','少幾元','差多少','不夠'],
-   desc:'甲有N個，乙有M個，乙比甲少幾個？'},
-  {id:'n1-money',code:'N-1-4',name:'錢幣認識與找零（一年級）',grade:'1',ops:['add','sub'],
-   keywords:['找零','錢幣','硬幣','紙鈔','付款'],
-   desc:'用 1、5、10、50、100 元進行付款與找零。低年級金錢概念核心。'},
-  {id:'n1-mix',code:'N-1-3',name:'加減兩步驟（一年級）',grade:'1',ops:['add','sub','mix'],
-   keywords:['兩步驟','先再','一年級'],
-   desc:'先合計再找零，或先拿走再添加。僅含加減，不含乘除。'},
-  {id:'n2-mul-a',code:'N-2-6',name:'等組型乘法（求總數）',grade:'2',ops:['mul'],
-   keywords:['每組','每排','幾個一組','九九乘法','等組'],
-   desc:'每組有N個，共M組，總共幾個？乘法核心情境。'},
-  {id:'n2-mul-b',code:'N-2-6',name:'等組型乘法（求幾組）',grade:'2',ops:['mul'],
-   keywords:['幾組','幾排','幾份'],
-   desc:'總共有N個，每組M個，分成幾組？'},
-  {id:'n2-times',code:'N-2-6',name:'倍數問題（幾倍）',grade:'2',ops:['mul'],
-   keywords:['幾倍','是幾倍','倍','比較倍數'],
-   desc:'甲是乙的幾倍？或甲的N倍是多少？'},
-  {id:'n2-price',code:'N-2-7',name:'總價計算（乘法購物）',grade:'2',ops:['mul'],
-   keywords:['總價','幾元','買幾個','多少錢'],
-   desc:'每個N元，買M個，共花幾元？九九乘法最常見的生活應用。'},
   {id:'n2-change',code:'N-2-7',name:'購物找零（乘法＋減法）',grade:'2',ops:['mul','sub','mix'],
    keywords:['找零','付款','買幾個','兩步驟乘減'],
-   desc:'買N個（每個M元），付款P元，找回幾元？本學單第一頁的核心題型。'},
-  {id:'n2-max',code:'N-2-8',name:'最多可以買幾個（預算判斷）',grade:'2',ops:['mul','sub','mix'],
-   keywords:['最多幾個','預算','夠不夠','判斷'],
-   desc:'口袋有P元，每個N元，最多能買幾個？本學單第二頁的核心題型。'},
-  {id:'n2-add-mul',code:'N-2-8',name:'兩步驟應用（加乘）',grade:'2',ops:['add','mul','mix'],
-   keywords:['兩步驟','加乘','先乘後加'],
-   desc:'N組各M個，再加上P個，共幾個？先乘後加。'},
-  {id:'n2-sub-mul',code:'N-2-8',name:'兩步驟應用（減乘）',grade:'2',ops:['sub','mul','mix'],
-   keywords:['兩步驟','減乘','先乘後減','剩餘'],
-   desc:'先乘後減，或先減後乘的複合情境。'},
+   desc:'第1頁：買1件＋1件找零、買3件找零、買5件找零（乘法＋減法）。第2頁：口袋有N元最多能買幾件（預算判斷）。目前系統唯一支援的學習單題型。'},
 ];
 
 // ── STATE ──
