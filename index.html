@@ -1063,7 +1063,7 @@ body {
 
       <div id="tab-types">
         <div style="padding:10px 16px 8px;font-size:12px;color:var(--teal-dark);background:var(--teal-light);border-bottom:1px solid var(--border);">
-          目前後端僅支援以下一種題型，其他題型開發中。
+          ✦ 三步驟加減混合（新）— 選主題後自動產生題目，其他題型開發中。
         </div>
         <div style="display:none;">
           <input type="text" id="typeSearch" value="">
@@ -1098,6 +1098,27 @@ body {
 
       <div id="tab-history" style="display:none;" class="card-body">
         <div class="history-list" id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- ── 三步驟專屬面板（選了 sanbushu 題型才顯示）── -->
+    <div id="sanbushuPanel" style="display:none;">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">三步驟設定</span>
+          <span id="sanbushuStatus" style="font-size:11px;color:var(--teal-dark);">自動產生</span>
+        </div>
+        <div class="card-body" style="padding:12px 16px;">
+          <div style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.7;">
+            選好主題後，系統自動為 <strong>第1頁</strong>（5個Menu）和
+            <strong>第3頁</strong>（8個合併Menu）各產生2道題。
+          </div>
+          <div id="sanbushuPreview" style="display:flex;flex-direction:column;gap:6px;">
+            <div style="padding:10px;background:var(--gray-light);border-radius:8px;font-size:12px;color:var(--gray);text-align:center;">
+              載入中…
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1297,7 +1318,10 @@ const OP_TAG_CLS = {add:'ttag-add',sub:'ttag-sub',mul:'ttag-mul',div:'ttag-div',
 let TYPES = [
   {id:'n2-change',code:'N-2-7',name:'購物找零（乘法＋減法）',grade:'2',ops:['mul','sub','mix'],
    keywords:['找零','付款','買幾個','兩步驟乘減'],
-   desc:'第1頁：買1件＋1件找零、買3件找零、買5件找零（乘法＋減法）。第2頁：口袋有N元最多能買幾件（預算判斷）。目前系統唯一支援的學習單題型。'},
+   desc:'第1頁：買1件＋1件找零、買3件找零、買5件找零（乘法＋減法）。第2頁：口袋有N元最多能買幾件（預算判斷）。'},
+  {id:'sanbushu',code:'N-2-7',name:'三步驟加減混合（乘法＋找零）',grade:'2',ops:['mul','add','sub','mix'],
+   keywords:['三步驟','加減混合','買兩種','合計找零'],
+   desc:'第1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。第2頁：8個Menu商品（兩組合併）＋2道題。只需選主題，題目自動產生。'},
 ];
 
 // ── STATE ──
@@ -1338,7 +1362,8 @@ function renderTrialBar() {
     left > 0
       ? `本月剩餘 ${left} 次免費產出（共 ${TRIAL_LIMIT} 次）`
       : '本月試用次數已用完，升級後繼續使用';
-  document.getElementById('genBtn').disabled = left === 0 || hasWarnings();
+  const _isSb = getType().id === 'sanbushu';
+  document.getElementById('genBtn').disabled = left === 0 || (!_isSb && hasWarnings());
 }
 
 // ── INIT ──
@@ -1378,7 +1403,10 @@ function renderThemes() {
     </button>`).join('');
 }
 
-function selectTheme(id) { initTheme(id); renderThemes(); renderGallery(); }
+function selectTheme(id) {
+  _sanbushuCache = {};  // 清除快取，強制重新載入
+  initTheme(id); renderThemes(); renderGallery();
+}
 
 // ── RENDER ITEMS ──
 function renderItems() {
@@ -1470,9 +1498,14 @@ function update() {
   if(!a.ok3) warns.push(`題3：${n0}×5＝${a.t3}元，超過付款${a.pay3}元`);
   if(a.maxQ>=6) warns.push('答案是6（上限），建議提高單價或降低預算');
   if(a.maxQ<=2) warns.push('答案是2個或更少，建議降低單價或提高預算');
+  const isSanbushu = (getType().id === 'sanbushu');
   const wb = document.getElementById('warnBox');
-  wb.style.display = warns.length ? 'block' : 'none';
-  if(warns.length) wb.innerHTML = '⚠️ <strong>需要調整：</strong><br>' + warns.map(w=>'• '+w).join('<br>');
+  // 三步驟不用顯示購物找零的警告
+  wb.style.display = (!isSanbushu && warns.length) ? 'block' : 'none';
+  if(!isSanbushu && warns.length) wb.innerHTML = '⚠️ <strong>需要調整：</strong><br>' + warns.map(w=>'• '+w).join('<br>');
+  // 三步驟面板
+  document.getElementById('sanbushuPanel').style.display = isSanbushu ? '' : 'none';
+  if (isSanbushu) loadSanbushuPreview(S.themeId);
 
   // Gen meta
   document.getElementById('genMeta').innerHTML = `
@@ -1726,6 +1759,30 @@ async function preview() {
   const now = new Date();
   const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
 
+  // 三步驟走獨立 endpoint
+  if (type.id === 'sanbushu') {
+    const res = await fetch(`${API_URL}/generate/sanbushu`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: S.themeId }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
+      btn.innerHTML = `❌ ${err.detail||'HTTP '+res.status}`;
+      setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; }, 3000);
+      return;
+    }
+    const blob = await res.blob();
+    _previewBlob = blob;
+    _previewFilename = `${S.themeId}_三步驟加減混合.docx`;
+    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
+      themeId:S.themeId,typeId:S.typeId,items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
+    incTrial(); renderTrialBar(); renderHistory();
+    openPreview(blob, type.name);
+    btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar();
+    return;
+  }
+
   const payload = {
     theme: S.themeId,
     type_name: type.name,
@@ -1860,6 +1917,30 @@ async function generate() {
   const now = new Date();
   const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
 
+  // 三步驟走獨立 endpoint
+  if (type.id === 'sanbushu') {
+    const res = await fetch(`${API_URL}/generate/sanbushu`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: S.themeId }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
+      btn.innerHTML = `❌ ${err.detail||'HTTP '+res.status}`;
+      setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; }, 3000);
+      return;
+    }
+    const blob = await res.blob();
+    _previewBlob = blob;
+    _previewFilename = `${S.themeId}_三步驟加減混合.docx`;
+    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
+      themeId:S.themeId,typeId:S.typeId,items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
+    incTrial(); renderTrialBar(); renderHistory();
+    openPreview(blob, type.name);
+    btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar();
+    return;
+  }
+
   const payload = {
     theme: S.themeId,
     type_name: type.name,
@@ -1960,6 +2041,57 @@ function renderKwChips(){
 // ── UPGRADE ──
 function openUpgrade() { document.getElementById('upgradeOverlay').classList.add('open'); }
 function closeUpgrade() { document.getElementById('upgradeOverlay').classList.remove('open'); }
+
+// ── 三步驟 Preview ──
+let _sanbushuCache = {};
+async function loadSanbushuPreview(theme) {
+  const container = document.getElementById('sanbushuPreview');
+  const status    = document.getElementById('sanbushuStatus');
+  if (_sanbushuCache[theme]) {
+    renderSanbushuPreview(_sanbushuCache[theme]); return;
+  }
+  status.textContent = '載入中…';
+  container.innerHTML = '<div style="padding:10px;background:var(--gray-light);border-radius:8px;font-size:12px;color:var(--gray);text-align:center;">載入中…</div>';
+  try {
+    const res = await fetch(`${API_URL}/sanbushu/preview/${encodeURIComponent(theme)}`);
+    if (!res.ok) throw new Error('無法取得預覽');
+    const data = await res.json();
+    _sanbushuCache[theme] = data;
+    renderSanbushuPreview(data);
+    status.textContent = '自動產生 ✓';
+  } catch(e) {
+    status.textContent = '預覽失敗';
+    container.innerHTML = `<div style="color:var(--red);font-size:12px;padding:8px;">${e.message}</div>`;
+  }
+}
+
+function renderSanbushuPreview(data) {
+  const container = document.getElementById('sanbushuPreview');
+  function qHtml(q, label) {
+    return `<div style="padding:8px 10px;background:var(--warm-white);border:1px solid var(--border);border-radius:8px;">
+      <div style="font-size:10px;font-weight:700;color:var(--gray);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;">${label}</div>
+      <div style="font-size:13px;font-weight:600;color:var(--ink);">
+        ${q.item_a.name}×${q.item_a.qty} + ${q.item_b.name}×${q.item_b.qty}
+      </div>
+      <div style="font-size:12px;color:var(--gray);margin-top:3px;">
+        ${q.item_a.price}×${q.item_a.qty} + ${q.item_b.price}×${q.item_b.qty}
+        = <strong style="color:var(--ink);">${q.total}元</strong>
+        ，付${q.pay}元
+        找<strong style="color:var(--teal-dark);">${q.change}元</strong>
+      </div>
+    </div>`;
+  }
+  container.innerHTML = `
+    <div style="font-size:11px;font-weight:700;color:var(--gray);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px;">第1頁 Menu（5個）</div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">${data.p1_menu.map(it=>`${it.name} ${it.price}元`).join('・')}</div>
+    ${qHtml(data.p1_q1,'第1頁 題1')}
+    ${qHtml(data.p1_q2,'第1頁 題2')}
+    <div style="font-size:11px;font-weight:700;color:var(--gray);letter-spacing:.04em;text-transform:uppercase;margin:8px 0 4px;">第2頁 Menu（8個合併）</div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">${data.p3_menu.map(it=>`${it.name} ${it.price}元`).join('・')}</div>
+    ${qHtml(data.p3_q1,'第2頁 題1')}
+    ${qHtml(data.p3_q2,'第2頁 題2')}
+  `;
+}
 
 // ── BOOT ──
 initTheme('飲料店');
