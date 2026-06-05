@@ -1982,68 +1982,9 @@ function clearPreviewCache() {
 }
 
 // ── PREVIEW ──
-async function preview() {
-  if(getTrialLeft()<=0){ openUpgrade(); return; }
-
-  const btn = document.getElementById('inlinePreviewBtn');
-  const origHTML = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;border-top-color:white;"></div> 預覽中…';
-
-  const type = getType();
-  const now = new Date();
-  const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-  // ── 若已有快取 blob（例如剛下載過），直接渲染，跳過 API ──
-  if (_previewBlob) {
-    await openPreview(_previewBlob, type.name);
-    btn.innerHTML = origHTML; btn.disabled = false;
-    return;
-  }
-
-  // ── 呼叫 PDF 預覽端點 ──
-  let res;
-  try {
-    if (type.id === 'fenfen') {
-      res = await fetch(`${API_URL}/preview/pdf/fenfen`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme: S.themeId, item_index: S.fenfenItemIndex, question_set: S.fenfenSet }),
-      });
-    } else if (type.id === 'sanbushu') {
-      res = await fetch(`${API_URL}/preview/pdf/sanbushu`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme: S.themeId }),
-      });
-    } else {
-      res = await fetch(`${API_URL}/preview/pdf`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          theme: S.themeId, type_name: type.name, difficulty: S.diff,
-          items: S.items.map(it=>({ name:it.name, counter:it.counter, price:it.price, file:it.file||'' })),
-          budget: S.budget,
-        }),
-      });
-    }
-
-    if (!res.ok) {
-      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
-      throw new Error(err.detail || `HTTP ${res.status}`);
-    }
-
-    const pdfBlob = await res.blob();
-    _previewBlob = pdfBlob;
-
-    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
-      themeId:S.themeId,typeId:S.typeId,items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
-    incTrial(); renderTrialBar(); renderHistory();
-
-    openPreview(pdfBlob, type.name);
-    btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar();
-
-  } catch(e) {
-    btn.innerHTML = `❌ ${e.message}`;
-    setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar(); }, 3000);
-  }
+function preview() {
+  // 直接顯示靜態範本 PDF，無需 API 呼叫
+  openPreview(getType().id);
 }
 
 // ── 直接下載（不顯示預覽）──
@@ -2131,54 +2072,40 @@ async function directDownload() {
   }
 }
 
-async function openPreview(pdfBlob, typeName) {
+function openPreview(typeId) {
   const loading = document.getElementById('inlinePreviewLoading');
   const container = document.getElementById('inlineDocxContainer');
   const empty = document.getElementById('inlinePreviewEmpty');
   const badge = document.getElementById('inlinePreviewBadge');
   const info = document.getElementById('inlinePreviewInfo');
 
-  // 清理舊 PDF Object URL
-  if (container._pdfUrl) { URL.revokeObjectURL(container._pdfUrl); }
-
   loading.style.display = 'none';
   empty.style.display = 'none';
 
-  // 建立 PDF Object URL 並用 <embed> 顯示（瀏覽器原生，即時）
-  const pdfUrl = URL.createObjectURL(pdfBlob);
-  container._pdfUrl = pdfUrl;
+  // 靜態範本 PDF 路徑（放在 GitHub Pages 的 samples/ 資料夾）
+  const base = window.location.protocol === 'file:'
+    ? 'samples/'
+    : (window.location.href.replace(/\/[^/]*$/, '/') + 'samples/');
+  const pdfMap = {
+    'n2-change': 'shopping.pdf',
+    'sanbushu':  'sanbushu.pdf',
+    'fenfen':    'fenfen.pdf',
+  };
+  const pdfFile = pdfMap[typeId] || 'shopping.pdf';
+  const pdfUrl = base + pdfFile;
 
-  // 偵測是否從 file:// 開啟（Chrome 會封鎖 blob: in embed）
-  const isFileProtocol = window.location.protocol === 'file:';
-
-  if (isFileProtocol) {
-    // file:// 環境：改用新分頁開啟 PDF
-    container.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-        min-height:220px;gap:14px;padding:20px;text-align:center;">
-        <div style="font-size:36px;">📄</div>
-        <div style="font-size:14px;font-weight:700;color:var(--ink);">PDF 已產生完成</div>
-        <div style="font-size:12px;color:var(--gray);">從本機檔案開啟時，預覽需在新分頁顯示</div>
-        <a href="${pdfUrl}" target="_blank" style="
-          padding:10px 22px;background:var(--teal);color:white;border-radius:var(--r-sm);
-          font-size:13px;font-weight:700;text-decoration:none;display:inline-block;">
-          👁 在新分頁預覽 PDF
-        </a>
-      </div>`;
-  } else {
-    // HTTP 伺服器環境：直接嵌入 PDF
-    container.innerHTML = `<embed src="${pdfUrl}" type="application/pdf"
+  container.innerHTML = `
+    <embed src="${pdfUrl}" type="application/pdf"
       style="width:100%;height:560px;border:none;display:block;border-radius:4px;">
-      <div style="padding:6px 10px;font-size:11px;color:var(--gray);text-align:right;">
-        <a href="${pdfUrl}" target="_blank" style="color:var(--teal-dark);">在新分頁開啟 →</a>
-      </div>`;
-  }
+    <div style="padding:6px 10px;font-size:11px;color:var(--gray);text-align:right;">
+      <a href="${pdfUrl}" target="_blank" style="color:var(--teal-dark);">在新分頁開啟 →</a>
+    </div>`;
   container.style.display = 'block';
 
-  badge.textContent = `${S.themeId}・${typeName}`;
-  info.textContent = '確認內容後點下方「下載學習單」';
+  const typeName = TYPES.find(t => t.id === typeId)?.name || '';
+  badge.textContent = `範本預覽・${typeName}`;
+  info.textContent = '以下為範本，實際學習單依您的設定產生';
 
-  // 捲動到預覽區
   document.getElementById('inlinePreviewCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
