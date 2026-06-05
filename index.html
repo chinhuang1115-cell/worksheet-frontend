@@ -1982,9 +1982,62 @@ function clearPreviewCache() {
 }
 
 // ── PREVIEW ──
-function preview() {
-  // 直接顯示靜態範本 PDF，無需 API 呼叫
-  openPreview(getType().id);
+async function preview() {
+  if(getTrialLeft()<=0){ openUpgrade(); return; }
+
+  const btn = document.getElementById('inlinePreviewBtn');
+  const origHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;border-top-color:white;"></div> 預覽中…';
+
+  const loading = document.getElementById('inlinePreviewLoading');
+  const container = document.getElementById('inlineDocxContainer');
+  const empty = document.getElementById('inlinePreviewEmpty');
+  loading.style.display = 'flex';
+  container.style.display = 'none';
+  empty.style.display = 'none';
+  document.getElementById('inlinePreviewCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const type = getType();
+  try {
+    let res;
+    if (type.id === 'fenfen') {
+      res = await fetch(`${API_URL}/preview/html/fenfen`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ theme:S.themeId, item_index:S.fenfenItemIndex, question_set:S.fenfenSet }),
+      });
+    } else if (type.id === 'sanbushu') {
+      res = await fetch(`${API_URL}/preview/html/sanbushu`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ theme:S.themeId }),
+      });
+    } else {
+      res = await fetch(`${API_URL}/preview/html`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          theme:S.themeId, type_name:type.name, difficulty:S.diff,
+          items: S.items.map(it=>({name:it.name,counter:it.counter,price:it.price,file:it.file||''})),
+          budget: S.budget,
+        }),
+      });
+    }
+
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+
+    const { html } = await res.json();
+    openPreview(html, type.name);
+    btn.innerHTML = origHTML; btn.disabled = false;
+
+  } catch(e) {
+    loading.style.display = 'none';
+    empty.style.display = 'flex';
+    empty.textContent = `❌ ${e.message}`;
+    btn.innerHTML = `❌ ${e.message}`;
+    setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; empty.innerHTML = '設定完成後<br>點下方「產出學習單」'; empty.style.display='none'; container.style.display='none'; loading.style.display='none'; }, 4000);
+  }
 }
 
 // ── 直接下載（不顯示預覽）──
@@ -2072,41 +2125,28 @@ async function directDownload() {
   }
 }
 
-function openPreview(typeId) {
+function openPreview(html, typeName) {
   const loading = document.getElementById('inlinePreviewLoading');
   const container = document.getElementById('inlineDocxContainer');
-  const empty = document.getElementById('inlinePreviewEmpty');
   const badge = document.getElementById('inlinePreviewBadge');
   const info = document.getElementById('inlinePreviewInfo');
 
   loading.style.display = 'none';
-  empty.style.display = 'none';
 
-  // 靜態範本 PDF 路徑（放在 GitHub Pages 的 samples/ 資料夾）
-  const base = window.location.protocol === 'file:'
-    ? 'samples/'
-    : (window.location.href.replace(/\/[^/]*$/, '/') + 'samples/');
-  const pdfMap = {
-    'n2-change': 'shopping.pdf',
-    'sanbushu':  'sanbushu.pdf',
-    'fenfen':    'fenfen.pdf',
-  };
-  const pdfFile = pdfMap[typeId] || 'shopping.pdf';
-  const pdfUrl = base + pdfFile;
+  // 清理舊 iframe blob URL
+  if (container._iframeUrl) { URL.revokeObjectURL(container._iframeUrl); }
 
-  container.innerHTML = `
-    <embed src="${pdfUrl}" type="application/pdf"
-      style="width:100%;height:560px;border:none;display:block;border-radius:4px;">
-    <div style="padding:6px 10px;font-size:11px;color:var(--gray);text-align:right;">
-      <a href="${pdfUrl}" target="_blank" style="color:var(--teal-dark);">在新分頁開啟 →</a>
-    </div>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const iframeUrl = URL.createObjectURL(blob);
+  container._iframeUrl = iframeUrl;
+
+  container.innerHTML = `<iframe src="${iframeUrl}"
+    style="width:100%;height:560px;border:none;display:block;border-radius:4px;background:white;"
+    sandbox="allow-same-origin"></iframe>`;
   container.style.display = 'block';
 
-  const typeName = TYPES.find(t => t.id === typeId)?.name || '';
-  badge.textContent = `範本預覽・${typeName}`;
-  info.textContent = '以下為範本，實際學習單依您的設定產生';
-
-  document.getElementById('inlinePreviewCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  badge.textContent = `${S.themeId}・${typeName}`;
+  info.textContent = '預覽為實際產出內容';
 }
 
 function closePreview() {
