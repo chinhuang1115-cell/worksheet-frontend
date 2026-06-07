@@ -1097,6 +1097,7 @@ body {
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module" id="pdfJsScript"></script>
 </head>
 <body>
 
@@ -1156,7 +1157,7 @@ body {
   <!-- ── LEFT COL ── -->
   <div style="display:flex;flex-direction:column;gap:14px;">
 
-    <div class="card">
+    <div class="card" id="themeCard">
       <div class="card-head">
         <span class="card-title">購物主題</span>
       </div>
@@ -1305,29 +1306,47 @@ body {
       </div>
     </div>
 
+    <!-- ── 平分延伸乘法專屬面板（選了 pingfen 題型才顯示）── -->
+    <div id="pingfenPanel" style="display:none;">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">找出平均數</span>
+          <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
+        </div>
+        <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+          <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+            把 N 個物件平分給 X 個人，一個人有幾個？<br>
+            從加法算式（□＋□＋□）延伸到乘法（□×X），建立平分與乘法的連結。
+          </div>
+          <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+            ✦ 共 5 題，數字每次隨機產生　✦ 適合二年級乘法初學者　✦ 課綱：N-2-5
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="warnBox" class="warn-box" style="display:none;"></div>
 
-    <!-- ── 學習單預覽（內嵌）── -->
-    <div class="card" id="inlinePreviewCard">
-      <div class="card-head">
-        <span class="card-title">學習單預覽</span>
-        <span id="inlinePreviewBadge" style="font-size:11px;color:var(--gray);">尚未產出</span>
+    <!-- ── 學習單範本（n2-change / sanbushu / fenfen 共用）── -->
+    <div id="sampleCard" class="card" style="display:none;">
+      <div class="card-head" style="cursor:pointer;user-select:none;" onclick="toggleSampleCard()">
+        <span class="card-title">學習單範本</span>
+        <span id="sampleCardToggle" style="font-size:11px;color:var(--gray);">▾ 展開預覽</span>
       </div>
-      <div id="inlinePreviewBody" style="background:#e8e4dc;min-height:260px;max-height:540px;overflow-y:auto;padding:12px;position:relative;">
-        <div id="inlinePreviewLoading" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:220px;">
-          <div class="big-spinner" style="border-top-color:var(--amber);"></div>
-          <div style="font-size:12px;color:var(--gray);">正在產生學習單…</div>
+      <div id="sampleCardBody" style="display:none;">
+        <div id="samplePdfContainer" style="background:#e8e4dc;padding:12px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
+          <div id="samplePdfLoading" style="padding:32px;color:var(--gray);font-size:13px;text-align:center;">
+            <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;"></div>
+            載入預覽中…
+          </div>
         </div>
-        <div id="inlineDocxContainer" style="background:white;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,.12);display:none;"></div>
-        <div id="inlinePreviewEmpty" style="display:flex;align-items:center;justify-content:center;min-height:220px;font-size:13px;color:var(--gray);text-align:center;line-height:2;">
-          設定完成後<br>點下方「產出學習單」
+        <div style="padding:10px 14px;">
+          <a id="sampleDownloadBtn" href="#" download
+            style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 0;background:var(--ink);color:var(--cream);border-radius:var(--r-sm);font-size:14px;font-weight:700;text-decoration:none;transition:opacity .15s;"
+            onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            ⬇ 下載範本 PDF
+          </a>
         </div>
-      </div>
-      <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-        <span id="inlinePreviewInfo" style="font-size:11px;color:var(--gray);"></span>
-        <button class="btn-download" id="inlinePreviewBtn" onclick="preview()" style="padding:8px 18px;font-size:13px;background:var(--teal);">
-          👁 開始預覽
-        </button>
       </div>
     </div>
 
@@ -1532,6 +1551,9 @@ let TYPES = [
   {id:'fenfen',code:'N-2-3',name:'分分看（除法概念）',grade:'2',ops:['div'],
    keywords:['分裝','幾組','等分','除法'],
    desc:'選主題與物件，自動產生4大題×3小題的分裝數學題組。每小題展示商品圖示，學生數數後填答。只需選主題與物件，題目自動排列。'},
+  {id:'pingfen',code:'N-2-5',name:'找出平均數（平分延伸乘法）',grade:'2',ops:['mul','div'],
+   keywords:['平分','平均數','等分','乘法連結'],
+   desc:'把N個物件平分給X個人，一個人有幾個？從加法算式（□+□+□）延伸到乘法（□×3），建立等分除法與乘法的連結關係。固定5題，適合乘法初學者。'},
 ];
 
 // ── STATE ──
@@ -1970,74 +1992,6 @@ let _previewFilename = '';
 function clearPreviewCache() {
   _previewBlob = null;
   _previewFilename = '';
-  // 重置預覽區顯示
-  const container = document.getElementById('inlineDocxContainer');
-  const empty = document.getElementById('inlinePreviewEmpty');
-  const badge = document.getElementById('inlinePreviewBadge');
-  const info = document.getElementById('inlinePreviewInfo');
-  if (container) { container.style.display = 'none'; container.innerHTML = ''; }
-  if (empty) { empty.style.display = 'flex'; empty.innerHTML = '設定完成後<br>點下方「產出學習單」'; }
-  if (badge) badge.textContent = '尚未產出';
-  if (info) info.textContent = '';
-}
-
-// ── PREVIEW ──
-async function preview() {
-  if(getTrialLeft()<=0){ openUpgrade(); return; }
-
-  const btn = document.getElementById('inlinePreviewBtn');
-  const origHTML = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;border-top-color:white;"></div> 預覽中…';
-
-  const loading = document.getElementById('inlinePreviewLoading');
-  const container = document.getElementById('inlineDocxContainer');
-  const empty = document.getElementById('inlinePreviewEmpty');
-  loading.style.display = 'flex';
-  container.style.display = 'none';
-  empty.style.display = 'none';
-  document.getElementById('inlinePreviewCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  const type = getType();
-  try {
-    let res;
-    if (type.id === 'fenfen') {
-      res = await fetch(`${API_URL}/preview/html/fenfen`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ theme:S.themeId, item_index:S.fenfenItemIndex, question_set:S.fenfenSet }),
-      });
-    } else if (type.id === 'sanbushu') {
-      res = await fetch(`${API_URL}/preview/html/sanbushu`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ theme:S.themeId }),
-      });
-    } else {
-      res = await fetch(`${API_URL}/preview/html`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          theme:S.themeId, type_name:type.name, difficulty:S.diff,
-          items: S.items.map(it=>({name:it.name,counter:it.counter,price:it.price,file:it.file||''})),
-          budget: S.budget,
-        }),
-      });
-    }
-
-    if (!res.ok) {
-      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
-      throw new Error(err.detail || `HTTP ${res.status}`);
-    }
-
-    const { html } = await res.json();
-    openPreview(html, type.name);
-    btn.innerHTML = origHTML; btn.disabled = false;
-
-  } catch(e) {
-    loading.style.display = 'none';
-    empty.style.display = 'flex';
-    empty.textContent = `❌ ${e.message}`;
-    btn.innerHTML = `❌ ${e.message}`;
-    setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; empty.innerHTML = '設定完成後<br>點下方「產出學習單」'; empty.style.display='none'; container.style.display='none'; loading.style.display='none'; }, 4000);
-  }
 }
 
 // ── 直接下載（不顯示預覽）──
@@ -2071,7 +2025,13 @@ async function directDownload() {
 
   try {
     let res, filename;
-    if (type.id === 'fenfen') {
+    if (type.id === 'pingfen') {
+      res = await fetch(`${API_URL}/generate/pingfen`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({}),
+      });
+      filename = '找出平均數_學習單.docx';
+    } else if (type.id === 'fenfen') {
       res = await fetch(`${API_URL}/generate/fenfen`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ theme:S.themeId, item_index:S.fenfenItemIndex, question_set:S.fenfenSet }),
@@ -2125,143 +2085,6 @@ async function directDownload() {
   }
 }
 
-function openPreview(html, typeName) {
-  const loading = document.getElementById('inlinePreviewLoading');
-  const container = document.getElementById('inlineDocxContainer');
-  const badge = document.getElementById('inlinePreviewBadge');
-  const info = document.getElementById('inlinePreviewInfo');
-
-  loading.style.display = 'none';
-
-  // 清理舊 iframe blob URL
-  if (container._iframeUrl) { URL.revokeObjectURL(container._iframeUrl); }
-
-  const blob = new Blob([html], { type: 'text/html' });
-  const iframeUrl = URL.createObjectURL(blob);
-  container._iframeUrl = iframeUrl;
-
-  container.innerHTML = `<iframe src="${iframeUrl}"
-    style="width:100%;height:560px;border:none;display:block;border-radius:4px;background:white;"
-    sandbox="allow-same-origin"></iframe>`;
-  container.style.display = 'block';
-
-  badge.textContent = `${S.themeId}・${typeName}`;
-  info.textContent = '預覽為實際產出內容';
-}
-
-function closePreview() {
-  document.getElementById('previewOverlay').classList.remove('open');
-}
-
-function downloadDocx() {
-  if(!_previewBlob) return;
-  const url = URL.createObjectURL(_previewBlob);
-  const a_el = document.createElement('a');
-  a_el.href = url;
-  a_el.download = _previewFilename;
-  document.body.appendChild(a_el);
-  a_el.click();
-  document.body.removeChild(a_el);
-  URL.revokeObjectURL(url);
-
-  // 顯示下載完成提示
-  const dlBtn = document.getElementById('genBtn');
-  const origDlHTML = dlBtn.innerHTML;
-  dlBtn.innerHTML = '✅ 下載完成！';
-  setTimeout(()=>{ dlBtn.innerHTML = origDlHTML; }, 2500);
-}
-
-// ── GENERATE（保留，供直接呼叫）──
-async function generate() {
-  if(getTrialLeft()<=0){ openUpgrade(); return; }
-
-  const btn = document.getElementById('genBtn');
-  const origHTML = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div> 產出中…';
-
-  const a = calc();
-  const type = getType();
-  const now = new Date();
-  const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-  // 三步驟走獨立 endpoint
-  if (type.id === 'sanbushu') {
-    const res = await fetch(`${API_URL}/generate/sanbushu`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ theme: S.themeId }),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
-      btn.innerHTML = `❌ ${err.detail||'HTTP '+res.status}`;
-      setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; }, 3000);
-      return;
-    }
-    const blob = await res.blob();
-    _previewBlob = blob;
-    _previewFilename = `${S.themeId}_三步驟加減混合.docx`;
-    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
-      themeId:S.themeId,typeId:S.typeId,items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
-    incTrial(); renderTrialBar(); renderHistory();
-    openPreview(blob, type.name);
-    btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar();
-    return;
-  }
-
-  const payload = {
-    theme: S.themeId,
-    type_name: type.name,
-    difficulty: S.diff,
-    items: S.items.map(it=>({
-      name: it.name,
-      counter: it.counter,
-      price: it.price,
-      file: it.file || '',
-    })),
-    budget: S.budget,
-  };
-
-  try {
-    const res = await fetch(`${API_URL}/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
-      throw new Error(err.detail || `HTTP ${res.status}`);
-    }
-
-    // 下載 .docx
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a_el = document.createElement('a');
-    a_el.href = url;
-    a_el.download = `${S.themeId}_${type.name}_${DIFF_CFG[S.diff].label}.docx`;
-    document.body.appendChild(a_el);
-    a_el.click();
-    document.body.removeChild(a_el);
-    URL.revokeObjectURL(url);
-
-    // 記錄
-    history.push({theme:S.themeId,type:type.name,diff:S.diff,time:timeStr,
-      themeId:S.themeId,typeId:S.typeId,
-      items:JSON.parse(JSON.stringify(S.items)),budget:S.budget});
-    incTrial();
-    renderTrialBar();
-    renderHistory();
-
-    // 成功提示
-    btn.innerHTML = '✅ 下載完成！';
-    setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar(); }, 2500);
-
-  } catch(e) {
-    btn.innerHTML = `❌ ${e.message}`;
-    setTimeout(()=>{ btn.innerHTML = origHTML; btn.disabled = false; renderTrialBar(); }, 3000);
-  }
-}
 
 // ── MODAL ──
 function openModal() {
@@ -2419,6 +2242,75 @@ function renderSanbushuPreview(data) {
   `;
 }
 
+// ── 學習單範本 PDF 預覽（n2-change / sanbushu / fenfen 共用）──
+const SAMPLE_PDFS = {
+  'n2-change': { pdf:'assets/n2change_sample.pdf', name:'購物找零範本.pdf' },
+  'sanbushu':  { pdf:'assets/sanbushu_sample.pdf', name:'三步驟加減混合範本.pdf' },
+  'fenfen':    { pdf:'assets/fenfen_sample.pdf',   name:'分分看範本.pdf' },
+  'pingfen':   { pdf:'assets/pingfen_sample.pdf',  name:'找出平均數範本.pdf' },
+};
+let _sampleCardOpen = false;
+let _samplePdfCache = {};
+
+function toggleSampleCard() {
+  _sampleCardOpen = !_sampleCardOpen;
+  document.getElementById('sampleCardBody').style.display = _sampleCardOpen ? '' : 'none';
+  document.getElementById('sampleCardToggle').textContent  = _sampleCardOpen ? '▴ 收起' : '▾ 展開預覽';
+  if (_sampleCardOpen) _doRenderSamplePdf(SAMPLE_PDFS[S.typeId]?.pdf);
+}
+
+async function _doRenderSamplePdf(pdfPath) {
+  if (!pdfPath) return;
+  const container = document.getElementById('samplePdfContainer');
+  const loading   = document.getElementById('samplePdfLoading');
+  while (container.children.length > 1) container.removeChild(container.lastChild);
+  if (_samplePdfCache[pdfPath]) {
+    loading.style.display = 'none';
+    _samplePdfCache[pdfPath].forEach(c => container.appendChild(c));
+    return;
+  }
+  loading.style.display = '';
+  try {
+    const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+    const pdf = await pdfjsLib.getDocument(pdfPath).promise;
+    loading.style.display = 'none';
+    const canvases = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const vp   = page.getViewport({ scale: 1.6 });
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width; canvas.height = vp.height;
+      canvas.style.cssText = 'width:100%;max-width:680px;box-shadow:0 2px 12px rgba(0,0,0,.15);border-radius:4px;background:white;';
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      container.appendChild(canvas);
+      canvases.push(canvas);
+    }
+    _samplePdfCache[pdfPath] = canvases;
+  } catch(e) {
+    loading.innerHTML = `<div style="color:var(--red);font-size:12px;">PDF 載入失敗：${e.message}</div>`;
+  }
+}
+
+function _resetSampleCard(typeId) {
+  const meta = SAMPLE_PDFS[typeId];
+  const card = document.getElementById('sampleCard');
+  if (!meta) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  document.getElementById('sampleDownloadBtn').href     = meta.pdf;
+  document.getElementById('sampleDownloadBtn').download = meta.name;
+  // 切換題型時清除舊 canvas
+  const container = document.getElementById('samplePdfContainer');
+  while (container.children.length > 1) container.removeChild(container.lastChild);
+  document.getElementById('samplePdfLoading').style.display = '';
+  // 自動展開並渲染
+  _sampleCardOpen = true;
+  document.getElementById('sampleCardBody').style.display = '';
+  document.getElementById('sampleCardToggle').textContent  = '▴ 收起';
+  _doRenderSamplePdf(meta.pdf);
+}
+
 // ── HOME SCREEN ──
 const HOME_TYPE_META = {
   'n2-change': {
@@ -2438,6 +2330,12 @@ const HOME_TYPE_META = {
     sub: '除法概念',
     desc: '把物品平均分裝成幾組，搭配圖示數數，建立等分除法的基本概念。',
     features: ['圖示輔助數數填答', '分裝等分概念', 'A/B/C 三版一次下載'],
+  },
+  'pingfen': {
+    icon: '⚖️',
+    sub: '除法→乘法',
+    desc: '把物品平均分配給每個人，從加法延伸到乘法算式，連結平分與乘法的關係。',
+    features: ['平分→加法→乘法三步驟', '找出平均數概念', '固定5題靜態學習單'],
   },
 };
 
@@ -2464,6 +2362,7 @@ function applyTypeLayout(typeId) {
   const isN2 = typeId === 'n2-change';
   const isSb = typeId === 'sanbushu';
   const isFf = typeId === 'fenfen';
+  const isPf = typeId === 'pingfen';
 
   // 左欄：難度/商品/預算 和 儲存設定 只在購物找零顯示
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
@@ -2481,11 +2380,16 @@ function applyTypeLayout(typeId) {
   // Gen meta：購物找零才需要顯示答案摘要
   document.getElementById('genMeta').style.display = isN2 ? '' : 'none';
 
-  // 購物主題標題依題型調整
-  const themeCardTitle = document.querySelector('#configScreen .card-title');
-  if (themeCardTitle) {
-    themeCardTitle.textContent = '選擇購物主題';
-  }
+  // 找出平均數面板（無主題選擇）
+  document.getElementById('pingfenPanel').style.display = isPf ? '' : 'none';
+  document.getElementById('themeCard').style.display = isPf ? 'none' : '';
+
+  // 所有動態題型都顯示產出按鈕和試用條
+  document.getElementById('genBtn').closest('.gen-section').style.display = '';
+  document.getElementById('trialBar').style.display = '';
+
+  // 所有題型都顯示可折疊範本卡
+  _resetSampleCard(typeId);
 }
 
 function enterConfig(typeId) {
