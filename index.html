@@ -1332,11 +1332,28 @@ body {
           <span class="card-title">還差多少設定</span>
           <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
         </div>
-        <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
           <div style="font-size:12px;color:var(--gray);line-height:1.8;">
-            選擇主題後，系統自動從圖庫挑選4件商品並產生題目。<br>
-            第1頁：手上11～19元，商品定價也在十幾元。<br>
-            第2頁：手上21～29元，商品定價也在二十幾元。
+            兩頁各選一個主題，系統自動從圖庫挑選 4 件商品並產生題目。<br>
+            建議第 1 頁選較低價的主題，第 2 頁選較高價的主題。
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="font-size:12px;font-weight:600;color:var(--ink);">
+              第 1 頁主題
+              <select id="hcThemeP1" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:white;">
+                <option value="甜點店">甜點店（15～50 元）</option>
+                <option value="飲料店">飲料店（30～55 元）</option>
+                <option value="玩具店">玩具店（45～85 元）</option>
+              </select>
+            </label>
+            <label style="font-size:12px;font-weight:600;color:var(--ink);">
+              第 2 頁主題
+              <select id="hcThemeP2" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:white;">
+                <option value="甜點店">甜點店（15～50 元）</option>
+                <option value="飲料店">飲料店（30～55 元）</option>
+                <option value="玩具店" selected>玩具店（45～85 元）</option>
+              </select>
+            </label>
           </div>
           <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
             ✦ 共 2 頁 × 4 題，每次隨機　✦ 建立加減互逆概念　✦ 課綱：N-2-2
@@ -1576,7 +1593,7 @@ let TYPES = [
    desc:'把N個物件平分給X個人，一個人有幾個？從加法算式（□+□+□）延伸到乘法（□×3），建立等分除法與乘法的連結關係。固定5題，適合乘法初學者。'},
   {id:'haochaduoshao',code:'N-2-2',name:'還差多少（二位數加減）',grade:'2',ops:['sub','add'],
    keywords:['還差','差距','二位數減法','加多少'],
-   desc:'手上的錢不夠買東西，還差多少？第1頁：十幾元的商品；第2頁：二十幾元的商品。共4大題，每題算出差額，建立加減互逆的概念。'},
+   desc:'手上的錢不夠買東西，還差多少？兩頁可選不同主題，以符合實際市價的商品定價出題。共 4 大題，每題算出差額，建立加減互逆的概念。'},
 ];
 
 // ── STATE ──
@@ -2049,11 +2066,13 @@ async function directDownload() {
   try {
     let res, filename;
     if (type.id === 'haochaduoshao') {
+      const hcP1 = document.getElementById('hcThemeP1').value;
+      const hcP2 = document.getElementById('hcThemeP2').value;
       res = await fetch(`${API_URL}/generate/haochaduoshao`, {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ theme: S.themeId }),
+        body: JSON.stringify({ theme_p1: hcP1, theme_p2: hcP2 }),
       });
-      filename = `${S.themeId}_還差多少.docx`;
+      filename = `${hcP1}_${hcP2}_還差多少.docx`;
     } else if (type.id === 'pingfen') {
       res = await fetch(`${API_URL}/generate/pingfen`, {
         method:'POST', headers:{'Content-Type':'application/json'},
