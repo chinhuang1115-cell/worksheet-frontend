@@ -1325,6 +1325,26 @@ body {
       </div>
     </div>
 
+    <!-- ── 還差多少專屬面板（選了 haochaduoshao 題型才顯示）── -->
+    <div id="haochaduoshaoPanel" style="display:none;">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">還差多少設定</span>
+          <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
+        </div>
+        <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+          <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+            選擇主題後，系統自動從圖庫挑選4件商品並產生題目。<br>
+            第1頁：手上11～19元，商品定價也在十幾元。<br>
+            第2頁：手上21～29元，商品定價也在二十幾元。
+          </div>
+          <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+            ✦ 共 2 頁 × 4 題，每次隨機　✦ 建立加減互逆概念　✦ 課綱：N-2-2
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="warnBox" class="warn-box" style="display:none;"></div>
 
     <!-- ── 學習單範本（n2-change / sanbushu / fenfen 共用）── -->
@@ -1554,6 +1574,9 @@ let TYPES = [
   {id:'pingfen',code:'N-2-5',name:'找出平均數（平分延伸乘法）',grade:'2',ops:['mul','div'],
    keywords:['平分','平均數','等分','乘法連結'],
    desc:'把N個物件平分給X個人，一個人有幾個？從加法算式（□+□+□）延伸到乘法（□×3），建立等分除法與乘法的連結關係。固定5題，適合乘法初學者。'},
+  {id:'haochaduoshao',code:'N-2-2',name:'還差多少（二位數加減）',grade:'2',ops:['sub','add'],
+   keywords:['還差','差距','二位數減法','加多少'],
+   desc:'手上的錢不夠買東西，還差多少？第1頁：十幾元的商品；第2頁：二十幾元的商品。共4大題，每題算出差額，建立加減互逆的概念。'},
 ];
 
 // ── STATE ──
@@ -2025,7 +2048,13 @@ async function directDownload() {
 
   try {
     let res, filename;
-    if (type.id === 'pingfen') {
+    if (type.id === 'haochaduoshao') {
+      res = await fetch(`${API_URL}/generate/haochaduoshao`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ theme: S.themeId }),
+      });
+      filename = `${S.themeId}_還差多少.docx`;
+    } else if (type.id === 'pingfen') {
       res = await fetch(`${API_URL}/generate/pingfen`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({}),
@@ -2244,10 +2273,11 @@ function renderSanbushuPreview(data) {
 
 // ── 學習單範本 PDF 預覽（n2-change / sanbushu / fenfen 共用）──
 const SAMPLE_PDFS = {
-  'n2-change': { pdf:'assets/n2change_sample.pdf', name:'購物找零範本.pdf' },
-  'sanbushu':  { pdf:'assets/sanbushu_sample.pdf', name:'三步驟加減混合範本.pdf' },
-  'fenfen':    { pdf:'assets/fenfen_sample.pdf',   name:'分分看範本.pdf' },
-  'pingfen':   { pdf:'assets/pingfen_sample.pdf',  name:'找出平均數範本.pdf' },
+  'n2-change':      { pdf:'assets/n2change_sample.pdf',      name:'購物找零範本.pdf' },
+  'sanbushu':       { pdf:'assets/sanbushu_sample.pdf',      name:'三步驟加減混合範本.pdf' },
+  'fenfen':         { pdf:'assets/fenfen_sample.pdf',        name:'分分看範本.pdf' },
+  'pingfen':        { pdf:'assets/pingfen_sample.pdf',       name:'找出平均數範本.pdf' },
+  'haochaduoshao':  { pdf:'assets/haochaduoshao_sample.pdf', name:'還差多少範本.pdf' },
 };
 let _sampleCardOpen = false;
 let _samplePdfCache = {};
@@ -2337,6 +2367,12 @@ const HOME_TYPE_META = {
     desc: '把物品平均分配給每個人，從加法延伸到乘法算式，連結平分與乘法的關係。',
     features: ['平分→加法→乘法三步驟', '找出平均數概念', '固定5題靜態學習單'],
   },
+  'haochaduoshao': {
+    icon: '💰',
+    sub: '加減互逆',
+    desc: '手上的錢不夠買東西，還差多少元才買得起？建立「差距」概念，練習二位數加減互逆。',
+    features: ['十幾元＋二十幾元兩種難度', '4大題自動隨機', '題目全自動產生'],
+  },
 };
 
 function renderHomeTypeCards() {
@@ -2363,6 +2399,7 @@ function applyTypeLayout(typeId) {
   const isSb = typeId === 'sanbushu';
   const isFf = typeId === 'fenfen';
   const isPf = typeId === 'pingfen';
+  const isHc = typeId === 'haochaduoshao';
 
   // 左欄：難度/商品/預算 和 儲存設定 只在購物找零顯示
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
@@ -2383,6 +2420,9 @@ function applyTypeLayout(typeId) {
   // 找出平均數面板（無主題選擇）
   document.getElementById('pingfenPanel').style.display = isPf ? '' : 'none';
   document.getElementById('themeCard').style.display = isPf ? 'none' : '';
+
+  // 還差多少面板
+  document.getElementById('haochaduoshaoPanel').style.display = isHc ? '' : 'none';
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
