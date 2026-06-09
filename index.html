@@ -1245,7 +1245,7 @@ body {
         </div>
         <div class="gallery-grid" id="galleryGrid"></div>
         <div class="gallery-info">
-          圖庫目前共 <strong>37 張</strong>裁切好的商品圖（飲料店 6、文具店 13、玩具店 6、甜點店 6、便當店 6），之後將加入 Gemini AI 生成圖片功能，可依需求客製圖片風格。
+          圖庫目前共 <strong>67 張</strong>裁切好的商品圖（飲料店 6、文具店 13、玩具店 6、甜點店 6、便當店 6、鞋子店 6、玩具車 6、懷舊玩具 6、童裝店 6、家電行 6），之後將加入 Gemini AI 生成圖片功能，可依需求客製圖片風格。
         </div>
       </div>
 
@@ -1370,8 +1370,8 @@ body {
         </div>
         <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
           <div style="font-size:12px;color:var(--gray);line-height:1.8;">
-            從左側選擇商品主題，系統自動從圖庫挑選 5 件商品並配置四位數（千元）定價，<br>
-            隨機選 2 件商品出題：先加法求合計，再減法求找零。
+            從左側選擇商品主題（鞋子店、玩具車、懷舊玩具、童裝店、家電行），系統自動挑選 5 件商品並配置四位數定價，<br>
+            隨機選 2 件出題：先加法求合計，再減法求找零。
           </div>
           <div style="font-size:11px;color:var(--gray);background:var(--bg-light);border-radius:8px;padding:8px 12px;line-height:1.8;">
             ✦ 商品定價 1000–3000 元（百元整）&ensp;✦ 付款為整千元&ensp;✦ 隨機 &ensp;✦ 課綱：N-2-4
@@ -1581,6 +1581,46 @@ const THEMES = {
     {name:'沙拉便當',counter:'個',price:65,icon:'🥗',file:'便當店/便當_沙拉.png'},
     {name:'韓式便當',counter:'個',price:75,icon:'🫙',file:'便當店/便當_韓式.png'},
     {name:'咖哩飯',counter:'份',price:55,icon:'🍛',file:'便當店/咖哩飯.png'},
+  ]},
+  鞋子店: { emoji:'👟', items:[
+    {name:'運動鞋A',counter:'雙',price:1200,icon:'👟',file:'鞋子店/運動鞋A.png'},
+    {name:'籃球鞋', counter:'雙',price:1800,icon:'👟',file:'鞋子店/籃球鞋.png'},
+    {name:'棒球鞋', counter:'雙',price:1500,icon:'👟',file:'鞋子店/棒球鞋.png'},
+    {name:'懶人鞋', counter:'雙',price:1100,icon:'🥿',file:'鞋子店/懶人鞋.png'},
+    {name:'跑鞋',   counter:'雙',price:2000,icon:'👟',file:'鞋子店/跑鞋.png'},
+    {name:'休閒鞋', counter:'雙',price:1300,icon:'👞',file:'鞋子店/休閒鞋.png'},
+  ]},
+  玩具車: { emoji:'🚗', items:[
+    {name:'跑車',  counter:'輛',price:1500,icon:'🏎️',file:'玩具車/跑車.png'},
+    {name:'卡車',  counter:'輛',price:1200,icon:'🚚',file:'玩具車/卡車.png'},
+    {name:'警車',  counter:'輛',price:1300,icon:'🚓',file:'玩具車/警車.png'},
+    {name:'農用車',counter:'輛',price:1100,icon:'🚜',file:'玩具車/農用車.png'},
+    {name:'校車',  counter:'輛',price:1400,icon:'🚌',file:'玩具車/校車.png'},
+    {name:'消防車',counter:'輛',price:1600,icon:'🚒',file:'玩具車/消防車.png'},
+  ]},
+  懷舊玩具: { emoji:'🧸', items:[
+    {name:'泰迪熊',counter:'個',price:1200,icon:'🧸',file:'懷舊玩具/泰迪熊.png'},
+    {name:'疊疊環',counter:'個',price:1000,icon:'🎯',file:'懷舊玩具/疊疊環.png'},
+    {name:'陀螺',  counter:'個',price:1100,icon:'🌀',file:'懷舊玩具/陀螺.png'},
+    {name:'木琴',  counter:'個',price:1500,icon:'🎵',file:'懷舊玩具/木琴.png'},
+    {name:'呼拉圈',counter:'個',price:1000,icon:'⭕',file:'懷舊玩具/呼拉圈.png'},
+    {name:'小丑盒',counter:'個',price:1300,icon:'🎭',file:'懷舊玩具/小丑盒.png'},
+  ]},
+  童裝店: { emoji:'👗', items:[
+    {name:'包屁衣',counter:'件',price:1000,icon:'👶',file:'童裝店/包屁衣.png'},
+    {name:'洋裝',  counter:'件',price:1200,icon:'👗',file:'童裝店/洋裝.png'},
+    {name:'帽子',  counter:'頂',price:1000,icon:'🧢',file:'童裝店/帽子.png'},
+    {name:'童鞋',  counter:'雙',price:1100,icon:'👟',file:'童裝店/童鞋.png'},
+    {name:'短褲',  counter:'件',price:1000,icon:'🩳',file:'童裝店/短褲.png'},
+    {name:'毛衣',  counter:'件',price:1500,icon:'🧥',file:'童裝店/毛衣.png'},
+  ]},
+  家電行: { emoji:'🏠', items:[
+    {name:'冰箱',  counter:'台',price:8000,icon:'🥶',file:'家電行/冰箱.png'},
+    {name:'微波爐',counter:'台',price:2000,icon:'📡',file:'家電行/微波爐.png'},
+    {name:'洗衣機',counter:'台',price:9000,icon:'🫧',file:'家電行/洗衣機.png'},
+    {name:'吸塵器',counter:'台',price:2500,icon:'💨',file:'家電行/吸塵器.png'},
+    {name:'電子鍋',counter:'台',price:1800,icon:'🍚',file:'家電行/電子鍋.png'},
+    {name:'電風扇',counter:'台',price:1200,icon:'💨',file:'家電行/電風扇.png'},
   ]},
 };
 
