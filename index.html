@@ -2548,6 +2548,13 @@ function applyTypeLayout(typeId) {
 
 function enterConfig(typeId) {
   S.typeId = typeId;
+  // 若目前主題不適用此題型，自動切換到第一個合法主題
+  const allowed = allowedThemes();
+  if (!allowed.includes(S.themeId)) {
+    S.themeId = allowed[0];
+    initTheme(S.themeId);
+  }
+  renderThemes();
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'flex';
   document.getElementById('configScreen').style.display = '';
