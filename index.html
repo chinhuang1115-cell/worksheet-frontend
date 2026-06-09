@@ -1732,11 +1732,21 @@ function applyDiff(d, reCalcPrices=true) {
 }
 
 // ── RENDER THEMES ──
+// 依題型區分適用主題：兩位數/三位數 vs 四位數
+const CHEAP_THEMES     = ['飲料店','文具店','玩具店','甜點店','便當店'];
+const EXPENSIVE_THEMES = ['鞋子店','玩具車','懷舊玩具','童裝店','家電行'];
+function allowedThemes() {
+  return getType().id === 'liangbushu' ? EXPENSIVE_THEMES : CHEAP_THEMES;
+}
+
 function renderThemes() {
-  document.getElementById('themeGrid').innerHTML = Object.entries(THEMES).map(([id,t])=>`
-    <button class="theme-btn ${S.themeId===id?'active':''}" onclick="selectTheme('${id}')">
-      <span class="theme-emoji">${t.emoji}</span>${id}
-    </button>`).join('');
+  const allowed = allowedThemes();
+  document.getElementById('themeGrid').innerHTML = Object.entries(THEMES)
+    .filter(([id]) => allowed.includes(id))
+    .map(([id,t])=>`
+      <button class="theme-btn ${S.themeId===id?'active':''}" onclick="selectTheme('${id}')">
+        <span class="theme-emoji">${t.emoji}</span>${id}
+      </button>`).join('');
 }
 
 function selectTheme(id) {
@@ -1991,7 +2001,13 @@ function hl(text,q) {
   return text.replace(new RegExp(esc,'gi'),m=>`<mark style="background:#fef08a;border-radius:2px;">${m}</mark>`);
 }
 
-function selectType(id) { S.typeId=id; renderTypeList(); update(); }
+function selectType(id) {
+  S.typeId = id;
+  // 切換題型時，若目前主題不在允許清單內，自動換到第一個合法主題
+  const allowed = allowedThemes();
+  if (!allowed.includes(S.themeId)) S.themeId = allowed[0];
+  renderTypeList(); update();
+}
 
 function delType(id) {
   if(TYPES.length<=1) return;
