@@ -1848,7 +1848,7 @@ function update() {
   if(a.maxQ<=2) warns.push('答案是2個或更少，建議降低單價或提高預算');
   const isN2change = (getType().id === 'n2-change');
   const isSanbushu = (getType().id === 'sanbushu');
-  const isSpecialType = ['sanbushu','fenfen'].includes(getType().id);
+  const isSpecialType = !['n2-change'].includes(getType().id); // 只有 n2-change 需要 warns 檢查
   const wb = document.getElementById('warnBox');
   // warnBox 只在購物找零且有錯誤時顯示
   const showWarn = isN2change && warns.length > 0;
