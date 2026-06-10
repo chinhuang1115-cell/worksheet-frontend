@@ -1072,29 +1072,37 @@ body {
   background: var(--warm-white);
   border-bottom: 1px solid var(--border);
   padding: 0 24px;
-  height: 44px;
+  height: 54px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 .back-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  border: 1.5px solid var(--border);
+  gap: 6px;
+  padding: 8px 18px;
+  border: none;
   border-radius: var(--r-sm);
-  background: none;
-  font-size: 12px;
-  font-weight: 500;
+  background: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  color: var(--gray);
+  color: var(--cream);
   font-family: 'Noto Sans TC', sans-serif;
-  transition: all .15s;
+  letter-spacing: .02em;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  transition: background .15s, box-shadow .15s, transform .1s;
 }
-.back-btn:hover { border-color: var(--ink); color: var(--ink); }
-.config-nav-sep { color: var(--border); font-size: 16px; }
-.config-nav-type { font-size: 14px; font-weight: 700; color: var(--ink); }
+.back-btn:hover {
+  background: var(--amber);
+  color: var(--ink);
+  box-shadow: 0 3px 10px rgba(245,158,11,.35);
+  transform: translateY(-1px);
+}
+.back-btn:active { transform: translateY(0); box-shadow: none; }
+.config-nav-sep { color: var(--border); font-size: 18px; }
+.config-nav-type { font-size: 15px; font-weight: 700; color: var(--ink); }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"></script>
@@ -1125,7 +1133,7 @@ body {
 
 <!-- ── CONFIG NAV ── -->
 <div class="config-nav" id="configNav" style="display:none;">
-  <button class="back-btn" onclick="goHome()">← 所有題型</button>
+  <button class="back-btn" onclick="goHome()">‹ 所有題型</button>
   <span class="config-nav-sep">›</span>
   <span class="config-nav-type" id="configNavType"></span>
 </div>
