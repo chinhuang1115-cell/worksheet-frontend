@@ -1698,7 +1698,7 @@ function renderTrialBar() {
     left > 0
       ? `本月剩餘 ${left} 次免費產出（共 ${TRIAL_LIMIT} 次）`
       : '本月試用次數已用完，升級後繼續使用';
-  const _specialType = ['sanbushu','fenfen'].includes(getType().id);
+  const _specialType = !['n2-change'].includes(getType().id); // 只有 n2-change 需要 warns 檢查
   document.getElementById('genBtn').disabled = left === 0 || (!_specialType && hasWarnings());
 }
 
