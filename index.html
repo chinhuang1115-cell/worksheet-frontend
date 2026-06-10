@@ -1135,22 +1135,22 @@ body {
   <div class="steps-header" id="stepsHeader">
     <div class="step-item active" id="step1-item">
       <div class="step-num">1</div>
-      <div class="step-label">選主題與題型</div>
+      <div class="step-label" id="step1-label">選主題與題型</div>
     </div>
-    <div class="step-arrow">›</div>
+    <div class="step-arrow" id="step-arrow-12">›</div>
     <div class="step-item" id="step2-item">
       <div class="step-num">2</div>
       <div class="step-label">設定商品與難度</div>
     </div>
-    <div class="step-arrow">›</div>
+    <div class="step-arrow" id="step-arrow-23">›</div>
     <div class="step-item" id="step3-item">
       <div class="step-num">3</div>
       <div class="step-label">驗算確認</div>
     </div>
-    <div class="step-arrow">›</div>
+    <div class="step-arrow" id="step-arrow-34">›</div>
     <div class="step-item" id="step4-item">
       <div class="step-num">4</div>
-      <div class="step-label">產出下載</div>
+      <div class="step-label" id="step4-label">產出下載</div>
     </div>
   </div>
 
@@ -1254,133 +1254,143 @@ body {
       </div>
     </div>
 
-    <!-- ── 分分看專屬面板（選了 fenfen 題型才顯示）── -->
-    <div id="fenfenPanel" style="display:none;">
-      <div class="card">
-        <div class="card-head">
-          <span class="card-title">分分看設定</span>
-        </div>
-        <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
-          <div>
-            <div class="section-label">選擇物件</div>
-            <div id="fenfenItemGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+    <!-- ── 非購物找零題型：統一 tabbed card（題型設定 | 產出記錄）── -->
+    <div id="typeTabsCard" class="card" style="display:none;">
+      <div class="rtabs">
+        <button class="rtab active" id="typeTab-settings" onclick="switchTypeTab('settings',this)">題型設定</button>
+        <button class="rtab" id="typeTab-history" onclick="switchTypeTab('history',this)">產出記錄</button>
+      </div>
+
+      <!-- 題型設定 tab 內容 -->
+      <div id="type-tab-settings">
+
+        <!-- 分分看 -->
+        <div id="fenfenPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">分分看設定</span>
           </div>
-          <div>
-            <div class="section-label">題目版本</div>
-            <div style="display:flex;gap:6px;">
-              <button class="fenfen-set-btn active" id="fenfenSetA" onclick="selectFenfenSet('A')">A 版</button>
-              <button class="fenfen-set-btn" id="fenfenSetB" onclick="selectFenfenSet('B')">B 版</button>
-              <button class="fenfen-set-btn" id="fenfenSetC" onclick="selectFenfenSet('C')">C 版</button>
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
+            <div>
+              <div class="section-label">選擇物件</div>
+              <div id="fenfenItemGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+            </div>
+            <div>
+              <div class="section-label">題目版本</div>
+              <div style="display:flex;gap:6px;">
+                <button class="fenfen-set-btn active" id="fenfenSetA" onclick="selectFenfenSet('A')">A 版</button>
+                <button class="fenfen-set-btn" id="fenfenSetB" onclick="selectFenfenSet('B')">B 版</button>
+                <button class="fenfen-set-btn" id="fenfenSetC" onclick="selectFenfenSet('C')">C 版</button>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--gray);line-height:1.7;padding:8px 10px;background:var(--gray-light);border-radius:var(--r-sm);">
+              共 4 大題 × 3 小題，每小題展示物件圖示讓學生數數後填答。<br>
+              A/B/C 三版使用不同數量與名字，可一次印三份讓學生各做一版。
+            </div>
+            <button id="fenfenAllBtn" onclick="downloadFenfenAll()"
+              style="width:100%;padding:10px;background:var(--teal);color:white;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans TC',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;">
+              ⬇ 一次下載三版 (A+B+C ZIP)
+            </button>
+          </div>
+        </div>
+
+        <!-- 三步驟 -->
+        <div id="sanbushuPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">三步驟設定</span>
+            <span id="sanbushuStatus" style="font-size:11px;color:var(--teal-dark);">自動產生</span>
+          </div>
+          <div class="card-body" style="padding:12px 16px;">
+            <div style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.7;">
+              選好主題後，系統自動為 <strong>第1頁</strong>（5個Menu）和
+              <strong>第3頁</strong>（8個合併Menu）各產生2道題。
+            </div>
+            <div id="sanbushuPreview" style="display:flex;flex-direction:column;gap:6px;">
+              <div style="padding:10px;background:var(--gray-light);border-radius:8px;font-size:12px;color:var(--gray);text-align:center;">
+                載入中…
+              </div>
             </div>
           </div>
-          <div style="font-size:11px;color:var(--gray);line-height:1.7;padding:8px 10px;background:var(--gray-light);border-radius:var(--r-sm);">
-            共 4 大題 × 3 小題，每小題展示物件圖示讓學生數數後填答。<br>
-            A/B/C 三版使用不同數量與名字，可一次印三份讓學生各做一版。
-          </div>
-          <button id="fenfenAllBtn" onclick="downloadFenfenAll()"
-            style="width:100%;padding:10px;background:var(--teal);color:white;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans TC',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;">
-            ⬇ 一次下載三版 (A+B+C ZIP)
-          </button>
         </div>
-      </div>
-    </div>
 
-    <!-- ── 三步驟專屬面板（選了 sanbushu 題型才顯示）── -->
-    <div id="sanbushuPanel" style="display:none;">
-      <div class="card">
-        <div class="card-head">
-          <span class="card-title">三步驟設定</span>
-          <span id="sanbushuStatus" style="font-size:11px;color:var(--teal-dark);">自動產生</span>
-        </div>
-        <div class="card-body" style="padding:12px 16px;">
-          <div style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.7;">
-            選好主題後，系統自動為 <strong>第1頁</strong>（5個Menu）和
-            <strong>第3頁</strong>（8個合併Menu）各產生2道題。
+        <!-- 找出平均數 -->
+        <div id="pingfenPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">找出平均數</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
-          <div id="sanbushuPreview" style="display:flex;flex-direction:column;gap:6px;">
-            <div style="padding:10px;background:var(--gray-light);border-radius:8px;font-size:12px;color:var(--gray);text-align:center;">
-              載入中…
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+            <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+              把 N 個物件平分給 X 個人，一個人有幾個？<br>
+              從加法算式（□＋□＋□）延伸到乘法（□×X），建立平分與乘法的連結。
+            </div>
+            <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+              ✦ 共 5 題，數字每次隨機產生　✦ 適合二年級乘法初學者　✦ 課綱：N-2-5
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ── 平分延伸乘法專屬面板（選了 pingfen 題型才顯示）── -->
-    <div id="pingfenPanel" style="display:none;">
-      <div class="card">
-        <div class="card-head">
-          <span class="card-title">找出平均數</span>
-          <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
-        </div>
-        <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
-          <div style="font-size:12px;color:var(--gray);line-height:1.8;">
-            把 N 個物件平分給 X 個人，一個人有幾個？<br>
-            從加法算式（□＋□＋□）延伸到乘法（□×X），建立平分與乘法的連結。
+        <!-- 還差多少 -->
+        <div id="haochaduoshaoPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">還差多少設定</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
-          <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
-            ✦ 共 5 題，數字每次隨機產生　✦ 適合二年級乘法初學者　✦ 課綱：N-2-5
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
+            <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+              兩頁各選一個主題，系統自動從圖庫挑選 4 件商品並產生題目。<br>
+              建議第 1 頁選較低價的主題，第 2 頁選較高價的主題。
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <label style="font-size:12px;font-weight:600;color:var(--ink);">
+                第 1 頁主題
+                <select id="hcThemeP1" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:white;">
+                  <option value="甜點店">甜點店（15～50 元）</option>
+                  <option value="飲料店">飲料店（30～55 元）</option>
+                  <option value="玩具店">玩具店（45～85 元）</option>
+                </select>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:var(--ink);">
+                第 2 頁主題
+                <select id="hcThemeP2" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:white;">
+                  <option value="甜點店">甜點店（15～50 元）</option>
+                  <option value="飲料店">飲料店（30～55 元）</option>
+                  <option value="玩具店" selected>玩具店（45～85 元）</option>
+                </select>
+              </label>
+            </div>
+            <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+              ✦ 共 2 頁 × 4 題，每次隨機　✦ 建立加減互逆概念　✦ 課綱：N-2-2
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ── 還差多少專屬面板（選了 haochaduoshao 題型才顯示）── -->
-    <div id="haochaduoshaoPanel" style="display:none;">
-      <div class="card">
-        <div class="card-head">
-          <span class="card-title">還差多少設定</span>
-          <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
-        </div>
-        <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
-          <div style="font-size:12px;color:var(--gray);line-height:1.8;">
-            兩頁各選一個主題，系統自動從圖庫挑選 4 件商品並產生題目。<br>
-            建議第 1 頁選較低價的主題，第 2 頁選較高價的主題。
+        <!-- 兩步驟加減混合 -->
+        <div id="liangbushuPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">兩步驟加減混合設定</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <label style="font-size:12px;font-weight:600;color:var(--ink);">
-              第 1 頁主題
-              <select id="hcThemeP1" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:white;">
-                <option value="甜點店">甜點店（15～50 元）</option>
-                <option value="飲料店">飲料店（30～55 元）</option>
-                <option value="玩具店">玩具店（45～85 元）</option>
-              </select>
-            </label>
-            <label style="font-size:12px;font-weight:600;color:var(--ink);">
-              第 2 頁主題
-              <select id="hcThemeP2" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:white;">
-                <option value="甜點店">甜點店（15～50 元）</option>
-                <option value="飲料店">飲料店（30～55 元）</option>
-                <option value="玩具店" selected>玩具店（45～85 元）</option>
-              </select>
-            </label>
-          </div>
-          <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
-            ✦ 共 2 頁 × 4 題，每次隨機　✦ 建立加減互逆概念　✦ 課綱：N-2-2
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
+            <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+              從左側選擇商品主題（鞋子店、玩具車、懷舊玩具、童裝店、家電行），系統自動挑選 5 件商品並配置四位數定價，<br>
+              隨機選 2 件出題：先加法求合計，再減法求找零。
+            </div>
+            <div style="font-size:11px;color:var(--gray);background:var(--bg-light);border-radius:8px;padding:8px 12px;line-height:1.8;">
+              ✦ 商品定價 1000–3000 元（百元整）&ensp;✦ 付款為整千元&ensp;✦ 隨機 &ensp;✦ 課綱：N-2-4
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div id="liangbushuPanel" style="display:none;">
-      <div class="card">
-        <div class="card-head">
-          <span class="card-title">兩步驟加減混合設定</span>
-          <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
-        </div>
-        <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
-          <div style="font-size:12px;color:var(--gray);line-height:1.8;">
-            從左側選擇商品主題（鞋子店、玩具車、懷舊玩具、童裝店、家電行），系統自動挑選 5 件商品並配置四位數定價，<br>
-            隨機選 2 件出題：先加法求合計，再減法求找零。
-          </div>
-          <div style="font-size:11px;color:var(--gray);background:var(--bg-light);border-radius:8px;padding:8px 12px;line-height:1.8;">
-            ✦ 商品定價 1000–3000 元（百元整）&ensp;✦ 付款為整千元&ensp;✦ 隨機 &ensp;✦ 課綱：N-2-4
-          </div>
+      </div><!-- /type-tab-settings -->
+
+      <!-- 產出記錄 tab 內容 -->
+      <div id="type-tab-history" style="display:none;" class="card-body">
+        <div class="history-list" id="typeHistoryList">
+          <div style="font-size:12px;color:var(--gray);padding:8px 0;">尚無產出記錄</div>
         </div>
       </div>
-    </div>
+    </div><!-- /typeTabsCard -->
 
-    
     <div id="warnBox" class="warn-box" style="display:none;"></div>
 
     <!-- ── 學習單範本（n2-change / sanbushu / fenfen 共用）── -->
@@ -1880,26 +1890,65 @@ function update() {
 
 // ── STEPS ──
 function updateSteps() {
-  const hasType = !!S.typeId;
-  const hasItems = S.items.length >= 2;
-  const noWarn = !hasWarnings();
-  ['step1-item','step2-item','step3-item','step4-item'].forEach((id,i)=>{
-    const el = document.getElementById(id);
-    el.classList.remove('active','done');
-    if(i===0){ if(hasType) el.classList.add('done'); else el.classList.add('active'); }
-    if(i===1){ if(hasItems&&noWarn) el.classList.add('done'); else if(hasType) el.classList.add('active'); }
-    if(i===2){ if(noWarn&&hasItems) el.classList.add('done'); else if(hasItems) el.classList.add('active'); }
-    if(i===3){ if(noWarn&&hasItems&&hasType) el.classList.add('active'); }
-  });
+  const typeId = getType().id;
+  const isN2 = typeId === 'n2-change';
+  if (isN2) {
+    // 購物找零：完整四步邏輯
+    const hasType = !!S.typeId;
+    const hasItems = S.items.length >= 2;
+    const noWarn = !hasWarnings();
+    ['step1-item','step2-item','step3-item','step4-item'].forEach((id,i)=>{
+      const el = document.getElementById(id);
+      el.classList.remove('active','done');
+      if(i===0){ if(hasType) el.classList.add('done'); else el.classList.add('active'); }
+      if(i===1){ if(hasItems&&noWarn) el.classList.add('done'); else if(hasType) el.classList.add('active'); }
+      if(i===2){ if(noWarn&&hasItems) el.classList.add('done'); else if(hasItems) el.classList.add('active'); }
+      if(i===3){ if(noWarn&&hasItems&&hasType) el.classList.add('active'); }
+    });
+  } else {
+    // 其他題型：只更新首尾兩步（選主題 → 產出下載）
+    const step1 = document.getElementById('step1-item');
+    const step4 = document.getElementById('step4-item');
+    step1.classList.remove('active','done');
+    step4.classList.remove('active','done');
+    if (S.themeId) { step1.classList.add('done'); step4.classList.add('active'); }
+    else            { step1.classList.add('active'); }
+  }
 }
 
-// ── TABS ──
+// ── TABS（購物找零右欄）──
 function switchTab(id, btn) {
-  document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#rightTabsCard .rtab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
   ['preview','gallery','history'].forEach(t=>{
     document.getElementById('tab-'+t).style.display = t===id ? 'block' : 'none';
   });
+}
+
+// ── TABS（其他題型右欄）──
+function switchTypeTab(id, btn) {
+  document.querySelectorAll('#typeTabsCard .rtab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('type-tab-settings').style.display = id==='settings' ? '' : 'none';
+  document.getElementById('type-tab-history').style.display  = id==='history'  ? '' : 'none';
+  if (id === 'history') renderTypeHistory();
+}
+
+function renderTypeHistory() {
+  const el = document.getElementById('typeHistoryList');
+  if (!el) return;
+  if (!history.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--gray);padding:8px 0;">尚無產出記錄</div>';
+    return;
+  }
+  el.innerHTML = history.map((h,i)=>`
+    <div class="history-item" onclick="loadHistory(${i})">
+      <div class="history-dot"></div>
+      <div style="flex:1;">
+        <div class="history-name">${h.theme}・${h.type}</div>
+        <div class="history-meta">${h.time}</div>
+      </div>
+    </div>`).join('');
 }
 
 // ── GALLERY ──
@@ -2516,11 +2565,26 @@ function applyTypeLayout(typeId) {
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
 
-  // 步驟引導：只在購物找零顯示
-  document.getElementById('stepsHeader').style.display = isN2 ? '' : 'none';
+  // ── 步驟引導：所有題型都顯示，但非購物找零只顯示首尾兩步 ──
+  document.getElementById('stepsHeader').style.display = '';
+  const showFullSteps = isN2;
+  ['step2-item','step-arrow-12','step3-item','step-arrow-23'].forEach(id => {
+    document.getElementById(id).style.display = showFullSteps ? '' : 'none';
+  });
+  // 非購物找零：調整首尾步驟的標籤
+  document.getElementById('step1-label').textContent = isN2 ? '選主題與題型' : '選主題';
+  document.getElementById('step4-label').textContent = '產出下載';
 
-  // 右欄：答案預覽 tabs 只在購物找零顯示
+  // 右欄：購物找零顯示答案預覽 tabs；其他題型顯示統一 typeTabsCard
   document.getElementById('rightTabsCard').style.display = isN2 ? '' : 'none';
+  document.getElementById('typeTabsCard').style.display = isN2 ? 'none' : '';
+  if (!isN2) {
+    // 重設回「題型設定」tab（切換題型時不殘留上次的 tab 狀態）
+    document.getElementById('typeTab-settings').classList.add('active');
+    document.getElementById('typeTab-history').classList.remove('active');
+    document.getElementById('type-tab-settings').style.display = '';
+    document.getElementById('type-tab-history').style.display = 'none';
+  }
 
   // 警告框：只在購物找零顯示
   document.getElementById('warnBox').style.display = 'none';
@@ -2528,15 +2592,15 @@ function applyTypeLayout(typeId) {
   // Gen meta：購物找零才需要顯示答案摘要
   document.getElementById('genMeta').style.display = isN2 ? '' : 'none';
 
-  // 找出平均數面板（無主題選擇）
-  document.getElementById('pingfenPanel').style.display = isPf ? '' : 'none';
+  // 找出平均數：不需要主題選擇；其他題型顯示主題格
   document.getElementById('themeCard').style.display = isPf ? 'none' : '';
 
-  // 還差多少面板
+  // typeTabsCard 內：只顯示對應題型的面板
+  document.getElementById('fenfenPanel').style.display        = isFf ? '' : 'none';
+  document.getElementById('sanbushuPanel').style.display      = isSb ? '' : 'none';
+  document.getElementById('pingfenPanel').style.display       = isPf ? '' : 'none';
   document.getElementById('haochaduoshaoPanel').style.display = isHc ? '' : 'none';
-
-  // 兩步驟加減混合面板
-  document.getElementById('liangbushuPanel').style.display = isLb ? '' : 'none';
+  document.getElementById('liangbushuPanel').style.display    = isLb ? '' : 'none';
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
