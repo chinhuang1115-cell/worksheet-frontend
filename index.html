@@ -1246,7 +1246,7 @@ body {
       <div class="rtabs">
         <button class="rtab active" onclick="switchTab('preview',this)">答案預覽</button>
         <button class="rtab" onclick="switchTab('gallery',this)">圖庫瀏覽</button>
-        <button class="rtab" onclick="switchTab('history',this)">產出記錄</button>
+        <button class="rtab" onclick="switchTab('history',this)">學習單範本</button>
       </div>
 
       <!-- tab-types 已移至首頁，保留隱藏欄位供 JS 使用 -->
@@ -1278,8 +1278,20 @@ body {
         <div class="gallery-grid" id="galleryGrid"></div>
       </div>
 
-      <div id="tab-history" style="display:none;" class="card-body">
-        <div class="history-list" id="historyList"></div>
+      <div id="tab-history" style="display:none;">
+        <div id="samplePdfContainer" style="background:#e8e4dc;padding:12px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
+          <div id="samplePdfLoading" style="padding:32px;color:var(--gray);font-size:13px;text-align:center;">
+            <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;"></div>
+            載入預覽中…
+          </div>
+        </div>
+        <div style="padding:10px 14px;">
+          <a id="sampleDownloadBtn" href="#" download
+            style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 0;background:var(--ink);color:var(--cream);border-radius:var(--r-sm);font-size:14px;font-weight:700;text-decoration:none;transition:opacity .15s;"
+            onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            ⬇ 下載範本 PDF
+          </a>
+        </div>
       </div>
     </div>
 
@@ -1288,7 +1300,7 @@ body {
       <div class="rtabs">
         <button class="rtab active" id="typeTab-preview" onclick="switchTypeTab('preview',this)">答案預覽</button>
         <button class="rtab" id="typeTab-gallery" onclick="switchTypeTab('gallery',this)">圖庫瀏覽</button>
-        <button class="rtab" id="typeTab-history" onclick="switchTypeTab('history',this)">產出記錄</button>
+        <button class="rtab" id="typeTab-history" onclick="switchTypeTab('history',this)">學習單範本</button>
       </div>
 
       <!-- 答案預覽 tab 內容（含各題型設定）-->
@@ -1423,38 +1435,25 @@ body {
         <div id="type-gallery-empty" style="display:none;padding:20px;text-align:center;color:var(--gray);font-size:12px;line-height:1.8;"></div>
       </div>
 
-      <!-- 產出記錄 tab 內容 -->
-      <div id="type-tab-history" style="display:none;" class="card-body">
-        <div class="history-list" id="typeHistoryList">
-          <div style="font-size:12px;color:var(--gray);padding:8px 0;">尚無產出記錄</div>
-        </div>
-      </div>
-    </div><!-- /typeTabsCard -->
-
-    <div id="warnBox" class="warn-box" style="display:none;"></div>
-
-    <!-- ── 學習單範本（n2-change / sanbushu / fenfen 共用）── -->
-    <div id="sampleCard" class="card" style="display:none;">
-      <div class="card-head" style="cursor:pointer;user-select:none;" onclick="toggleSampleCard()">
-        <span class="card-title">學習單範本</span>
-        <span id="sampleCardToggle" style="font-size:11px;color:var(--gray);">▾ 展開預覽</span>
-      </div>
-      <div id="sampleCardBody" style="display:none;">
-        <div id="samplePdfContainer" style="background:#e8e4dc;padding:12px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
-          <div id="samplePdfLoading" style="padding:32px;color:var(--gray);font-size:13px;text-align:center;">
+      <!-- 學習單範本 tab 內容 -->
+      <div id="type-tab-history" style="display:none;">
+        <div id="typeSamplePdfContainer" style="background:#e8e4dc;padding:12px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
+          <div id="typeSamplePdfLoading" style="padding:32px;color:var(--gray);font-size:13px;text-align:center;">
             <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;"></div>
             載入預覽中…
           </div>
         </div>
         <div style="padding:10px 14px;">
-          <a id="sampleDownloadBtn" href="#" download
+          <a id="typeSampleDownloadBtn" href="#" download
             style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 0;background:var(--ink);color:var(--cream);border-radius:var(--r-sm);font-size:14px;font-weight:700;text-decoration:none;transition:opacity .15s;"
             onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
             ⬇ 下載範本 PDF
           </a>
         </div>
       </div>
-    </div>
+    </div><!-- /typeTabsCard -->
+
+    <div id="warnBox" class="warn-box" style="display:none;"></div>
 
     <div class="trial-bar-wrap" id="trialBar">
       <div class="trial-dots" id="trialDots"></div>
@@ -1975,6 +1974,15 @@ function switchTab(id, btn) {
   ['preview','gallery','history'].forEach(t=>{
     document.getElementById('tab-'+t).style.display = t===id ? 'block' : 'none';
   });
+  if (id === 'gallery') renderGallery();
+  if (id === 'history') {
+    const meta = SAMPLE_PDFS['n2-change'];
+    if (meta) {
+      document.getElementById('sampleDownloadBtn').href     = meta.pdf;
+      document.getElementById('sampleDownloadBtn').download = meta.name;
+      _doRenderSamplePdf(meta.pdf, 'samplePdfContainer', 'samplePdfLoading');
+    }
+  }
 }
 
 // ── TABS（其他題型右欄）──
@@ -1985,24 +1993,18 @@ function switchTypeTab(id, btn) {
   document.getElementById('type-tab-gallery').style.display  = id==='gallery'  ? '' : 'none';
   document.getElementById('type-tab-history').style.display  = id==='history'  ? '' : 'none';
   if (id === 'gallery') renderTypeGallery();
-  if (id === 'history') renderTypeHistory();
+  if (id === 'history') {
+    const meta = SAMPLE_PDFS[S.typeId];
+    if (meta) {
+      document.getElementById('typeSampleDownloadBtn').href     = meta.pdf;
+      document.getElementById('typeSampleDownloadBtn').download = meta.name;
+      _doRenderSamplePdf(meta.pdf, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
+    }
+  }
 }
 
 function renderTypeHistory() {
-  const el = document.getElementById('typeHistoryList');
-  if (!el) return;
-  if (!history.length) {
-    el.innerHTML = '<div style="font-size:12px;color:var(--gray);padding:8px 0;">尚無產出記錄</div>';
-    return;
-  }
-  el.innerHTML = history.map((h,i)=>`
-    <div class="history-item" onclick="loadHistory(${i})">
-      <div class="history-dot"></div>
-      <div style="flex:1;">
-        <div class="history-name">${h.theme}・${h.type}</div>
-        <div class="history-meta">${h.time}</div>
-      </div>
-    </div>`).join('');
+  // 已改為學習單範本 tab，此函式保留為空以避免舊呼叫出錯
 }
 
 // ── 非購物找零：難度資訊卡 ──
@@ -2604,29 +2606,22 @@ function renderSanbushuPreview(data) {
   `;
 }
 
-// ── 學習單範本 PDF 預覽（n2-change / sanbushu / fenfen 共用）──
+// ── 學習單範本 PDF 預覽 ──
 const SAMPLE_PDFS = {
   'n2-change':      { pdf:'assets/n2change_sample.pdf',      name:'購物找零範本.pdf' },
   'sanbushu':       { pdf:'assets/sanbushu_sample.pdf',      name:'三步驟加減混合範本.pdf' },
   'fenfen':         { pdf:'assets/fenfen_sample.pdf',        name:'分分看範本.pdf' },
   'pingfen':        { pdf:'assets/pingfen_sample.pdf',       name:'找出平均數範本.pdf' },
   'haochaduoshao':  { pdf:'assets/haochaduoshao_sample.pdf', name:'還差多少範本.pdf' },
-  'liangbushu':     { pdf:'assets/liangbushu_sample.pdf',      name:'兩步驟加減混合範本.pdf' },
+  'liangbushu':     { pdf:'assets/liangbushu_sample.pdf',    name:'兩步驟加減混合範本.pdf' },
 };
-let _sampleCardOpen = false;
 let _samplePdfCache = {};
 
-function toggleSampleCard() {
-  _sampleCardOpen = !_sampleCardOpen;
-  document.getElementById('sampleCardBody').style.display = _sampleCardOpen ? '' : 'none';
-  document.getElementById('sampleCardToggle').textContent  = _sampleCardOpen ? '▴ 收起' : '▾ 展開預覽';
-  if (_sampleCardOpen) _doRenderSamplePdf(SAMPLE_PDFS[S.typeId]?.pdf);
-}
-
-async function _doRenderSamplePdf(pdfPath) {
+async function _doRenderSamplePdf(pdfPath, containerId = 'samplePdfContainer', loadingId = 'samplePdfLoading') {
   if (!pdfPath) return;
-  const container = document.getElementById('samplePdfContainer');
-  const loading   = document.getElementById('samplePdfLoading');
+  const container = document.getElementById(containerId);
+  const loading   = document.getElementById(loadingId);
+  if (!container || !loading) return;
   while (container.children.length > 1) container.removeChild(container.lastChild);
   if (_samplePdfCache[pdfPath]) {
     loading.style.display = 'none';
@@ -2655,24 +2650,6 @@ async function _doRenderSamplePdf(pdfPath) {
   } catch(e) {
     loading.innerHTML = `<div style="color:var(--red);font-size:12px;">PDF 載入失敗：${e.message}</div>`;
   }
-}
-
-function _resetSampleCard(typeId) {
-  const meta = SAMPLE_PDFS[typeId];
-  const card = document.getElementById('sampleCard');
-  if (!meta) { card.style.display = 'none'; return; }
-  card.style.display = '';
-  document.getElementById('sampleDownloadBtn').href     = meta.pdf;
-  document.getElementById('sampleDownloadBtn').download = meta.name;
-  // 切換題型時清除舊 canvas
-  const container = document.getElementById('samplePdfContainer');
-  while (container.children.length > 1) container.removeChild(container.lastChild);
-  document.getElementById('samplePdfLoading').style.display = '';
-  // 自動展開並渲染
-  _sampleCardOpen = true;
-  document.getElementById('sampleCardBody').style.display = '';
-  document.getElementById('sampleCardToggle').textContent  = '▴ 收起';
-  _doRenderSamplePdf(meta.pdf);
 }
 
 // ── HOME SCREEN ──
@@ -2799,8 +2776,6 @@ function applyTypeLayout(typeId) {
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
   document.getElementById('trialBar').style.display = '';
 
-  // 所有題型都顯示可折疊範本卡
-  _resetSampleCard(typeId);
 }
 
 function enterConfig(typeId) {
