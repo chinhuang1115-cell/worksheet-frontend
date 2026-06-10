@@ -496,6 +496,7 @@ body {
 .gallery-item:hover { border-color: var(--amber); }
 .gallery-item.selected { border-color: var(--amber); background: var(--amber-light); box-shadow: 0 0 0 3px rgba(245,158,11,.2); }
 .gi-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+.gi-img  { width: 56px; height: 56px; object-fit: contain; display: block; margin: 0 auto 4px; }
 .gi-name { font-size: 11px; font-weight: 600; color: var(--ink); display: block; margin-bottom: 2px; }
 .gi-price { font-size: 10px; color: var(--gray); }
 .gi-counter { display:inline-block;font-size:9px;padding:1px 5px;border-radius:99px;background:var(--teal-light);color:var(--teal-dark);margin-top:2px; }
@@ -2036,7 +2037,9 @@ function renderTypeGallery() {
   const items = THEMES[themeId].items;
   grid.innerHTML = items.map(it => `
     <div class="gallery-item" style="cursor:default;">
-      <span class="gi-icon">${it.icon}</span>
+      <img class="gi-img" src="${API_URL}/assets/images/${it.file}" alt="${it.name}"
+           onerror="this.style.display='none';this.nextSibling.style.display='block'">
+      <span class="gi-icon" style="display:none;">${it.icon}</span>
       <span class="gi-name">${it.name}</span>
       <span class="gi-price">${it.price} 元</span>
     </div>`).join('');
@@ -2049,7 +2052,9 @@ function renderGallery() {
   document.getElementById('galleryGrid').innerHTML = items.map((it,i)=>`
     <div class="gallery-item ${S.items.findIndex(x=>x.name===it.name)>=0?'selected':''}"
       onclick="toggleGalleryItem(${i})">
-      <span class="gi-icon">${it.icon}</span>
+      <img class="gi-img" src="${API_URL}/assets/images/${it.file}" alt="${it.name}"
+           onerror="this.style.display='none';this.nextSibling.style.display='block'">
+      <span class="gi-icon" style="display:none;">${it.icon}</span>
       <span class="gi-name">${it.name}</span>
       <span class="gi-price">${it.price} 元</span>
       <span class="gi-counter">${it.counter}</span>
