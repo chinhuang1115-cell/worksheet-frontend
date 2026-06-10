@@ -1132,28 +1132,6 @@ body {
 <!-- ── CONFIG SCREEN ── -->
 <div class="main" id="configScreen" style="display:none;">
 
-  <div class="steps-header" id="stepsHeader">
-    <div class="step-item active" id="step1-item">
-      <div class="step-num">1</div>
-      <div class="step-label">選主題與題型</div>
-    </div>
-    <div class="step-arrow">›</div>
-    <div class="step-item" id="step2-item">
-      <div class="step-num">2</div>
-      <div class="step-label">設定商品與難度</div>
-    </div>
-    <div class="step-arrow">›</div>
-    <div class="step-item" id="step3-item">
-      <div class="step-num">3</div>
-      <div class="step-label">驗算確認</div>
-    </div>
-    <div class="step-arrow">›</div>
-    <div class="step-item" id="step4-item">
-      <div class="step-num">4</div>
-      <div class="step-label">產出下載</div>
-    </div>
-  </div>
-
   <!-- ── LEFT COL ── -->
   <div style="display:flex;flex-direction:column;gap:14px;">
 
@@ -1166,6 +1144,12 @@ body {
       </div>
     </div>
 
+  </div>
+
+  <!-- ── RIGHT COL ── -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+
+    <!-- 難度＋商品（購物找零專屬，其他題型隱藏） -->
     <div class="card" id="diffBudgetCard">
       <div class="card-head"><span class="card-title">難度建議</span></div>
       <div class="card-section">
@@ -1195,6 +1179,7 @@ body {
       </div>
     </div>
 
+    <!-- 儲存的設定（購物找零專屬，其他題型隱藏） -->
     <div class="card" id="savedConfigCard">
       <div class="card-head"><span class="card-title">儲存的設定</span></div>
       <div class="card-body">
@@ -1205,11 +1190,6 @@ body {
         </div>
       </div>
     </div>
-
-  </div>
-
-  <!-- ── RIGHT COL ── -->
-  <div style="display:flex;flex-direction:column;gap:14px;">
 
     <div class="card" id="rightTabsCard">
       <div class="rtabs">
@@ -1878,20 +1858,8 @@ function update() {
   renderTrialBar();
 }
 
-// ── STEPS ──
-function updateSteps() {
-  const hasType = !!S.typeId;
-  const hasItems = S.items.length >= 2;
-  const noWarn = !hasWarnings();
-  ['step1-item','step2-item','step3-item','step4-item'].forEach((id,i)=>{
-    const el = document.getElementById(id);
-    el.classList.remove('active','done');
-    if(i===0){ if(hasType) el.classList.add('done'); else el.classList.add('active'); }
-    if(i===1){ if(hasItems&&noWarn) el.classList.add('done'); else if(hasType) el.classList.add('active'); }
-    if(i===2){ if(noWarn&&hasItems) el.classList.add('done'); else if(hasItems) el.classList.add('active'); }
-    if(i===3){ if(noWarn&&hasItems&&hasType) el.classList.add('active'); }
-  });
-}
+// ── STEPS（步驟條已移除，保留空函式避免報錯）──
+function updateSteps() {}
 
 // ── TABS ──
 function switchTab(id, btn) {
@@ -2512,12 +2480,12 @@ function applyTypeLayout(typeId) {
   const isHc = typeId === 'haochaduoshao';
   const isLb = typeId === 'liangbushu';
 
-  // 左欄：難度/商品/預算 和 儲存設定 只在購物找零顯示
+  // 右欄上方：難度/商品/預算 和 儲存設定 只在購物找零顯示（已移至右欄）
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
 
-  // 步驟引導：只在購物找零顯示
-  document.getElementById('stepsHeader').style.display = isN2 ? '' : 'none';
+  // 步驟引導：已移除（版面統一，不再顯示）
+  // document.getElementById('stepsHeader').style.display = isN2 ? '' : 'none';
 
   // 右欄：答案預覽 tabs 只在購物找零顯示
   document.getElementById('rightTabsCard').style.display = isN2 ? '' : 'none';
