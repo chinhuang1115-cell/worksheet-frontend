@@ -1381,7 +1381,7 @@ body {
               </label>
               <label style="font-size:12px;font-weight:600;color:var(--ink);">
                 第 2 頁主題
-                <select id="hcThemeP2" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:white;" onchange="S.priceOverrides={};renderPriceEditRows();">
+                <select id="hcThemeP2" style="margin-left:8px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:white;" onchange="S.priceOverrides={};renderPriceEditRows();renderTypeGallery();">
                   <option value="甜點店">甜點店（15～50 元）</option>
                   <option value="飲料店">飲料店（30～55 元）</option>
                   <option value="玩具店" selected>玩具店（45～85 元）</option>
@@ -1416,8 +1416,7 @@ body {
       <!-- 圖庫瀏覽 tab 內容 -->
       <div id="type-tab-gallery" style="display:none;" class="card-body">
         <div style="font-size:11px;color:var(--gray);margin-bottom:10px;">
-          目前主題：<strong id="type-gallery-theme" style="color:var(--ink)"></strong>
-          　（圖庫瀏覽，各題型自動選用）<br>
+          目前主題：<strong id="type-gallery-theme" style="color:var(--ink)"></strong><br>
           <span style="color:var(--gray);">圖片下方定價為系統暫定值，可於左欄「商品單價」卡自行調整。</span>
         </div>
         <div class="gallery-grid" id="typeGalleryGrid"></div>
@@ -2081,11 +2080,30 @@ function renderTypeGallery() {
     return;
   }
 
-  // 還差多少：使用第 1 頁主題
-  let themeId = S.themeId;
+  // 還差多少：同時顯示第 1 頁與第 2 頁主題
   if (typeId === 'haochaduoshao') {
-    themeId = document.getElementById('hcThemeP1')?.value || S.themeId;
+    const t1 = document.getElementById('hcThemeP1')?.value || '甜點店';
+    const t2 = document.getElementById('hcThemeP2')?.value || '玩具店';
+    if (lbl) lbl.textContent = `第1頁：${t1}　第2頁：${t2}`;
+    empty.style.display = 'none';
+    grid.style.display  = '';
+    const renderGroup = (theme, label) => {
+      const its = THEMES[theme]?.items || [];
+      const header = `<div class="price-group-label" style="grid-column:1/-1;">${label}・${theme}</div>`;
+      return header + its.map(it => `
+        <div class="gallery-item" style="cursor:default;">
+          <img class="gi-img" src="./images/${it.file}" loading="lazy" alt="${it.name}"
+               onerror="this.style.display='none';this.nextSibling.style.display='block'">
+          <span class="gi-icon" style="display:none;">${it.icon}</span>
+          <span class="gi-name">${it.name}</span>
+          <span class="gi-price">${it.price} 元</span>
+        </div>`).join('');
+    };
+    grid.innerHTML = renderGroup(t1, '第 1 頁') + renderGroup(t2, '第 2 頁');
+    return;
   }
+
+  let themeId = S.themeId;
 
   if (!themeId || !THEMES[themeId]) {
     grid.style.display  = 'none';
@@ -2767,8 +2785,8 @@ function applyTypeLayout(typeId) {
   // Gen meta：購物找零才需要顯示答案摘要
   document.getElementById('genMeta').style.display = isN2 ? '' : 'none';
 
-  // 找出平均數：不需要主題選擇；其他題型顯示主題格
-  document.getElementById('themeCard').style.display = isPf ? 'none' : '';
+  // 找出平均數、還差多少：不需要主題格（前者無圖庫，後者有獨立 P1/P2 選單）
+  document.getElementById('themeCard').style.display = (isPf || isHc) ? 'none' : '';
 
   // typeTabsCard 內：只顯示對應題型的面板
   document.getElementById('fenfenPanel').style.display        = isFf ? '' : 'none';
