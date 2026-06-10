@@ -1166,6 +1166,12 @@ body {
       </div>
     </div>
 
+    <!-- 非購物找零題型：難度資訊卡 -->
+    <div class="card" id="diffInfoCard" style="display:none;">
+      <div class="card-head"><span class="card-title">難度建議</span></div>
+      <div class="card-body" id="diffInfoBody" style="padding:12px 16px;"></div>
+    </div>
+
     <div class="card" id="diffBudgetCard">
       <div class="card-head"><span class="card-title">難度建議</span></div>
       <div class="card-section">
@@ -1257,12 +1263,13 @@ body {
     <!-- ── 非購物找零題型：統一 tabbed card（題型設定 | 產出記錄）── -->
     <div id="typeTabsCard" class="card" style="display:none;">
       <div class="rtabs">
-        <button class="rtab active" id="typeTab-settings" onclick="switchTypeTab('settings',this)">題型設定</button>
+        <button class="rtab active" id="typeTab-preview" onclick="switchTypeTab('preview',this)">答案預覽</button>
+        <button class="rtab" id="typeTab-gallery" onclick="switchTypeTab('gallery',this)">圖庫瀏覽</button>
         <button class="rtab" id="typeTab-history" onclick="switchTypeTab('history',this)">產出記錄</button>
       </div>
 
-      <!-- 題型設定 tab 內容 -->
-      <div id="type-tab-settings">
+      <!-- 答案預覽 tab 內容（含各題型設定）-->
+      <div id="type-tab-preview">
 
         <!-- 分分看 -->
         <div id="fenfenPanel" style="display:none;">
@@ -1381,7 +1388,17 @@ body {
           </div>
         </div>
 
-      </div><!-- /type-tab-settings -->
+      </div><!-- /type-tab-preview -->
+
+      <!-- 圖庫瀏覽 tab 內容 -->
+      <div id="type-tab-gallery" style="display:none;" class="card-body">
+        <div style="font-size:11px;color:var(--gray);margin-bottom:10px;">
+          目前主題：<strong id="type-gallery-theme" style="color:var(--ink)"></strong>
+          　（圖庫瀏覽，各題型自動選用）
+        </div>
+        <div class="gallery-grid" id="typeGalleryGrid"></div>
+        <div id="type-gallery-empty" style="display:none;padding:20px;text-align:center;color:var(--gray);font-size:12px;line-height:1.8;"></div>
+      </div>
 
       <!-- 產出記錄 tab 內容 -->
       <div id="type-tab-history" style="display:none;" class="card-body">
@@ -1749,6 +1766,15 @@ function allowedThemes() {
   return getType().id === 'liangbushu' ? EXPENSIVE_THEMES : CHEAP_THEMES;
 }
 
+// 各題型難度資訊（非購物找零用）
+const TYPE_DIFF_INFO = {
+  'fenfen':        { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3', desc:'以具體圖示輔助「等分除法」概念，每份幾個，適合除法初學者。' },
+  'sanbushu':      { grade:'二年級', level:'中等', levelColor:'#f59e0b', code:'N-2-7', desc:'三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。' },
+  'pingfen':       { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-5', desc:'把 N 個物件平分給 X 人，連結加法（□＋□＋□）與乘法（□×X）。' },
+  'haochaduoshao': { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-2', desc:'兩位數加減互逆，已知「原有」與「現在」，求「差值」。' },
+  'liangbushu':    { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-4', desc:'四位數兩步驟加減（先加求合計，再減求找零），適合熟悉進退位的學生。' }
+};
+
 function renderThemes() {
   const allowed = allowedThemes();
   document.getElementById('themeGrid').innerHTML = Object.entries(THEMES)
@@ -1929,8 +1955,10 @@ function switchTab(id, btn) {
 function switchTypeTab(id, btn) {
   document.querySelectorAll('#typeTabsCard .rtab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('type-tab-settings').style.display = id==='settings' ? '' : 'none';
+  document.getElementById('type-tab-preview').style.display  = id==='preview'  ? '' : 'none';
+  document.getElementById('type-tab-gallery').style.display  = id==='gallery'  ? '' : 'none';
   document.getElementById('type-tab-history').style.display  = id==='history'  ? '' : 'none';
+  if (id === 'gallery') renderTypeGallery();
   if (id === 'history') renderTypeHistory();
 }
 
@@ -1948,6 +1976,69 @@ function renderTypeHistory() {
         <div class="history-name">${h.theme}・${h.type}</div>
         <div class="history-meta">${h.time}</div>
       </div>
+    </div>`).join('');
+}
+
+// ── 非購物找零：難度資訊卡 ──
+function renderDiffInfoCard(typeId) {
+  const info = TYPE_DIFF_INFO[typeId];
+  const el = document.getElementById('diffInfoBody');
+  if (!el || !info) return;
+  el.innerHTML = `
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+      <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+            background:${info.levelColor}22;color:${info.levelColor};border:1px solid ${info.levelColor}44;">
+        ${info.level}
+      </span>
+      <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+            background:var(--gray-light);color:var(--gray);">${info.grade}</span>
+      <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+            background:var(--gray-light);color:var(--gray);">課綱 ${info.code}</span>
+    </div>
+    <div style="font-size:12px;color:var(--gray);line-height:1.8;">${info.desc}</div>
+  `;
+}
+
+// ── 非購物找零：圖庫瀏覽 ──
+function renderTypeGallery() {
+  const typeId = getType().id;
+  const grid   = document.getElementById('typeGalleryGrid');
+  const empty  = document.getElementById('type-gallery-empty');
+  const lbl    = document.getElementById('type-gallery-theme');
+  if (!grid) return;
+
+  // 找出平均數：無圖庫
+  if (typeId === 'pingfen') {
+    grid.style.display  = 'none';
+    empty.style.display = '';
+    empty.innerHTML = '此題型不使用商品圖庫，<br>數字由系統隨機產生。';
+    if (lbl) lbl.textContent = '—';
+    return;
+  }
+
+  // 還差多少：使用第 1 頁主題
+  let themeId = S.themeId;
+  if (typeId === 'haochaduoshao') {
+    themeId = document.getElementById('hcThemeP1')?.value || S.themeId;
+  }
+
+  if (!themeId || !THEMES[themeId]) {
+    grid.style.display  = 'none';
+    empty.style.display = '';
+    empty.innerHTML = '請先選擇主題。';
+    if (lbl) lbl.textContent = '—';
+    return;
+  }
+
+  if (lbl) lbl.textContent = themeId;
+  empty.style.display = 'none';
+  grid.style.display  = '';
+  const items = THEMES[themeId].items;
+  grid.innerHTML = items.map(it => `
+    <div class="gallery-item" style="cursor:default;">
+      <span class="gi-icon">${it.icon}</span>
+      <span class="gi-name">${it.name}</span>
+      <span class="gi-price">${it.price} 元</span>
     </div>`).join('');
 }
 
@@ -2561,9 +2652,11 @@ function applyTypeLayout(typeId) {
   const isHc = typeId === 'haochaduoshao';
   const isLb = typeId === 'liangbushu';
 
-  // 左欄：難度/商品/預算 和 儲存設定 只在購物找零顯示
+  // 左欄：購物找零顯示互動難度卡＋儲存設定；其他題型顯示靜態難度資訊卡
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
+  document.getElementById('diffInfoCard').style.display   = isN2 ? 'none' : '';
+  if (!isN2) renderDiffInfoCard(typeId);
 
   // ── 步驟引導：所有題型都顯示，但非購物找零只顯示首尾兩步 ──
   document.getElementById('stepsHeader').style.display = '';
@@ -2579,10 +2672,12 @@ function applyTypeLayout(typeId) {
   document.getElementById('rightTabsCard').style.display = isN2 ? '' : 'none';
   document.getElementById('typeTabsCard').style.display = isN2 ? 'none' : '';
   if (!isN2) {
-    // 重設回「題型設定」tab（切換題型時不殘留上次的 tab 狀態）
-    document.getElementById('typeTab-settings').classList.add('active');
+    // 重設回「答案預覽」tab（切換題型時不殘留上次的 tab 狀態）
+    document.getElementById('typeTab-preview').classList.add('active');
+    document.getElementById('typeTab-gallery').classList.remove('active');
     document.getElementById('typeTab-history').classList.remove('active');
-    document.getElementById('type-tab-settings').style.display = '';
+    document.getElementById('type-tab-preview').style.display = '';
+    document.getElementById('type-tab-gallery').style.display = 'none';
     document.getElementById('type-tab-history').style.display = 'none';
   }
 
