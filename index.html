@@ -2037,7 +2037,7 @@ function renderTypeGallery() {
   const items = THEMES[themeId].items;
   grid.innerHTML = items.map(it => `
     <div class="gallery-item" style="cursor:default;">
-      <img class="gi-img" src="${API_URL}/assets/images/${it.file}" alt="${it.name}"
+      <img class="gi-img" src="./images/${it.file}" loading="lazy" alt="${it.name}"
            onerror="this.style.display='none';this.nextSibling.style.display='block'">
       <span class="gi-icon" style="display:none;">${it.icon}</span>
       <span class="gi-name">${it.name}</span>
@@ -2052,7 +2052,7 @@ function renderGallery() {
   document.getElementById('galleryGrid').innerHTML = items.map((it,i)=>`
     <div class="gallery-item ${S.items.findIndex(x=>x.name===it.name)>=0?'selected':''}"
       onclick="toggleGalleryItem(${i})">
-      <img class="gi-img" src="${API_URL}/assets/images/${it.file}" alt="${it.name}"
+      <img class="gi-img" src="./images/${it.file}" loading="lazy" alt="${it.name}"
            onerror="this.style.display='none';this.nextSibling.style.display='block'">
       <span class="gi-icon" style="display:none;">${it.icon}</span>
       <span class="gi-name">${it.name}</span>
