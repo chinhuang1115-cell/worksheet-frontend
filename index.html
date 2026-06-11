@@ -2262,6 +2262,7 @@ function editType(id) {
 // ── HISTORY ──
 function renderHistory() {
   const el = document.getElementById('historyList');
+  if (!el) return;
   if(!history.length){
     el.innerHTML='<div class="history-empty">尚無產出記錄<br><span style="font-size:11px;">設定完成後按「產出學習單」</span></div>';
     return;
