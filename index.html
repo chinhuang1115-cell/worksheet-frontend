@@ -2076,8 +2076,8 @@ function renderTypeGallery() {
   const lbl    = document.getElementById('type-gallery-theme');
   if (!grid) return;
 
-  // 找出平均數：無圖庫
-  if (typeId === 'pingfen') {
+  // 找出平均數、分分看：無圖庫
+  if (typeId === 'pingfen' || typeId === 'fenfen') {
     grid.style.display  = 'none';
     empty.style.display = '';
     empty.innerHTML = '此題型不使用商品圖庫，<br>數字由系統隨機產生。';
