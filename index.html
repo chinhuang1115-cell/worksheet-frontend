@@ -1312,6 +1312,9 @@ body {
             <span class="card-title">分分看設定</span>
           </div>
           <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
+            <div style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.7;">
+              ℹ️ 此題型不需選擇購物主題，請直接從下方選擇要出題的物件與版本。
+            </div>
             <div>
               <div class="section-label">選擇物件</div>
               <div id="fenfenItemGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
@@ -2763,8 +2766,8 @@ function applyTypeLayout(typeId) {
   // Gen meta：購物找零才需要顯示答案摘要
   document.getElementById('genMeta').style.display = isN2 ? '' : 'none';
 
-  // 找出平均數、還差多少：不需要主題格（前者無圖庫，後者有獨立 P1/P2 選單）
-  document.getElementById('themeCard').style.display = (isPf || isHc) ? 'none' : '';
+  // 找出平均數、還差多少、分分看：不需要主題格
+  document.getElementById('themeCard').style.display = (isPf || isHc || isFf) ? 'none' : '';
 
   // typeTabsCard 內：只顯示對應題型的面板
   document.getElementById('fenfenPanel').style.display        = isFf ? '' : 'none';
