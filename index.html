@@ -1430,7 +1430,7 @@ body {
 
       <!-- 圖庫瀏覽 tab 內容 -->
       <div id="type-tab-gallery" style="display:none;" class="card-body">
-        <div style="font-size:11px;color:var(--gray);margin-bottom:10px;">
+        <div id="typeGalleryHeader" style="font-size:11px;color:var(--gray);margin-bottom:10px;">
           目前主題：<strong id="type-gallery-theme" style="color:var(--ink)"></strong><br>
           <span style="color:var(--gray);">圖片下方定價為系統暫定值，可於左欄「商品單價」卡自行調整。</span>
         </div>
@@ -2078,12 +2078,14 @@ function renderTypeGallery() {
 
   // 找出平均數、分分看：無圖庫
   if (typeId === 'pingfen' || typeId === 'fenfen') {
+    document.getElementById('typeGalleryHeader').style.display = 'none';
     grid.style.display  = 'none';
     empty.style.display = '';
     empty.innerHTML = '此題型不使用商品圖庫，<br>數字由系統隨機產生。';
     if (lbl) lbl.textContent = '—';
     return;
   }
+  document.getElementById('typeGalleryHeader').style.display = '';
 
   // 還差多少：同時顯示第 1 頁與第 2 頁主題
   if (typeId === 'haochaduoshao') {
