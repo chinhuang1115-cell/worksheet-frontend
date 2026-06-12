@@ -1429,6 +1429,22 @@ body {
           </div>
         </div>
 
+        <div id="chenghePanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">兩步驟先乘後減設定</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
+          </div>
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
+            <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+              從左側選擇商品主題（飲料店、文具店、玩具店、甜點店、便當店），系統自動挑選 5 件商品，<br>
+              每道題買同款 N 件（2–9 件），先乘法求合計，再從整付金額找零。共 3 道題。
+            </div>
+            <div style="font-size:11px;color:var(--gray);background:var(--bg-light);border-radius:8px;padding:8px 12px;line-height:1.8;">
+              ✦ 商品單價 10–99 元&ensp;✦ 付款為整百元&ensp;✦ 左右雙欄版面&ensp;✦ 課綱：N-2-7
+            </div>
+          </div>
+        </div><!-- /chenghePanel -->
+
       </div><!-- /type-tab-preview -->
 
       <!-- 圖庫瀏覽 tab 內容 -->
@@ -1711,6 +1727,9 @@ let TYPES = [
   {id:'liangbushu',code:'N-2-4',name:'兩步驟加減混合（四位數）',grade:'2',ops:['add','sub','mix'],
    keywords:['兩步驟','四位數','加減混合','找零合計'],
    desc:'價目表列出 5 件千元商品，選 2 件計算合計（加法），再從付款金額扣除找零（減法），建立四位數加減兩步驟的計算流程。'},
+  {id:'chenghe',code:'N-2-7',name:'兩步驟先乘後減（兩位數）',grade:'2',ops:['mul','sub','mix'],
+   keywords:['先乘後減','九九乘法','找零','兩步驟'],
+   desc:'價目表 5 件商品，買 N 件後計算合計（乘法），再從付款金額找零（減法），每題左右雙欄，3 道題自動隨機。'},
 ];
 
 // ── STATE ──
@@ -1801,7 +1820,8 @@ const TYPE_DIFF_INFO = {
   'sanbushu':      { grade:'二年級', level:'中等', levelColor:'#f59e0b', code:'N-2-7', desc:'三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。' },
   'pingfen':       { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-5', desc:'把 N 個物件平分給 X 人，連結加法（□＋□＋□）與乘法（□×X）。' },
   'haochaduoshao': { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-2', desc:'兩位數加減互逆，已知「原有」與「現在」，求「差值」。' },
-  'liangbushu':    { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-4', desc:'四位數兩步驟加減（先加求合計，再減求找零），適合熟悉進退位的學生。' }
+  'liangbushu':    { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-4', desc:'四位數兩步驟加減（先加求合計，再減求找零），適合熟悉進退位的學生。' },
+  'chenghe':       { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-7', desc:'九九乘法兩步驟：先乘法求合計，再付款找零，每頁 3 道題，適合乘法已熟練的學生。' }
 };
 
 function renderThemes() {
@@ -2417,6 +2437,13 @@ async function directDownload() {
           price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       });
       filename = `${S.themeId}_兩步驟加減混合.docx`;
+    } else if (type.id === 'chenghe') {
+      res = await fetch(`${API_URL}/generate/chenghe`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ theme: S.themeId,
+          price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
+      });
+      filename = `${S.themeId}_兩步驟先乘後減.docx`;
     } else {
       const payload = {
         theme:S.themeId, type_name:type.name, difficulty:S.diff,
@@ -2623,6 +2650,7 @@ const SAMPLE_PDFS = {
   'pingfen':        { pdf:'assets/pingfen_sample.pdf',       name:'找出平均數範本.pdf' },
   'haochaduoshao':  { pdf:'assets/haochaduoshao_sample.pdf', name:'還差多少範本.pdf' },
   'liangbushu':     { pdf:'assets/liangbushu_sample.pdf',    name:'兩步驟加減混合範本.pdf' },
+  'chenghe':        { pdf:'assets/chenghe_sample.pdf',      name:'兩步驟先乘後減範本.pdf' },
 };
 let _samplePdfCache = {};
 
@@ -2699,6 +2727,12 @@ const HOME_TYPE_META = {
     desc: '千元商品價目表，選兩件商品計算合計，再從付款金額找零，建立四位數兩步驟計算流程。',
     features: ['四位數加法→合計', '四位數減法→找零', '題目全自動產生'],
   },
+  'chenghe': {
+    icon: '✖️',
+    sub: '乘法→找零',
+    desc: '買同款商品 N 件，先用乘法算合計，再從付款金額找零，九九乘法的生活應用兩步驟練習。',
+    features: ['乘法求合計', '減法求找零', '3 道題全自動隨機'],
+  },
 };
 
 function renderHomeTypeCards() {
@@ -2727,6 +2761,7 @@ function applyTypeLayout(typeId) {
   const isPf = typeId === 'pingfen';
   const isHc = typeId === 'haochaduoshao';
   const isLb = typeId === 'liangbushu';
+  const isCh = typeId === 'chenghe';
 
   // 左欄：購物找零顯示互動難度卡＋儲存設定；其他題型顯示靜態難度資訊卡
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
@@ -2735,7 +2770,7 @@ function applyTypeLayout(typeId) {
   if (!isN2) renderDiffInfoCard(typeId);
 
   // 單價調整卡：三步驟、還差多少、兩步驟加減混合才顯示
-  const hasPrices = isSb || isHc || isLb;
+  const hasPrices = isSb || isHc || isLb || isCh;
   document.getElementById('priceEditCard').style.display = hasPrices ? '' : 'none';
   if (hasPrices) {
     S.priceOverrides = {};
@@ -2780,6 +2815,7 @@ function applyTypeLayout(typeId) {
   document.getElementById('pingfenPanel').style.display       = isPf ? '' : 'none';
   document.getElementById('haochaduoshaoPanel').style.display = isHc ? '' : 'none';
   document.getElementById('liangbushuPanel').style.display    = isLb ? '' : 'none';
+  document.getElementById('chenghePanel').style.display       = isCh ? '' : 'none';
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
