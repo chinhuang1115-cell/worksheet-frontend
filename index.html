@@ -1415,16 +1415,16 @@ body {
         <!-- 還差多少 -->
         <div id="haochashaoPanel" style="display:none;">
           <div class="card-head">
-            <span class="card-title">還差多少</span>
+            <span class="card-title">還差多少設定</span>
             <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
           <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
             <div style="font-size:12px;color:var(--gray);line-height:1.8;">
-              甜點店 4 件商品（鯛魚燒、杯子蛋糕、棉花糖、棒棒糖），學生存了一些錢卻不夠，<br>
-              計算「商品標價－存款＝還差多少元」。
+              從左側選擇商品主題，系統自動挑選 4 件商品，學生存了一些錢卻不夠，<br>
+              計算「商品標價 − 存款 = 還差多少元」。共 6 道題。
             </div>
             <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
-              ✦ 共 6 題，數字每次隨機產生　✦ 一步驟減法，適合二年級初學者　✦ 課綱：N-2-4
+              ✦ 商品標價與存款每次隨機產生　✦ 一步驟減法，適合二年級初學者　✦ 課綱：N-2-4
             </div>
           </div>
         </div><!-- /haochashaoPanel -->
@@ -2396,9 +2396,10 @@ async function directDownload() {
     } else if (type.id === 'haochashao') {
       res = await fetch(`${API_URL}/generate/haochashao`, {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({}),
+        body: JSON.stringify({ theme: S.themeId,
+          price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       });
-      filename = '還差多少_一步驟減法_兩位數.docx';
+      filename = `${S.themeId}_還差多少_一步驟減法_兩位數.docx`;
     } else {
       const payload = {
         theme:S.themeId, type_name:type.name, difficulty:S.diff,
@@ -2778,8 +2779,8 @@ function applyTypeLayout(typeId) {
   document.getElementById('diffInfoCard').style.display   = isN2 ? 'none' : '';
   if (!isN2) renderDiffInfoCard(typeId);
 
-  // 單價調整卡：三步驟、兩步驟加減混合才顯示
-  const hasPrices = isSb || isLb || isCh;
+  // 單價調整卡：三步驟、兩步驟加減混合、倍數購物、還差多少顯示
+  const hasPrices = isSb || isLb || isCh || isHc;
   document.getElementById('priceEditCard').style.display = hasPrices ? '' : 'none';
   if (hasPrices) {
     S.priceOverrides = {};
@@ -2815,8 +2816,8 @@ function applyTypeLayout(typeId) {
   // Gen meta：購物找零才需要顯示答案摘要
   document.getElementById('genMeta').style.display = isN2 ? '' : 'none';
 
-  // 找出平均數、還差多少、分分看：不需要主題格
-  document.getElementById('themeCard').style.display = (isPf || isHc || isFf) ? 'none' : '';
+  // 找出平均數、分分看：不需要主題格（haochashao 需要）
+  document.getElementById('themeCard').style.display = (isPf || isFf) ? 'none' : '';
 
   // typeTabsCard 內：只顯示對應題型的面板
   document.getElementById('fenfenPanel').style.display        = isFf ? '' : 'none';
