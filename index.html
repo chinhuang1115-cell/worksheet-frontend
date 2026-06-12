@@ -1412,6 +1412,23 @@ body {
           </div>
         </div><!-- /chenghePanel -->
 
+        <!-- 還差多少 -->
+        <div id="haochashaoPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">還差多少</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
+          </div>
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+            <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+              甜點店 4 件商品（鯛魚燒、杯子蛋糕、棉花糖、棒棒糖），學生存了一些錢卻不夠，<br>
+              計算「商品標價－存款＝還差多少元」。
+            </div>
+            <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+              ✦ 共 6 題，數字每次隨機產生　✦ 一步驟減法，適合二年級初學者　✦ 課綱：N-2-4
+            </div>
+          </div>
+        </div><!-- /haochashaoPanel -->
+
       </div><!-- /type-tab-preview -->
 
       <!-- 圖庫瀏覽 tab 內容 -->
@@ -1696,6 +1713,9 @@ let TYPES = [
   {id:'chenghe',code:'N-2-7',name:'倍數購物＿兩步驟乘減（兩位數）',grade:'2',ops:['mul','sub','mix'],
    keywords:['先乘後減','九九乘法','找零','兩步驟'],
    desc:'價目表 5 件商品，買 N 件後計算合計（乘法），再從付款金額找零（減法），每題左右雙欄，3 道題自動隨機。'},
+  {id:'haochashao',code:'N-2-4',name:'還差多少＿一步驟減法（兩位數）',grade:'2',ops:['sub'],
+   keywords:['還差多少','不夠','存款','減法'],
+   desc:'甜點店 4 件商品，學生存了一些錢還不夠買，計算還差幾元。共 6 道題，數字每次隨機產生。'},
 ];
 
 // ── STATE ──
@@ -1786,7 +1806,8 @@ const TYPE_DIFF_INFO = {
   'sanbushu':      { grade:'二年級', level:'中等', levelColor:'#f59e0b', code:'N-2-7', desc:'三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。' },
   'pingfen':       { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-5', desc:'把 N 個物件平分給 X 人，連結加法（□＋□＋□）與乘法（□×X）。' },
   'liangbushu':    { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-4', desc:'四位數兩步驟加減（先加求合計，再減求找零），適合熟悉進退位的學生。' },
-  'chenghe':       { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-7', desc:'九九乘法兩步驟：先乘法求合計，再付款找零，每頁 3 道題，適合乘法已熟練的學生。' }
+  'chenghe':       { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-7', desc:'九九乘法兩步驟：先乘法求合計，再付款找零，每頁 3 道題，適合乘法已熟練的學生。' },
+  'haochashao':    { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-4', desc:'甜點店 4 件商品，學生手邊有一些錢但不夠，計算還差幾元。一步驟減法，適合剛學減法的學生。' }
 };
 
 function renderThemes() {
@@ -2372,6 +2393,12 @@ async function directDownload() {
           price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       });
       filename = `${S.themeId}_倍數購物_兩步驟乘減_兩位數.docx`;
+    } else if (type.id === 'haochashao') {
+      res = await fetch(`${API_URL}/generate/haochashao`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({}),
+      });
+      filename = '還差多少_一步驟減法_兩位數.docx';
     } else {
       const payload = {
         theme:S.themeId, type_name:type.name, difficulty:S.diff,
@@ -2578,6 +2605,7 @@ const SAMPLE_PDFS = {
   'pingfen':        { pdf:'assets/pingfen_sample.pdf',       name:'平分問題_一步驟除乘_兩位數_範本.pdf' },
   'liangbushu':     { pdf:'assets/liangbushu_sample.pdf',    name:'購物找零_兩步驟加減_四位數_範本.pdf' },
   'chenghe':        { pdf:'assets/chenghe_sample.pdf',       name:'倍數購物_兩步驟乘減_兩位數_範本.pdf' },
+  'haochashao':     { pdf:'assets/haochashao_sample.pdf',   name:'還差多少_一步驟減法_兩位數_範本.pdf' },
 };
 let _samplePdfCache = {};
 
@@ -2654,6 +2682,12 @@ const HOME_TYPE_META = {
     desc: '買同款商品 N 件，先用乘法算合計，再從付款金額找零，九九乘法的生活應用兩步驟練習。',
     features: ['乘法求合計', '減法求找零', '3 道題全自動隨機'],
   },
+  'haochashao': {
+    icon: '🏷️',
+    sub: '一步驟減法',
+    desc: '甜點店商品標價，學生存了一些錢卻不夠，計算還差多少元才能買到，建立減法的生活情境。',
+    features: ['標價－存款＝還差多少', '甜點店 4 件商品', '6 道題全自動隨機'],
+  },
 };
 
 const HOME_OP_KEYS = ['all','add','sub','mul','div','addsub','addsubmul'];
@@ -2690,6 +2724,7 @@ const TYPE_SORT = {
   'sanbushu':      [3, 2, 3],
   'fenfen':        [4, 2, 1],
   'pingfen':       [4, 2, 1],
+  'haochashao':    [2, 2, 1],
 };
 
 function renderHomeTypeCards() {
@@ -2735,6 +2770,7 @@ function applyTypeLayout(typeId) {
   const isPf = typeId === 'pingfen';
   const isLb = typeId === 'liangbushu';
   const isCh = typeId === 'chenghe';
+  const isHc = typeId === 'haochashao';
 
   // 左欄：購物找零顯示互動難度卡＋儲存設定；其他題型顯示靜態難度資訊卡
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
@@ -2788,6 +2824,7 @@ function applyTypeLayout(typeId) {
   document.getElementById('pingfenPanel').style.display       = isPf ? '' : 'none';
   document.getElementById('liangbushuPanel').style.display    = isLb ? '' : 'none';
   document.getElementById('chenghePanel').style.display       = isCh ? '' : 'none';
+  document.getElementById('haochashaoPanel').style.display    = isHc ? '' : 'none';
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
