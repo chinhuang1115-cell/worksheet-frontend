@@ -1707,29 +1707,32 @@ const OP_META = {
   all:{label:'全部',cls:'f-all'},add:{label:'加法',cls:'f-add'},
   sub:{label:'減法',cls:'f-sub'},mul:{label:'乘法',cls:'f-mul'},
   div:{label:'除法',cls:'f-div'},mix:{label:'混合',cls:'f-mix'},
+  comprehensive:{label:'綜合',cls:'f-mix'},
+  addsub:{label:'加減混合',cls:'f-sub'},
+  addsubmul:{label:'加減乘混合',cls:'f-mul'},
 };
 const OP_TAG_CLS = {add:'ttag-add',sub:'ttag-sub',mul:'ttag-mul',div:'ttag-div',mix:'ttag-mix'};
 
 let TYPES = [
-  {id:'n2-change',code:'N-2-7',name:'購物找零（乘法＋減法）',grade:'2',ops:['mul','sub','mix'],
+  {id:'n2-change',code:'N-2-7',name:'購物找零＿兩步驟乘減（兩位數）',grade:'2',ops:['mul','sub','mix'],
    keywords:['找零','付款','買幾個','兩步驟乘減'],
    desc:'第1頁：買1件＋1件找零、買3件找零、買5件找零（乘法＋減法）。第2頁：口袋有N元最多能買幾件（預算判斷）。'},
-  {id:'sanbushu',code:'N-2-7',name:'三步驟加減混合（乘法＋找零）',grade:'2',ops:['mul','add','sub','mix'],
+  {id:'sanbushu',code:'N-2-7',name:'購物找零＿三步驟乘加減（兩位數）',grade:'2',ops:['mul','add','sub','mix'],
    keywords:['三步驟','加減混合','買兩種','合計找零'],
    desc:'第1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。第2頁：8個Menu商品（兩組合併）＋2道題。只需選主題，題目自動產生。'},
-  {id:'fenfen',code:'N-2-3',name:'分分看（除法概念）',grade:'2',ops:['div'],
+  {id:'fenfen',code:'N-2-3',name:'分裝分組＿一步驟除法（兩位數）',grade:'2',ops:['div'],
    keywords:['分裝','幾組','等分','除法'],
    desc:'選主題與物件，自動產生4大題×3小題的分裝數學題組。每小題展示商品圖示，學生數數後填答。只需選主題與物件，題目自動排列。'},
-  {id:'pingfen',code:'N-2-5',name:'找出平均數（平分延伸乘法）',grade:'2',ops:['mul','div'],
+  {id:'pingfen',code:'N-2-5',name:'平分問題＿一步驟除乘（兩位數）',grade:'2',ops:['mul','div'],
    keywords:['平分','平均數','等分','乘法連結'],
    desc:'把N個物件平分給X個人，一個人有幾個？從加法算式（□+□+□）延伸到乘法（□×3），建立等分除法與乘法的連結關係。固定5題，適合乘法初學者。'},
-  {id:'haochaduoshao',code:'N-2-2',name:'還差多少（二位數加減）',grade:'2',ops:['sub','add'],
+  {id:'haochaduoshao',code:'N-2-2',name:'還差多少＿一步驟加減（兩位數）',grade:'2',ops:['sub','add'],
    keywords:['還差','差距','二位數減法','加多少'],
    desc:'手上的錢不夠買東西，還差多少？兩頁可選不同主題，以符合實際市價的商品定價出題。共 4 大題，每題算出差額，建立加減互逆的概念。'},
-  {id:'liangbushu',code:'N-2-4',name:'兩步驟加減混合（四位數）',grade:'2',ops:['add','sub','mix'],
+  {id:'liangbushu',code:'N-2-4',name:'購物找零＿兩步驟加減（四位數）',grade:'2',ops:['add','sub','mix'],
    keywords:['兩步驟','四位數','加減混合','找零合計'],
    desc:'價目表列出 5 件千元商品，選 2 件計算合計（加法），再從付款金額扣除找零（減法），建立四位數加減兩步驟的計算流程。'},
-  {id:'chenghe',code:'N-2-7',name:'兩步驟先乘後減（兩位數）',grade:'2',ops:['mul','sub','mix'],
+  {id:'chenghe',code:'N-2-7',name:'倍數購物＿兩步驟乘減（兩位數）',grade:'2',ops:['mul','sub','mix'],
    keywords:['先乘後減','九九乘法','找零','兩步驟'],
    desc:'價目表 5 件商品，買 N 件後計算合計（乘法），再從付款金額找零（減法），每題左右雙欄，3 道題自動隨機。'},
 ];
@@ -2411,41 +2414,41 @@ async function directDownload() {
         body: JSON.stringify({ theme_p1: hcP1, theme_p2: hcP2,
           price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       });
-      filename = `${hcP1}_${hcP2}_還差多少.docx`;
+      filename = `${hcP1}_${hcP2}_還差多少_一步驟加減_兩位數.docx`;
     } else if (type.id === 'pingfen') {
       res = await fetch(`${API_URL}/generate/pingfen`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({}),
       });
-      filename = '找出平均數_學習單.docx';
+      filename = '平分問題_一步驟除乘_兩位數.docx';
     } else if (type.id === 'fenfen') {
       res = await fetch(`${API_URL}/generate/fenfen`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ theme:S.themeId, item_index:S.fenfenItemIndex, question_set:S.fenfenSet }),
       });
       const itemName = THEMES[S.themeId].items[S.fenfenItemIndex]?.name || '';
-      filename = `${S.themeId}_分分看_${itemName}_${S.fenfenSet}.docx`;
+      filename = `${S.themeId}_分裝分組_${itemName}_${S.fenfenSet}_一步驟除法_兩位數.docx`;
     } else if (type.id === 'sanbushu') {
       res = await fetch(`${API_URL}/generate/sanbushu`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ theme:S.themeId,
           price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       });
-      filename = `${S.themeId}_三步驟加減混合.docx`;
+      filename = `${S.themeId}_購物找零_三步驟乘加減_兩位數.docx`;
     } else if (type.id === 'liangbushu') {
       res = await fetch(`${API_URL}/generate/liangbushu`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ theme: S.themeId,
           price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       });
-      filename = `${S.themeId}_兩步驟加減混合.docx`;
+      filename = `${S.themeId}_購物找零_兩步驟加減_四位數.docx`;
     } else if (type.id === 'chenghe') {
       res = await fetch(`${API_URL}/generate/chenghe`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ theme: S.themeId,
           price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       });
-      filename = `${S.themeId}_兩步驟先乘後減.docx`;
+      filename = `${S.themeId}_倍數購物_兩步驟乘減_兩位數.docx`;
     } else {
       const payload = {
         theme:S.themeId, type_name:type.name, difficulty:S.diff,
@@ -2456,7 +2459,7 @@ async function directDownload() {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify(payload),
       });
-      filename = `${S.themeId}_${type.name}_${DIFF_CFG[S.diff].label}.docx`;
+      filename = `${S.themeId}_購物找零_兩步驟乘減_兩位數_${DIFF_CFG[S.diff].label}.docx`;
     }
 
     if (!res.ok) {
@@ -2646,13 +2649,13 @@ function renderSanbushuPreview(data) {
 
 // ── 學習單範本 PDF 預覽 ──
 const SAMPLE_PDFS = {
-  'n2-change':      { pdf:'assets/n2change_sample.pdf',      name:'購物找零範本.pdf' },
-  'sanbushu':       { pdf:'assets/sanbushu_sample.pdf',      name:'三步驟加減混合範本.pdf' },
-  'fenfen':         { pdf:'assets/fenfen_sample.pdf',        name:'分分看範本.pdf' },
-  'pingfen':        { pdf:'assets/pingfen_sample.pdf',       name:'找出平均數範本.pdf' },
-  'haochaduoshao':  { pdf:'assets/haochaduoshao_sample.pdf', name:'還差多少範本.pdf' },
-  'liangbushu':     { pdf:'assets/liangbushu_sample.pdf',    name:'兩步驟加減混合範本.pdf' },
-  'chenghe':        { pdf:'assets/chenghe_sample.pdf',      name:'兩步驟先乘後減範本.pdf' },
+  'n2-change':      { pdf:'assets/n2change_sample.pdf',      name:'購物找零_兩步驟乘減_兩位數_範本.pdf' },
+  'sanbushu':       { pdf:'assets/sanbushu_sample.pdf',      name:'購物找零_三步驟乘加減_兩位數_範本.pdf' },
+  'fenfen':         { pdf:'assets/fenfen_sample.pdf',        name:'分裝分組_一步驟除法_兩位數_範本.pdf' },
+  'pingfen':        { pdf:'assets/pingfen_sample.pdf',       name:'平分問題_一步驟除乘_兩位數_範本.pdf' },
+  'haochaduoshao':  { pdf:'assets/haochaduoshao_sample.pdf', name:'還差多少_一步驟加減_兩位數_範本.pdf' },
+  'liangbushu':     { pdf:'assets/liangbushu_sample.pdf',    name:'購物找零_兩步驟加減_四位數_範本.pdf' },
+  'chenghe':        { pdf:'assets/chenghe_sample.pdf',       name:'倍數購物_兩步驟乘減_兩位數_範本.pdf' },
 };
 let _samplePdfCache = {};
 
@@ -2737,7 +2740,7 @@ const HOME_TYPE_META = {
   },
 };
 
-const HOME_OP_KEYS = ['all','add','sub','mul','div'];
+const HOME_OP_KEYS = ['all','add','sub','mul','div','addsub','addsubmul'];
 
 function renderHomeFilter() {
   document.getElementById('homeOpFilters').innerHTML = HOME_OP_KEYS.map(op => {
@@ -2746,10 +2749,33 @@ function renderHomeFilter() {
   }).join('');
 }
 
+// 排序鍵：[主要運算難度（加1/減2/乘3/除4）, 計算位數, 步驟數]
+const TYPE_SORT = {
+  'haochaduoshao': [2, 2, 1],
+  'liangbushu':    [2, 4, 2],
+  'n2-change':     [3, 2, 2],
+  'chenghe':       [3, 2, 2],
+  'sanbushu':      [3, 2, 3],
+  'fenfen':        [4, 2, 1],
+  'pingfen':       [4, 2, 1],
+};
+
 function renderHomeTypeCards() {
-  const filtered = TYPES.filter(t =>
-    curOps.has('all') || t.ops.some(o => curOps.has(o))
-  );
+  const op = [...curOps][0];
+  const filtered = TYPES
+    .filter(t => {
+      if (op === 'all') return true;
+      const o = t.ops;
+      if (op === 'comprehensive') return o.includes('add') && o.includes('sub');
+      if (op === 'addsub')        return o.includes('add') && o.includes('sub') && !o.includes('mul');
+      if (op === 'addsubmul')     return o.includes('add') && o.includes('sub') &&  o.includes('mul');
+      return o.includes(op);
+    })
+    .sort((a, b) => {
+      const [oa, da, sa] = TYPE_SORT[a.id] ?? [9, 9, 9];
+      const [ob, db, sb] = TYPE_SORT[b.id] ?? [9, 9, 9];
+      return oa !== ob ? oa - ob : da !== db ? da - db : sa - sb;
+    });
   document.getElementById('typeCardGrid').innerHTML = filtered.length
     ? filtered.map(t => {
     const m = HOME_TYPE_META[t.id] || {};
