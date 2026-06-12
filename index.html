@@ -306,6 +306,7 @@ body {
 .filter-pill.f-mul.active    { background: var(--amber-light); border-color: var(--amber); color: var(--amber-dark); }
 .filter-pill.f-div.active    { background: #fce7f3; border-color: #ec4899; color: #9d174d; }
 .filter-pill.f-mix.active    { background: #ede9fe; border-color: #7c3aed; color: #4c1d95; }
+#homeOpFilters .filter-pill  { font-size: 14px; padding: 5px 16px; }
 .grade-tabs { display: flex; border-bottom: 1.5px solid var(--border); margin-bottom: 0; }
 .grade-tab {
   padding: 7px 12px;
@@ -2200,8 +2201,7 @@ function renderOpFilters() {
 }
 
 function toggleOp(op) {
-  if(op==='all'){ curOps=new Set(['all']); }
-  else { curOps.delete('all'); curOps.has(op)?curOps.delete(op):curOps.add(op); if(!curOps.size)curOps.add('all'); }
+  curOps = new Set([op === 'all' || curOps.size === 1 && curOps.has(op) ? 'all' : op]);
   renderOpFilters(); renderTypeList();
   renderHomeFilter(); renderHomeTypeCards();
 }
