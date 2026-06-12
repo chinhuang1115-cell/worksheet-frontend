@@ -2741,6 +2741,23 @@ const HOME_TYPE_META = {
 
 const HOME_OP_KEYS = ['all','add','sub','mul','div','addsub','addsubmul'];
 
+const TOPIC_COLORS = {
+  '購物找零': '#d97706',
+  '倍數購物': '#0d9488',
+  '分裝分組': '#16a34a',
+  '平分問題': '#2563eb',
+  '還差多少': '#dc2626',
+};
+
+function coloredName(name) {
+  const idx = name.indexOf('＿');
+  if (idx < 0) return name;
+  const topic = name.slice(0, idx);
+  const rest  = name.slice(idx);
+  const color = TOPIC_COLORS[topic] || 'var(--ink)';
+  return `<span style="color:${color};font-weight:900;">${topic}</span>${rest}`;
+}
+
 function renderHomeFilter() {
   document.getElementById('homeOpFilters').innerHTML = HOME_OP_KEYS.map(op => {
     const m = OP_META[op];
@@ -2782,7 +2799,7 @@ function renderHomeTypeCards() {
     <div class="type-card" onclick="enterConfig('${t.id}')">
       <div class="type-card-icon">${m.icon || '📄'}</div>
       <div>
-        <div class="type-card-name">${t.name}</div>
+        <div class="type-card-name">${coloredName(t.name)}</div>
         <span class="type-card-sub">${m.sub || ''}</span>
       </div>
       <div class="type-card-desc">${m.desc || t.desc}</div>
@@ -2876,8 +2893,8 @@ function enterConfig(typeId) {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'flex';
   document.getElementById('configScreen').style.display = '';
-  document.getElementById('configNavType').textContent =
-    TYPES.find(t => t.id === typeId)?.name || '';
+  document.getElementById('configNavType').innerHTML =
+    coloredName(TYPES.find(t => t.id === typeId)?.name || '');
 
   // 套用題型版面並清除舊預覽
   applyTypeLayout(typeId);
