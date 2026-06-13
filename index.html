@@ -1314,31 +1314,18 @@ body {
         <!-- 分分看 -->
         <div id="fenfenPanel" style="display:none;">
           <div class="card-head">
-            <span class="card-title">分分看設定</span>
+            <span class="card-title">分裝分組</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
           <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
-            <div style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.7;">
-              ℹ️ 此題型不需選擇購物主題，請直接從下方選擇要出題的物件與版本。
+            <div style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:10px 12px;line-height:1.8;">
+              共 <strong>6 題</strong>，每題展示物件圖示讓學生數數後填答。<br>
+              物件：花（÷2）、氣球（÷2）、糖果（÷3）、花（÷4）、氣球（÷5）、糖果（÷6）。<br>
+              每次下載數量隨機，可重複產生不同版本。
             </div>
-            <div>
-              <div class="section-label">選擇物件</div>
-              <div id="fenfenItemGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
-            </div>
-            <div>
-              <div class="section-label">題目版本</div>
-              <div style="display:flex;gap:6px;">
-                <button class="fenfen-set-btn active" id="fenfenSetA" onclick="selectFenfenSet('A')">A 版</button>
-                <button class="fenfen-set-btn" id="fenfenSetB" onclick="selectFenfenSet('B')">B 版</button>
-                <button class="fenfen-set-btn" id="fenfenSetC" onclick="selectFenfenSet('C')">C 版</button>
-              </div>
-            </div>
-            <div style="font-size:11px;color:var(--gray);line-height:1.7;padding:8px 10px;background:var(--gray-light);border-radius:var(--r-sm);">
-              共 4 大題 × 3 小題，每小題展示物件圖示讓學生數數後填答。<br>
-              A/B/C 三版使用不同數量與名字，可一次印三份讓學生各做一版。
-            </div>
-            <button id="fenfenAllBtn" onclick="downloadFenfenAll()"
+            <button onclick="downloadFenfenAll()"
               style="width:100%;padding:10px;background:var(--teal);color:white;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans TC',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;">
-              ⬇ 一次下載三版 (A+B+C ZIP)
+              ⬇ 一次下載三份 (ZIP)
             </button>
           </div>
         </div>
@@ -1428,6 +1415,27 @@ body {
             </div>
           </div>
         </div><!-- /haochashaoPanel -->
+
+        <!-- 分分看（新版） -->
+        <div id="fenfennewPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">分分看設定</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
+          </div>
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
+            <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+              選擇物件主題，系統自動產生 6 題等分除法練習。<br>
+              每題展示圖示讓學生數數，除數與數量每次隨機。
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px;">選擇物件主題</div>
+              <div id="fenfennewThemeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+            </div>
+            <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+              ✦ 共 6 題，除數隨機 2–6　✦ 適合二年級初學者　✦ 課綱：N-2-3
+            </div>
+          </div>
+        </div><!-- /fenfennewPanel -->
 
       </div><!-- /type-tab-preview -->
 
@@ -1694,29 +1702,229 @@ const OP_META = {
 };
 const OP_TAG_CLS = {add:'ttag-add',sub:'ttag-sub',mul:'ttag-mul',div:'ttag-div',mix:'ttag-mix'};
 
-let TYPES = [
-  {id:'n2-change',code:'N-2-7',name:'購物找零＿兩步驟乘減（兩位數）',grade:'2',ops:['mul','sub','mix'],
-   keywords:['找零','付款','買幾個','兩步驟乘減'],
-   desc:'第1頁：買1件＋1件找零、買3件找零、買5件找零（乘法＋減法）。第2頁：口袋有N元最多能買幾件（預算判斷）。'},
-  {id:'sanbushu',code:'N-2-7',name:'購物找零＿三步驟乘加減（兩位數）',grade:'2',ops:['mul','add','sub','mix'],
-   keywords:['三步驟','加減混合','買兩種','合計找零'],
-   desc:'第1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。第2頁：8個Menu商品（兩組合併）＋2道題。只需選主題，題目自動產生。'},
-  {id:'fenfen',code:'N-2-3',name:'分裝分組＿一步驟除法（兩位數）',grade:'2',ops:['div'],
-   keywords:['分裝','幾組','等分','除法'],
-   desc:'選主題與物件，自動產生4大題×3小題的分裝數學題組。每小題展示商品圖示，學生數數後填答。只需選主題與物件，題目自動排列。'},
-  {id:'pingfen',code:'N-2-5',name:'平分問題＿一步驟除乘（兩位數）',grade:'2',ops:['mul','div'],
-   keywords:['平分','平均數','等分','乘法連結'],
-   desc:'把N個物件平分給X個人，一個人有幾個？從加法算式（□+□+□）延伸到乘法（□×3），建立等分除法與乘法的連結關係。固定5題，適合乘法初學者。'},
-  {id:'liangbushu',code:'N-2-4',name:'購物找零＿兩步驟加減（四位數）',grade:'2',ops:['add','sub','mix'],
-   keywords:['兩步驟','四位數','加減混合','找零合計'],
-   desc:'價目表列出 5 件千元商品，選 2 件計算合計（加法），再從付款金額扣除找零（減法），建立四位數加減兩步驟的計算流程。'},
-  {id:'chenghe',code:'N-2-7',name:'倍數購物＿兩步驟乘減（兩位數）',grade:'2',ops:['mul','sub','mix'],
-   keywords:['先乘後減','九九乘法','找零','兩步驟'],
-   desc:'價目表 5 件商品，買 N 件後計算合計（乘法），再從付款金額找零（減法），每題左右雙欄，3 道題自動隨機。'},
-  {id:'haochashao',code:'N-2-4',name:'還差多少＿一步驟減法（兩位數）',grade:'2',ops:['sub'],
-   keywords:['還差多少','不夠','存款','減法'],
-   desc:'甜點店 4 件商品，學生存了一些錢還不夠買，計算還差幾元。共 6 道題，數字每次隨機產生。'},
+/* ════════════════════════════════════════════════════════════════════
+   TYPE_REGISTRY ── 題型唯一註冊點（single source of truth）
+
+   新增題型時只需要做兩件事：
+   1. 在這個陣列加一個完整 entry（欄位說明見下）
+   2. 在 typeTabsCard 裡新增對應的 Panel HTML（id 填入 layout.panel）
+
+   舊的 TYPES / TYPE_DIFF_INFO / SAMPLE_PDFS / HOME_TYPE_META / TYPE_SORT
+   全部由此衍生，不要再手動維護那些物件。
+
+   欄位說明：
+   - id / code / name / grade / ops / keywords / desc：題型基本資料
+   - sortKey：[運算等級(加1減2乘3除4), 位數, 步驟數]，首頁排序用
+   - home：首頁卡片 { icon, sub, desc, features[] }
+   - diffInfo：左欄靜態難度卡 { grade, level, levelColor, code, desc }
+               （null = 使用互動難度卡，目前只有 n2-change）
+   - sample：範本 PDF { pdf: 路徑, name: 下載檔名 }
+   - layout：版面控制 {
+       panel:       專屬 Panel 的 DOM id（null = 無）
+       themeSet:    'cheap' | 'expensive'（主題網格用哪組）
+       showTheme:   是否顯示主題選擇卡
+       prices:      是否顯示單價調整卡
+       interactive: 是否為互動難度題型（目前只有 n2-change）
+     }
+   - api：產出設定 {
+       endpoint: 後端路徑
+       body():   組 request body
+       filename(): 組下載檔名（遵循命名規則）
+     }
+   ════════════════════════════════════════════════════════════════════ */
+
+// 共用 body：主題 + 單價覆蓋（sanbushu / liangbushu / chenghe / haochashao）
+const _themePriceBody = () => ({
+  theme: S.themeId,
+  price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined,
+});
+
+const TYPE_REGISTRY = [
+  {
+    id:'n2-change', code:'N-2-7', grade:'2',
+    name:'購物找零＿兩步驟乘減（兩位數）',
+    ops:['mul','sub','mix'],
+    keywords:['找零','付款','買幾個','兩步驟乘減'],
+    desc:'第1頁：買1件＋1件找零、買3件找零、買5件找零（乘法＋減法）。第2頁：口袋有N元最多能買幾件（預算判斷）。',
+    sortKey:[3,2,2],
+    home:{
+      icon:'🛒', sub:'乘法 × 減法',
+      desc:'學生到店裡購物，計算找零金額，以及口袋裡的錢最多能買幾件商品。',
+      features:['買東西計算找零','預算最多能買幾個','乘法＋減法兩步驟'],
+    },
+    diffInfo:null,
+    sample:{ pdf:'assets/n2change_sample.pdf', name:'購物找零_兩步驟乘減_兩位數_範本.pdf' },
+    layout:{ panel:null, themeSet:'cheap', showTheme:true, prices:false, interactive:true },
+    api:{
+      endpoint:'/generate',
+      body:()=>({
+        theme:S.themeId, type_name:getType().name, difficulty:S.diff,
+        items:S.items.map(it=>({name:it.name,counter:it.counter,price:it.price,file:it.file||''})),
+        budget:S.budget,
+      }),
+      filename:()=>`${S.themeId}_購物找零_兩步驟乘減_兩位數_${DIFF_CFG[S.diff].label}.docx`,
+    },
+  },
+  {
+    id:'sanbushu', code:'N-2-7', grade:'2',
+    name:'購物找零＿三步驟乘加減（兩位數）',
+    ops:['mul','add','sub','mix'],
+    keywords:['三步驟','加減混合','買兩種','合計找零'],
+    desc:'第1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。第2頁：8個Menu商品（兩組合併）＋2道題。只需選主題，題目自動產生。',
+    sortKey:[3,2,3],
+    home:{
+      icon:'📋', sub:'加減混合',
+      desc:'買兩種商品求合計，再計算付款後的找零，三步驟串聯練習加減混合。',
+      features:['買兩種商品求合計','計算付款後找零','題目全自動產生'],
+    },
+    diffInfo:{ grade:'二年級', level:'中等', levelColor:'#f59e0b', code:'N-2-7',
+      desc:'三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。' },
+    sample:{ pdf:'assets/sanbushu_sample.pdf', name:'購物找零_三步驟乘加減_兩位數_範本.pdf' },
+    layout:{ panel:'sanbushuPanel', themeSet:'cheap', showTheme:true, prices:true, interactive:false },
+    api:{
+      endpoint:'/generate/sanbushu',
+      body:_themePriceBody,
+      filename:()=>`${S.themeId}_購物找零_三步驟乘加減_兩位數.docx`,
+    },
+  },
+  {
+    id:'fenfen', code:'N-2-3', grade:'2',
+    name:'分裝分組＿一步驟除法（兩位數）',
+    ops:['div'],
+    keywords:['分裝','幾組','等分','除法'],
+    desc:'選主題與物件，自動產生4大題×3小題的分裝數學題組。每小題展示商品圖示，學生數數後填答。只需選主題與物件，題目自動排列。',
+    sortKey:[4,2,1],
+    home:{
+      icon:'🍡', sub:'除法概念',
+      desc:'把物品平均分裝成幾組，搭配圖示數數，建立等分除法的基本概念。',
+      features:['圖示輔助數數填答','分裝等分概念','A/B/C 三版一次下載'],
+    },
+    diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
+      desc:'以具體圖示輔助「等分除法」概念，每份幾個，適合除法初學者。' },
+    sample:{ pdf:'assets/fenfen_sample.pdf', name:'分裝分組_一步驟除法_兩位數_範本.pdf' },
+    layout:{ panel:'fenfenPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/fenfen',
+      body:()=>({}),
+      filename:()=>'分裝分組_一步驟除法_兩位數.docx',
+    },
+  },
+  {
+    id:'pingfen', code:'N-2-5', grade:'2',
+    name:'平分問題＿一步驟除乘（兩位數）',
+    ops:['mul','div'],
+    keywords:['平分','平均數','等分','乘法連結'],
+    desc:'把N個物件平分給X個人，一個人有幾個？從加法算式（□+□+□）延伸到乘法（□×3），建立等分除法與乘法的連結關係。固定5題，適合乘法初學者。',
+    sortKey:[4,2,1],
+    home:{
+      icon:'⚖️', sub:'除法→乘法',
+      desc:'把物品平均分配給每個人，從加法延伸到乘法算式，連結平分與乘法的關係。',
+      features:['平分→加法→乘法三步驟','找出平均數概念','固定5題靜態學習單'],
+    },
+    diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-5',
+      desc:'把 N 個物件平分給 X 人，連結加法（□＋□＋□）與乘法（□×X）。' },
+    sample:{ pdf:'assets/pingfen_sample.pdf', name:'平分問題_一步驟除乘_兩位數_範本.pdf' },
+    layout:{ panel:'pingfenPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/pingfen',
+      body:()=>({}),
+      filename:()=>'平分問題_一步驟除乘_兩位數.docx',
+    },
+  },
+  {
+    id:'liangbushu', code:'N-2-4', grade:'2',
+    name:'購物找零＿兩步驟加減（四位數）',
+    ops:['add','sub','mix'],
+    keywords:['兩步驟','四位數','加減混合','找零合計'],
+    desc:'價目表列出 5 件千元商品，選 2 件計算合計（加法），再從付款金額扣除找零（減法），建立四位數加減兩步驟的計算流程。',
+    sortKey:[2,4,2],
+    home:{
+      icon:'🏷️', sub:'四位數加減',
+      desc:'千元商品價目表，選兩件商品計算合計，再從付款金額找零，建立四位數兩步驟計算流程。',
+      features:['四位數加法→合計','四位數減法→找零','題目全自動產生'],
+    },
+    diffInfo:{ grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-4',
+      desc:'四位數兩步驟加減（先加求合計，再減求找零），適合熟悉進退位的學生。' },
+    sample:{ pdf:'assets/liangbushu_sample.pdf', name:'購物找零_兩步驟加減_四位數_範本.pdf' },
+    layout:{ panel:'liangbushuPanel', themeSet:'expensive', showTheme:true, prices:true, interactive:false },
+    api:{
+      endpoint:'/generate/liangbushu',
+      body:_themePriceBody,
+      filename:()=>`${S.themeId}_購物找零_兩步驟加減_四位數.docx`,
+    },
+  },
+  {
+    id:'chenghe', code:'N-2-7', grade:'2',
+    name:'倍數購物＿兩步驟乘減（兩位數）',
+    ops:['mul','sub','mix'],
+    keywords:['先乘後減','九九乘法','找零','兩步驟'],
+    desc:'價目表 5 件商品，買 N 件後計算合計（乘法），再從付款金額找零（減法），每題左右雙欄，3 道題自動隨機。',
+    sortKey:[3,2,2],
+    home:{
+      icon:'✖️', sub:'乘法→找零',
+      desc:'買同款商品 N 件，先用乘法算合計，再從付款金額找零，九九乘法的生活應用兩步驟練習。',
+      features:['乘法求合計','減法求找零','3 道題全自動隨機'],
+    },
+    diffInfo:{ grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-7',
+      desc:'九九乘法兩步驟：先乘法求合計，再付款找零，每頁 3 道題，適合乘法已熟練的學生。' },
+    sample:{ pdf:'assets/chenghe_sample.pdf', name:'倍數購物_兩步驟乘減_兩位數_範本.pdf' },
+    layout:{ panel:'chenghePanel', themeSet:'cheap', showTheme:true, prices:true, interactive:false },
+    api:{
+      endpoint:'/generate/chenghe',
+      body:_themePriceBody,
+      filename:()=>`${S.themeId}_倍數購物_兩步驟乘減_兩位數.docx`,
+    },
+  },
+  {
+    id:'haochashao', code:'N-2-4', grade:'2',
+    name:'還差多少＿一步驟減法（兩位數）',
+    ops:['sub'],
+    keywords:['還差多少','不夠','存款','減法'],
+    desc:'甜點店 4 件商品，學生存了一些錢還不夠買，計算還差幾元。共 6 道題，數字每次隨機產生。',
+    sortKey:[2,2,1],
+    home:{
+      icon:'🏷️', sub:'一步驟減法',
+      desc:'甜點店商品標價，學生存了一些錢卻不夠，計算還差多少元才能買到，建立減法的生活情境。',
+      features:['標價－存款＝還差多少','甜點店 4 件商品','6 道題全自動隨機'],
+    },
+    diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-4',
+      desc:'甜點店 4 件商品，學生手邊有一些錢但不夠，計算還差幾元。一步驟減法，適合剛學減法的學生。' },
+    sample:{ pdf:'assets/haochashao_sample.pdf', name:'還差多少_一步驟減法_兩位數_範本.pdf' },
+    layout:{ panel:'haochashaoPanel', themeSet:'cheap', showTheme:true, prices:true, interactive:false },
+    api:{
+      endpoint:'/generate/haochashao',
+      body:_themePriceBody,
+      filename:()=>`${S.themeId}_還差多少_一步驟減法_兩位數.docx`,
+    },
+  },
+  {
+    id:'fenfennew', code:'N-2-3', grade:'2',
+    name:'分分看＿一步驟除法（兩位數）',
+    ops:['div'],
+    keywords:['分分看','幾組','等分','除法','圖示'],
+    desc:'選擇物件主題（花、動物、水果等），系統自動產生 6 道等分除法題組，每題展示圖示讓學生數數後填答。除數 2–6 隨機，A4 橫向雙欄版面。',
+    sortKey:[4,2,1],
+    home:{
+      icon:'🌸', sub:'除法概念',
+      desc:'選物件主題，6 道題展示圖示讓學生數數並練習等分除法，除數與數量每次隨機，A4 橫向雙欄。',
+      features:['6 題圖示輔助數數填答','除數隨機 2–6','11 種物件主題可選'],
+    },
+    diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
+      desc:'以具體圖示輔助「等分除法」概念，數幾個、每幾個一組、共幾組，適合除法初學者。' },
+    sample:{ pdf:null, name:'分分看_一步驟除法_兩位數_範本.pdf' },
+    layout:{ panel:'fenfennewPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/fenfennew',
+      body:()=>({ theme: S.fenfennewTheme }),
+      filename:()=>`${S.fenfennewTheme}_分分看＿一步驟除法（兩位數）.docx`,
+    },
+  },
 ];
+
+// ── 由 registry 衍生的相容層（下游程式碼不需更動）──
+function getReg(id) { return TYPE_REGISTRY.find(t=>t.id===id) || TYPE_REGISTRY[0]; }
+let TYPES = TYPE_REGISTRY.map(({id,code,name,grade,ops,keywords,desc}) =>
+  ({id,code,name,grade,ops,keywords,desc}));
 
 // ── STATE ──
 let S = {
@@ -1727,6 +1935,7 @@ let S = {
   diff: 'mid',
   fenfenItemIndex: 0,
   fenfenSet: 'A',
+  fenfennewTheme: '花',
   priceOverrides: {},
 };
 let curGrade = 'all';
@@ -1797,18 +2006,13 @@ function applyDiff(d, reCalcPrices=true) {
 const CHEAP_THEMES     = ['飲料店','文具店','玩具店','甜點店','便當店'];
 const EXPENSIVE_THEMES = ['鞋子店','玩具車','懷舊玩具','童裝店','家電行'];
 function allowedThemes() {
-  return getType().id === 'liangbushu' ? EXPENSIVE_THEMES : CHEAP_THEMES;
+  return getReg(getType().id).layout.themeSet === 'expensive' ? EXPENSIVE_THEMES : CHEAP_THEMES;
 }
 
 // 各題型難度資訊（非購物找零用）
-const TYPE_DIFF_INFO = {
-  'fenfen':        { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3', desc:'以具體圖示輔助「等分除法」概念，每份幾個，適合除法初學者。' },
-  'sanbushu':      { grade:'二年級', level:'中等', levelColor:'#f59e0b', code:'N-2-7', desc:'三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。' },
-  'pingfen':       { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-5', desc:'把 N 個物件平分給 X 人，連結加法（□＋□＋□）與乘法（□×X）。' },
-  'liangbushu':    { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-4', desc:'四位數兩步驟加減（先加求合計，再減求找零），適合熟悉進退位的學生。' },
-  'chenghe':       { grade:'二年級', level:'進階', levelColor:'#f97316', code:'N-2-7', desc:'九九乘法兩步驟：先乘法求合計，再付款找零，每頁 3 道題，適合乘法已熟練的學生。' },
-  'haochashao':    { grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-4', desc:'甜點店 4 件商品，學生手邊有一些錢但不夠，計算還差幾元。一步驟減法，適合剛學減法的學生。' }
-};
+// 靜態難度資訊卡（定義於 TYPE_REGISTRY.diffInfo；null = 互動難度卡）
+const TYPE_DIFF_INFO = Object.fromEntries(
+  TYPE_REGISTRY.filter(t=>t.diffInfo).map(t=>[t.id, t.diffInfo]));
 
 function renderThemes() {
   const allowed = allowedThemes();
@@ -2358,60 +2562,12 @@ async function directDownload() {
   const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
 
   try {
-    let res, filename;
-    if (type.id === 'pingfen') {
-      res = await fetch(`${API_URL}/generate/pingfen`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({}),
-      });
-      filename = '平分問題_一步驟除乘_兩位數.docx';
-    } else if (type.id === 'fenfen') {
-      res = await fetch(`${API_URL}/generate/fenfen`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ theme:S.themeId, item_index:S.fenfenItemIndex, question_set:S.fenfenSet }),
-      });
-      const itemName = THEMES[S.themeId].items[S.fenfenItemIndex]?.name || '';
-      filename = `${S.themeId}_分裝分組_${itemName}_${S.fenfenSet}_一步驟除法_兩位數.docx`;
-    } else if (type.id === 'sanbushu') {
-      res = await fetch(`${API_URL}/generate/sanbushu`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ theme:S.themeId,
-          price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
-      });
-      filename = `${S.themeId}_購物找零_三步驟乘加減_兩位數.docx`;
-    } else if (type.id === 'liangbushu') {
-      res = await fetch(`${API_URL}/generate/liangbushu`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ theme: S.themeId,
-          price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
-      });
-      filename = `${S.themeId}_購物找零_兩步驟加減_四位數.docx`;
-    } else if (type.id === 'chenghe') {
-      res = await fetch(`${API_URL}/generate/chenghe`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ theme: S.themeId,
-          price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
-      });
-      filename = `${S.themeId}_倍數購物_兩步驟乘減_兩位數.docx`;
-    } else if (type.id === 'haochashao') {
-      res = await fetch(`${API_URL}/generate/haochashao`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ theme: S.themeId,
-          price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
-      });
-      filename = `${S.themeId}_還差多少_一步驟減法_兩位數.docx`;
-    } else {
-      const payload = {
-        theme:S.themeId, type_name:type.name, difficulty:S.diff,
-        items: S.items.map(it=>({name:it.name,counter:it.counter,price:it.price,file:it.file||''})),
-        budget: S.budget,
-      };
-      res = await fetch(`${API_URL}/generate`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(payload),
-      });
-      filename = `${S.themeId}_購物找零_兩步驟乘減_兩位數_${DIFF_CFG[S.diff].label}.docx`;
-    }
+    const reg = getReg(type.id);
+    const res = await fetch(`${API_URL}${reg.api.endpoint}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(reg.api.body()),
+    });
+    const filename = reg.api.filename();
 
     if (!res.ok) {
       const err = await res.json().catch(()=>({detail:'伺服器錯誤'}));
@@ -2599,15 +2755,8 @@ function renderSanbushuPreview(data) {
 }
 
 // ── 學習單範本 PDF 預覽 ──
-const SAMPLE_PDFS = {
-  'n2-change':      { pdf:'assets/n2change_sample.pdf',      name:'購物找零_兩步驟乘減_兩位數_範本.pdf' },
-  'sanbushu':       { pdf:'assets/sanbushu_sample.pdf',      name:'購物找零_三步驟乘加減_兩位數_範本.pdf' },
-  'fenfen':         { pdf:'assets/fenfen_sample.pdf',        name:'分裝分組_一步驟除法_兩位數_範本.pdf' },
-  'pingfen':        { pdf:'assets/pingfen_sample.pdf',       name:'平分問題_一步驟除乘_兩位數_範本.pdf' },
-  'liangbushu':     { pdf:'assets/liangbushu_sample.pdf',    name:'購物找零_兩步驟加減_四位數_範本.pdf' },
-  'chenghe':        { pdf:'assets/chenghe_sample.pdf',       name:'倍數購物_兩步驟乘減_兩位數_範本.pdf' },
-  'haochashao':     { pdf:'assets/haochashao_sample.pdf',   name:'還差多少_一步驟減法_兩位數_範本.pdf' },
-};
+// 範本 PDF（定義於 TYPE_REGISTRY.sample）
+const SAMPLE_PDFS = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.sample]));
 let _samplePdfCache = {};
 
 async function _doRenderSamplePdf(pdfPath, containerId = 'samplePdfContainer', loadingId = 'samplePdfLoading') {
@@ -2646,50 +2795,8 @@ async function _doRenderSamplePdf(pdfPath, containerId = 'samplePdfContainer', l
 }
 
 // ── HOME SCREEN ──
-const HOME_TYPE_META = {
-  'n2-change': {
-    icon: '🛒',
-    sub: '乘法 × 減法',
-    desc: '學生到店裡購物，計算找零金額，以及口袋裡的錢最多能買幾件商品。',
-    features: ['買東西計算找零', '預算最多能買幾個', '乘法＋減法兩步驟'],
-  },
-  'sanbushu': {
-    icon: '📋',
-    sub: '加減混合',
-    desc: '買兩種商品求合計，再計算付款後的找零，三步驟串聯練習加減混合。',
-    features: ['買兩種商品求合計', '計算付款後找零', '題目全自動產生'],
-  },
-  'fenfen': {
-    icon: '🍡',
-    sub: '除法概念',
-    desc: '把物品平均分裝成幾組，搭配圖示數數，建立等分除法的基本概念。',
-    features: ['圖示輔助數數填答', '分裝等分概念', 'A/B/C 三版一次下載'],
-  },
-  'pingfen': {
-    icon: '⚖️',
-    sub: '除法→乘法',
-    desc: '把物品平均分配給每個人，從加法延伸到乘法算式，連結平分與乘法的關係。',
-    features: ['平分→加法→乘法三步驟', '找出平均數概念', '固定5題靜態學習單'],
-  },
-  'liangbushu': {
-    icon: '🏷️',
-    sub: '四位數加減',
-    desc: '千元商品價目表，選兩件商品計算合計，再從付款金額找零，建立四位數兩步驟計算流程。',
-    features: ['四位數加法→合計', '四位數減法→找零', '題目全自動產生'],
-  },
-  'chenghe': {
-    icon: '✖️',
-    sub: '乘法→找零',
-    desc: '買同款商品 N 件，先用乘法算合計，再從付款金額找零，九九乘法的生活應用兩步驟練習。',
-    features: ['乘法求合計', '減法求找零', '3 道題全自動隨機'],
-  },
-  'haochashao': {
-    icon: '🏷️',
-    sub: '一步驟減法',
-    desc: '甜點店商品標價，學生存了一些錢卻不夠，計算還差多少元才能買到，建立減法的生活情境。',
-    features: ['標價－存款＝還差多少', '甜點店 4 件商品', '6 道題全自動隨機'],
-  },
-};
+// 首頁卡片資料（定義於 TYPE_REGISTRY.home）
+const HOME_TYPE_META = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.home]));
 
 const HOME_OP_KEYS = ['all','add','sub','mul','div','addsub','addsubmul'];
 
@@ -2718,15 +2825,8 @@ function renderHomeFilter() {
 }
 
 // 排序鍵：[主要運算難度（加1/減2/乘3/除4）, 計算位數, 步驟數]
-const TYPE_SORT = {
-  'liangbushu':    [2, 4, 2],
-  'n2-change':     [3, 2, 2],
-  'chenghe':       [3, 2, 2],
-  'sanbushu':      [3, 2, 3],
-  'fenfen':        [4, 2, 1],
-  'pingfen':       [4, 2, 1],
-  'haochashao':    [2, 2, 1],
-};
+// 排序鍵：[主要運算難度（加1/減2/乘3/除4）, 計算位數, 步驟數]（定義於 TYPE_REGISTRY.sortKey）
+const TYPE_SORT = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.sortKey]));
 
 function renderHomeTypeCards() {
   const op = [...curOps][0];
@@ -2765,13 +2865,8 @@ function renderHomeTypeCards() {
 }
 
 function applyTypeLayout(typeId) {
-  const isN2 = typeId === 'n2-change';
-  const isSb = typeId === 'sanbushu';
-  const isFf = typeId === 'fenfen';
-  const isPf = typeId === 'pingfen';
-  const isLb = typeId === 'liangbushu';
-  const isCh = typeId === 'chenghe';
-  const isHc = typeId === 'haochashao';
+  const L = getReg(typeId).layout;
+  const isN2 = L.interactive;
 
   // 左欄：購物找零顯示互動難度卡＋儲存設定；其他題型顯示靜態難度資訊卡
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
@@ -2779,10 +2874,9 @@ function applyTypeLayout(typeId) {
   document.getElementById('diffInfoCard').style.display   = isN2 ? 'none' : '';
   if (!isN2) renderDiffInfoCard(typeId);
 
-  // 單價調整卡：三步驟、兩步驟加減混合、倍數購物、還差多少顯示
-  const hasPrices = isSb || isLb || isCh || isHc;
-  document.getElementById('priceEditCard').style.display = hasPrices ? '' : 'none';
-  if (hasPrices) {
+  // 單價調整卡：由 registry layout.prices 控制
+  document.getElementById('priceEditCard').style.display = L.prices ? '' : 'none';
+  if (L.prices) {
     S.priceOverrides = {};
     renderPriceEditRows();
   }
@@ -2816,16 +2910,15 @@ function applyTypeLayout(typeId) {
   // Gen meta：購物找零才需要顯示答案摘要
   document.getElementById('genMeta').style.display = isN2 ? '' : 'none';
 
-  // 找出平均數、分分看：不需要主題格（haochashao 需要）
-  document.getElementById('themeCard').style.display = (isPf || isFf) ? 'none' : '';
+  // 主題選擇卡：由 registry layout.showTheme 控制
+  document.getElementById('themeCard').style.display = L.showTheme ? '' : 'none';
 
-  // typeTabsCard 內：只顯示對應題型的面板
-  document.getElementById('fenfenPanel').style.display        = isFf ? '' : 'none';
-  document.getElementById('sanbushuPanel').style.display      = isSb ? '' : 'none';
-  document.getElementById('pingfenPanel').style.display       = isPf ? '' : 'none';
-  document.getElementById('liangbushuPanel').style.display    = isLb ? '' : 'none';
-  document.getElementById('chenghePanel').style.display       = isCh ? '' : 'none';
-  document.getElementById('haochashaoPanel').style.display    = isHc ? '' : 'none';
+  // typeTabsCard 內：只顯示對應題型的面板（由 registry layout.panel 控制）
+  TYPE_REGISTRY.forEach(t => {
+    if (!t.layout.panel) return;
+    const el = document.getElementById(t.layout.panel);
+    if (el) el.style.display = (t.id === typeId) ? '' : 'none';
+  });
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
