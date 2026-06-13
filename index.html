@@ -1311,10 +1311,10 @@ body {
       <!-- 答案預覽 tab 內容（含各題型設定）-->
       <div id="type-tab-preview">
 
-        <!-- 分分看 -->
+        <!-- 分分看（固定版） -->
         <div id="fenfenPanel" style="display:none;">
           <div class="card-head">
-            <span class="card-title">分裝分組</span>
+            <span class="card-title">分分看（固定版）</span>
             <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
           <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
@@ -1789,24 +1789,24 @@ const TYPE_REGISTRY = [
   },
   {
     id:'fenfen', code:'N-2-3', grade:'2',
-    name:'分裝分組＿一步驟除法（兩位數）',
+    name:'分分看（固定版）＿一步驟除法（兩位數）',
     ops:['div'],
-    keywords:['分裝','幾組','等分','除法'],
-    desc:'選主題與物件，自動產生4大題×3小題的分裝數學題組。每小題展示商品圖示，學生數數後填答。只需選主題與物件，題目自動排列。',
+    keywords:['分分看','圈一圈','等分','除法','花','氣球','糖果'],
+    desc:'固定 3 種物件（花、氣球、糖果），6 道等分除法題，圖示預先印好，學生數數後填入「共可分成幾組」。除數固定（2、2、3、4、5、6），被除數每次隨機。',
     sortKey:[4,2,1],
     home:{
-      icon:'🍡', sub:'除法概念',
-      desc:'把物品平均分裝成幾組，搭配圖示數數，建立等分除法的基本概念。',
-      features:['圖示輔助數數填答','分裝等分概念','A/B/C 三版一次下載'],
+      icon:'🌼', sub:'除法概念',
+      desc:'花、氣球、糖果圖示已印好，學生數一數並填入「共可分成幾組」，建立等分除法概念。',
+      features:['圖示預先印好，學生只需數數','花/氣球/糖果固定三種','數量每次隨機'],
     },
     diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
-      desc:'以具體圖示輔助「等分除法」概念，每份幾個，適合除法初學者。' },
-    sample:{ pdf:'assets/fenfen_sample.pdf', name:'分裝分組_一步驟除法_兩位數_範本.pdf' },
+      desc:'圖示預先繪好，學生數一數即可填答，是認識等分除法的第一步。' },
+    sample:{ pdf:'assets/fenfen_sample.pdf', name:'分分看（固定版）_一步驟除法_兩位數_範本.pdf' },
     layout:{ panel:'fenfenPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
     api:{
       endpoint:'/generate/fenfen',
       body:()=>({}),
-      filename:()=>'分裝分組_一步驟除法_兩位數.docx',
+      filename:()=>'分分看（固定版）_一步驟除法_兩位數.docx',
     },
   },
   {
@@ -2178,8 +2178,10 @@ function updateSteps() {
     const step4 = document.getElementById('step4-item');
     step1.classList.remove('active','done');
     step4.classList.remove('active','done');
-    if (S.themeId) { step1.classList.add('done'); step4.classList.add('active'); }
-    else            { step1.classList.add('active'); }
+    // fenfennew 用 S.fenfennewTheme；其他題型用 S.themeId
+    const hasTheme = typeId === 'fenfennew' ? !!S.fenfennewTheme : !!S.themeId;
+    if (hasTheme) { step1.classList.add('done'); step4.classList.add('active'); }
+    else           { step1.classList.add('active'); }
   }
 }
 
@@ -2282,12 +2284,12 @@ function renderTypeGallery() {
   const lbl    = document.getElementById('type-gallery-theme');
   if (!grid) return;
 
-  // 找出平均數、分分看：無圖庫
-  if (typeId === 'pingfen' || typeId === 'fenfen') {
+  // 找出平均數、分分看、分分看（新版）：無圖庫
+  if (typeId === 'pingfen' || typeId === 'fenfen' || typeId === 'fenfennew') {
     document.getElementById('typeGalleryHeader').style.display = 'none';
     grid.style.display  = 'none';
     empty.style.display = '';
-    empty.innerHTML = '此題型不使用商品圖庫，<br>數字由系統隨機產生。';
+    empty.innerHTML = '此題型不使用商品圖庫，<br>圖示由系統依主題自動選用。';
     if (lbl) lbl.textContent = '—';
     return;
   }
@@ -2696,6 +2698,37 @@ function selectFenfenItem(i) {
   renderFenfenItems();
 }
 
+// ── 分分看（新版）──
+const FENFEN_NEW_THEMES = ['花','蘋果','水果','小動物','海洋生物','農場動物','魚','氣球','小狗','糖果','文具'];
+
+async function renderFenfennewThemeGrid() {
+  const grid = document.getElementById('fenfennewThemeGrid');
+  if (!grid) return;
+  // 若圖示尚未從後端載入，先用靜態清單渲染，再嘗試取得 counter
+  let themes = FENFEN_NEW_THEMES.map(name => ({ name, count: 6, counter: '' }));
+  try {
+    const res = await fetch(`${API_URL}/library/fenfennew`);
+    if (res.ok) {
+      const data = await res.json();
+      themes = data.themes || themes;
+    }
+  } catch (_) {}
+  grid.innerHTML = themes.map(t => `
+    <div class="gallery-item ${S.fenfennewTheme === t.name ? 'selected' : ''}"
+         onclick="selectFenfennewTheme('${t.name}')"
+         style="padding:8px 6px;cursor:pointer;">
+      <span class="gi-name" style="font-size:13px;font-weight:700;">${t.name}</span>
+      ${t.counter ? `<span class="gi-counter" style="font-size:11px;color:var(--gray);">${t.counter}</span>` : ''}
+      <span class="gi-price" style="font-size:11px;color:var(--teal-dark);">${t.count} 張圖</span>
+    </div>`).join('');
+}
+
+function selectFenfennewTheme(name) {
+  S.fenfennewTheme = name;
+  renderFenfennewThemeGrid();
+  updateSteps();
+}
+
 function selectFenfenSet(v) {
   S.fenfenSet = v;
   ['A','B','C'].forEach(s => {
@@ -2801,11 +2834,13 @@ const HOME_TYPE_META = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.home]));
 const HOME_OP_KEYS = ['all','add','sub','mul','div','addsub','addsubmul'];
 
 const TOPIC_COLORS = {
-  '購物找零': '#d97706',
-  '倍數購物': '#0d9488',
-  '分裝分組': '#16a34a',
-  '平分問題': '#2563eb',
-  '還差多少': '#dc2626',
+  '購物找零':      '#d97706',
+  '倍數購物':      '#0d9488',
+  '分裝分組':      '#16a34a',
+  '平分問題':      '#2563eb',
+  '還差多少':      '#dc2626',
+  '分分看':        '#8b5cf6',
+  '分分看（固定版）': '#8b5cf6',
 };
 
 function coloredName(name) {
@@ -2919,6 +2954,7 @@ function applyTypeLayout(typeId) {
     const el = document.getElementById(t.layout.panel);
     if (el) el.style.display = (t.id === typeId) ? '' : 'none';
   });
+  if (typeId === 'fenfennew') renderFenfennewThemeGrid();
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
