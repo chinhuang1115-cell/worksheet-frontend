@@ -1744,13 +1744,13 @@ const TYPE_REGISTRY = [
     id:'n2-change', code:'N-2-7', grade:'2',
     name:'購物找零＿兩步驟乘減（兩位數）',
     ops:['mul','sub','mix'],
-    keywords:['找零','付款','買幾個','兩步驟乘減'],
-    desc:'第1頁：買1件＋1件找零、買3件找零、買5件找零（乘法＋減法）。第2頁：口袋有N元最多能買幾件（預算判斷）。',
+    keywords:['找零','付款','兩步驟乘減'],
+    desc:'價目表 4 件商品，3 道找零題：買1件A＋1件B找零、買3件A找零、買5件A找零（乘法＋減法兩步驟）。',
     sortKey:[3,2,2],
     home:{
       icon:'🛒', sub:'乘法 × 減法',
-      desc:'學生到店裡購物，計算找零金額，以及口袋裡的錢最多能買幾件商品。',
-      features:['買東西計算找零','預算最多能買幾個','乘法＋減法兩步驟'],
+      desc:'學生到店裡購物，計算找零金額，練習乘法應用加付款找零的兩步驟計算。',
+      features:['買東西計算找零','乘法＋減法兩步驟','3 道題全自動配置'],
     },
     diffInfo:null,
     sample:{ pdf:'assets/n2change_sample.pdf', name:'購物找零_兩步驟乘減_兩位數_範本.pdf' },
@@ -1766,11 +1766,36 @@ const TYPE_REGISTRY = [
     },
   },
   {
+    id:'maxbuy', code:'N-2-8', grade:'2',
+    name:'最多能買幾個＿預算判斷（兩位數）',
+    ops:['mul','div'],
+    keywords:['最多能買','買幾個','預算','預算判斷','口袋有幾元'],
+    desc:'口袋有 N 元，單件商品定價後，學生逐一計算買 2 個、3 個…的花費，找出不超出預算的最大數量（答案落在 3～5 個）。',
+    sortKey:[3,2,1],
+    home:{
+      icon:'💰', sub:'預算 × 判斷',
+      desc:'口袋有 N 元，最多能買幾件？學生逐步計算每個數量的總金額，找出不超預算的最大數量。',
+      features:['以乘法試算不同數量','比較總金額與預算','找出最大可購買數量'],
+    },
+    diffInfo:null,
+    sample:{ pdf:'assets/maxbuy_sample.pdf', name:'最多能買幾個_預算判斷_兩位數_範本.pdf' },
+    layout:{ panel:null, themeSet:'cheap', showTheme:true, prices:false, interactive:true },
+    api:{
+      endpoint:'/generate/maxbuy',
+      body:()=>({
+        theme:S.themeId, type_name:getType().name, difficulty:S.diff,
+        items:S.items.map(it=>({name:it.name,counter:it.counter,price:it.price,file:it.file||''})),
+        budget:S.budget,
+      }),
+      filename:()=>`${S.themeId}_最多能買幾個_預算判斷_兩位數_${DIFF_CFG[S.diff].label}.docx`,
+    },
+  },
+  {
     id:'sanbushu', code:'N-2-7', grade:'2',
     name:'購物找零＿三步驟乘加減（兩位數）',
     ops:['mul','add','sub','mix'],
     keywords:['三步驟','加減混合','買兩種','合計找零'],
-    desc:'第1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。第2頁：8個Menu商品（兩組合併）＋2道題。只需選主題，題目自動產生。',
+    desc:'1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。題目全自動產生，只需選主題。',
     sortKey:[3,2,3],
     home:{
       icon:'📋', sub:'加減混合',
@@ -2124,13 +2149,16 @@ function update() {
   if(a.maxQ>=6) warns.push('答案是6（上限），建議提高單價或降低預算');
   if(a.maxQ<=2) warns.push('答案是2個或更少，建議降低單價或提高預算');
   const isN2change = (getType().id === 'n2-change');
+  const isMaxbuy   = (getType().id === 'maxbuy');
+  const isInteractive = isN2change || isMaxbuy;
   const isSanbushu = (getType().id === 'sanbushu');
-  const isSpecialType = !['n2-change'].includes(getType().id); // 只有 n2-change 需要 warns 檢查
+  const isSpecialType = !isInteractive;
+  const maxQWarns  = warns.filter(w => w.includes('答案是'));
+  const shownWarns = isN2change ? warns : isMaxbuy ? maxQWarns : [];
   const wb = document.getElementById('warnBox');
-  // warnBox 只在購物找零且有錯誤時顯示
-  const showWarn = isN2change && warns.length > 0;
+  const showWarn = isInteractive && shownWarns.length > 0;
   wb.style.display = showWarn ? 'block' : 'none';
-  if(showWarn) wb.innerHTML = '⚠️ <strong>需要調整：</strong><br>' + warns.map(w=>'• '+w).join('<br>');
+  if(showWarn) wb.innerHTML = '⚠️ <strong>需要調整：</strong><br>' + shownWarns.map(w=>'• '+w).join('<br>');
   // 分分看面板
   const isFenfen = (getType().id === 'fenfen');
   document.getElementById('fenfenPanel').style.display = isFenfen ? '' : 'none';
@@ -2140,25 +2168,28 @@ function update() {
   if (isSanbushu) loadSanbushuPreview(S.themeId);
 
   // Gen meta
+  const answerRow = isMaxbuy
+    ? `<div class="gen-meta-row"><span class="gen-meta-label">答案</span><span class="gen-meta-val" style="color:var(--teal)">最多買 ${a.maxQ} ${c0}</span></div>`
+    : '';
   document.getElementById('genMeta').innerHTML = `
     <div class="gen-meta-row"><span class="gen-meta-label">主題</span><span class="gen-meta-val">${S.themeId}</span></div>
     <div class="gen-meta-row"><span class="gen-meta-label">題型</span><span class="gen-meta-val">${getType().name}</span></div>
     <div class="gen-meta-row"><span class="gen-meta-label">難度</span><span class="gen-meta-val">${DIFF_CFG[S.diff].label}</span></div>
-    <div class="gen-meta-row"><span class="gen-meta-label">答案</span><span class="gen-meta-val" style="color:var(--teal)">最多買 ${a.maxQ} ${c0}</span></div>`;
+    ${answerRow}`;
 
   // Update steps
   updateSteps();
 
   // Gen btn
   const left = getTrialLeft();
-  document.getElementById('genBtn').disabled = left===0 || (!isSpecialType && warns.length>0);
+  document.getElementById('genBtn').disabled = left===0 || (isInteractive && shownWarns.length>0);
   renderTrialBar();
 }
 
 // ── STEPS ──
 function updateSteps() {
   const typeId = getType().id;
-  const isN2 = typeId === 'n2-change';
+  const isN2 = ['n2-change', 'maxbuy'].includes(typeId);
   if (isN2) {
     // 購物找零：完整四步邏輯
     const hasType = !!S.typeId;
@@ -2194,8 +2225,8 @@ function switchTab(id, btn) {
   });
   if (id === 'gallery') renderGallery();
   if (id === 'history') {
-    const meta = SAMPLE_PDFS['n2-change'];
-    if (meta) {
+    const meta = SAMPLE_PDFS[S.typeId];
+    if (meta && meta.pdf) {
       document.getElementById('sampleDownloadBtn').href     = meta.pdf;
       document.getElementById('sampleDownloadBtn').download = meta.name;
       _doRenderSamplePdf(meta.pdf, 'samplePdfContainer', 'samplePdfLoading');
@@ -2835,6 +2866,7 @@ const HOME_OP_KEYS = ['all','add','sub','mul','div','addsub','addsubmul'];
 
 const TOPIC_COLORS = {
   '購物找零':      '#d97706',
+  '最多能買幾個':  '#0891b2',
   '倍數購物':      '#0d9488',
   '分裝分組':      '#16a34a',
   '平分問題':      '#2563eb',
@@ -2930,13 +2962,20 @@ function applyTypeLayout(typeId) {
   document.getElementById('rightTabsCard').style.display = isN2 ? '' : 'none';
   document.getElementById('typeTabsCard').style.display = isN2 ? 'none' : '';
   if (!isN2) {
-    // 重設回「答案預覽」tab（切換題型時不殘留上次的 tab 狀態）
-    document.getElementById('typeTab-preview').classList.add('active');
+    // 預設顯示「學習單範本」tab
+    document.getElementById('typeTab-preview').classList.remove('active');
     document.getElementById('typeTab-gallery').classList.remove('active');
-    document.getElementById('typeTab-history').classList.remove('active');
-    document.getElementById('type-tab-preview').style.display = '';
+    document.getElementById('typeTab-history').classList.add('active');
+    document.getElementById('type-tab-preview').style.display = 'none';
     document.getElementById('type-tab-gallery').style.display = 'none';
-    document.getElementById('type-tab-history').style.display = 'none';
+    document.getElementById('type-tab-history').style.display = '';
+    // 觸發 PDF 載入
+    const meta = getReg(typeId).sample;
+    if (meta && meta.pdf) {
+      document.getElementById('typeSampleDownloadBtn').href     = meta.pdf;
+      document.getElementById('typeSampleDownloadBtn').download = meta.name;
+      _doRenderSamplePdf(meta.pdf, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
+    }
   }
 
   // 警告框：只在購物找零顯示
@@ -2981,12 +3020,20 @@ function enterConfig(typeId) {
   applyTypeLayout(typeId);
   clearPreviewCache();
 
-  // 重設右欄 tab 為「答案預覽」
-  document.querySelectorAll('.rtab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.rtab')[0].classList.add('active');
-  ['preview','gallery','history'].forEach((t, i) => {
-    document.getElementById('tab-'+t).style.display = i === 0 ? 'block' : 'none';
+  // 預設右欄 tab 為「學習單範本」（rightTabsCard，用於 n2-change）
+  document.querySelectorAll('#rightTabsCard .rtab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#rightTabsCard .rtab')[2].classList.add('active');
+  ['preview','gallery','history'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === 'history' ? 'block' : 'none';
   });
+  if (getReg(S.typeId).layout.interactive) {
+    const _meta = getReg(S.typeId).sample;
+    if (_meta && _meta.pdf) {
+      document.getElementById('sampleDownloadBtn').href     = _meta.pdf;
+      document.getElementById('sampleDownloadBtn').download = _meta.name;
+      _doRenderSamplePdf(_meta.pdf, 'samplePdfContainer', 'samplePdfLoading');
+    }
+  }
   update();
 }
 
