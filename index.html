@@ -1075,6 +1075,127 @@ body {
 }
 .type-card:hover .type-card-btn { opacity: .9; }
 
+/* ── HOME VIEW TOGGLE ── */
+.home-view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.hv-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 22px;
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  background: var(--warm-white);
+  color: var(--gray);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer;
+  transition: all .15s;
+}
+.hv-btn.active {
+  background: var(--ink);
+  color: var(--cream);
+  border-color: var(--ink);
+}
+.hv-btn:hover:not(.active) {
+  border-color: var(--amber);
+  color: var(--ink);
+}
+
+/* ── SAMPLE PREVIEW GRID ── */
+.type-sample-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.type-sample-card {
+  background: var(--warm-white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+.type-sample-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--amber);
+}
+.sample-thumb-wrap {
+  height: 300px;
+  background: #f0ece4;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.sample-thumb-img {
+  width: 100%;
+  display: block;
+  flex-shrink: 0;
+}
+.sample-thumb-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--gray);
+  background: #f0ece4;
+  gap: 6px;
+}
+.sample-thumb-placeholder {
+  font-size: 12px;
+  color: var(--gray);
+}
+.sample-card-footer {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+}
+.sample-card-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+  flex: 1;
+}
+.sample-card-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer;
+  transition: opacity .15s;
+  position: relative;
+  overflow: hidden;
+}
+.sample-card-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(245,158,11,.18), transparent);
+}
+.type-sample-card:hover .sample-card-btn { opacity: .85; }
+
 /* ── CONFIG BREADCRUMB ── */
 .config-nav {
   background: var(--warm-white);
@@ -1140,7 +1261,12 @@ body {
     <p class="home-sub">選擇題型，快速產出客製化數學學習單</p>
   </div>
   <div class="filter-pills" id="homeOpFilters" style="justify-content:center;margin-bottom:16px;"></div>
-  <div class="type-card-grid" id="typeCardGrid"></div>
+  <div class="home-view-toggle">
+    <button class="hv-btn active" id="hvInfo"   onclick="setHomeView('info')">📝 簡介模式</button>
+    <button class="hv-btn"        id="hvSample" onclick="setHomeView('sample')">🗂 範本預覽</button>
+  </div>
+  <div class="type-card-grid"   id="typeCardGrid"></div>
+  <div class="type-sample-grid" id="typeSampleGrid" style="display:none;"></div>
 </div>
 
 <!-- ── CONFIG NAV ── -->
@@ -2895,6 +3021,18 @@ function renderHomeFilter() {
 // 排序鍵：[主要運算難度（加1/減2/乘3/除4）, 計算位數, 步驟數]（定義於 TYPE_REGISTRY.sortKey）
 const TYPE_SORT = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.sortKey]));
 
+let homeViewMode = 'info';
+const _thumbCache = {}; // typeId -> dataURL
+
+function setHomeView(mode) {
+  homeViewMode = mode;
+  document.getElementById('hvInfo').classList.toggle('active', mode === 'info');
+  document.getElementById('hvSample').classList.toggle('active', mode === 'sample');
+  document.getElementById('typeCardGrid').style.display   = mode === 'info'   ? '' : 'none';
+  document.getElementById('typeSampleGrid').style.display = mode === 'sample' ? '' : 'none';
+  if (mode === 'sample') _loadAllThumbs();
+}
+
 function renderHomeTypeCards() {
   const op = [...curOps][0];
   const filtered = TYPES
@@ -2911,24 +3049,95 @@ function renderHomeTypeCards() {
       const [ob, db, sb] = TYPE_SORT[b.id] ?? [9, 9, 9];
       return oa !== ob ? oa - ob : da !== db ? da - db : sa - sb;
     });
+
+  const empty = '<div style="text-align:center;padding:40px 0;color:var(--gray);font-size:13px;">此分類尚無題型</div>';
+
+  // 簡介模式
   document.getElementById('typeCardGrid').innerHTML = filtered.length
     ? filtered.map(t => {
-    const m = HOME_TYPE_META[t.id] || {};
-    return `
-    <div class="type-card" onclick="enterConfig('${t.id}')">
-      <div class="type-card-icon">${m.icon || '📄'}</div>
-      <div>
-        <div class="type-card-name">${coloredName(t.name)}</div>
-        <span class="type-card-sub">${m.sub || ''}</span>
-      </div>
-      <div class="type-card-desc">${m.desc || t.desc}</div>
-      <div class="type-card-features">
-        ${(m.features || []).map(f => `<div class="type-card-feature">${f}</div>`).join('')}
-      </div>
-      <button class="type-card-btn" onclick="event.stopPropagation();enterConfig('${t.id}')">立即使用 →</button>
-    </div>`;
-  }).join('')
-  : '<div style="text-align:center;padding:40px 0;color:var(--gray);font-size:13px;">此分類尚無題型</div>';
+        const m = HOME_TYPE_META[t.id] || {};
+        return `
+        <div class="type-card" onclick="enterConfig('${t.id}')">
+          <div class="type-card-icon">${m.icon || '📄'}</div>
+          <div>
+            <div class="type-card-name">${coloredName(t.name)}</div>
+            <span class="type-card-sub">${m.sub || ''}</span>
+          </div>
+          <div class="type-card-desc">${m.desc || t.desc}</div>
+          <div class="type-card-features">
+            ${(m.features || []).map(f => `<div class="type-card-feature">${f}</div>`).join('')}
+          </div>
+          <button class="type-card-btn" onclick="event.stopPropagation();enterConfig('${t.id}')">立即使用 →</button>
+        </div>`;
+      }).join('')
+    : empty;
+
+  // 範本預覽模式
+  document.getElementById('typeSampleGrid').innerHTML = filtered.length
+    ? filtered.map(t => {
+        const sample = SAMPLE_PDFS[t.id];
+        const hasPdf = sample?.pdf;
+        return `
+        <div class="type-sample-card" onclick="enterConfig('${t.id}')">
+          <div class="sample-thumb-wrap">
+            ${hasPdf
+              ? `<img class="sample-thumb-img" id="thumb-img-${t.id}" style="display:none;" alt="${t.name}">
+                 <div class="sample-thumb-loading" id="thumb-loading-${t.id}">
+                   <span>載入中…</span>
+                 </div>`
+              : `<div class="sample-thumb-placeholder">尚無範本預覽</div>`}
+          </div>
+          <div class="sample-card-footer">
+            <div class="sample-card-name">${coloredName(t.name)}</div>
+            <button class="sample-card-btn" onclick="event.stopPropagation();enterConfig('${t.id}')">使用 →</button>
+          </div>
+        </div>`;
+      }).join('')
+    : empty;
+
+  // 若目前在範本預覽模式，觸發縮圖載入
+  if (homeViewMode === 'sample') _loadAllThumbs();
+}
+
+async function _loadAllThumbs() {
+  let pdfjsLib;
+  try {
+    pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+  } catch(e) { return; }
+
+  for (const t of TYPE_REGISTRY) {
+    const sample = SAMPLE_PDFS[t.id];
+    if (!sample?.pdf) continue;
+    const img = document.getElementById(`thumb-img-${t.id}`);
+    if (!img) continue; // 被 filter 排除或不在 DOM 中
+
+    if (_thumbCache[t.id]) {
+      img.src = _thumbCache[t.id];
+      img.style.display = 'block';
+      document.getElementById(`thumb-loading-${t.id}`)?.remove();
+      continue;
+    }
+
+    try {
+      const pdf = await pdfjsLib.getDocument(sample.pdf).promise;
+      const page = await pdf.getPage(1);
+      const vp = page.getViewport({ scale: 1.0 });
+      const offscreen = document.createElement('canvas');
+      offscreen.width = vp.width;
+      offscreen.height = vp.height;
+      await page.render({ canvasContext: offscreen.getContext('2d'), viewport: vp }).promise;
+      const dataUrl = offscreen.toDataURL('image/jpeg', 0.88);
+      _thumbCache[t.id] = dataUrl;
+      img.src = dataUrl;
+      img.style.display = 'block';
+      document.getElementById(`thumb-loading-${t.id}`)?.remove();
+    } catch(e) {
+      const el = document.getElementById(`thumb-loading-${t.id}`);
+      if (el) el.innerHTML = '<span style="color:var(--red);font-size:11px;">載入失敗</span>';
+    }
+  }
 }
 
 function applyTypeLayout(typeId) {
