@@ -1613,6 +1613,23 @@ body {
           </div>
         </div><!-- /huachu4subPanel -->
 
+        <!-- No-Carry Addition (4-digit) — Draw Coins (English) -->
+        <div id="huachu4addEnPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">No-Carry Addition (4-digit) — Draw Coins</span>
+            <span style="font-size:11px;color:var(--teal-dark);">Randomized</span>
+          </div>
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+            <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+              5 problems of 4-digit no-carry addition with coin drawing aid.<br>
+              Writing practice: thousands digit counts up from 2 to 9, same last 3 digits, 8 blanks.
+            </div>
+            <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+              ✦ 5 problems, numbers randomized each time &nbsp;✦ No carrying (each column sum ≤ 9) &nbsp;✦ Standard: N-3-1
+            </div>
+          </div>
+        </div><!-- /huachu4addEnPanel -->
+
       </div><!-- /type-tab-preview -->
 
       <!-- 圖庫瀏覽 tab 內容 -->
@@ -2143,6 +2160,28 @@ const TYPE_REGISTRY = [
     },
   },
   {
+    id:'huachu4add-en', code:'N-3-1', grade:'3',
+    name:'No-Carry Addition (4-digit) — Draw Coins',
+    ops:['add'],
+    keywords:['draw coins','4-digit','no carry','addition','English'],
+    desc:'5 four-digit no-carry addition problems with coin drawing aid. Writing practice: thousands digit 2→9, same last 3 digits, 8 blanks. Numbers randomized each time.',
+    sortKey:[1,4,1],
+    home:{
+      icon:'🪙', sub:'4-digit No-Carry Addition',
+      desc:'Draw coins to represent 4-digit numbers, solve 5 no-carry addition problems. Writing practice counts up by thousands.',
+      features:['4-digit no-carry addition','Coin drawing aid','Thousands counting-up practice'],
+    },
+    diffInfo:{ grade:'Grade 3', level:'Foundation', levelColor:'#22c55e', code:'N-3-1',
+      desc:'4-digit addition (no carrying). Students draw coins to understand place value. Suitable for introductory 4-digit addition practice.' },
+    sample:{ pdf:'assets/huachu4add_en_sample.pdf', name:'No-Carry-Addition_4-digit_Draw-Coins_sample.pdf' },
+    layout:{ panel:'huachu4addEnPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/huachu4add-en',
+      body:()=>({}),
+      filename:()=>'No-Carry Addition (4-digit) — Draw Coins.docx',
+    },
+  },
+  {
     id:'fenfennew', code:'N-2-3', grade:'2',
     name:'分分看＿一步驟除法（兩位數）',
     ops:['div'],
@@ -2533,7 +2572,7 @@ function renderTypeGallery() {
   if (!grid) return;
 
   // 找出平均數、分分看、分分看（新版）：無圖庫
-  if (typeId === 'pingfen' || typeId === 'fenfen' || typeId === 'fenfennew' || typeId === 'huachu4add' || typeId === 'huachu4sub') {
+  if (typeId === 'pingfen' || typeId === 'fenfen' || typeId === 'fenfennew' || typeId === 'huachu4add' || typeId === 'huachu4sub' || typeId === 'huachu4add-en') {
     document.getElementById('typeGalleryHeader').style.display = 'none';
     grid.style.display  = 'none';
     empty.style.display = '';
