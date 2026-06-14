@@ -1579,10 +1579,10 @@ body {
           </div>
         </div><!-- /fenfennewPanel -->
 
-        <!-- 畫出錢幣＿一步驟加法（四位數） -->
+        <!-- 不進位的加法（四位數）＿畫錢幣輔助 -->
         <div id="huachu4addPanel" style="display:none;">
           <div class="card-head">
-            <span class="card-title">畫出錢幣＿四位數加法</span>
+            <span class="card-title">不進位的加法（四位數）＿畫錢幣輔助</span>
             <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
           <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
@@ -2083,24 +2083,24 @@ const TYPE_REGISTRY = [
   },
   {
     id:'huachu4add', code:'N-3-1', grade:'3',
-    name:'畫出錢幣＿一步驟加法（四位數）',
+    name:'不進位的加法（四位數）＿畫錢幣輔助',
     ops:['add'],
     keywords:['畫出錢幣','四位數','不進位','加法','錢幣'],
     desc:'5 道四位數不進位加法題（畫出錢幣並計算），搭配寫一寫練習千位遞增數列。數字每次隨機產生，不進位保證每位數和 ≤ 9。',
     sortKey:[1,4,1],
     home:{
-      icon:'🪙', sub:'四位數加法',
+      icon:'🪙', sub:'四位數不進位加法',
       desc:'畫出錢幣表示四位數，5 道不進位加法題，搭配寫一寫練習千位遞增，建立四位數加法的數感。',
       features:['四位數不進位加法','畫出錢幣輔助理解','寫一寫千位遞增練習'],
     },
     diffInfo:{ grade:'三年級', level:'基礎', levelColor:'#22c55e', code:'N-3-1',
       desc:'四位數加法（不進位），以畫錢幣輔助學生理解位值，適合四位數加法的入門練習。' },
-    sample:{ pdf:'assets/huachu4add_sample.pdf', name:'畫出錢幣_一步驟加法_四位數_範本.pdf' },
+    sample:{ pdf:'assets/huachu4add_sample.pdf', name:'不進位的加法_四位數_畫錢幣輔助_範本.pdf' },
     layout:{ panel:'huachu4addPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
     api:{
       endpoint:'/generate/huachu4add',
       body:()=>({}),
-      filename:()=>'畫出錢幣＿一步驟加法（四位數）.docx',
+      filename:()=>'不進位的加法（四位數）＿畫錢幣輔助.docx',
     },
   },
   {
