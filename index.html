@@ -1439,20 +1439,36 @@ body {
 
         <!-- 分分看（固定版） -->
         <div id="fenfenPanel" style="display:none;">
-          <div class="card-head">
-            <span class="card-title">分分看（固定版）</span>
-            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
+          <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="card-title">分分看設定</span>
+            <div style="display:flex;gap:4px;">
+              <button id="fenfenVerA" class="fenfen-set-btn active" onclick="selectFenfenVersion('A')">A 版</button>
+              <button id="fenfenVerB" class="fenfen-set-btn" onclick="selectFenfenVersion('B')">B 版</button>
+            </div>
           </div>
           <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
-            <div style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:10px 12px;line-height:1.8;">
-              共 <strong>6 題</strong>，每題展示物件圖示讓學生數數後填答。<br>
-              物件：花（÷2）、氣球（÷2）、糖果（÷3）、花（÷4）、氣球（÷5）、糖果（÷6）。<br>
-              每次下載數量隨機，可重複產生不同版本。
+            <!-- A版（固定版） -->
+            <div id="fenfenContentA">
+              <div style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:10px 12px;line-height:1.8;">
+                共 <strong>6 題</strong>，每題展示物件圖示，學生數數後填答。<br>
+                每次從圖庫隨機挑選 3 種物件，每種出現 2 次，除數固定（÷2/÷4、÷2/÷5、÷3/÷6）。<br>
+                數量每次隨機，可重複產生不同版本。
+              </div>
             </div>
-            <button onclick="downloadFenfenAll()"
-              style="width:100%;padding:10px;background:var(--teal);color:white;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans TC',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;">
-              ⬇ 一次下載三份 (ZIP)
-            </button>
+            <!-- B版（新版） -->
+            <div id="fenfenContentB" style="display:none;flex-direction:column;gap:10px;">
+              <div style="font-size:12px;color:var(--gray);line-height:1.8;">
+                選擇物件主題，系統自動產生 6 題等分除法練習。<br>
+                每題展示圖示讓學生數數，除數與數量每次隨機。
+              </div>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px;">選擇物件主題</div>
+                <div id="fenfenBThemeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+              </div>
+              <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+                ✦ 共 6 題，除數隨機 2–6　✦ 適合二年級初學者　✦ 課綱：N-2-3
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1940,24 +1956,24 @@ const TYPE_REGISTRY = [
   },
   {
     id:'fenfen', code:'N-2-3', grade:'2',
-    name:'分分看（固定版）＿一步驟除法（兩位數）',
+    name:'分分看＿一步驟除法（兩位數）',
     ops:['div'],
     keywords:['分分看','圈一圈','等分','除法','花','氣球','糖果'],
-    desc:'固定 3 種物件（花、氣球、糖果），6 道等分除法題，圖示預先印好，學生數數後填入「共可分成幾組」。除數固定（2、2、3、4、5、6），被除數每次隨機。',
+    desc:'同一設定頁含 A、B 兩版。A版：從圖庫隨機挑選 3 種物件，圖示預先印好，學生數數填答；B版：可選 11 種主題，系統自動產生圖示，除數每次隨機。',
     sortKey:[4,2,1],
     home:{
-      icon:'🌼', sub:'除法概念',
-      desc:'花、氣球、糖果圖示已印好，學生數一數並填入「共可分成幾組」，建立等分除法概念。',
-      features:['圖示預先印好，學生只需數數','花/氣球/糖果固定三種','數量每次隨機'],
+      icon:'🌼', sub:'除法概念（A / B 版）',
+      desc:'同一設定頁提供兩版：A版圖示預印（隨機主題）、B版可選主題自動產圖，兩版均為 6 題等分除法。',
+      features:['A版：隨機物件，圖示預印填數','B版：11種主題可選，系統產圖','兩版除數均為 2–6'],
     },
     diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
-      desc:'圖示預先繪好，學生數一數即可填答，是認識等分除法的第一步。' },
-    sample:{ pdf:'assets/fenfen_sample.pdf', name:'分分看（固定版）_一步驟除法_兩位數_範本.pdf' },
+      desc:'A版圖示預先繪好，學生數一數即可填答；B版可選主題，圖示隨機產生，是認識等分除法的第一步。' },
+    sample:{ pdf:'assets/fenfen_sample.pdf', name:'分分看_一步驟除法_兩位數_A版_範本.pdf' },
     layout:{ panel:'fenfenPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
     api:{
       endpoint:'/generate/fenfen',
       body:()=>({}),
-      filename:()=>'分分看（固定版）_一步驟除法_兩位數.docx',
+      filename:()=>'分分看_A版_一步驟除法_兩位數.docx',
     },
   },
   {
@@ -2055,14 +2071,10 @@ const TYPE_REGISTRY = [
     keywords:['分分看','幾組','等分','除法','圖示'],
     desc:'選擇物件主題（花、動物、水果等），系統自動產生 6 道等分除法題組，每題展示圖示讓學生數數後填答。除數 2–6 隨機，A4 橫向雙欄版面。',
     sortKey:[4,2,1],
-    home:{
-      icon:'🌸', sub:'除法概念',
-      desc:'選物件主題，6 道題展示圖示讓學生數數並練習等分除法，除數與數量每次隨機，A4 橫向雙欄。',
-      features:['6 題圖示輔助數數填答','除數隨機 2–6','11 種物件主題可選'],
-    },
+    home:null,
     diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
       desc:'以具體圖示輔助「等分除法」概念，數幾個、每幾個一組、共幾組，適合除法初學者。' },
-    sample:{ pdf:null, name:'分分看_一步驟除法_兩位數_範本.pdf' },
+    sample:{ pdf:'assets/fenfennew_sample.pdf', name:'分分看_一步驟除法_兩位數_範本.pdf' },
     layout:{ panel:'fenfennewPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
     api:{
       endpoint:'/generate/fenfennew',
@@ -2085,6 +2097,7 @@ let S = {
   budget: 150,
   diff: 'mid',
   fenfenItemIndex: 0,
+  fenfenVersion: 'A',
   fenfenSet: 'A',
   fenfennewTheme: '花',
   priceOverrides: {},
@@ -2119,8 +2132,8 @@ function renderTrialBar() {
     left > 0
       ? `本月剩餘 ${left} 次免費產出（共 ${TRIAL_LIMIT} 次）`
       : '本月試用次數已用完，升級後繼續使用';
-  const _specialType = !['n2-change'].includes(getType().id); // 只有 n2-change 需要 warns 檢查
-  document.getElementById('genBtn').disabled = left === 0 || (!_specialType && hasWarnings());
+  const _isInteractive = getReg(getType().id).layout.interactive;
+  document.getElementById('genBtn').disabled = left === 0 || (_isInteractive && hasWarnings());
 }
 
 // ── INIT ──
@@ -2721,7 +2734,9 @@ async function directDownload() {
   const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
 
   try {
-    const reg = getReg(type.id);
+    // 分分看 B版 → 路由到 fenfennew API
+    let reg = getReg(type.id);
+    if (type.id === 'fenfen' && S.fenfenVersion === 'B') reg = getReg('fenfennew');
     const res = await fetch(`${API_URL}${reg.api.endpoint}`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify(reg.api.body()),
@@ -2883,7 +2898,49 @@ async function renderFenfennewThemeGrid() {
 function selectFenfennewTheme(name) {
   S.fenfennewTheme = name;
   renderFenfennewThemeGrid();
+  renderFenfenBThemeGrid();
   updateSteps();
+}
+
+async function renderFenfenBThemeGrid() {
+  const grid = document.getElementById('fenfenBThemeGrid');
+  if (!grid) return;
+  let themes = FENFEN_NEW_THEMES.map(name => ({ name, count: 6, counter: '' }));
+  try {
+    const res = await fetch(`${API_URL}/library/fenfennew`);
+    if (res.ok) {
+      const data = await res.json();
+      themes = data.themes || themes;
+    }
+  } catch (_) {}
+  grid.innerHTML = themes.map(t => `
+    <div class="gallery-item ${S.fenfennewTheme === t.name ? 'selected' : ''}"
+         onclick="selectFenfennewTheme('${t.name}')"
+         style="padding:8px 6px;cursor:pointer;">
+      <span class="gi-name" style="font-size:13px;font-weight:700;">${t.name}</span>
+      ${t.counter ? `<span class="gi-counter" style="font-size:11px;color:var(--gray);">${t.counter}</span>` : ''}
+      <span class="gi-price" style="font-size:11px;color:var(--teal-dark);">${t.count} 張圖</span>
+    </div>`).join('');
+}
+
+function selectFenfenVersion(v) {
+  S.fenfenVersion = v;
+  ['A','B'].forEach(s => {
+    const btn = document.getElementById('fenfenVer'+s);
+    if (btn) btn.classList.toggle('active', s === v);
+    const content = document.getElementById('fenfenContent'+s);
+    if (content) {
+      content.style.display = s === v ? (s === 'B' ? 'flex' : '') : 'none';
+    }
+  });
+  if (v === 'B') renderFenfenBThemeGrid();
+  // 更新右欄的學習單範本
+  const meta = v === 'A' ? getReg('fenfen').sample : getReg('fenfennew').sample;
+  if (meta?.pdf) {
+    const dlBtn = document.getElementById('typeSampleDownloadBtn');
+    if (dlBtn) { dlBtn.href = meta.pdf; dlBtn.download = meta.name; }
+    _doRenderSamplePdf(meta.pdf, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
+  }
 }
 
 function selectFenfenSet(v) {
@@ -2998,7 +3055,6 @@ const TOPIC_COLORS = {
   '平分問題':      '#2563eb',
   '還差多少':      '#dc2626',
   '分分看':        '#8b5cf6',
-  '分分看（固定版）': '#8b5cf6',
 };
 
 function coloredName(name) {
@@ -3037,6 +3093,7 @@ function renderHomeTypeCards() {
   const op = [...curOps][0];
   const filtered = TYPES
     .filter(t => {
+      if (!getReg(t.id).home) return false; // hidden from home (e.g. fenfennew merged into fenfen)
       if (op === 'all') return true;
       const o = t.ops;
       if (op === 'comprehensive') return o.includes('add') && o.includes('sub');
@@ -3203,6 +3260,7 @@ function applyTypeLayout(typeId) {
     if (el) el.style.display = (t.id === typeId) ? '' : 'none';
   });
   if (typeId === 'fenfennew') renderFenfennewThemeGrid();
+  if (typeId === 'fenfen') selectFenfenVersion(S.fenfenVersion);
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
