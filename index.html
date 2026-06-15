@@ -2231,10 +2231,11 @@ const TYPE_REGISTRY = [
     diffInfo:{ grade:'三年級', level:'進階', levelColor:'#f59e0b', code:'N-3-1',
       desc:'四位數減法（含退位），以畫錢幣輔助學生理解借位過程，提供百位借位、十位借位、雙重借位三種難度。' },
     sample:{ pdf:'assets/tuiwei4sub_bai_sample.pdf', name:'退位減法_四位數_百位借位_範本.pdf' },
-    layout:{ panel:'tuiwei4subPanel', themeSet:'expensive', showTheme:false, prices:false, interactive:false },
+    layout:{ panel:'tuiwei4subPanel', themeSet:'expensive', showTheme:true, prices:true, interactive:false },
     api:{
       endpoint:'/generate/tuiwei4sub',
-      body:()=>({ mode: S.tuweiMode ?? 'bai' }),
+      body:()=>({ mode: S.tuweiMode ?? 'bai',
+                  price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       filename:()=>'退位減法（四位數）＿畫錢幣輔助.docx',
     },
   },
@@ -3173,7 +3174,7 @@ async function applyTuweiMode() {
     const res = await fetch(`${API_URL}/generate/tuiwei4sub`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode }),
+      body: JSON.stringify({ mode, price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
