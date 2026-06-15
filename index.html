@@ -1331,6 +1331,31 @@ body {
       <div class="card-body" id="diffInfoBody" style="padding:12px 16px;"></div>
     </div>
 
+    <!-- 借位模式選擇卡（退位減法四位數） -->
+    <div class="card" id="tuweiModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">借位模式</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">選擇借位方式後，系統將依此設定隨機產生學習單。</div>
+        <div style="display:flex;gap:6px;">
+          <button id="tuiweiModeBai"    class="fenfen-set-btn active" onclick="selectTuweiMode('bai')">百位借位</button>
+          <button id="tuiweiModeShi"    class="fenfen-set-btn"        onclick="selectTuweiMode('shi')">十位借位</button>
+          <button id="tuiweiModeDouble" class="fenfen-set-btn"        onclick="selectTuweiMode('double')">雙重借位</button>
+        </div>
+        <div id="tuiweiDescBai" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          個位、十位為 0，百位需向千位借位。<br>
+          範例：5200 – 3600 = 1600、5000 – 3200 = 1800
+        </div>
+        <div id="tuiweiDescShi" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          個位為 0，十位需向百位借位，百位夠借。<br>
+          範例：2500 – 1320 = 1180
+        </div>
+        <div id="tuiweiDescDouble" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          個位為 0，十位向百位借、百位再向千位借（雙重借位）。<br>
+          範例：2000 – 1320 = 680
+        </div>
+      </div>
+    </div>
+
     <!-- 單價調整卡（三步驟、還差多少、兩步驟） -->
     <div class="card" id="priceEditCard" style="display:none;">
       <div class="card-head">
@@ -1628,28 +1653,10 @@ body {
         <!-- 退位減法（四位數）＿畫錢幣輔助 -->
         <div id="tuiwei4subPanel" style="display:none;">
           <div class="card-head">
-            <span class="card-title">退位減法設定</span>
+            <span class="card-title">退位減法（四位數）</span>
             <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
-          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
-            <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px;">借位方式</div>
-            <div style="display:flex;gap:6px;">
-              <button id="tuiweiModeBai"   class="fenfen-set-btn active" onclick="selectTuweiMode('bai')">百位借位</button>
-              <button id="tuiweiModeShi"   class="fenfen-set-btn"        onclick="selectTuweiMode('shi')">十位借位</button>
-              <button id="tuiweiModeDouble" class="fenfen-set-btn"        onclick="selectTuweiMode('double')">雙重借位</button>
-            </div>
-            <div id="tuiweiDescBai" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
-              個位、十位為 0，百位需向千位借位。<br>
-              範例：5200 – 3600 = 1600、5000 – 3200 = 1800
-            </div>
-            <div id="tuiweiDescShi" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
-              個位為 0，十位需向百位借位，百位夠借。<br>
-              範例：2500 – 1320 = 1180
-            </div>
-            <div id="tuiweiDescDouble" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
-              個位為 0，十位向百位借、百位再向千位借（雙重借位）。<br>
-              範例：2000 – 1320 = 680
-            </div>
+          <div class="card-body" style="padding:12px 16px;">
             <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
               ✦ 6 道題，數字每次隨機產生　✦ 個位恆為 0　✦ 課綱：N-3-1
             </div>
@@ -2173,7 +2180,7 @@ const TYPE_REGISTRY = [
     diffInfo:{ grade:'三年級', level:'基礎', levelColor:'#22c55e', code:'N-3-1',
       desc:'四位數加法（不進位），以畫錢幣輔助學生理解位值，適合四位數加法的入門練習。' },
     sample:{ pdf:'assets/huachu4add_sample.pdf', name:'不進位的加法_四位數_畫錢幣輔助_範本.pdf' },
-    layout:{ panel:'huachu4addPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
+    layout:{ panel:'huachu4addPanel', themeSet:'expensive', showTheme:false, prices:false, interactive:false },
     api:{
       endpoint:'/generate/huachu4add',
       body:()=>({}),
@@ -2195,7 +2202,7 @@ const TYPE_REGISTRY = [
     diffInfo:{ grade:'三年級', level:'基礎', levelColor:'#22c55e', code:'N-3-1',
       desc:'四位數減法（不退位），以畫錢幣輔助學生理解位值，適合四位數減法的入門練習。' },
     sample:{ pdf:'assets/huachu4sub_sample.pdf', name:'不退位的減法_四位數_畫錢幣輔助_範本.pdf' },
-    layout:{ panel:'huachu4subPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
+    layout:{ panel:'huachu4subPanel', themeSet:'expensive', showTheme:false, prices:false, interactive:false },
     api:{
       endpoint:'/generate/huachu4sub',
       body:()=>({}),
@@ -2217,7 +2224,7 @@ const TYPE_REGISTRY = [
     diffInfo:{ grade:'三年級', level:'進階', levelColor:'#f59e0b', code:'N-3-1',
       desc:'四位數減法（含退位），以畫錢幣輔助學生理解借位過程，提供百位借位、十位借位、雙重借位三種難度。' },
     sample:{ pdf:'assets/tuiwei4sub_sample.pdf', name:'退位減法_四位數_畫錢幣輔助_範本.pdf' },
-    layout:{ panel:'tuiwei4subPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
+    layout:{ panel:'tuiwei4subPanel', themeSet:'expensive', showTheme:false, prices:false, interactive:false },
     api:{
       endpoint:'/generate/tuiwei4sub',
       body:()=>({ mode: S.tuweiMode ?? 'bai' }),
@@ -3401,6 +3408,9 @@ function applyTypeLayout(typeId) {
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
   document.getElementById('diffInfoCard').style.display   = isN2 ? 'none' : '';
   if (!isN2) renderDiffInfoCard(typeId);
+
+  // 借位模式卡：只在退位減法四位數題型顯示
+  document.getElementById('tuweiModeCard').style.display = (typeId === 'tuiwei4sub') ? '' : 'none';
 
   // 單價調整卡：由 registry layout.prices 控制
   document.getElementById('priceEditCard').style.display = L.prices ? '' : 'none';
