@@ -2223,7 +2223,7 @@ const TYPE_REGISTRY = [
     },
     diffInfo:{ grade:'三年級', level:'進階', levelColor:'#f59e0b', code:'N-3-1',
       desc:'四位數減法（含退位），以畫錢幣輔助學生理解借位過程，提供百位借位、十位借位、雙重借位三種難度。' },
-    sample:{ pdf:'assets/tuiwei4sub_sample.pdf', name:'退位減法_四位數_畫錢幣輔助_範本.pdf' },
+    sample:{ pdf:'assets/tuiwei4sub_bai_sample.pdf', name:'退位減法_四位數_百位借位_範本.pdf' },
     layout:{ panel:'tuiwei4subPanel', themeSet:'expensive', showTheme:false, prices:false, interactive:false },
     api:{
       endpoint:'/generate/tuiwei4sub',
@@ -3123,6 +3123,12 @@ function selectTuweiMode(mode) {
     const desc = document.getElementById('tuiweiDesc' + cap);
     if (desc) desc.style.display = m === mode ? '' : 'none';
   });
+  // 切換對應借位模式的學習單範本
+  const pdfMap  = { bai:'assets/tuiwei4sub_bai_sample.pdf', shi:'assets/tuiwei4sub_shi_sample.pdf', double:'assets/tuiwei4sub_double_sample.pdf' };
+  const nameMap = { bai:'退位減法_四位數_百位借位_範本.pdf', shi:'退位減法_四位數_十位借位_範本.pdf', double:'退位減法_四位數_雙重借位_範本.pdf' };
+  const dlBtn = document.getElementById('typeSampleDownloadBtn');
+  if (dlBtn) { dlBtn.href = pdfMap[mode]; dlBtn.download = nameMap[mode]; }
+  _doRenderSamplePdf(pdfMap[mode], 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
 
 function selectFenfenVersion(v) {
