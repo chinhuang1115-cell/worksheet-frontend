@@ -3371,7 +3371,7 @@ function renderHomeTypeCards() {
       if (op === 'comprehensive') return o.includes('add') && o.includes('sub');
       if (op === 'addsub')        return o.includes('add') && o.includes('sub') && !o.includes('mul');
       if (op === 'addsubmul')     return o.includes('add') && o.includes('sub') &&  o.includes('mul');
-      return o.includes(op);
+      return o.length === 1 && o.includes(op);
     })
     .sort((a, b) => {
       const [oa, da, sa] = TYPE_SORT[a.id] ?? [9, 9, 9];
