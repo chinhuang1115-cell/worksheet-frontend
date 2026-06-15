@@ -1625,6 +1625,37 @@ body {
           </div>
         </div><!-- /huachu4subPanel -->
 
+        <!-- 退位減法（四位數）＿畫錢幣輔助 -->
+        <div id="tuiwei4subPanel" style="display:none;">
+          <div class="card-head">
+            <span class="card-title">退位減法設定</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
+          </div>
+          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px;">借位方式</div>
+            <div style="display:flex;gap:6px;">
+              <button id="tuiweiModeBai"   class="fenfen-set-btn active" onclick="selectTuweiMode('bai')">百位借位</button>
+              <button id="tuiweiModeShi"   class="fenfen-set-btn"        onclick="selectTuweiMode('shi')">十位借位</button>
+              <button id="tuweiModeDouble" class="fenfen-set-btn"        onclick="selectTuweiMode('double')">雙重借位</button>
+            </div>
+            <div id="tuiweiDescBai" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+              個位、十位為 0，百位需向千位借位。<br>
+              範例：5200 – 3600 = 1600、5000 – 3200 = 1800
+            </div>
+            <div id="tuiweiDescShi" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+              個位為 0，十位需向百位借位，百位夠借。<br>
+              範例：2500 – 1320 = 1180
+            </div>
+            <div id="tuiweiDescDouble" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+              個位為 0，十位向百位借、百位再向千位借（雙重借位）。<br>
+              範例：2000 – 1320 = 680
+            </div>
+            <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+              ✦ 6 道題，數字每次隨機產生　✦ 個位恆為 0　✦ 課綱：N-3-1
+            </div>
+          </div>
+        </div><!-- /tuiwei4subPanel -->
+
         <!-- No-Carry Addition (4-digit) — Draw Coins (English) -->
         <div id="huachu4addEnPanel" style="display:none;">
           <div class="card-head">
@@ -2172,6 +2203,28 @@ const TYPE_REGISTRY = [
     },
   },
   {
+    id:'tuiwei4sub', code:'N-3-1', grade:'3',
+    name:'退位減法（四位數）＿畫錢幣輔助',
+    ops:['sub'],
+    keywords:['畫出錢幣','四位數','退位','減法','借位','錢幣'],
+    desc:'6 道四位數退位減法題，依選定借位模式隨機產生：百位借位、十位借位、或雙重借位。搭配錢幣輔助格供學生畫錢幣後計算。',
+    sortKey:[2,4,1],
+    home:{
+      icon:'🪙', sub:'四位數退位減法',
+      desc:'畫出錢幣表示四位數，6 道退位減法題，可選百位借位、十位借位或雙重借位，建立四位數退位的借位概念。',
+      features:['四位數退位減法','三種借位模式可選','畫出錢幣輔助理解'],
+    },
+    diffInfo:{ grade:'三年級', level:'進階', levelColor:'#f59e0b', code:'N-3-1',
+      desc:'四位數減法（含退位），以畫錢幣輔助學生理解借位過程，提供百位借位、十位借位、雙重借位三種難度。' },
+    sample:{ pdf:'assets/tuiwei4sub_sample.pdf', name:'退位減法_四位數_畫錢幣輔助_範本.pdf' },
+    layout:{ panel:'tuiwei4subPanel', themeSet:'cheap', showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/tuiwei4sub',
+      body:()=>({ mode: S.tuweiMode ?? 'bai' }),
+      filename:()=>'退位減法（四位數）＿畫錢幣輔助.docx',
+    },
+  },
+  {
     id:'huachu4add-en', code:'N-3-1', grade:'3',
     name:'No-Carry Addition (4-digit) — Draw Coins',
     ops:['add'],
@@ -2229,6 +2282,7 @@ let S = {
   fenfenVersion: 'A',
   fenfenSet: 'A',
   fenfennewTheme: '花',
+  tuweiMode: 'bai',
   priceOverrides: {},
 };
 let curGrade = 'all';
@@ -3052,6 +3106,18 @@ async function renderFenfenBThemeGrid() {
     </div>`).join('');
 }
 
+function selectTuweiMode(mode) {
+  S.tuweiMode = mode;
+  const idMap = { bai: 'tuiweiModeBai', shi: 'tuiweiModeShi', double: 'tuweiModeDouble' };
+  ['bai', 'shi', 'double'].forEach(m => {
+    const btn = document.getElementById(idMap[m]);
+    if (btn) btn.classList.toggle('active', m === mode);
+    const cap = m.charAt(0).toUpperCase() + m.slice(1);
+    const desc = document.getElementById('tuiweiDesc' + cap);
+    if (desc) desc.style.display = m === mode ? '' : 'none';
+  });
+}
+
 function selectFenfenVersion(v) {
   S.fenfenVersion = v;
   ['A','B'].forEach(s => {
@@ -3390,6 +3456,7 @@ function applyTypeLayout(typeId) {
   });
   if (typeId === 'fenfennew') renderFenfennewThemeGrid();
   if (typeId === 'fenfen') selectFenfenVersion(S.fenfenVersion);
+  if (typeId === 'tuiwei4sub') selectTuweiMode(S.tuweiMode ?? 'bai');
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
