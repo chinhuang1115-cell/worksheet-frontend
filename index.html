@@ -1636,7 +1636,7 @@ body {
             <div style="display:flex;gap:6px;">
               <button id="tuiweiModeBai"   class="fenfen-set-btn active" onclick="selectTuweiMode('bai')">百位借位</button>
               <button id="tuiweiModeShi"   class="fenfen-set-btn"        onclick="selectTuweiMode('shi')">十位借位</button>
-              <button id="tuweiModeDouble" class="fenfen-set-btn"        onclick="selectTuweiMode('double')">雙重借位</button>
+              <button id="tuiweiModeDouble" class="fenfen-set-btn"        onclick="selectTuweiMode('double')">雙重借位</button>
             </div>
             <div id="tuiweiDescBai" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
               個位、十位為 0，百位需向千位借位。<br>
@@ -3108,7 +3108,7 @@ async function renderFenfenBThemeGrid() {
 
 function selectTuweiMode(mode) {
   S.tuweiMode = mode;
-  const idMap = { bai: 'tuiweiModeBai', shi: 'tuiweiModeShi', double: 'tuweiModeDouble' };
+  const idMap = { bai: 'tuiweiModeBai', shi: 'tuiweiModeShi', double: 'tuiweiModeDouble' };
   ['bai', 'shi', 'double'].forEach(m => {
     const btn = document.getElementById(idMap[m]);
     if (btn) btn.classList.toggle('active', m === mode);
