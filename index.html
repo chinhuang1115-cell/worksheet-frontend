@@ -1970,6 +1970,7 @@ const OP_META = {
   comprehensive:{label:'綜合',cls:'f-mix'},
   addsub:{label:'加減混合',cls:'f-sub'},
   addsubmul:{label:'加減乘混合',cls:'f-mul'},
+  fenfen:{label:'分分看',cls:'f-div'},
 };
 const OP_TAG_CLS = {add:'ttag-add',sub:'ttag-sub',mul:'ttag-mul',div:'ttag-div',mix:'ttag-mix'};
 
@@ -3532,7 +3533,7 @@ async function _doRenderSamplePdf(pdfPath, containerId = 'samplePdfContainer', l
 // 首頁卡片資料（定義於 TYPE_REGISTRY.home）
 const HOME_TYPE_META = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.home]));
 
-const HOME_OP_KEYS = ['all','add','sub','mul','div','addsub','addsubmul'];
+const HOME_OP_KEYS = ['all','add','sub','mul','div','fenfen','addsub','addsubmul'];
 
 const TOPIC_COLORS = {
   '購物找零':      '#d97706',
@@ -3586,6 +3587,7 @@ function renderHomeTypeCards() {
       if (op === 'comprehensive') return o.includes('add') && o.includes('sub');
       if (op === 'addsub')        return o.includes('add') && o.includes('sub') && !o.includes('mul');
       if (op === 'addsubmul')     return o.includes('add') && o.includes('sub') &&  o.includes('mul');
+      if (op === 'fenfen')        return t.id === 'fenfen';
       return o.length === 1 && o.includes(op);
     })
     .sort((a, b) => {
