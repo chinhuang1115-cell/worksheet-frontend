@@ -1335,12 +1335,13 @@ body {
     <div class="card" id="fenfenSubtypeCard" style="display:none;">
       <div class="card-head"><span class="card-title">版型選擇</span></div>
       <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">選取版型 → 確認套用 → 下載學習單</div>
         <div style="display:flex;gap:5px;flex-wrap:wrap;">
-          <button id="fenfenSub_norem"   class="fenfen-set-btn active" onclick="selectFenfenSubtype('norem')">無餘數 <span style="font-size:10px;background:#FAEEDA;color:#854F0B;padding:1px 5px;border-radius:3px;margin-left:3px;">隨機圖片</span></button>
-          <button id="fenfenSub_rem"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('rem')">有餘數</button>
-          <button id="fenfenSub_heap"    class="fenfen-set-btn"        onclick="selectFenfenSubtype('heap')">分堆畫圈</button>
-          <button id="fenfenSub_pan"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('pan')">分盤畫圈</button>
-          <button id="fenfenSub_pangrid" class="fenfen-set-btn"        onclick="selectFenfenSubtype('pangrid')">分盤格線</button>
+          <button id="fenfenSub_norem"   class="fenfen-set-btn active" onclick="selectFenfenSubtype('norem',true)">無餘數 <span style="font-size:10px;background:#FAEEDA;color:#854F0B;padding:1px 5px;border-radius:3px;margin-left:3px;">隨機圖片</span></button>
+          <button id="fenfenSub_rem"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('rem',true)">有餘數</button>
+          <button id="fenfenSub_heap"    class="fenfen-set-btn"        onclick="selectFenfenSubtype('heap',true)">分堆畫圈</button>
+          <button id="fenfenSub_pan"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('pan',true)">分盤畫圈</button>
+          <button id="fenfenSub_pangrid" class="fenfen-set-btn"        onclick="selectFenfenSubtype('pangrid',true)">分盤格線</button>
         </div>
         <div id="fenfenDescNorem" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
           圖示預先印好，學生數數填答（無餘數）。<br>
@@ -1362,6 +1363,13 @@ body {
         <div id="fenfenSubThemeSection">
           <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;">主題（選填）</div>
           <div id="fenfenBThemeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+        </div>
+        <!-- 確認套用按鈕 -->
+        <button id="fenfenConfirmBtn" onclick="applyFenfenSubtype()" style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.02em;">確認套用</button>
+        <!-- 生成結果區 -->
+        <div id="fenfenResultRow" style="display:none;padding:10px 12px;background:var(--teal-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span id="fenfenResultLabel" style="font-size:12px;color:var(--teal-dark);font-weight:600;"></span>
+          <a id="fenfenDownloadLink" href="#" download="分分看.docx" style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">⬇ 下載學習單</a>
         </div>
       </div>
     </div>
@@ -2385,6 +2393,7 @@ let S = {
   tuweiMode: 'bai',
   tuweiPendingMode: 'bai',
   _tuweiDocxUrl: null,
+  _fenfenDocxUrl: null,
   priceOverrides: {},
 };
 let curGrade = 'all';
@@ -3203,6 +3212,14 @@ function selectFenfennewTheme(name) {
   renderFenfennewThemeGrid();
   renderFenfenBThemeGrid();
   updateSteps();
+  // 在分分看無餘數版型下切換主題 → 重置確認按鈕
+  if (S.fenfenSubtype === 'norem') {
+    const confirmBtn = document.getElementById('fenfenConfirmBtn');
+    const resultRow  = document.getElementById('fenfenResultRow');
+    const label = name && name !== '隨機' ? `無餘數（${name}）` : '無餘數（隨機）';
+    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = `確認套用「${label}」`; }
+    if (resultRow)  resultRow.style.display = 'none';
+  }
 }
 
 async function renderFenfenBThemeGrid() {
@@ -3298,8 +3315,15 @@ async function applyTuweiMode() {
   }
 }
 
-function selectFenfenSubtype(sub) {
+function selectFenfenSubtype(sub, fromUser = false) {
   S.fenfenSubtype = sub;
+  const subLabel = {
+    norem:   () => S.fenfennewTheme && S.fenfennewTheme !== '隨機' ? `無餘數（${S.fenfennewTheme}）` : '無餘數（隨機）',
+    rem:     () => '有餘數',
+    heap:    () => '分堆畫圈',
+    pan:     () => '分盤畫圈',
+    pangrid: () => '分盤格線',
+  };
   ['norem','rem','heap','pan','pangrid'].forEach(s => {
     const btn = document.getElementById('fenfenSub_' + s);
     if (btn) btn.classList.toggle('active', s === sub);
@@ -3309,6 +3333,20 @@ function selectFenfenSubtype(sub) {
   const themeSection = document.getElementById('fenfenSubThemeSection');
   if (themeSection) themeSection.style.display = sub === 'norem' ? '' : 'none';
   if (sub === 'norem') renderFenfenBThemeGrid();
+  // 確認按鈕與結果列
+  const confirmBtn = document.getElementById('fenfenConfirmBtn');
+  const resultRow  = document.getElementById('fenfenResultRow');
+  if (fromUser) {
+    if (confirmBtn) {
+      confirmBtn.style.display = '';
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = `確認套用「${subLabel[sub]()}」`;
+    }
+    if (resultRow) resultRow.style.display = 'none';
+  } else {
+    if (confirmBtn) confirmBtn.style.display = 'none';
+    if (resultRow)  resultRow.style.display  = 'none';
+  }
   // 即時切換右欄「學習單範本」tab 的 PDF
   const pdfMap = {
     norem:   'assets/fenfen_sample.pdf',
@@ -3327,6 +3365,69 @@ function selectFenfenSubtype(sub) {
   const dlBtn = document.getElementById('typeSampleDownloadBtn');
   if (dlBtn) { dlBtn.href = pdfMap[sub]; dlBtn.download = nameMap[sub]; }
   _doRenderSamplePdf(pdfMap[sub], 'typeSamplePdfContainer', 'typeSamplePdfLoading');
+}
+
+async function applyFenfenSubtype() {
+  const sub = S.fenfenSubtype || 'norem';
+  const subLabel = {
+    norem:   () => S.fenfennewTheme && S.fenfennewTheme !== '隨機' ? `無餘數（${S.fenfennewTheme}）` : '無餘數（隨機）',
+    rem:     () => '有餘數',
+    heap:    () => '分堆畫圈',
+    pan:     () => '分盤畫圈',
+    pangrid: () => '分盤格線',
+  };
+  const endpointMap = {
+    norem:   S.fenfennewTheme && S.fenfennewTheme !== '隨機' ? '/generate/fenfennew' : '/generate/fenfen',
+    rem:     '/generate/fenfen-rem',
+    heap:    '/generate/fenfen-heap',
+    pan:     '/generate/fenfen-pan',
+    pangrid: '/generate/fenfen-pangrid',
+  };
+  const bodyMap = {
+    norem:   S.fenfennewTheme && S.fenfennewTheme !== '隨機' ? { theme: S.fenfennewTheme } : {},
+    rem: {}, heap: {}, pan: {}, pangrid: {},
+  };
+  const filenameMap = {
+    norem:   () => S.fenfennewTheme && S.fenfennewTheme !== '隨機' ? `${S.fenfennewTheme}_分分看＿一步驟除法（兩位數）.docx` : '分分看_A版_一步驟除法_兩位數.docx',
+    rem:     () => '分分看_有餘數_兩位數.docx',
+    heap:    () => '分分看_分堆畫圈_兩位數.docx',
+    pan:     () => '分分看_分盤畫圈_兩位數.docx',
+    pangrid: () => '分分看_分盤格線_兩位數.docx',
+  };
+  const confirmBtn = document.getElementById('fenfenConfirmBtn');
+  const resultRow  = document.getElementById('fenfenResultRow');
+  const resultLbl  = document.getElementById('fenfenResultLabel');
+  const dlLink     = document.getElementById('fenfenDownloadLink');
+  const label = subLabel[sub]();
+
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = '生成中…';
+  if (resultRow) resultRow.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API_URL}${endpointMap[sub]}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bodyMap[sub]),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    const blob = await res.blob();
+    if (S._fenfenDocxUrl) URL.revokeObjectURL(S._fenfenDocxUrl);
+    S._fenfenDocxUrl = URL.createObjectURL(blob);
+    dlLink.href = S._fenfenDocxUrl;
+    dlLink.download = filenameMap[sub]();
+    resultLbl.textContent = `✓ 已依「${label}」版型生成`;
+    resultRow.style.display = '';
+    confirmBtn.textContent = `重新生成「${label}」`;
+    confirmBtn.disabled = false;
+  } catch (e) {
+    confirmBtn.textContent = `確認套用「${label}」`;
+    confirmBtn.disabled = false;
+    if (resultLbl) { resultLbl.textContent = `生成失敗：${e.message}`; resultRow.style.display = ''; resultRow.style.background = '#fef2f2'; }
+  }
 }
 
 function selectFenfenSet(v) {
