@@ -310,8 +310,8 @@ body {
 .home-sidebar { flex: 0 0 96px; position: sticky; top: 60px; }
 .home-sidebar-label { font-size: 11px; font-weight: 600; color: var(--gray); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
 .home-main { flex: 1; min-width: 0; }
-#homeOpFilters { flex-direction: column; gap: 4px; margin-bottom: 0; }
-#homeOpFilters .filter-pill { font-size: 13px; padding: 6px 10px; width: 100%; text-align: left; border-radius: var(--r-sm); }
+#homeGradeFilters, #homeOpFilters { flex-direction: column; gap: 4px; margin-bottom: 0; }
+#homeGradeFilters .filter-pill, #homeOpFilters .filter-pill { font-size: 13px; padding: 6px 10px; width: 100%; text-align: left; border-radius: var(--r-sm); }
 .grade-tabs { display: flex; border-bottom: 1.5px solid var(--border); margin-bottom: 0; }
 .grade-tab {
   padding: 7px 12px;
@@ -1267,7 +1267,10 @@ body {
   </div>
   <div class="home-layout">
     <div class="home-sidebar">
-      <div class="home-sidebar-label">分類篩選</div>
+      <div class="home-sidebar-label">年　　級</div>
+      <div class="filter-pills" id="homeGradeFilters"></div>
+      <div style="border-top:1px solid var(--border);margin:10px 0 8px;"></div>
+      <div class="home-sidebar-label">運算類型</div>
       <div class="filter-pills" id="homeOpFilters"></div>
     </div>
     <div class="home-main">
@@ -2826,7 +2829,14 @@ function renderGradeTabs() {
     <button class="grade-tab ${curGrade===g.id?'active':''}" onclick="setGrade('${g.id}')">${g.label}</button>`).join('');
 }
 
-function setGrade(g) { curGrade=g; renderGradeTabs(); renderTypeList(); }
+function setGrade(g) {
+  curGrade = g;
+  renderGradeTabs(); renderTypeList();
+  renderGradeFilters(); renderHomeTypeCards();
+}
+function toggleGradeHome(g) {
+  setGrade(curGrade === g && g !== 'all' ? 'all' : g);
+}
 
 function renderOpFilters() {
   document.getElementById('opFilters').innerHTML = Object.entries(OP_META).map(([op,m])=>`
@@ -3556,6 +3566,14 @@ const HOME_TYPE_META = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.home]));
 
 const HOME_OP_KEYS = ['all','add','sub','mul','div','fenfen','addsub','addsubmul'];
 
+const GRADE_KEYS = ['all', '1', '2', '3'];
+const GRADE_META = {
+  all: { label: '全　部' },
+  '1': { label: '一年級' },
+  '2': { label: '二年級' },
+  '3': { label: '三年級' },
+};
+
 const TOPIC_COLORS = {
   '購物找零':      '#d97706',
   '最多能買幾個':  '#0891b2',
@@ -3573,6 +3591,13 @@ function coloredName(name) {
   const rest  = name.slice(idx);
   const color = TOPIC_COLORS[topic] || 'var(--ink)';
   return `<span style="color:${color};font-weight:900;">${topic}</span>${rest}`;
+}
+
+function renderGradeFilters() {
+  document.getElementById('homeGradeFilters').innerHTML = GRADE_KEYS.map(g => {
+    const m = GRADE_META[g];
+    return `<button class="filter-pill ${curGrade===g?'active':''}" onclick="toggleGradeHome('${g}')">${m.label}</button>`;
+  }).join('');
 }
 
 function renderHomeFilter() {
@@ -3602,7 +3627,8 @@ function renderHomeTypeCards() {
   const op = [...curOps][0];
   const filtered = TYPES
     .filter(t => {
-      if (!getReg(t.id).home) return false; // hidden from home (e.g. fenfennew merged into fenfen)
+      if (!getReg(t.id).home) return false;
+      if (curGrade !== 'all' && String(t.grade) !== curGrade) return false;
       if (op === 'all') return true;
       const o = t.ops;
       if (op === 'comprehensive') return o.includes('add') && o.includes('sub');
@@ -3840,6 +3866,7 @@ renderOpFilters();
 renderGallery();
 renderSaved();
 renderHistory();
+renderGradeFilters();
 renderHomeFilter();
 renderHomeTypeCards();
 renderTrialBar(); // 更新 topbar 試用次數
