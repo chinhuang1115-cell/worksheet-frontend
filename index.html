@@ -1481,37 +1481,32 @@ body {
       <!-- 答案預覽 tab 內容（含各題型設定）-->
       <div id="type-tab-preview">
 
-        <!-- 分分看（固定版） -->
+        <!-- 分分看（全部版型） -->
         <div id="fenfenPanel" style="display:none;">
-          <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="card-head">
             <span class="card-title">分分看設定</span>
-            <div style="display:flex;gap:4px;">
-              <button id="fenfenVerA" class="fenfen-set-btn active" onclick="selectFenfenVersion('A')">A 版</button>
-              <button id="fenfenVerB" class="fenfen-set-btn" onclick="selectFenfenVersion('B')">B 版</button>
-            </div>
           </div>
           <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
-            <!-- A版（固定版） -->
-            <div id="fenfenContentA">
-              <div style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:10px 12px;line-height:1.8;">
-                共 <strong>6 題</strong>，每題展示物件圖示，學生數數後填答。<br>
-                每次從圖庫隨機挑選 3 種物件，每種出現 2 次，除數固定（÷2/÷4、÷2/÷5、÷3/÷6）。<br>
-                數量每次隨機，可重複產生不同版本。
-              </div>
+            <!-- 5 個平鋪按鈕 -->
+            <div style="display:flex;gap:5px;flex-wrap:wrap;">
+              <button id="fenfenSub_norem"   class="fenfen-set-btn active" onclick="selectFenfenSubtype('norem')">無餘數 <span style="font-size:10px;background:#FAEEDA;color:#854F0B;padding:1px 5px;border-radius:3px;margin-left:3px;">隨機圖片</span></button>
+              <button id="fenfenSub_rem"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('rem')">有餘數</button>
+              <button id="fenfenSub_heap"    class="fenfen-set-btn"        onclick="selectFenfenSubtype('heap')">分堆畫圈</button>
+              <button id="fenfenSub_pan"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('pan')">分盤畫圈</button>
+              <button id="fenfenSub_pangrid" class="fenfen-set-btn"        onclick="selectFenfenSubtype('pangrid')">分盤格線</button>
             </div>
-            <!-- B版（新版） -->
-            <div id="fenfenContentB" style="display:none;flex-direction:column;gap:10px;">
-              <div style="font-size:12px;color:var(--gray);line-height:1.8;">
-                選擇物件主題，系統自動產生 6 題等分除法練習。<br>
-                每題展示圖示讓學生數數，除數與數量每次隨機。
+            <!-- 無餘數：主題選擇器 -->
+            <div id="fenfenSubContentNorem">
+              <div style="font-size:12px;color:var(--gray);line-height:1.8;background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;">
+                圖示預先印好，學生數數填答（無餘數）。<br>
+                選擇主題後以指定主題產圖；選「隨機」則每次任選 3 種物件。
               </div>
-              <div>
-                <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px;">選擇物件主題</div>
-                <div id="fenfenBThemeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
-              </div>
-              <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
-                ✦ 共 6 題，除數隨機 2–6　✦ 適合二年級初學者　✦ 課綱：N-2-3
-              </div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);margin:8px 0 4px;">主題（選填）</div>
+              <div id="fenfenBThemeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+            </div>
+            <!-- 其他 4 種 -->
+            <div id="fenfenSubContentOther" style="display:none;">
+              <div id="fenfenSubOtherDesc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
             </div>
           </div>
         </div>
@@ -2070,9 +2065,9 @@ const TYPE_REGISTRY = [
     desc:'同一設定頁含 A、B 兩版。A版：從圖庫隨機挑選 3 種物件，圖示預先印好，學生數數填答；B版：可選 11 種主題，系統自動產生圖示，除數每次隨機。',
     sortKey:[4,2,1],
     home:{
-      icon:'🌼', sub:'除法概念（A / B 版）',
-      desc:'同一設定頁提供兩版：A版圖示預印（隨機主題）、B版可選主題自動產圖，兩版均為 6 題等分除法。',
-      features:['A版：隨機物件，圖示預印填數','B版：11種主題可選，系統產圖','兩版除數均為 2–6'],
+      icon:'🌼', sub:'除法概念（5 種版型）',
+      desc:'5 種版型統一在同一設定頁：圖示預印填答、有餘數、分堆畫圈、分盤畫圈、分盤格線，涵蓋等組與等分除法。',
+      features:['無餘數：圖示預印，可選 11 種主題','有餘數：固定圖片，計算商與餘數','B版 3 種：學生自行畫圈，純換數字'],
     },
     diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
       desc:'A版圖示預先繪好，學生數一數即可填答；B版可選主題，圖示隨機產生，是認識等分除法的第一步。' },
@@ -2279,6 +2274,78 @@ const TYPE_REGISTRY = [
       filename:()=>`${S.fenfennewTheme}_分分看＿一步驟除法（兩位數）.docx`,
     },
   },
+  {
+    id:'fenfen-rem', code:'N-2-3', grade:'2',
+    name:'分分看＿有餘數（兩位數）',
+    ops:['div'],
+    keywords:['分分看','有餘數','圈圈看','等組','裝盤'],
+    desc:'固定圖片版型，只換除數，確保每題有餘數（圖片數不被除數整除）。6 題，物品種類固定在模板中。',
+    sortKey:[4,2,1],
+    home:null,
+    diffInfo:{ grade:'二年級', level:'進階', levelColor:'#f59e0b', code:'N-2-3',
+      desc:'在等組除法基礎上加入餘數概念，圖示固定，學生圈圈後同時填入商與餘數。' },
+    sample:{ pdf:'assets/fenfen_rem_sample.pdf', name:'分分看_有餘數_兩位數_範本.pdf' },
+    layout:{ panel:'fenfenPanel', themeSet:null, showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/fenfen-rem',
+      body:()=>({}),
+      filename:()=>'分分看_有餘數_兩位數.docx',
+    },
+  },
+  {
+    id:'fenfen-heap', code:'N-2-3', grade:'2',
+    name:'分分看＿分堆畫圈（兩位數）',
+    ops:['div'],
+    keywords:['分分看','分堆','畫圓圈','等分','平分'],
+    desc:'把 N 個物品平分給 X 個人，學生畫圓圈表示分堆，4 題，數字每次隨機。',
+    sortKey:[4,2,1],
+    home:null,
+    diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
+      desc:'學生自己畫圓圈將物品平均分堆，建立等分除法的具體操作概念。' },
+    sample:{ pdf:'assets/fenfen_heap_sample.pdf', name:'分分看_分堆畫圈_兩位數_範本.pdf' },
+    layout:{ panel:'fenfenPanel', themeSet:null, showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/fenfen-heap',
+      body:()=>({}),
+      filename:()=>'分分看_分堆畫圈_兩位數.docx',
+    },
+  },
+  {
+    id:'fenfen-pan', code:'N-2-3', grade:'2',
+    name:'分分看＿分盤畫圈（兩位數）',
+    ops:['div'],
+    keywords:['分分看','分盤','畫圓圈','等分','平分','無格線'],
+    desc:'把 N 個物品平分給 X 個人，學生在盤形空間中畫圓圈，無格線，8 題（含 1 題範例），數字每次隨機。',
+    sortKey:[4,2,1],
+    home:null,
+    diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
+      desc:'在盤形空間中畫圓圈表示等分，無格線版提供較大自由度，適合初學等分概念。' },
+    sample:{ pdf:'assets/fenfen_pan_sample.pdf', name:'分分看_分盤畫圈_兩位數_範本.pdf' },
+    layout:{ panel:'fenfenPanel', themeSet:null, showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/fenfen-pan',
+      body:()=>({}),
+      filename:()=>'分分看_分盤畫圈_兩位數.docx',
+    },
+  },
+  {
+    id:'fenfen-pangrid', code:'N-2-3', grade:'2',
+    name:'分分看＿分盤格線（兩位數）',
+    ops:['div'],
+    keywords:['分分看','分盤','格線','畫圓圈','等分','平分'],
+    desc:'把 N 個物品平分給 X 個人，盤形空間有格線輔助，4 題，數字每次隨機。',
+    sortKey:[4,2,1],
+    home:null,
+    diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-3',
+      desc:'格線輔助學生在盤中整齊排列圓圈，更有利於等分概念的視覺呈現。' },
+    sample:{ pdf:'assets/fenfen_pangrid_sample.pdf', name:'分分看_分盤格線_兩位數_範本.pdf' },
+    layout:{ panel:'fenfenPanel', themeSet:null, showTheme:false, prices:false, interactive:false },
+    api:{
+      endpoint:'/generate/fenfen-pangrid',
+      body:()=>({}),
+      filename:()=>'分分看_分盤格線_兩位數.docx',
+    },
+  },
 ];
 
 // ── 由 registry 衍生的相容層（下游程式碼不需更動）──
@@ -2294,7 +2361,7 @@ let S = {
   budget: 150,
   diff: 'mid',
   fenfenItemIndex: 0,
-  fenfenVersion: 'A',
+  fenfenSubtype: 'norem',
   fenfenSet: 'A',
   fenfennewTheme: '花',
   tuweiMode: 'bai',
@@ -2934,9 +3001,27 @@ async function directDownload() {
   const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
 
   try {
-    // 分分看 B版 → 路由到 fenfennew API
     let reg = getReg(type.id);
-    if (type.id === 'fenfen' && S.fenfenVersion === 'B') reg = getReg('fenfennew');
+    if (type.id === 'fenfen') {
+      const sub = S.fenfenSubtype || 'norem';
+      const endpointMap = {
+        norem:   S.fenfennewTheme && S.fenfennewTheme !== '隨機'
+                   ? '/generate/fenfennew' : '/generate/fenfen',
+        rem:     '/generate/fenfen-rem',
+        heap:    '/generate/fenfen-heap',
+        pan:     '/generate/fenfen-pan',
+        pangrid: '/generate/fenfen-pangrid',
+      };
+      const bodyMap = {
+        norem:   S.fenfennewTheme && S.fenfennewTheme !== '隨機'
+                   ? { theme: S.fenfennewTheme } : {},
+        rem: {}, heap: {}, pan: {}, pangrid: {},
+      };
+      reg = { ...reg, api: { ...reg.api,
+        endpoint: endpointMap[sub],
+        body: () => bodyMap[sub],
+      }};
+    }
     const res = await fetch(`${API_URL}${reg.api.endpoint}`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify(reg.api.body()),
@@ -3195,24 +3280,23 @@ async function applyTuweiMode() {
   }
 }
 
-function selectFenfenVersion(v) {
-  S.fenfenVersion = v;
-  ['A','B'].forEach(s => {
-    const btn = document.getElementById('fenfenVer'+s);
-    if (btn) btn.classList.toggle('active', s === v);
-    const content = document.getElementById('fenfenContent'+s);
-    if (content) {
-      content.style.display = s === v ? (s === 'B' ? 'flex' : '') : 'none';
-    }
+function selectFenfenSubtype(sub) {
+  S.fenfenSubtype = sub;
+  ['norem','rem','heap','pan','pangrid'].forEach(s => {
+    const btn = document.getElementById('fenfenSub_' + s);
+    if (btn) btn.classList.toggle('active', s === sub);
   });
-  if (v === 'B') renderFenfenBThemeGrid();
-  // 更新右欄的學習單範本
-  const meta = v === 'A' ? getReg('fenfen').sample : getReg('fenfennew').sample;
-  if (meta?.pdf) {
-    const dlBtn = document.getElementById('typeSampleDownloadBtn');
-    if (dlBtn) { dlBtn.href = meta.pdf; dlBtn.download = meta.name; }
-    _doRenderSamplePdf(meta.pdf, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
-  }
+  document.getElementById('fenfenSubContentNorem').style.display = sub === 'norem' ? '' : 'none';
+  document.getElementById('fenfenSubContentOther').style.display = sub !== 'norem' ? '' : 'none';
+  const descs = {
+    rem:     '固定圖片，只換除數，題目含餘數（圖片數不能被除數整除）。6 題。',
+    heap:    '把 N 個，平分給 X 個人，學生畫圓圈表示分堆。4 題，數字每次隨機。',
+    pan:     '把 N 個，平分給 X 個人，學生在盤形空間畫圓圈（無格線）。8 題（含 1 題範例）。',
+    pangrid: '把 N 個，平分給 X 個人，學生在有格線盤形空間畫圓圈。4 題，數字每次隨機。',
+  };
+  const descEl = document.getElementById('fenfenSubOtherDesc');
+  if (descEl && descs[sub]) descEl.textContent = descs[sub];
+  if (sub === 'norem') renderFenfenBThemeGrid();
 }
 
 function selectFenfenSet(v) {
@@ -3535,7 +3619,7 @@ function applyTypeLayout(typeId) {
     if (el) el.style.display = (t.id === typeId) ? '' : 'none';
   });
   if (typeId === 'fenfennew') renderFenfennewThemeGrid();
-  if (typeId === 'fenfen') selectFenfenVersion(S.fenfenVersion);
+  if (typeId === 'fenfen') selectFenfenSubtype(S.fenfenSubtype || 'norem');
   if (typeId === 'tuiwei4sub') selectTuweiMode(S.tuweiMode ?? 'bai');
 
   // 所有動態題型都顯示產出按鈕和試用條
