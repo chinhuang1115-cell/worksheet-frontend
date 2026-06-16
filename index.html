@@ -3761,6 +3761,10 @@ function applyTypeLayout(typeId) {
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
   document.getElementById('trialBar').style.display = '';
 
+  // 「選項卡 + 確認套用」模式的題型：下載在選項卡內完成，隱藏底部下載按鈕
+  const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub');
+  document.getElementById('genBtn').closest('.gen-section').style.display = usesOptionCard ? 'none' : '';
+
 }
 
 function enterConfig(typeId) {
