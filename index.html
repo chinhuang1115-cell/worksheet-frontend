@@ -1363,6 +1363,14 @@ body {
         <div id="fenfenSubThemeSection">
           <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;">主題（選填）</div>
           <div id="fenfenBThemeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+          <!-- 排列方式 -->
+          <div style="margin-top:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;">排列方式</div>
+            <div style="display:flex;gap:6px;">
+              <button id="fenfenLayoutCompact" class="fenfen-set-btn active" onclick="selectFenfenLayout('compact')" style="font-size:12px;">每列 6–9 個（隨機）</button>
+              <button id="fenfenLayoutWide"    class="fenfen-set-btn"        onclick="selectFenfenLayout('wide')"    style="font-size:12px;">每列 10 個</button>
+            </div>
+          </div>
         </div>
         <!-- 確認套用按鈕 -->
         <button id="fenfenConfirmBtn" onclick="applyFenfenSubtype()" style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.02em;">確認套用</button>
@@ -2391,6 +2399,7 @@ let S = {
   fenfenSubtype: 'norem',
   fenfenSet: 'A',
   fenfennewTheme: '花',
+  fenfenRowLayout: 'compact',
   tuweiMode: 'bai',
   tuweiPendingMode: 'bai',
   _tuweiDocxUrl: null,
@@ -3030,8 +3039,7 @@ async function directDownload() {
     if (type.id === 'fenfen') {
       const sub = S.fenfenSubtype || 'norem';
       const endpointMap = {
-        norem:   S.fenfennewTheme && S.fenfennewTheme !== '隨機'
-                   ? '/generate/fenfennew' : '/generate/fenfen',
+        norem:   '/generate/fenfennew',
         rem:     '/generate/fenfen-rem',
         heap:    '/generate/fenfen-heap',
         pan:     '/generate/fenfen-pan',
@@ -3382,7 +3390,9 @@ async function applyFenfenSubtype() {
     pangrid: '/generate/fenfen-pangrid',
   };
   const bodyMap = {
-    norem:   S.fenfennewTheme && S.fenfennewTheme !== '隨機' ? { theme: S.fenfennewTheme } : {},
+    norem:   S.fenfennewTheme && S.fenfennewTheme !== '隨機'
+               ? { theme: S.fenfennewTheme, row_layout: S.fenfenRowLayout }
+               : { theme: '隨機', row_layout: S.fenfenRowLayout },
     rem: {}, heap: {}, pan: {}, pangrid: {},
   };
   const filenameMap = {
@@ -3426,6 +3436,13 @@ async function applyFenfenSubtype() {
     confirmBtn.disabled = false;
     if (resultLbl) { resultLbl.textContent = `生成失敗：${e.message}`; resultRow.style.display = ''; resultRow.style.background = '#fef2f2'; }
   }
+}
+
+function selectFenfenLayout(layout) {
+  S.fenfenRowLayout = layout;
+  ['Compact','Wide'].forEach(k => {
+    document.getElementById('fenfenLayout'+k).classList.toggle('active', k.toLowerCase() === layout);
+  });
 }
 
 function selectFenfenSet(v) {
