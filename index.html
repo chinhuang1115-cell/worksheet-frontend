@@ -3309,6 +3309,24 @@ function selectFenfenSubtype(sub) {
   const themeSection = document.getElementById('fenfenSubThemeSection');
   if (themeSection) themeSection.style.display = sub === 'norem' ? '' : 'none';
   if (sub === 'norem') renderFenfenBThemeGrid();
+  // 即時切換右欄「學習單範本」tab 的 PDF
+  const pdfMap = {
+    norem:   'assets/fenfen_sample.pdf',
+    rem:     'assets/fenfen_rem_sample.pdf',
+    heap:    'assets/fenfen_heap_sample.pdf',
+    pan:     'assets/fenfen_pan_sample.pdf',
+    pangrid: 'assets/fenfen_pangrid_sample.pdf',
+  };
+  const nameMap = {
+    norem:   '分分看_一步驟除法_兩位數_A版_範本.pdf',
+    rem:     '分分看_有餘數_兩位數_範本.pdf',
+    heap:    '分分看_分堆畫圈_兩位數_範本.pdf',
+    pan:     '分分看_分盤畫圈_兩位數_範本.pdf',
+    pangrid: '分分看_分盤格線_兩位數_範本.pdf',
+  };
+  const dlBtn = document.getElementById('typeSampleDownloadBtn');
+  if (dlBtn) { dlBtn.href = pdfMap[sub]; dlBtn.download = nameMap[sub]; }
+  _doRenderSamplePdf(pdfMap[sub], 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
 
 function selectFenfenSet(v) {
