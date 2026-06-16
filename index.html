@@ -1331,6 +1331,41 @@ body {
       <div class="card-body" id="diffInfoBody" style="padding:12px 16px;"></div>
     </div>
 
+    <!-- 版型選擇卡（分分看） -->
+    <div class="card" id="fenfenSubtypeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">版型選擇</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button id="fenfenSub_norem"   class="fenfen-set-btn active" onclick="selectFenfenSubtype('norem')">無餘數 <span style="font-size:10px;background:#FAEEDA;color:#854F0B;padding:1px 5px;border-radius:3px;margin-left:3px;">隨機圖片</span></button>
+          <button id="fenfenSub_rem"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('rem')">有餘數</button>
+          <button id="fenfenSub_heap"    class="fenfen-set-btn"        onclick="selectFenfenSubtype('heap')">分堆畫圈</button>
+          <button id="fenfenSub_pan"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('pan')">分盤畫圈</button>
+          <button id="fenfenSub_pangrid" class="fenfen-set-btn"        onclick="selectFenfenSubtype('pangrid')">分盤格線</button>
+        </div>
+        <div id="fenfenDescNorem" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          圖示預先印好，學生數數填答（無餘數）。<br>
+          選擇主題後以指定主題產圖；選「隨機」則每次任選 3 種物件。
+        </div>
+        <div id="fenfenDescRem" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          固定圖片，只換除數，題目含餘數（圖片數不能被除數整除）。6 題。
+        </div>
+        <div id="fenfenDescHeap" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          把 N 個，平分給 X 個人，學生畫圓圈表示分堆。4 題，數字每次隨機。
+        </div>
+        <div id="fenfenDescPan" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          把 N 個，平分給 X 個人，學生在盤形空間畫圓圈（無格線）。8 題（含 1 題範例）。
+        </div>
+        <div id="fenfenDescPangrid" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          把 N 個，平分給 X 個人，學生在有格線盤形空間畫圓圈。4 題，數字每次隨機。
+        </div>
+        <!-- 主題選擇（只在 norem 時顯示） -->
+        <div id="fenfenSubThemeSection">
+          <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;">主題（選填）</div>
+          <div id="fenfenBThemeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- 借位模式選擇卡（退位減法四位數） -->
     <div class="card" id="tuweiModeCard" style="display:none;">
       <div class="card-head"><span class="card-title">借位模式</span></div>
@@ -1485,28 +1520,11 @@ body {
         <div id="fenfenPanel" style="display:none;">
           <div class="card-head">
             <span class="card-title">分分看設定</span>
+            <span style="font-size:11px;color:var(--teal-dark);">隨機產生</span>
           </div>
-          <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
-            <!-- 5 個平鋪按鈕 -->
-            <div style="display:flex;gap:5px;flex-wrap:wrap;">
-              <button id="fenfenSub_norem"   class="fenfen-set-btn active" onclick="selectFenfenSubtype('norem')">無餘數 <span style="font-size:10px;background:#FAEEDA;color:#854F0B;padding:1px 5px;border-radius:3px;margin-left:3px;">隨機圖片</span></button>
-              <button id="fenfenSub_rem"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('rem')">有餘數</button>
-              <button id="fenfenSub_heap"    class="fenfen-set-btn"        onclick="selectFenfenSubtype('heap')">分堆畫圈</button>
-              <button id="fenfenSub_pan"     class="fenfen-set-btn"        onclick="selectFenfenSubtype('pan')">分盤畫圈</button>
-              <button id="fenfenSub_pangrid" class="fenfen-set-btn"        onclick="selectFenfenSubtype('pangrid')">分盤格線</button>
-            </div>
-            <!-- 無餘數：主題選擇器 -->
-            <div id="fenfenSubContentNorem">
-              <div style="font-size:12px;color:var(--gray);line-height:1.8;background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;">
-                圖示預先印好，學生數數填答（無餘數）。<br>
-                選擇主題後以指定主題產圖；選「隨機」則每次任選 3 種物件。
-              </div>
-              <div style="font-size:12px;font-weight:700;color:var(--ink);margin:8px 0 4px;">主題（選填）</div>
-              <div id="fenfenBThemeGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
-            </div>
-            <!-- 其他 4 種 -->
-            <div id="fenfenSubContentOther" style="display:none;">
-              <div id="fenfenSubOtherDesc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
+          <div class="card-body" style="padding:12px 16px;">
+            <div style="background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;font-size:11px;color:var(--gray);line-height:1.8;">
+              ✦ 除法概念，除數 2–6　✦ 適合二年級初學者　✦ 課綱：N-2-3
             </div>
           </div>
         </div>
@@ -3285,17 +3303,11 @@ function selectFenfenSubtype(sub) {
   ['norem','rem','heap','pan','pangrid'].forEach(s => {
     const btn = document.getElementById('fenfenSub_' + s);
     if (btn) btn.classList.toggle('active', s === sub);
+    const desc = document.getElementById('fenfenDesc' + s.charAt(0).toUpperCase() + s.slice(1));
+    if (desc) desc.style.display = s === sub ? '' : 'none';
   });
-  document.getElementById('fenfenSubContentNorem').style.display = sub === 'norem' ? '' : 'none';
-  document.getElementById('fenfenSubContentOther').style.display = sub !== 'norem' ? '' : 'none';
-  const descs = {
-    rem:     '固定圖片，只換除數，題目含餘數（圖片數不能被除數整除）。6 題。',
-    heap:    '把 N 個，平分給 X 個人，學生畫圓圈表示分堆。4 題，數字每次隨機。',
-    pan:     '把 N 個，平分給 X 個人，學生在盤形空間畫圓圈（無格線）。8 題（含 1 題範例）。',
-    pangrid: '把 N 個，平分給 X 個人，學生在有格線盤形空間畫圓圈。4 題，數字每次隨機。',
-  };
-  const descEl = document.getElementById('fenfenSubOtherDesc');
-  if (descEl && descs[sub]) descEl.textContent = descs[sub];
+  const themeSection = document.getElementById('fenfenSubThemeSection');
+  if (themeSection) themeSection.style.display = sub === 'norem' ? '' : 'none';
   if (sub === 'norem') renderFenfenBThemeGrid();
 }
 
@@ -3560,8 +3572,12 @@ function applyTypeLayout(typeId) {
   // 左欄：購物找零顯示互動難度卡＋儲存設定；其他題型顯示靜態難度資訊卡
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
-  document.getElementById('diffInfoCard').style.display   = isN2 ? 'none' : '';
-  if (!isN2) renderDiffInfoCard(typeId);
+  const hideDiffInfo = isN2 || typeId === 'fenfen';
+  document.getElementById('diffInfoCard').style.display   = hideDiffInfo ? 'none' : '';
+  if (!hideDiffInfo) renderDiffInfoCard(typeId);
+
+  // 版型選擇卡：只在分分看題型顯示
+  document.getElementById('fenfenSubtypeCard').style.display = (typeId === 'fenfen') ? '' : 'none';
 
   // 借位模式卡：只在退位減法四位數題型顯示
   document.getElementById('tuweiModeCard').style.display = (typeId === 'tuiwei4sub') ? '' : 'none';
