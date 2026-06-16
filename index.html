@@ -2593,10 +2593,7 @@ function update() {
   const showWarn = isInteractive && shownWarns.length > 0;
   wb.style.display = showWarn ? 'block' : 'none';
   if(showWarn) wb.innerHTML = '⚠️ <strong>需要調整：</strong><br>' + shownWarns.map(w=>'• '+w).join('<br>');
-  // 分分看面板
-  const isFenfen = (getType().id === 'fenfen');
-  document.getElementById('fenfenPanel').style.display = isFenfen ? '' : 'none';
-  if (isFenfen) renderFenfenItems();
+  // 分分看面板（顯示/隱藏由 applyTypeLayout 統一管理，此處不重複呼叫）
   // 三步驟面板
   document.getElementById('sanbushuPanel').style.display = isSanbushu ? '' : 'none';
   if (isSanbushu) loadSanbushuPreview(S.themeId);
@@ -3195,7 +3192,7 @@ async function renderFenfennewThemeGrid() {
     const res = await fetch(`${API_URL}/library/fenfennew`);
     if (res.ok) {
       const data = await res.json();
-      themes = data.themes || themes;
+      themes = Array.isArray(data.themes) ? data.themes : themes;
     }
   } catch (_) {}
   grid.innerHTML = themes.map(t => `
@@ -3231,7 +3228,7 @@ async function renderFenfenBThemeGrid() {
     const res = await fetch(`${API_URL}/library/fenfennew`);
     if (res.ok) {
       const data = await res.json();
-      themes = data.themes || themes;
+      themes = Array.isArray(data.themes) ? data.themes : themes;
     }
   } catch (_) {}
   grid.innerHTML = themes.map(t => `
