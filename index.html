@@ -1452,6 +1452,47 @@ body {
       </div>
     </div>
 
+    <!-- 版型選擇卡（十以內減法） -->
+    <div class="card" id="sub1ModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">版型選擇</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">選取版型 → 確認套用 → 下載學習單</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="sub1ModeSub15"     class="fenfen-set-btn active" onclick="selectSub1Mode('sub15', true)">被減數 1–5</button>
+          <button id="sub1ModeSub69"     class="fenfen-set-btn"        onclick="selectSub1Mode('sub69', true)">被減數 6–9</button>
+          <button id="sub1ModeSub10"     class="fenfen-set-btn"        onclick="selectSub1Mode('sub10', true)">被減數 10</button>
+          <button id="sub1ModeSubfig"    class="fenfen-set-btn"        onclick="selectSub1Mode('subfig', true)">圖輔助</button>
+          <button id="sub1ModeSubborrow" class="fenfen-set-btn"        onclick="selectSub1Mode('subborrow', true)">退位減法</button>
+        </div>
+        <div id="sub1DescSub15" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          被減數 1–5，共 12 題。<br>
+          前 6 題附伴隨格（顯示被減數）；後 6 題純算式，含被減數與減數均隨機的題目。
+        </div>
+        <div id="sub1DescSub69" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          被減數 6–9，共 12 題。<br>
+          前 6 題被減數固定（6/7/8/9），減數隨機；後 6 題被減數與減數均隨機。
+        </div>
+        <div id="sub1DescSub10" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          被減數固定為 10，減數 1–9 隨機，共 12 題。<br>
+          前 6 題附伴隨格，後 6 題純算式，適合練習「10 的分解」。
+        </div>
+        <div id="sub1DescSubfig" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          十以內減法，共 8 題，每題附圖輔助。<br>
+          圖片為固定版型，供學生目視輔助計算。
+        </div>
+        <div id="sub1DescSubborrow" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          退位減法，共 12 題（兩種題型混合）：<br>
+          ① 10−X：被減數 10，減數隨機（4 題）<br>
+          ② 1X−Y：兩位數減一位數，個位不夠需退位（8 題）
+        </div>
+        <button id="sub1ConfirmBtn" onclick="applySub1Mode()" style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.02em;">確認套用</button>
+        <div id="sub1ResultRow" style="display:none;padding:10px 12px;background:var(--teal-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span id="sub1ResultLabel" style="font-size:12px;color:var(--teal-dark);font-weight:600;"></span>
+          <a id="sub1DownloadLink" href="#" download="加減計算練習＿減法.docx" style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">⬇ 下載學習單</a>
+        </div>
+      </div>
+    </div>
+
     <!-- 單價調整卡（三步驟、還差多少、兩步驟） -->
     <div class="card" id="priceEditCard" style="display:none;">
       <div class="card-head">
@@ -1745,50 +1786,11 @@ body {
           </p>
         </div>
 
-        <!-- sub10Panel -->
-        <div id="sub10Panel" class="type-panel" style="display:none">
+        <!-- sub1Panel（十以內減法合併頁） -->
+        <div id="sub1Panel" class="type-panel" style="display:none">
           <p style="font-size:13px;color:var(--gray);line-height:1.7;">
-            被減數固定為 10，減數 1–9 隨機，共 12 題。<br>
-            前 6 題附伴隨格（另位顯示減數），後 6 題純算式。<br>
-            適合練習「10 的分解」。
-          </p>
-        </div>
-
-        <!-- subfigPanel -->
-        <div id="subfigPanel" class="type-panel" style="display:none">
-          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
-            十以內減法，共 8 題，每題附圖輔助。<br>
-            被減數恆為 10，減數 1–9 隨機。<br>
-            圖片為固定版型，供學生目視輔助計算。
-          </p>
-        </div>
-
-        <!-- sub15Panel -->
-        <div id="sub15Panel" class="type-panel" style="display:none">
-          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
-            被減數 1–5，共 12 題。<br>
-            前 6 題附伴隨格，顯示被減數；<br>
-            題 7–9 被減數為紅字（隨機），減數固定；<br>
-            題 10–12 被減數與減數均隨機。
-          </p>
-        </div>
-
-        <!-- sub69Panel -->
-        <div id="sub69Panel" class="type-panel" style="display:none">
-          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
-            被減數 6–9，共 12 題。<br>
-            前 6 題被減數固定（6/7/8/9），減數隨機；<br>
-            後 6 題被減數與減數均隨機（6–9 範圍）。
-          </p>
-        </div>
-
-        <!-- subborrowPanel -->
-        <div id="subborrowPanel" class="type-panel" style="display:none">
-          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
-            退位減法，共 12 題（兩種題型混合）：<br>
-            ① 10−X：被減數 10，減數隨機（4 題）<br>
-            ② 1X−Y：兩位數減一位數，個位不夠需退位（8 題）<br>
-            部分題目附伴隨格顯示各位數值。
+            左欄選取版型後按「確認套用」即可下載學習單。<br>
+            共 5 種版型：被減數 1–5、6–9、10、圖輔助版、退位減法。
           </p>
         </div>
 
@@ -2397,79 +2399,19 @@ const TYPE_REGISTRY = [
     },
   },
   {
-    id: 'sub10',
+    id: 'sub1',
     code: 'N-1-1',
-    name: '加減計算練習＿減法（被減數10）',
+    name: '加減計算練習＿減法（十以內）',
     grade: 1,
     ops: ['sub'],
-    keywords: ['一位數', '減法', '被減數10', '算術練習'],
-    desc: '被減數固定為 10，減數 1–9 隨機，共 12 題，適合 10 的分解練習。',
+    keywords: ['一位數', '減法', '十以內', '算術練習'],
+    desc: '十以內各種減法，共 5 種版型：被減數 1–5／6–9／10、圖輔助版、退位減法，可依學生程度選擇。',
     sortKey: [2, 1, 1],
-    home: { icon: '🔟', label: '10的減法練習', sub: '被減數固定為10' },
-    diffInfo: { title: '難度說明', rows: [['位數', '一位數'], ['被減數', '固定10'], ['題數', '12題']] },
-    sample: { pdf: 'assets/sub10_sample.pdf', name: '加減計算練習＿減法（被減數10）_範本.pdf' },
-    layout: { panel: 'sub10Panel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
-    api: { endpoint: '/generate/sub10', body: () => ({}), filename: () => '加減計算練習＿減法（被減數10）.docx' },
-  },
-  {
-    id: 'subfig',
-    code: 'N-1-2',
-    name: '加減計算練習＿減法（十以內）＿圖輔助',
-    grade: 1,
-    ops: ['sub'],
-    keywords: ['一位數', '減法', '十以內', '圖輔助', '算術練習'],
-    desc: '十以內減法，8 題，每題附圖輔助，被減數恆為 10，減數 1–9 隨機。',
-    sortKey: [2, 1, 2],
-    home: { icon: '🖼️', label: '十以內減法', sub: '圖輔助版' },
-    diffInfo: { title: '難度說明', rows: [['位數', '一位數'], ['被減數', '10以內'], ['題數', '8題'], ['輔助', '圖示輔助']] },
-    sample: { pdf: 'assets/subfig_sample.pdf', name: '加減計算練習＿減法（十以內）＿圖輔助_範本.pdf' },
-    layout: { panel: 'subfigPanel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
-    api: { endpoint: '/generate/subfig', body: () => ({}), filename: () => '加減計算練習＿減法（十以內）＿圖輔助.docx' },
-  },
-  {
-    id: 'sub15',
-    code: 'N-1-3',
-    name: '加減計算練習＿減法（被減數1-5）',
-    grade: 1,
-    ops: ['sub'],
-    keywords: ['一位數', '減法', '被減數1-5', '算術練習'],
-    desc: '被減數 1–5，共 12 題，前 6 題附伴隨格；後 3 題被減數固定，最後 3 題被減數與減數均隨機。',
-    sortKey: [2, 1, 3],
-    home: { icon: '5️⃣', label: '1-5 減法練習', sub: '被減數1-5' },
-    diffInfo: { title: '難度說明', rows: [['位數', '一位數'], ['被減數', '1-5'], ['題數', '12題']] },
-    sample: { pdf: 'assets/sub15_sample.pdf', name: '加減計算練習＿減法（被減數1-5）_範本.pdf' },
-    layout: { panel: 'sub15Panel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
-    api: { endpoint: '/generate/sub15', body: () => ({}), filename: () => '加減計算練習＿減法（被減數1-5）.docx' },
-  },
-  {
-    id: 'sub69',
-    code: 'N-1-4',
-    name: '加減計算練習＿減法（被減數6-9）',
-    grade: 1,
-    ops: ['sub'],
-    keywords: ['一位數', '減法', '被減數6-9', '算術練習'],
-    desc: '被減數 6–9，共 12 題；前 6 題被減數固定（黑字），後 6 題被減數與減數均隨機（紅字）。',
-    sortKey: [2, 1, 4],
-    home: { icon: '9️⃣', label: '6-9 減法練習', sub: '被減數6-9' },
-    diffInfo: { title: '難度說明', rows: [['位數', '一位數'], ['被減數', '6-9'], ['題數', '12題']] },
-    sample: { pdf: 'assets/sub69_sample.pdf', name: '加減計算練習＿減法（被減數6-9）_範本.pdf' },
-    layout: { panel: 'sub69Panel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
-    api: { endpoint: '/generate/sub69', body: () => ({}), filename: () => '加減計算練習＿減法（被減數6-9）.docx' },
-  },
-  {
-    id: 'subborrow',
-    code: 'N-1-5',
-    name: '加減計算練習＿退位減法（十以內）',
-    grade: 1,
-    ops: ['sub'],
-    keywords: ['一位數', '減法', '退位', '借位', '算術練習'],
-    desc: '退位減法 12 題：含「10−X」與「1X−Y（個位不夠借位）」兩種題型，部分題目附伴隨格。',
-    sortKey: [2, 1, 5],
-    home: { icon: '↩️', label: '退位減法練習', sub: '10以內借位' },
-    diffInfo: { title: '難度說明', rows: [['位數', '一/二位數'], ['題型', '10−X + 1X−Y'], ['題數', '12題'], ['借位', '個位借位']] },
-    sample: { pdf: 'assets/subborrow_sample.pdf', name: '加減計算練習＿退位減法（十以內）_範本.pdf' },
-    layout: { panel: 'subborrowPanel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
-    api: { endpoint: '/generate/subborrow', body: () => ({}), filename: () => '加減計算練習＿退位減法（十以內）.docx' },
+    home: { icon: '➖', label: '十以內減法', sub: '5 種版型選擇' },
+    diffInfo: null,
+    sample: { pdf: 'assets/sub15_sample.pdf', name: '十以內減法練習_範本.pdf' },
+    layout: { panel: 'sub1Panel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub15', body: () => ({}), filename: () => '加減計算練習＿減法.docx' },
   },
   {
     id: 'tuiwei3sub-yw',
@@ -2640,6 +2582,9 @@ let S = {
   tuiwei3subMode: 'coin',
   tuiwei3subPendingMode: 'coin',
   _tuiwei3subDocxUrl: null,
+  sub1Mode: 'sub15',
+  sub1PendingMode: 'sub15',
+  _sub1DocxUrl: null,
   _fenfenDocxUrl: null,
   priceOverrides: {},
 };
@@ -3640,6 +3585,97 @@ async function applyTuiwei3subMode() {
   }
 }
 
+function selectSub1Mode(mode, fromUser = false) {
+  S.sub1PendingMode = mode;
+  const modes = ['sub15', 'sub69', 'sub10', 'subfig', 'subborrow'];
+  const idMap  = { sub15: 'sub1ModeSub15', sub69: 'sub1ModeSub69', sub10: 'sub1ModeSub10', subfig: 'sub1ModeSubfig', subborrow: 'sub1ModeSubborrow' };
+  const modeLabel = { sub15: '被減數 1–5', sub69: '被減數 6–9', sub10: '被減數 10', subfig: '圖輔助', subborrow: '退位減法' };
+  const pdfMap = {
+    sub15:     'assets/sub15_sample.pdf',
+    sub69:     'assets/sub69_sample.pdf',
+    sub10:     'assets/sub10_sample.pdf',
+    subfig:    'assets/subfig_sample.pdf',
+    subborrow: 'assets/subborrow_sample.pdf',
+  };
+  const nameMap = {
+    sub15:     '加減計算練習＿減法（被減數1-5）_範本.pdf',
+    sub69:     '加減計算練習＿減法（被減數6-9）_範本.pdf',
+    sub10:     '加減計算練習＿減法（被減數10）_範本.pdf',
+    subfig:    '加減計算練習＿減法（十以內）＿圖輔助_範本.pdf',
+    subborrow: '加減計算練習＿退位減法（十以內）_範本.pdf',
+  };
+  modes.forEach(m => {
+    const btn = document.getElementById(idMap[m]);
+    if (btn) btn.classList.toggle('active', m === mode);
+    const key = m.charAt(0).toUpperCase() + m.slice(1);
+    const desc = document.getElementById('sub1Desc' + key);
+    if (desc) desc.style.display = m === mode ? '' : 'none';
+  });
+  const dlBtn = document.getElementById('typeSampleDownloadBtn');
+  if (dlBtn) { dlBtn.href = pdfMap[mode]; dlBtn.download = nameMap[mode]; }
+  _doRenderSamplePdf(pdfMap[mode], 'typeSamplePdfContainer', 'typeSamplePdfLoading');
+  const confirmBtn = document.getElementById('sub1ConfirmBtn');
+  const resultRow  = document.getElementById('sub1ResultRow');
+  if (fromUser) {
+    if (confirmBtn) {
+      confirmBtn.style.display = '';
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = `確認套用「${modeLabel[mode]}」`;
+    }
+    if (resultRow) resultRow.style.display = 'none';
+  } else {
+    if (confirmBtn) confirmBtn.style.display = 'none';
+    if (resultRow)  resultRow.style.display  = 'none';
+  }
+}
+
+async function applySub1Mode() {
+  const mode = S.sub1PendingMode ?? S.sub1Mode ?? 'sub15';
+  S.sub1Mode = mode;
+  const modeLabel   = { sub15: '被減數 1–5', sub69: '被減數 6–9', sub10: '被減數 10', subfig: '圖輔助', subborrow: '退位減法' };
+  const endpointMap = { sub15: '/generate/sub15', sub69: '/generate/sub69', sub10: '/generate/sub10', subfig: '/generate/subfig', subborrow: '/generate/subborrow' };
+  const filenameMap = {
+    sub15:     '加減計算練習＿減法（被減數1-5）.docx',
+    sub69:     '加減計算練習＿減法（被減數6-9）.docx',
+    sub10:     '加減計算練習＿減法（被減數10）.docx',
+    subfig:    '加減計算練習＿減法（十以內）＿圖輔助.docx',
+    subborrow: '加減計算練習＿退位減法（十以內）.docx',
+  };
+  const confirmBtn = document.getElementById('sub1ConfirmBtn');
+  const resultRow  = document.getElementById('sub1ResultRow');
+  const resultLbl  = document.getElementById('sub1ResultLabel');
+  const dlLink     = document.getElementById('sub1DownloadLink');
+
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = '生成中…';
+  if (resultRow) resultRow.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API_URL}${endpointMap[mode]}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    const blob = await res.blob();
+    if (S._sub1DocxUrl) URL.revokeObjectURL(S._sub1DocxUrl);
+    S._sub1DocxUrl = URL.createObjectURL(blob);
+    dlLink.href = S._sub1DocxUrl;
+    dlLink.download = filenameMap[mode];
+    resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」版型生成`;
+    resultRow.style.display = '';
+    confirmBtn.textContent = `重新生成「${modeLabel[mode]}」`;
+    confirmBtn.disabled = false;
+  } catch (e) {
+    confirmBtn.textContent = `確認套用「${modeLabel[mode]}」`;
+    confirmBtn.disabled = false;
+    if (resultLbl) { resultLbl.textContent = `生成失敗：${e.message}`; resultRow.style.display = ''; resultRow.style.background = '#fef2f2'; }
+  }
+}
+
 function selectFenfenSubtype(sub, fromUser = false) {
   S.fenfenSubtype = sub;
   const subLabel = {
@@ -4049,7 +4085,7 @@ function applyTypeLayout(typeId) {
   // 左欄：購物找零顯示互動難度卡＋儲存設定；其他題型顯示靜態難度資訊卡
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
-  const hideDiffInfo = isN2 || typeId === 'fenfen' || typeId === 'tuiwei3sub';
+  const hideDiffInfo = isN2 || typeId === 'fenfen' || typeId === 'tuiwei3sub' || typeId === 'sub1';
   document.getElementById('diffInfoCard').style.display   = hideDiffInfo ? 'none' : '';
   if (!hideDiffInfo) renderDiffInfoCard(typeId);
 
@@ -4061,6 +4097,9 @@ function applyTypeLayout(typeId) {
 
   // 版型選擇卡：只在退位減法三位數題型顯示
   document.getElementById('tuiwei3subModeCard').style.display = (typeId === 'tuiwei3sub') ? '' : 'none';
+
+  // 版型選擇卡：只在十以內減法題型顯示
+  document.getElementById('sub1ModeCard').style.display = (typeId === 'sub1') ? '' : 'none';
 
   // 單價調整卡：由 registry layout.prices 控制
   document.getElementById('priceEditCard').style.display = L.prices ? '' : 'none';
@@ -4118,13 +4157,14 @@ function applyTypeLayout(typeId) {
   if (typeId === 'fenfen') selectFenfenSubtype(S.fenfenSubtype || 'norem');
   if (typeId === 'tuiwei4sub') selectTuweiMode(S.tuweiMode ?? 'bai');
   if (typeId === 'tuiwei3sub') selectTuiwei3subMode(S.tuiwei3subMode ?? 'coin');
+  if (typeId === 'sub1') selectSub1Mode(S.sub1Mode ?? 'sub15');
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
   document.getElementById('trialBar').style.display = '';
 
   // 「選項卡 + 確認套用」模式的題型：下載在選項卡內完成，隱藏底部下載按鈕
-  const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub' || typeId === 'tuiwei3sub');
+  const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub' || typeId === 'tuiwei3sub' || typeId === 'sub1');
   document.getElementById('genBtn').closest('.gen-section').style.display = usesOptionCard ? 'none' : '';
 
 }
