@@ -1420,6 +1420,38 @@ body {
       </div>
     </div>
 
+    <!-- 版型選擇卡（退位減法三位數） -->
+    <div class="card" id="tuiwei3subModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">版型選擇</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">選取輔助版型 → 確認套用 → 下載學習單</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="tuiwei3subModeCoin"  class="fenfen-set-btn active" onclick="selectTuiwei3subMode('coin', true)">單退位錢幣</button>
+          <button id="tuiwei3subModeDcoin" class="fenfen-set-btn"        onclick="selectTuiwei3subMode('dcoin', true)">雙退位錢幣</button>
+          <button id="tuiwei3subModeTally" class="fenfen-set-btn"        onclick="selectTuiwei3subMode('tally', true)">雙退位畫記</button>
+        </div>
+        <div id="tuiwei3subDescCoin" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          十位需向百位借位（單退位），以畫錢幣輔助學生理解借位過程。<br>
+          範例：530 – 260 = 270
+        </div>
+        <div id="tuiwei3subDescDcoin" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          十位向百位借、百位再向千位借（雙重退位），以畫錢幣輔助。<br>
+          範例：600 – 230 = 370
+        </div>
+        <div id="tuiwei3subDescTally" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          雙重退位，改以畫記符號（正字）取代錢幣，適合進階練習。<br>
+          範例：600 – 230 = 370
+        </div>
+        <!-- 確認套用按鈕（點選版型後出現） -->
+        <button id="tuiwei3subConfirmBtn" onclick="applyTuiwei3subMode()" style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.02em;">確認套用</button>
+        <!-- 生成結果區（套用成功後出現） -->
+        <div id="tuiwei3subResultRow" style="display:none;padding:10px 12px;background:var(--teal-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span id="tuiwei3subResultLabel" style="font-size:12px;color:var(--teal-dark);font-weight:600;"></span>
+          <a id="tuiwei3subDownloadLink" href="#" download="退位減法（三位數）＿畫錢幣／畫記輔助.docx" style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">⬇ 下載學習單</a>
+        </div>
+      </div>
+    </div>
+
     <!-- 單價調整卡（三步驟、還差多少、兩步驟） -->
     <div class="card" id="priceEditCard" style="display:none;">
       <div class="card-head">
@@ -2483,6 +2515,9 @@ let S = {
   tuweiMode: 'bai',
   tuweiPendingMode: 'bai',
   _tuweiDocxUrl: null,
+  tuiwei3subMode: 'coin',
+  tuiwei3subPendingMode: 'coin',
+  _tuiwei3subDocxUrl: null,
   _fenfenDocxUrl: null,
   priceOverrides: {},
 };
@@ -3408,6 +3443,81 @@ async function applyTuweiMode() {
   }
 }
 
+function selectTuiwei3subMode(mode, fromUser = false) {
+  S.tuiwei3subPendingMode = mode;
+  const idMap = { coin: 'tuiwei3subModeCoin', dcoin: 'tuiwei3subModeDcoin', tally: 'tuiwei3subModeTally' };
+  const modeLabel = { coin: '單退位錢幣', dcoin: '雙退位錢幣', tally: '雙退位畫記' };
+  ['coin', 'dcoin', 'tally'].forEach(m => {
+    const btn = document.getElementById(idMap[m]);
+    if (btn) btn.classList.toggle('active', m === mode);
+    const cap = m.charAt(0).toUpperCase() + m.slice(1);
+    const desc = document.getElementById('tuiwei3subDesc' + cap);
+    if (desc) desc.style.display = m === mode ? '' : 'none';
+  });
+  // 切換對應版型的學習單範本
+  const pdfMap  = { coin: 'assets/tuiwei3sub_coin_sample.pdf', dcoin: 'assets/tuiwei3sub_dcoin_sample.pdf', tally: 'assets/tuiwei3sub_tally_sample.pdf' };
+  const nameMap = { coin: '退位減法_三位數_單退位錢幣_範本.pdf', dcoin: '退位減法_三位數_雙退位錢幣_範本.pdf', tally: '退位減法_三位數_雙退位畫記_範本.pdf' };
+  const dlBtn = document.getElementById('typeSampleDownloadBtn');
+  if (dlBtn) { dlBtn.href = pdfMap[mode]; dlBtn.download = nameMap[mode]; }
+  _doRenderSamplePdf(pdfMap[mode], 'typeSamplePdfContainer', 'typeSamplePdfLoading');
+  const confirmBtn = document.getElementById('tuiwei3subConfirmBtn');
+  const resultRow  = document.getElementById('tuiwei3subResultRow');
+  if (fromUser) {
+    // 使用者點選版型：顯示確認按鈕，清除上一次生成結果
+    if (confirmBtn) {
+      confirmBtn.style.display = '';
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = `確認套用「${modeLabel[mode]}」`;
+    }
+    if (resultRow) resultRow.style.display = 'none';
+  } else {
+    // 程式呼叫（進入題型時）：隱藏確認與結果區，回到初始狀態
+    if (confirmBtn) confirmBtn.style.display = 'none';
+    if (resultRow)  resultRow.style.display  = 'none';
+  }
+}
+
+async function applyTuiwei3subMode() {
+  const mode = S.tuiwei3subPendingMode ?? S.tuiwei3subMode ?? 'coin';
+  S.tuiwei3subMode = mode;
+  const modeLabel = { coin: '單退位錢幣', dcoin: '雙退位錢幣', tally: '雙退位畫記' };
+  const endpointMap = { coin: '/generate/tuiwei3sub-coin', dcoin: '/generate/tuiwei3sub-dcoin', tally: '/generate/tuiwei3sub-tally' };
+  const filenameMap = { coin: '退位減法（三位數）＿單退位錢幣.docx', dcoin: '退位減法（三位數）＿雙退位錢幣.docx', tally: '退位減法（三位數）＿雙退位畫記.docx' };
+  const confirmBtn = document.getElementById('tuiwei3subConfirmBtn');
+  const resultRow  = document.getElementById('tuiwei3subResultRow');
+  const resultLbl  = document.getElementById('tuiwei3subResultLabel');
+  const dlLink     = document.getElementById('tuiwei3subDownloadLink');
+
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = '生成中…';
+  if (resultRow) resultRow.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API_URL}${endpointMap[mode]}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    const blob = await res.blob();
+    if (S._tuiwei3subDocxUrl) URL.revokeObjectURL(S._tuiwei3subDocxUrl);
+    S._tuiwei3subDocxUrl = URL.createObjectURL(blob);
+    dlLink.href = S._tuiwei3subDocxUrl;
+    dlLink.download = filenameMap[mode];
+    resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」版型生成`;
+    resultRow.style.display = '';
+    confirmBtn.textContent = `重新生成「${modeLabel[mode]}」`;
+    confirmBtn.disabled = false;
+  } catch (e) {
+    confirmBtn.textContent = `確認套用「${modeLabel[mode]}」`;
+    confirmBtn.disabled = false;
+    if (resultLbl) { resultLbl.textContent = `生成失敗：${e.message}`; resultRow.style.display = ''; resultRow.style.background = '#fef2f2'; }
+  }
+}
+
 function selectFenfenSubtype(sub, fromUser = false) {
   S.fenfenSubtype = sub;
   const subLabel = {
@@ -3817,7 +3927,7 @@ function applyTypeLayout(typeId) {
   // 左欄：購物找零顯示互動難度卡＋儲存設定；其他題型顯示靜態難度資訊卡
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
-  const hideDiffInfo = isN2 || typeId === 'fenfen';
+  const hideDiffInfo = isN2 || typeId === 'fenfen' || typeId === 'tuiwei3sub';
   document.getElementById('diffInfoCard').style.display   = hideDiffInfo ? 'none' : '';
   if (!hideDiffInfo) renderDiffInfoCard(typeId);
 
@@ -3826,6 +3936,9 @@ function applyTypeLayout(typeId) {
 
   // 借位模式卡：只在退位減法四位數題型顯示
   document.getElementById('tuweiModeCard').style.display = (typeId === 'tuiwei4sub') ? '' : 'none';
+
+  // 版型選擇卡：只在退位減法三位數題型顯示
+  document.getElementById('tuiwei3subModeCard').style.display = (typeId === 'tuiwei3sub') ? '' : 'none';
 
   // 單價調整卡：由 registry layout.prices 控制
   document.getElementById('priceEditCard').style.display = L.prices ? '' : 'none';
@@ -3882,13 +3995,14 @@ function applyTypeLayout(typeId) {
   if (typeId === 'fenfennew') renderFenfennewThemeGrid();
   if (typeId === 'fenfen') selectFenfenSubtype(S.fenfenSubtype || 'norem');
   if (typeId === 'tuiwei4sub') selectTuweiMode(S.tuweiMode ?? 'bai');
+  if (typeId === 'tuiwei3sub') selectTuiwei3subMode(S.tuiwei3subMode ?? 'coin');
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
   document.getElementById('trialBar').style.display = '';
 
   // 「選項卡 + 確認套用」模式的題型：下載在選項卡內完成，隱藏底部下載按鈕
-  const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub');
+  const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub' || typeId === 'tuiwei3sub');
   document.getElementById('genBtn').closest('.gen-section').style.display = usesOptionCard ? 'none' : '';
 
 }
