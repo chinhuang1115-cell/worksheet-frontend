@@ -1705,6 +1705,23 @@ body {
           </div>
         </div><!-- /tuiwei4subPanel -->
 
+        <!-- tuiwei3subPanel -->
+        <div id="tuiwei3subPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            三位數退位減法計算練習，共三種輔助版型。<br>
+            請在左側選擇版型後點「確認套用」下載。
+          </p>
+        </div>
+
+        <!-- tuiwei3subYwPanel -->
+        <div id="tuiwei3subYwPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            三位數退位減法應用題，玩具店主題。<br>
+            每張 6 道題，格式：「你有 A 元，玩具要 C 元，剩下幾元？」<br>
+            個位均為 0，十位需退位（單退位）。
+          </p>
+        </div>
+
         <!-- No-Carry Addition (4-digit) — Draw Coins (English) -->
         <div id="huachu4addEnPanel" style="display:none;">
           <div class="card-head">
@@ -2273,6 +2290,63 @@ const TYPE_REGISTRY = [
       body:()=>({ mode: S.tuweiMode ?? 'bai',
                   price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined }),
       filename:()=>'退位減法（四位數）＿畫錢幣輔助.docx',
+    },
+  },
+  {
+    id: 'tuiwei3sub',
+    code: 'N-3-2',
+    name: '退位減法（三位數）＿畫錢幣／畫記輔助',
+    grade: 3,
+    ops: ['sub'],
+    keywords: [],
+    desc: '三位數退位減法計算練習，提供單退位錢幣、雙退位錢幣、雙退位畫記三種版型',
+    sortKey: [2, 3, 1],
+    home: { icon: '🪙', label: '三位數退位減法', sub: '錢幣 / 畫記輔助' },
+    diffInfo: null,
+    sample: null,
+    layout: {
+      panel: 'tuiwei3subPanel',
+      themeSet: null,
+      showTheme: false,
+      prices: false,
+      interactive: false,
+    },
+    api: {
+      endpoint: '/generate/tuiwei3sub-coin',
+      body: () => ({}),
+      filename: () => '退位減法三位數.docx',
+    },
+  },
+  {
+    id: 'tuiwei3sub-yw',
+    code: 'N-3-2',
+    name: '退位減法（三位數）＿應用題＿玩具篇',
+    grade: 3,
+    ops: ['sub'],
+    keywords: [],
+    desc: '三位數退位減法情境題，玩具店主題，每題附玩具圖片，個位均為 0',
+    sortKey: [2, 3, 2],
+    home: { icon: '🧸', label: '三位數退位應用題', sub: '玩具篇情境' },
+    diffInfo: {
+      title: '難度說明',
+      rows: [
+        ['位數', '三位數'],
+        ['步驟', '一步驟'],
+        ['借位', '十位單退位'],
+      ],
+    },
+    sample: 'tuiwei3sub-yw_sample.pdf',
+    layout: {
+      panel: 'tuiwei3subYwPanel',
+      themeSet: 'cheap',
+      showTheme: true,
+      prices: false,
+      interactive: false,
+    },
+    api: {
+      endpoint: '/generate/tuiwei3sub-yw',
+      body: () => ({ theme: S.theme }),
+      filename: () => `退位減法三位數應用題_${S.theme}.docx`,
     },
   },
   {
