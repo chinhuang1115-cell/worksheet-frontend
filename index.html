@@ -1745,6 +1745,53 @@ body {
           </p>
         </div>
 
+        <!-- sub10Panel -->
+        <div id="sub10Panel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            被減數固定為 10，減數 1–9 隨機，共 12 題。<br>
+            前 6 題附伴隨格（另位顯示減數），後 6 題純算式。<br>
+            適合練習「10 的分解」。
+          </p>
+        </div>
+
+        <!-- subfigPanel -->
+        <div id="subfigPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            十以內減法，共 8 題，每題附圖輔助。<br>
+            被減數恆為 10，減數 1–9 隨機。<br>
+            圖片為固定版型，供學生目視輔助計算。
+          </p>
+        </div>
+
+        <!-- sub15Panel -->
+        <div id="sub15Panel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            被減數 1–5，共 12 題。<br>
+            前 6 題附伴隨格，顯示被減數；<br>
+            題 7–9 被減數為紅字（隨機），減數固定；<br>
+            題 10–12 被減數與減數均隨機。
+          </p>
+        </div>
+
+        <!-- sub69Panel -->
+        <div id="sub69Panel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            被減數 6–9，共 12 題。<br>
+            前 6 題被減數固定（6/7/8/9），減數隨機；<br>
+            後 6 題被減數與減數均隨機（6–9 範圍）。
+          </p>
+        </div>
+
+        <!-- subborrowPanel -->
+        <div id="subborrowPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            退位減法，共 12 題（兩種題型混合）：<br>
+            ① 10−X：被減數 10，減數隨機（4 題）<br>
+            ② 1X−Y：兩位數減一位數，個位不夠需退位（8 題）<br>
+            部分題目附伴隨格顯示各位數值。
+          </p>
+        </div>
+
         <!-- tuiwei3subYwPanel -->
         <div id="tuiwei3subYwPanel" class="type-panel" style="display:none">
           <p style="font-size:13px;color:var(--gray);line-height:1.7;">
@@ -2348,6 +2395,81 @@ const TYPE_REGISTRY = [
       body: () => ({}),
       filename: () => '退位減法三位數.docx',
     },
+  },
+  {
+    id: 'sub10',
+    code: 'N-1-1',
+    name: '加減計算練習＿減法（被減數10）',
+    grade: 1,
+    ops: ['sub'],
+    keywords: ['一位數', '減法', '被減數10', '算術練習'],
+    desc: '被減數固定為 10，減數 1–9 隨機，共 12 題，適合 10 的分解練習。',
+    sortKey: [2, 1, 1],
+    home: { icon: '🔟', label: '10的減法練習', sub: '被減數固定為10' },
+    diffInfo: { title: '難度說明', rows: [['位數', '一位數'], ['被減數', '固定10'], ['題數', '12題']] },
+    sample: { pdf: 'assets/sub10_sample.pdf', name: '加減計算練習＿減法（被減數10）_範本.pdf' },
+    layout: { panel: 'sub10Panel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub10', body: () => ({}), filename: () => '加減計算練習＿減法（被減數10）.docx' },
+  },
+  {
+    id: 'subfig',
+    code: 'N-1-2',
+    name: '加減計算練習＿減法（十以內）＿圖輔助',
+    grade: 1,
+    ops: ['sub'],
+    keywords: ['一位數', '減法', '十以內', '圖輔助', '算術練習'],
+    desc: '十以內減法，8 題，每題附圖輔助，被減數恆為 10，減數 1–9 隨機。',
+    sortKey: [2, 1, 2],
+    home: { icon: '🖼️', label: '十以內減法', sub: '圖輔助版' },
+    diffInfo: { title: '難度說明', rows: [['位數', '一位數'], ['被減數', '10以內'], ['題數', '8題'], ['輔助', '圖示輔助']] },
+    sample: { pdf: 'assets/subfig_sample.pdf', name: '加減計算練習＿減法（十以內）＿圖輔助_範本.pdf' },
+    layout: { panel: 'subfigPanel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/subfig', body: () => ({}), filename: () => '加減計算練習＿減法（十以內）＿圖輔助.docx' },
+  },
+  {
+    id: 'sub15',
+    code: 'N-1-3',
+    name: '加減計算練習＿減法（被減數1-5）',
+    grade: 1,
+    ops: ['sub'],
+    keywords: ['一位數', '減法', '被減數1-5', '算術練習'],
+    desc: '被減數 1–5，共 12 題，前 6 題附伴隨格；後 3 題被減數固定，最後 3 題被減數與減數均隨機。',
+    sortKey: [2, 1, 3],
+    home: { icon: '5️⃣', label: '1-5 減法練習', sub: '被減數1-5' },
+    diffInfo: { title: '難度說明', rows: [['位數', '一位數'], ['被減數', '1-5'], ['題數', '12題']] },
+    sample: { pdf: 'assets/sub15_sample.pdf', name: '加減計算練習＿減法（被減數1-5）_範本.pdf' },
+    layout: { panel: 'sub15Panel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub15', body: () => ({}), filename: () => '加減計算練習＿減法（被減數1-5）.docx' },
+  },
+  {
+    id: 'sub69',
+    code: 'N-1-4',
+    name: '加減計算練習＿減法（被減數6-9）',
+    grade: 1,
+    ops: ['sub'],
+    keywords: ['一位數', '減法', '被減數6-9', '算術練習'],
+    desc: '被減數 6–9，共 12 題；前 6 題被減數固定（黑字），後 6 題被減數與減數均隨機（紅字）。',
+    sortKey: [2, 1, 4],
+    home: { icon: '9️⃣', label: '6-9 減法練習', sub: '被減數6-9' },
+    diffInfo: { title: '難度說明', rows: [['位數', '一位數'], ['被減數', '6-9'], ['題數', '12題']] },
+    sample: { pdf: 'assets/sub69_sample.pdf', name: '加減計算練習＿減法（被減數6-9）_範本.pdf' },
+    layout: { panel: 'sub69Panel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub69', body: () => ({}), filename: () => '加減計算練習＿減法（被減數6-9）.docx' },
+  },
+  {
+    id: 'subborrow',
+    code: 'N-1-5',
+    name: '加減計算練習＿退位減法（十以內）',
+    grade: 1,
+    ops: ['sub'],
+    keywords: ['一位數', '減法', '退位', '借位', '算術練習'],
+    desc: '退位減法 12 題：含「10−X」與「1X−Y（個位不夠借位）」兩種題型，部分題目附伴隨格。',
+    sortKey: [2, 1, 5],
+    home: { icon: '↩️', label: '退位減法練習', sub: '10以內借位' },
+    diffInfo: { title: '難度說明', rows: [['位數', '一/二位數'], ['題型', '10−X + 1X−Y'], ['題數', '12題'], ['借位', '個位借位']] },
+    sample: { pdf: 'assets/subborrow_sample.pdf', name: '加減計算練習＿退位減法（十以內）_範本.pdf' },
+    layout: { panel: 'subborrowPanel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/subborrow', body: () => ({}), filename: () => '加減計算練習＿退位減法（十以內）.docx' },
   },
   {
     id: 'tuiwei3sub-yw',
