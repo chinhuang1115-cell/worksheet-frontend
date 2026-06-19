@@ -2352,13 +2352,13 @@ const TYPE_REGISTRY = [
   {
     id: 'tuiwei3sub-yw',
     code: 'N-3-2',
-    name: '退位減法（三位數）＿應用題＿玩具篇',
+    name: '退位減法（三位數）＿應用題＿購物篇',
     grade: 3,
     ops: ['sub'],
     keywords: [],
-    desc: '三位數退位減法情境題，玩具店主題，每題附玩具圖片，個位均為 0',
+    desc: '三位數退位減法情境題，購物情境，每題附商品圖片，個位均為 0，自動選三位數價位主題',
     sortKey: [2, 3, 2],
-    home: { icon: '🧸', label: '三位數退位應用題', sub: '玩具篇情境' },
+    home: { icon: '🛍️', label: '三位數退位應用題', sub: '購物篇情境' },
     diffInfo: {
       title: '難度說明',
       rows: [
@@ -2367,18 +2367,18 @@ const TYPE_REGISTRY = [
         ['借位', '十位單退位'],
       ],
     },
-    sample: 'tuiwei3sub-yw_sample.pdf',
+    sample: { pdf: 'assets/tuiwei3sub-yw_sample.pdf', name: '退位減法（三位數）＿應用題＿購物篇_範本.pdf' },
     layout: {
       panel: 'tuiwei3subYwPanel',
       themeSet: 'cheap',
-      showTheme: true,
+      showTheme: false,
       prices: false,
       interactive: false,
     },
     api: {
       endpoint: '/generate/tuiwei3sub-yw',
-      body: () => ({ theme: S.theme }),
-      filename: () => `退位減法三位數應用題_${S.theme}.docx`,
+      body: () => ({}),
+      filename: () => '退位減法（三位數）＿應用題＿購物篇.docx',
     },
   },
   {
