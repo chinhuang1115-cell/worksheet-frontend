@@ -1493,6 +1493,106 @@ body {
       </div>
     </div>
 
+    <!-- sub2noreg 版型卡 -->
+    <div class="card" id="sub2noregModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">版型選擇</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">選取版型 → 確認套用 → 下載學習單</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="sub2noregModeDemo" class="fenfen-set-btn active" onclick="selectSub2noregMode('demo',true)">示範版</button>
+          <button id="sub2noregModeV2"   class="fenfen-set-btn"        onclick="selectSub2noregMode('v2',true)">練習版</button>
+        </div>
+        <div id="sub2noregDescDemo" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          3 題示範（含個位拆分步驟）＋ 9 題練習，適合初學者。
+        </div>
+        <div id="sub2noregDescV2" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          3 題示範＋ 21 題大量練習，適合熟練度鞏固。
+        </div>
+        <button id="sub2noregConfirmBtn" onclick="applySub2noregMode()" style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">確認套用</button>
+        <div id="sub2noregResultRow" style="display:none;padding:10px 12px;background:var(--teal-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span id="sub2noregResultLabel" style="font-size:12px;color:var(--teal-dark);font-weight:600;"></span>
+          <a id="sub2noregDownloadLink" href="#" download="兩位數不退位減法.docx" style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">⬇ 下載學習單</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- sub2noregApp 版型卡 -->
+    <div class="card" id="sub2noregAppModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">版型選擇</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">選取版型 → 確認套用 → 下載學習單</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="sub2noregAppModePman" class="fenfen-set-btn active" onclick="selectSub2noregAppMode('pman',true)">撲滿版</button>
+          <button id="sub2noregAppModeA"    class="fenfen-set-btn"        onclick="selectSub2noregAppMode('a',true)">找幾個10元</button>
+          <button id="sub2noregAppModeB"    class="fenfen-set-btn"        onclick="selectSub2noregAppMode('b',true)">找零版</button>
+        </div>
+        <div id="sub2noregAppDescPman" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          撲滿存款 X，12 道不退位減法問題，Y 為從撲滿取出的金額，每次數字隨機。
+        </div>
+        <div id="sub2noregAppDescA" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          給 50 元／給 100 元各 5 道，商品為整十元，練習找出幾個 10 元。
+        </div>
+        <div id="sub2noregAppDescB" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          給 50 元 3 道、給 100 元 3 道，非整十元商品，練習找出幾個 10 元與幾個 1 元。
+        </div>
+        <button id="sub2noregAppConfirmBtn" onclick="applySub2noregAppMode()" style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">確認套用</button>
+        <div id="sub2noregAppResultRow" style="display:none;padding:10px 12px;background:var(--teal-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span id="sub2noregAppResultLabel" style="font-size:12px;color:var(--teal-dark);font-weight:600;"></span>
+          <a id="sub2noregAppDownloadLink" href="#" download="兩位數不退位減法應用題.docx" style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">⬇ 下載學習單</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- sub2borrow 版型卡 -->
+    <div class="card" id="sub2borrowModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">版型選擇</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">選取版型 → 確認套用 → 下載學習單</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="sub2borrowModeDemo" class="fenfen-set-btn active" onclick="selectSub2borrowMode('demo',true)">示範版</button>
+          <button id="sub2borrowModeV2"   class="fenfen-set-btn"        onclick="selectSub2borrowMode('v2',true)">練習版</button>
+        </div>
+        <div id="sub2borrowDescDemo" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          8 題，含個位退位圖示說明，適合初次學習退位概念。
+        </div>
+        <div id="sub2borrowDescV2" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          3 題示範＋ 21 題大量練習，適合退位概念後的熟練鞏固。
+        </div>
+        <button id="sub2borrowConfirmBtn" onclick="applySub2borrowMode()" style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">確認套用</button>
+        <div id="sub2borrowResultRow" style="display:none;padding:10px 12px;background:var(--teal-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span id="sub2borrowResultLabel" style="font-size:12px;color:var(--teal-dark);font-weight:600;"></span>
+          <a id="sub2borrowDownloadLink" href="#" download="兩位數退位減法.docx" style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">⬇ 下載學習單</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- sub3noregApp 版型卡 -->
+    <div class="card" id="sub3noregAppModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">版型選擇</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">選取版型 → 確認套用 → 下載學習單</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="sub3noregAppModeStd"    class="fenfen-set-btn active" onclick="selectSub3noregAppMode('std',true)">標準版</button>
+          <button id="sub3noregAppMode2digit" class="fenfen-set-btn"        onclick="selectSub3noregAppMode('2digit',true)">被減數兩位</button>
+          <button id="sub3noregAppModeMixed"  class="fenfen-set-btn"        onclick="selectSub3noregAppMode('mixed',true)">混合版</button>
+        </div>
+        <div id="sub3noregAppDescStd" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          X 為整十三位數，Y 為三位數，12 題共用同一 X，適合初學三位數不退位減法。
+        </div>
+        <div id="sub3noregAppDesc2digit" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          X 為三位數，Y 為兩位數，12 題，難度較低，適合銜接兩位數到三位數的過渡練習。
+        </div>
+        <div id="sub3noregAppDescMixed" style="display:none;font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;">
+          X、Y 位數混合（三位數與兩位數），12 題，適合綜合練習。
+        </div>
+        <button id="sub3noregAppConfirmBtn" onclick="applySub3noregAppMode()" style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">確認套用</button>
+        <div id="sub3noregAppResultRow" style="display:none;padding:10px 12px;background:var(--teal-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span id="sub3noregAppResultLabel" style="font-size:12px;color:var(--teal-dark);font-weight:600;"></span>
+          <a id="sub3noregAppDownloadLink" href="#" download="三位數不退位減法應用題.docx" style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">⬇ 下載學習單</a>
+        </div>
+      </div>
+    </div>
+
     <!-- 單價調整卡（三步驟、還差多少、兩步驟） -->
     <div class="card" id="priceEditCard" style="display:none;">
       <div class="card-head">
@@ -1819,6 +1919,58 @@ body {
             </div>
           </div>
         </div><!-- /huachu4addEnPanel -->
+
+        <!-- sub2noregPanel -->
+        <div id="sub2noregPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            兩位數不退位減法直式計算練習。<br>
+            左欄選取版型後按「確認套用」即可下載。<br>
+            示範版：3 題示範 + 9 題練習；練習版：3 題示範 + 21 題練習。
+          </p>
+        </div>
+
+        <!-- sub2noregAppPanel -->
+        <div id="sub2noregAppPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            兩位數不退位減法應用題。<br>
+            左欄選取版型後按「確認套用」即可下載。<br>
+            撲滿版：12 題共用一個存款；找 10 元版：整十元商品找零；找零版：非整十元找零。
+          </p>
+        </div>
+
+        <!-- sub2borrowPanel -->
+        <div id="sub2borrowPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            兩位數退位減法直式計算練習。<br>
+            左欄選取版型後按「確認套用」即可下載。<br>
+            示範版：8 題（含個位拆分圖示）；練習版：3 題示範 + 21 題練習。
+          </p>
+        </div>
+
+        <!-- sub2borrow1dPanel -->
+        <div id="sub2borrow1dPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            兩位數減個位數退位減法，被減數 11–19。<br>
+            2 題示範（附個位拆分步驟）＋ 4 題練習，每次數字隨機。
+          </p>
+        </div>
+
+        <!-- sub3noregAppPanel -->
+        <div id="sub3noregAppPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            三位數不退位減法應用題。<br>
+            左欄選取版型後按「確認套用」即可下載。<br>
+            標準版：X 整十，Y 三位數；被減數兩位版；混合版。
+          </p>
+        </div>
+
+        <!-- sub3borrowPanel -->
+        <div id="sub3borrowPanel" class="type-panel" style="display:none">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            三位數退位減法直式計算練習，6 題，個位退位。<br>
+            三種格式混合（整體式、個位拆分式、百十位拆分式），每次數字隨機。
+          </p>
+        </div>
 
       </div><!-- /type-tab-preview -->
 
@@ -2557,6 +2709,116 @@ const TYPE_REGISTRY = [
       filename:()=>'分分看_分盤格線_兩位數.docx',
     },
   },
+  // ── 兩位數不退位減法 ──────────────────────────────────────────────────
+  {
+    id: 'sub2noreg',
+    code: 'N-2-2',
+    name: '兩位數不退位減法＿直式計算',
+    grade: 2,
+    ops: ['sub'],
+    keywords: ['兩位數', '不退位', '減法', '直式'],
+    desc: '兩位數不退位減法直式計算，分示範版（3 題示範 + 9 題練習）與練習版（3 題示範 + 21 題練習），每次數字隨機。',
+    sortKey: [2, 2, 1],
+    home: { icon: '➖', label: '兩位數不退位減法', sub: '直式計算練習' },
+    diffInfo: null,
+    sample: null,
+    layout: { panel: 'sub2noregPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub2noreg', body: () => ({ mode: S.sub2noregMode ?? 'demo' }), filename: () => '兩位數不退位減法.docx' },
+  },
+  // ── 兩位數不退位減法應用題 ─────────────────────────────────────────────
+  {
+    id: 'sub2noreg-app',
+    code: 'N-2-2',
+    name: '兩位數不退位減法＿應用題',
+    grade: 2,
+    ops: ['sub'],
+    keywords: ['兩位數', '不退位', '減法', '應用題', '撲滿', '找錢'],
+    desc: '兩位數不退位減法應用題，含撲滿版（12 題共用 X）、找幾個 10 元版、找 10 元+1 元版，每次數字隨機。',
+    sortKey: [2, 2, 2],
+    home: { icon: '🐷', label: '兩位數不退位應用題', sub: '撲滿 / 找零版' },
+    diffInfo: null,
+    sample: null,
+    layout: { panel: 'sub2noregAppPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub2noreg-app', body: () => ({ mode: S.sub2noregAppMode ?? 'pman' }), filename: () => '兩位數不退位減法應用題.docx' },
+  },
+  // ── 兩位數退位減法 ───────────────────────────────────────────────────
+  {
+    id: 'sub2borrow',
+    code: 'N-2-2',
+    name: '兩位數退位減法＿直式計算',
+    grade: 2,
+    ops: ['sub'],
+    keywords: ['兩位數', '退位', '減法', '直式', '個位退位'],
+    desc: '兩位數退位減法直式計算，含示範版（8 題圖示退位過程）與練習版（3 題示範 + 21 題練習），每次數字隨機。',
+    sortKey: [2, 2, 3],
+    home: { icon: '🔢', label: '兩位數退位減法', sub: '直式計算練習' },
+    diffInfo: null,
+    sample: null,
+    layout: { panel: 'sub2borrowPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub2borrow', body: () => ({ mode: S.sub2borrowMode ?? 'demo' }), filename: () => '兩位數退位減法.docx' },
+  },
+  // ── 兩位數減個位數退位 ──────────────────────────────────────────────
+  {
+    id: 'sub2borrow-1d',
+    code: 'N-2-2',
+    name: '兩位數減個位數＿退位減法',
+    grade: 2,
+    ops: ['sub'],
+    keywords: ['兩位數', '個位數', '退位', '減法'],
+    desc: '兩位數減個位數的退位減法練習（被減數 11–19），2 題示範附個位拆分步驟，4 題練習，每次數字隨機。',
+    sortKey: [2, 2, 4],
+    home: { icon: '➖', label: '兩位數減個位數', sub: '退位減法' },
+    diffInfo: {
+      title: '難度說明',
+      rows: [
+        ['位數', '兩位數 – 個位數'],
+        ['範圍', '被減數 11–19'],
+        ['借位', '個位退位'],
+      ],
+    },
+    sample: null,
+    layout: { panel: 'sub2borrow1dPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub2borrow-1d', body: () => ({}), filename: () => '兩位數減個位數退位減法.docx' },
+  },
+  // ── 三位數不退位減法應用題 ────────────────────────────────────────────
+  {
+    id: 'sub3noreg-app',
+    code: 'N-3-2',
+    name: '三位數不退位減法＿應用題',
+    grade: 3,
+    ops: ['sub'],
+    keywords: ['三位數', '不退位', '減法', '應用題', '撲滿'],
+    desc: '三位數不退位減法應用題，含三種版型：標準版（X 整十，Y 三位數）、被減數兩位版、混合版，每次數字隨機。',
+    sortKey: [2, 3, 3],
+    home: { icon: '🐷', label: '三位數不退位應用題', sub: '撲滿情境' },
+    diffInfo: null,
+    sample: null,
+    layout: { panel: 'sub3noregAppPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub3noreg-app', body: () => ({ mode: S.sub3noregAppMode ?? 'std' }), filename: () => '三位數不退位減法應用題.docx' },
+  },
+  // ── 三位數退位減法 ────────────────────────────────────────────────
+  {
+    id: 'sub3borrow',
+    code: 'N-3-2',
+    name: '三位數退位減法＿直式計算',
+    grade: 3,
+    ops: ['sub'],
+    keywords: ['三位數', '退位', '減法', '直式'],
+    desc: '三位數退位減法直式計算，6 題練習，三種格式混合（整體式、個位拆分式、百十位拆分式），每次數字隨機。',
+    sortKey: [2, 3, 4],
+    home: { icon: '🔢', label: '三位數退位減法', sub: '直式計算練習' },
+    diffInfo: {
+      title: '難度說明',
+      rows: [
+        ['位數', '三位數'],
+        ['步驟', '6 題練習'],
+        ['借位', '個位退位'],
+      ],
+    },
+    sample: null,
+    layout: { panel: 'sub3borrowPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub3borrow', body: () => ({}), filename: () => '三位數退位減法.docx' },
+  },
 ];
 
 // ── 由 registry 衍生的相容層（下游程式碼不需更動）──
@@ -2587,6 +2849,18 @@ let S = {
   _sub1DocxUrl: null,
   _fenfenDocxUrl: null,
   priceOverrides: {},
+  sub2noregMode: 'demo',
+  sub2noregPendingMode: 'demo',
+  _sub2noregDocxUrl: null,
+  sub2noregAppMode: 'pman',
+  sub2noregAppPendingMode: 'pman',
+  _sub2noregAppDocxUrl: null,
+  sub2borrowMode: 'demo',
+  sub2borrowPendingMode: 'demo',
+  _sub2borrowDocxUrl: null,
+  sub3noregAppMode: 'std',
+  sub3noregAppPendingMode: 'std',
+  _sub3noregAppDocxUrl: null,
 };
 let curGrade = 'all';
 let curOps = new Set(['all']);
@@ -3676,6 +3950,194 @@ async function applySub1Mode() {
   }
 }
 
+// ── sub2noreg（兩位數不退位減法）───────────────────────────────────────────
+function selectSub2noregMode(mode, fromUser = false) {
+  S.sub2noregPendingMode = mode;
+  const ids = { demo: 'sub2noregModeDemo', v2: 'sub2noregModeV2' };
+  Object.entries(ids).forEach(([k, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', k === mode);
+  });
+  ['demo', 'v2'].forEach(k => {
+    const el = document.getElementById('sub2noregDesc' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (el) el.style.display = k === mode ? '' : 'none';
+  });
+  const confirmBtn = document.getElementById('sub2noregConfirmBtn');
+  const resultRow  = document.getElementById('sub2noregResultRow');
+  if (confirmBtn) {
+    if (fromUser) { confirmBtn.style.display = ''; confirmBtn.textContent = `確認套用「${mode === 'demo' ? '示範版' : '練習版'}」`; if (resultRow) resultRow.style.display = 'none'; }
+    else { confirmBtn.style.display = 'none'; }
+  }
+}
+async function applySub2noregMode() {
+  const mode = S.sub2noregPendingMode ?? S.sub2noregMode ?? 'demo';
+  S.sub2noregMode = mode;
+  const modeLabel = { demo: '示範版', v2: '練習版' };
+  const filename  = { demo: '兩位數不退位減法（示範版）.docx', v2: '兩位數不退位減法（練習版）.docx' };
+  const confirmBtn = document.getElementById('sub2noregConfirmBtn');
+  const resultRow  = document.getElementById('sub2noregResultRow');
+  const resultLbl  = document.getElementById('sub2noregResultLabel');
+  const dlLink     = document.getElementById('sub2noregDownloadLink');
+  confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
+  if (resultRow) resultRow.style.display = 'none';
+  try {
+    const res = await fetch(`${API_URL}/generate/sub2noreg`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode }) });
+    if (!res.ok) { const e = await res.json().catch(()=>({detail:`HTTP ${res.status}`})); throw new Error(e.detail || `HTTP ${res.status}`); }
+    const blob = await res.blob();
+    if (S._sub2noregDocxUrl) URL.revokeObjectURL(S._sub2noregDocxUrl);
+    S._sub2noregDocxUrl = URL.createObjectURL(blob);
+    dlLink.href = S._sub2noregDocxUrl; dlLink.download = filename[mode];
+    resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」生成`;
+    resultRow.style.display = ''; resultRow.style.background = '';
+    confirmBtn.textContent = `重新生成「${modeLabel[mode]}」`; confirmBtn.disabled = false;
+  } catch (e) {
+    confirmBtn.textContent = `確認套用「${modeLabel[mode]}」`; confirmBtn.disabled = false;
+    if (resultLbl) { resultLbl.textContent = `生成失敗：${e.message}`; resultRow.style.display = ''; resultRow.style.background = '#fef2f2'; }
+  }
+}
+
+// ── sub2noregApp（兩位數不退位減法應用題）─────────────────────────────────
+function selectSub2noregAppMode(mode, fromUser = false) {
+  S.sub2noregAppPendingMode = mode;
+  const ids = { pman: 'sub2noregAppModePman', a: 'sub2noregAppModeA', b: 'sub2noregAppModeB' };
+  Object.entries(ids).forEach(([k, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', k === mode);
+  });
+  ['Pman','A','B'].forEach(k => {
+    const el = document.getElementById('sub2noregAppDesc' + k);
+    if (el) el.style.display = k.toLowerCase() === mode ? '' : 'none';
+  });
+  const confirmBtn = document.getElementById('sub2noregAppConfirmBtn');
+  const resultRow  = document.getElementById('sub2noregAppResultRow');
+  const label = { pman: '撲滿版', a: '找幾個10元', b: '找零版' };
+  if (confirmBtn) {
+    if (fromUser) { confirmBtn.style.display = ''; confirmBtn.textContent = `確認套用「${label[mode]}」`; if (resultRow) resultRow.style.display = 'none'; }
+    else { confirmBtn.style.display = 'none'; }
+  }
+}
+async function applySub2noregAppMode() {
+  const mode = S.sub2noregAppPendingMode ?? S.sub2noregAppMode ?? 'pman';
+  S.sub2noregAppMode = mode;
+  const modeLabel = { pman: '撲滿版', a: '找幾個10元', b: '找零版' };
+  const filename  = { pman: '兩位數不退位減法應用題（撲滿版）.docx', a: '兩位數不退位減法應用題（找幾個10元）.docx', b: '兩位數不退位減法應用題（找零版）.docx' };
+  const confirmBtn = document.getElementById('sub2noregAppConfirmBtn');
+  const resultRow  = document.getElementById('sub2noregAppResultRow');
+  const resultLbl  = document.getElementById('sub2noregAppResultLabel');
+  const dlLink     = document.getElementById('sub2noregAppDownloadLink');
+  confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
+  if (resultRow) resultRow.style.display = 'none';
+  try {
+    const res = await fetch(`${API_URL}/generate/sub2noreg-app`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode }) });
+    if (!res.ok) { const e = await res.json().catch(()=>({detail:`HTTP ${res.status}`})); throw new Error(e.detail || `HTTP ${res.status}`); }
+    const blob = await res.blob();
+    if (S._sub2noregAppDocxUrl) URL.revokeObjectURL(S._sub2noregAppDocxUrl);
+    S._sub2noregAppDocxUrl = URL.createObjectURL(blob);
+    dlLink.href = S._sub2noregAppDocxUrl; dlLink.download = filename[mode];
+    resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」生成`;
+    resultRow.style.display = ''; resultRow.style.background = '';
+    confirmBtn.textContent = `重新生成「${modeLabel[mode]}」`; confirmBtn.disabled = false;
+  } catch (e) {
+    confirmBtn.textContent = `確認套用「${modeLabel[mode]}」`; confirmBtn.disabled = false;
+    if (resultLbl) { resultLbl.textContent = `生成失敗：${e.message}`; resultRow.style.display = ''; resultRow.style.background = '#fef2f2'; }
+  }
+}
+
+// ── sub2borrow（兩位數退位減法）───────────────────────────────────────────
+function selectSub2borrowMode(mode, fromUser = false) {
+  S.sub2borrowPendingMode = mode;
+  const ids = { demo: 'sub2borrowModeDemo', v2: 'sub2borrowModeV2' };
+  Object.entries(ids).forEach(([k, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', k === mode);
+  });
+  ['Demo','V2'].forEach(k => {
+    const el = document.getElementById('sub2borrowDesc' + k);
+    if (el) el.style.display = k.toLowerCase() === mode ? '' : 'none';
+  });
+  const confirmBtn = document.getElementById('sub2borrowConfirmBtn');
+  const resultRow  = document.getElementById('sub2borrowResultRow');
+  const label = { demo: '示範版', v2: '練習版' };
+  if (confirmBtn) {
+    if (fromUser) { confirmBtn.style.display = ''; confirmBtn.textContent = `確認套用「${label[mode]}」`; if (resultRow) resultRow.style.display = 'none'; }
+    else { confirmBtn.style.display = 'none'; }
+  }
+}
+async function applySub2borrowMode() {
+  const mode = S.sub2borrowPendingMode ?? S.sub2borrowMode ?? 'demo';
+  S.sub2borrowMode = mode;
+  const modeLabel = { demo: '示範版', v2: '練習版' };
+  const filename  = { demo: '兩位數退位減法（示範版）.docx', v2: '兩位數退位減法（練習版）.docx' };
+  const confirmBtn = document.getElementById('sub2borrowConfirmBtn');
+  const resultRow  = document.getElementById('sub2borrowResultRow');
+  const resultLbl  = document.getElementById('sub2borrowResultLabel');
+  const dlLink     = document.getElementById('sub2borrowDownloadLink');
+  confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
+  if (resultRow) resultRow.style.display = 'none';
+  try {
+    const res = await fetch(`${API_URL}/generate/sub2borrow`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode }) });
+    if (!res.ok) { const e = await res.json().catch(()=>({detail:`HTTP ${res.status}`})); throw new Error(e.detail || `HTTP ${res.status}`); }
+    const blob = await res.blob();
+    if (S._sub2borrowDocxUrl) URL.revokeObjectURL(S._sub2borrowDocxUrl);
+    S._sub2borrowDocxUrl = URL.createObjectURL(blob);
+    dlLink.href = S._sub2borrowDocxUrl; dlLink.download = filename[mode];
+    resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」生成`;
+    resultRow.style.display = ''; resultRow.style.background = '';
+    confirmBtn.textContent = `重新生成「${modeLabel[mode]}」`; confirmBtn.disabled = false;
+  } catch (e) {
+    confirmBtn.textContent = `確認套用「${modeLabel[mode]}」`; confirmBtn.disabled = false;
+    if (resultLbl) { resultLbl.textContent = `生成失敗：${e.message}`; resultRow.style.display = ''; resultRow.style.background = '#fef2f2'; }
+  }
+}
+
+// ── sub3noregApp（三位數不退位減法應用題）─────────────────────────────────
+function selectSub3noregAppMode(mode, fromUser = false) {
+  S.sub3noregAppPendingMode = mode;
+  const ids = { std: 'sub3noregAppModeStd', '2digit': 'sub3noregAppMode2digit', mixed: 'sub3noregAppModeMixed' };
+  Object.entries(ids).forEach(([k, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', k === mode);
+  });
+  const descMap = { std: 'sub3noregAppDescStd', '2digit': 'sub3noregAppDesc2digit', mixed: 'sub3noregAppDescMixed' };
+  Object.entries(descMap).forEach(([k, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = k === mode ? '' : 'none';
+  });
+  const confirmBtn = document.getElementById('sub3noregAppConfirmBtn');
+  const resultRow  = document.getElementById('sub3noregAppResultRow');
+  const label = { std: '標準版', '2digit': '被減數兩位版', mixed: '混合版' };
+  if (confirmBtn) {
+    if (fromUser) { confirmBtn.style.display = ''; confirmBtn.textContent = `確認套用「${label[mode]}」`; if (resultRow) resultRow.style.display = 'none'; }
+    else { confirmBtn.style.display = 'none'; }
+  }
+}
+async function applySub3noregAppMode() {
+  const mode = S.sub3noregAppPendingMode ?? S.sub3noregAppMode ?? 'std';
+  S.sub3noregAppMode = mode;
+  const modeLabel = { std: '標準版', '2digit': '被減數兩位版', mixed: '混合版' };
+  const filename  = { std: '三位數不退位減法應用題（標準版）.docx', '2digit': '三位數不退位減法應用題（被減數兩位版）.docx', mixed: '三位數不退位減法應用題（混合版）.docx' };
+  const confirmBtn = document.getElementById('sub3noregAppConfirmBtn');
+  const resultRow  = document.getElementById('sub3noregAppResultRow');
+  const resultLbl  = document.getElementById('sub3noregAppResultLabel');
+  const dlLink     = document.getElementById('sub3noregAppDownloadLink');
+  confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
+  if (resultRow) resultRow.style.display = 'none';
+  try {
+    const res = await fetch(`${API_URL}/generate/sub3noreg-app`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode }) });
+    if (!res.ok) { const e = await res.json().catch(()=>({detail:`HTTP ${res.status}`})); throw new Error(e.detail || `HTTP ${res.status}`); }
+    const blob = await res.blob();
+    if (S._sub3noregAppDocxUrl) URL.revokeObjectURL(S._sub3noregAppDocxUrl);
+    S._sub3noregAppDocxUrl = URL.createObjectURL(blob);
+    dlLink.href = S._sub3noregAppDocxUrl; dlLink.download = filename[mode];
+    resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」生成`;
+    resultRow.style.display = ''; resultRow.style.background = '';
+    confirmBtn.textContent = `重新生成「${modeLabel[mode]}」`; confirmBtn.disabled = false;
+  } catch (e) {
+    confirmBtn.textContent = `確認套用「${modeLabel[mode]}」`; confirmBtn.disabled = false;
+    if (resultLbl) { resultLbl.textContent = `生成失敗：${e.message}`; resultRow.style.display = ''; resultRow.style.background = '#fef2f2'; }
+  }
+}
+
 function selectFenfenSubtype(sub, fromUser = false) {
   S.fenfenSubtype = sub;
   const subLabel = {
@@ -4085,7 +4547,9 @@ function applyTypeLayout(typeId) {
   // 左欄：購物找零顯示互動難度卡＋儲存設定；其他題型顯示靜態難度資訊卡
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
-  const hideDiffInfo = isN2 || typeId === 'fenfen' || typeId === 'tuiwei3sub' || typeId === 'sub1';
+  const hideDiffInfo = isN2 || typeId === 'fenfen' || typeId === 'tuiwei3sub' || typeId === 'sub1'
+    || typeId === 'sub2noreg' || typeId === 'sub2noreg-app' || typeId === 'sub2borrow'
+    || typeId === 'sub3noreg-app';
   document.getElementById('diffInfoCard').style.display   = hideDiffInfo ? 'none' : '';
   if (!hideDiffInfo) renderDiffInfoCard(typeId);
 
@@ -4100,6 +4564,12 @@ function applyTypeLayout(typeId) {
 
   // 版型選擇卡：只在十以內減法題型顯示
   document.getElementById('sub1ModeCard').style.display = (typeId === 'sub1') ? '' : 'none';
+
+  // 版型選擇卡：新減法題型
+  document.getElementById('sub2noregModeCard').style.display    = (typeId === 'sub2noreg')     ? '' : 'none';
+  document.getElementById('sub2noregAppModeCard').style.display = (typeId === 'sub2noreg-app') ? '' : 'none';
+  document.getElementById('sub2borrowModeCard').style.display   = (typeId === 'sub2borrow')    ? '' : 'none';
+  document.getElementById('sub3noregAppModeCard').style.display = (typeId === 'sub3noreg-app') ? '' : 'none';
 
   // 單價調整卡：由 registry layout.prices 控制
   document.getElementById('priceEditCard').style.display = L.prices ? '' : 'none';
@@ -4158,13 +4628,18 @@ function applyTypeLayout(typeId) {
   if (typeId === 'tuiwei4sub') selectTuweiMode(S.tuweiMode ?? 'bai');
   if (typeId === 'tuiwei3sub') selectTuiwei3subMode(S.tuiwei3subMode ?? 'coin');
   if (typeId === 'sub1') selectSub1Mode(S.sub1Mode ?? 'sub15');
+  if (typeId === 'sub2noreg')    selectSub2noregMode(S.sub2noregMode ?? 'demo');
+  if (typeId === 'sub2noreg-app') selectSub2noregAppMode(S.sub2noregAppMode ?? 'pman');
+  if (typeId === 'sub2borrow')   selectSub2borrowMode(S.sub2borrowMode ?? 'demo');
+  if (typeId === 'sub3noreg-app') selectSub3noregAppMode(S.sub3noregAppMode ?? 'std');
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
   document.getElementById('trialBar').style.display = '';
 
   // 「選項卡 + 確認套用」模式的題型：下載在選項卡內完成，隱藏底部下載按鈕
-  const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub' || typeId === 'tuiwei3sub' || typeId === 'sub1');
+  const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub' || typeId === 'tuiwei3sub' || typeId === 'sub1'
+    || typeId === 'sub2noreg' || typeId === 'sub2noreg-app' || typeId === 'sub2borrow' || typeId === 'sub3noreg-app');
   document.getElementById('genBtn').closest('.gen-section').style.display = usesOptionCard ? 'none' : '';
 
 }
