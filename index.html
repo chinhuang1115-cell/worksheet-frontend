@@ -2746,13 +2746,13 @@ const TYPE_REGISTRY = [
     grade: 2,
     ops: ['sub'],
     keywords: ['兩位數', '不退位', '減法', '直式'],
-    desc: '兩位數不退位減法直式計算，分示範版（3 題示範 + 9 題練習）與練習版（3 題示範 + 21 題練習），每次數字隨機。',
+    desc: '兩位數不退位減法直式計算，3 題示範（固定）+ 9 題練習（隨機），每次數字隨機。',
     sortKey: [2, 2, 1],
     home: { icon: '➖', label: '兩位數不退位減法', sub: '直式計算練習', isNew: true },
     diffInfo: null,
-    sample: null,
+    sample: 'assets/sub2noreg_sample.pdf',
     layout: { panel: 'sub2noregPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
-    api: { endpoint: '/generate/sub2noreg', body: () => ({ mode: S.sub2noregMode ?? 'demo' }), filename: () => '兩位數不退位減法.docx' },
+    api: { endpoint: '/generate/sub2noreg', body: () => ({}), filename: () => '兩位數不退位減法.docx' },
   },
   // ── 兩位數不退位減法應用題 ─────────────────────────────────────────────
   {
@@ -2766,7 +2766,7 @@ const TYPE_REGISTRY = [
     sortKey: [2, 2, 2],
     home: { icon: '🐷', label: '兩位數不退位應用題', sub: '撲滿 / 找零版', isNew: true },
     diffInfo: null,
-    sample: null,
+    sample: 'assets/sub2noreg-app_pman_sample.pdf',
     layout: { panel: 'sub2noregAppPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub2noreg-app', body: () => ({ mode: S.sub2noregAppMode ?? 'pman' }), filename: () => '兩位數不退位減法應用題.docx' },
   },
@@ -2782,7 +2782,7 @@ const TYPE_REGISTRY = [
     sortKey: [2, 2, 3],
     home: { icon: '🔢', label: '兩位數退位減法', sub: '直式計算練習', isNew: true },
     diffInfo: null,
-    sample: null,
+    sample: 'assets/sub2borrow_demo_sample.pdf',
     layout: { panel: 'sub2borrowPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub2borrow', body: () => ({ mode: S.sub2borrowMode ?? 'demo' }), filename: () => '兩位數退位減法.docx' },
   },
@@ -2805,7 +2805,7 @@ const TYPE_REGISTRY = [
         ['借位', '個位退位'],
       ],
     },
-    sample: null,
+    sample: 'assets/sub2borrow-1d_sample.pdf',
     layout: { panel: 'sub2borrow1dPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub2borrow-1d', body: () => ({}), filename: () => '兩位數減個位數退位減法.docx' },
   },
@@ -2821,7 +2821,7 @@ const TYPE_REGISTRY = [
     sortKey: [2, 3, 3],
     home: { icon: '🐷', label: '三位數不退位應用題', sub: '撲滿情境', isNew: true },
     diffInfo: null,
-    sample: null,
+    sample: 'assets/sub3noreg-app_std_sample.pdf',
     layout: { panel: 'sub3noregAppPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub3noreg-app', body: () => ({ mode: S.sub3noregAppMode ?? 'std' }), filename: () => '三位數不退位減法應用題.docx' },
   },
@@ -2844,7 +2844,7 @@ const TYPE_REGISTRY = [
         ['借位', '個位退位'],
       ],
     },
-    sample: null,
+    sample: 'assets/sub3borrow_sample.pdf',
     layout: { panel: 'sub3borrowPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub3borrow', body: () => ({}), filename: () => '三位數退位減法.docx' },
   },
@@ -4044,6 +4044,11 @@ function selectSub2noregAppMode(mode, fromUser = false) {
     if (fromUser) { confirmBtn.style.display = ''; confirmBtn.textContent = `確認套用「${label[mode]}」`; if (resultRow) resultRow.style.display = 'none'; }
     else { confirmBtn.style.display = 'none'; }
   }
+  const pdfMap  = { pman: 'assets/sub2noreg-app_pman_sample.pdf', a: 'assets/sub2noreg-app_a_sample.pdf', b: 'assets/sub2noreg-app_b_sample.pdf' };
+  const nameMap = { pman: '兩位數不退位減法應用題（撲滿版）.pdf', a: '兩位數不退位減法應用題（找幾個10元）.pdf', b: '兩位數不退位減法應用題（找零版）.pdf' };
+  const dlBtn = document.getElementById('typeSampleDownloadBtn');
+  if (dlBtn) { dlBtn.href = pdfMap[mode]; dlBtn.download = nameMap[mode]; }
+  _doRenderSamplePdf(pdfMap[mode], 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
 async function applySub2noregAppMode() {
   const mode = S.sub2noregAppPendingMode ?? S.sub2noregAppMode ?? 'pman';
@@ -4091,6 +4096,11 @@ function selectSub2borrowMode(mode, fromUser = false) {
     if (fromUser) { confirmBtn.style.display = ''; confirmBtn.textContent = `確認套用「${label[mode]}」`; if (resultRow) resultRow.style.display = 'none'; }
     else { confirmBtn.style.display = 'none'; }
   }
+  const pdfMap  = { demo: 'assets/sub2borrow_demo_sample.pdf', v2: 'assets/sub2borrow_v2_sample.pdf' };
+  const nameMap = { demo: '兩位數退位減法（示範版）.pdf', v2: '兩位數退位減法（練習版）.pdf' };
+  const dlBtn = document.getElementById('typeSampleDownloadBtn');
+  if (dlBtn) { dlBtn.href = pdfMap[mode]; dlBtn.download = nameMap[mode]; }
+  _doRenderSamplePdf(pdfMap[mode], 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
 async function applySub2borrowMode() {
   const mode = S.sub2borrowPendingMode ?? S.sub2borrowMode ?? 'demo';
@@ -4139,6 +4149,11 @@ function selectSub3noregAppMode(mode, fromUser = false) {
     if (fromUser) { confirmBtn.style.display = ''; confirmBtn.textContent = `確認套用「${label[mode]}」`; if (resultRow) resultRow.style.display = 'none'; }
     else { confirmBtn.style.display = 'none'; }
   }
+  const pdfMap  = { std: 'assets/sub3noreg-app_std_sample.pdf', '2digit': 'assets/sub3noreg-app_2digit_sample.pdf', mixed: 'assets/sub3noreg-app_mixed_sample.pdf' };
+  const nameMap = { std: '三位數不退位減法應用題（標準版）.pdf', '2digit': '三位數不退位減法應用題（被減數兩位版）.pdf', mixed: '三位數不退位減法應用題（混合版）.pdf' };
+  const dlBtn = document.getElementById('typeSampleDownloadBtn');
+  if (dlBtn) { dlBtn.href = pdfMap[mode]; dlBtn.download = nameMap[mode]; }
+  _doRenderSamplePdf(pdfMap[mode], 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
 async function applySub3noregAppMode() {
   const mode = S.sub3noregAppPendingMode ?? S.sub3noregAppMode ?? 'std';
@@ -4578,7 +4593,7 @@ function applyTypeLayout(typeId) {
   document.getElementById('diffBudgetCard').style.display = isN2 ? '' : 'none';
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
   const hideDiffInfo = isN2 || typeId === 'fenfen' || typeId === 'tuiwei3sub' || typeId === 'sub1'
-    || typeId === 'sub2noreg' || typeId === 'sub2noreg-app' || typeId === 'sub2borrow'
+    || typeId === 'sub2noreg-app' || typeId === 'sub2borrow'
     || typeId === 'sub3noreg-app';
   document.getElementById('diffInfoCard').style.display   = hideDiffInfo ? 'none' : '';
   if (!hideDiffInfo) renderDiffInfoCard(typeId);
@@ -4596,7 +4611,7 @@ function applyTypeLayout(typeId) {
   document.getElementById('sub1ModeCard').style.display = (typeId === 'sub1') ? '' : 'none';
 
   // 版型選擇卡：新減法題型
-  document.getElementById('sub2noregModeCard').style.display    = (typeId === 'sub2noreg')     ? '' : 'none';
+  document.getElementById('sub2noregModeCard').style.display    = 'none';
   document.getElementById('sub2noregAppModeCard').style.display = (typeId === 'sub2noreg-app') ? '' : 'none';
   document.getElementById('sub2borrowModeCard').style.display   = (typeId === 'sub2borrow')    ? '' : 'none';
   document.getElementById('sub3noregAppModeCard').style.display = (typeId === 'sub3noreg-app') ? '' : 'none';
@@ -4658,7 +4673,6 @@ function applyTypeLayout(typeId) {
   if (typeId === 'tuiwei4sub') selectTuweiMode(S.tuweiMode ?? 'bai');
   if (typeId === 'tuiwei3sub') selectTuiwei3subMode(S.tuiwei3subMode ?? 'coin');
   if (typeId === 'sub1') selectSub1Mode(S.sub1Mode ?? 'sub15');
-  if (typeId === 'sub2noreg')    selectSub2noregMode(S.sub2noregMode ?? 'demo');
   if (typeId === 'sub2noreg-app') selectSub2noregAppMode(S.sub2noregAppMode ?? 'pman');
   if (typeId === 'sub2borrow')   selectSub2borrowMode(S.sub2borrowMode ?? 'demo');
   if (typeId === 'sub3noreg-app') selectSub3noregAppMode(S.sub3noregAppMode ?? 'std');
@@ -4669,7 +4683,7 @@ function applyTypeLayout(typeId) {
 
   // 「選項卡 + 確認套用」模式的題型：下載在選項卡內完成，隱藏底部下載按鈕
   const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub' || typeId === 'tuiwei3sub' || typeId === 'sub1'
-    || typeId === 'sub2noreg' || typeId === 'sub2noreg-app' || typeId === 'sub2borrow' || typeId === 'sub3noreg-app');
+    || typeId === 'sub2noreg-app' || typeId === 'sub2borrow' || typeId === 'sub3noreg-app');
   document.getElementById('genBtn').closest('.gen-section').style.display = usesOptionCard ? 'none' : '';
 
 }
