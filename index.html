@@ -2797,14 +2797,8 @@ const TYPE_REGISTRY = [
     desc: '兩位數減個位數的退位減法練習（被減數 11–19），2 題示範附個位拆分步驟，4 題練習，每次數字隨機。',
     sortKey: [2, 2, 4],
     home: { icon: '➖', label: '兩位數減個位數', sub: '退位減法', isNew: true },
-    diffInfo: {
-      title: '難度說明',
-      rows: [
-        ['位數', '兩位數 – 個位數'],
-        ['範圍', '被減數 11–19'],
-        ['借位', '個位退位'],
-      ],
-    },
+    diffInfo: { grade: '二年級', level: '基礎', levelColor: '#22c55e', code: 'N-2-2',
+      desc: '被減數 11–19，個位退位。2 題示範附拆分步驟，4 題隨機練習。' },
     sample: 'assets/sub2borrow-1d_sample.pdf',
     layout: { panel: 'sub2borrow1dPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub2borrow-1d', body: () => ({}), filename: () => '兩位數減個位數退位減法.docx' },
