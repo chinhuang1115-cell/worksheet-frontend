@@ -312,6 +312,8 @@ body {
 .home-main { flex: 1; min-width: 0; }
 #homeOpFilters { flex-direction: column; gap: 4px; margin-bottom: 0; }
 #homeOpFilters .filter-pill { font-size: 13px; padding: 6px 10px; width: 100%; text-align: left; border-radius: var(--r-sm); }
+#homeSortBtns { gap: 6px; margin-bottom: 0; align-items: center; flex-wrap: nowrap; }
+#homeSortBtns .filter-pill { font-size: 13px; padding: 5px 14px; border-radius: 99px; }
 #homeGradeFilters { gap: 6px; margin-bottom: 0; align-items: center; flex-wrap: nowrap; }
 #homeGradeFilters .filter-pill { font-size: 13px; padding: 5px 14px; border-radius: 99px; }
 .grade-tabs { display: flex; border-bottom: 1.5px solid var(--border); margin-bottom: 0; }
@@ -1114,10 +1116,15 @@ body {
 /* ── HOME VIEW TOGGLE ── */
 .home-view-toggle {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.home-view-toggle-row {
+  display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  margin-bottom: 20px;
 }
 .hv-btn {
   display: flex;
@@ -1304,10 +1311,16 @@ body {
     </div>
     <div class="home-main">
       <div class="home-view-toggle">
-        <div class="filter-pills" id="homeGradeFilters"></div>
-        <div style="display:flex;gap:8px;">
-          <button class="hv-btn active" id="hvInfo"   onclick="setHomeView('info')">📝 簡介模式</button>
-          <button class="hv-btn"        id="hvSample" onclick="setHomeView('sample')">🗂 範本預覽</button>
+        <div class="home-view-toggle-row">
+          <div class="filter-pills" id="homeGradeFilters"></div>
+          <div style="display:flex;gap:8px;">
+            <button class="hv-btn active" id="hvInfo"   onclick="setHomeView('info')">📝 簡介模式</button>
+            <button class="hv-btn"        id="hvSample" onclick="setHomeView('sample')">🗂 範本預覽</button>
+          </div>
+        </div>
+        <div class="home-view-toggle-row">
+          <div style="font-size:11px;font-weight:600;color:var(--gray);letter-spacing:.06em;white-space:nowrap;">排序</div>
+          <div class="filter-pills" id="homeSortBtns"></div>
         </div>
       </div>
       <div class="type-card-grid"   id="typeCardGrid"></div>
@@ -2888,6 +2901,7 @@ let S = {
 };
 let curGrade = 'all';
 let curOps = new Set(['all']);
+let curSort = 'default'; // 'default' | 'difficulty' | 'release'
 let newKws = [];
 let saves = [];
 let history = [];
@@ -4463,6 +4477,22 @@ function renderHomeFilter() {
   }).join('');
 }
 
+const _SORT_OPTS = [
+  { key: 'default',    label: '預設' },
+  { key: 'difficulty', label: '由易到難' },
+  { key: 'release',    label: '最新優先' },
+];
+function setSort(s) {
+  curSort = s;
+  renderSortBtns();
+  renderHomeTypeCards();
+}
+function renderSortBtns() {
+  document.getElementById('homeSortBtns').innerHTML = _SORT_OPTS.map(({ key, label }) =>
+    `<button class="filter-pill f-all ${curSort===key?'active':''}" onclick="setSort('${key}')">${label}</button>`
+  ).join('');
+}
+
 // 排序鍵：[主要運算難度（加1/減2/乘3/除4）, 計算位數, 步驟數]
 // 排序鍵：[主要運算難度（加1/減2/乘3/除4）, 計算位數, 步驟數]（定義於 TYPE_REGISTRY.sortKey）
 const TYPE_SORT = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.sortKey]));
@@ -4494,8 +4524,14 @@ function renderHomeTypeCards() {
       return o.length === 1 && o.includes(op);
     })
     .sort((a, b) => {
+      if (curSort === 'release') {
+        return TYPE_REGISTRY.findIndex(t => t.id === b.id) - TYPE_REGISTRY.findIndex(t => t.id === a.id);
+      }
       const [oa, da, sa] = TYPE_SORT[a.id] ?? [9, 9, 9];
       const [ob, db, sb] = TYPE_SORT[b.id] ?? [9, 9, 9];
+      if (curSort === 'difficulty') {
+        return da !== db ? da - db : sa !== sb ? sa - sb : oa - ob;
+      }
       return oa !== ob ? oa - ob : da !== db ? da - db : sa - sb;
     });
 
@@ -4747,6 +4783,7 @@ renderSaved();
 renderHistory();
 renderGradeFilters();
 renderHomeFilter();
+renderSortBtns();
 renderHomeTypeCards();
 renderTrialBar(); // 更新 topbar 試用次數
 // 起始顯示首頁，configScreen 已 display:none
