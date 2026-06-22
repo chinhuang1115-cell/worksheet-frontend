@@ -2775,8 +2775,8 @@ const TYPE_REGISTRY = [
     home: { icon: '🐷', label: '兩位數不退位應用題', sub: '撲滿 / 找零版', isNew: true },
     diffInfo: null,
     sample: 'assets/sub2noreg-app_pman_sample.pdf',
-    layout: { panel: 'sub2noregAppPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
-    api: { endpoint: '/generate/sub2noreg-app', body: () => ({ mode: S.sub2noregAppMode ?? 'pman' }), filename: () => '兩位數不退位減法應用題.docx' },
+    layout: { panel: 'sub2noregAppPanel', themeSet: 'cheap', showTheme: true, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub2noreg-app', body: () => ({ mode: S.sub2noregAppMode ?? 'pman', theme_id: S.themeId }), filename: () => '兩位數不退位減法應用題.docx' },
   },
   // ── 兩位數退位減法 ───────────────────────────────────────────────────
   {
@@ -2824,8 +2824,8 @@ const TYPE_REGISTRY = [
     home: { icon: '🐷', label: '三位數不退位應用題', sub: '撲滿情境', isNew: true },
     diffInfo: null,
     sample: 'assets/sub3noreg-app_std_sample.pdf',
-    layout: { panel: 'sub3noregAppPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
-    api: { endpoint: '/generate/sub3noreg-app', body: () => ({ mode: S.sub3noregAppMode ?? 'std' }), filename: () => '三位數不退位減法應用題.docx' },
+    layout: { panel: 'sub3noregAppPanel', themeSet: 'cheap', showTheme: true, prices: false, interactive: false },
+    api: { endpoint: '/generate/sub3noreg-app', body: () => ({ mode: S.sub3noregAppMode ?? 'std', theme_id: S.themeId }), filename: () => '三位數不退位減法應用題.docx' },
   },
   // ── 三位數退位減法 ────────────────────────────────────────────────
   {
@@ -4041,6 +4041,9 @@ function selectSub2noregAppMode(mode, fromUser = false) {
     if (fromUser) { confirmBtn.style.display = ''; confirmBtn.textContent = `確認套用「${label[mode]}」`; if (resultRow) resultRow.style.display = 'none'; }
     else { confirmBtn.style.display = 'none'; }
   }
+  // 僅撲滿版（pman）使用主題圖；a/b 版為固定範本，隱藏主題選擇卡
+  const themeCard = document.getElementById('themeCard');
+  if (themeCard && S.typeId === 'sub2noreg-app') themeCard.style.display = mode === 'pman' ? '' : 'none';
   const pdfMap  = { pman: 'assets/sub2noreg-app_pman_sample.pdf', a: 'assets/sub2noreg-app_a_sample.pdf', b: 'assets/sub2noreg-app_b_sample.pdf' };
   const nameMap = { pman: '兩位數不退位減法應用題（撲滿版）.pdf', a: '兩位數不退位減法應用題（找幾個10元）.pdf', b: '兩位數不退位減法應用題（找零版）.pdf' };
   const dlBtn = document.getElementById('typeSampleDownloadBtn');
@@ -4059,7 +4062,7 @@ async function applySub2noregAppMode() {
   confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
   if (resultRow) resultRow.style.display = 'none';
   try {
-    const res = await fetch(`${API_URL}/generate/sub2noreg-app`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode }) });
+    const res = await fetch(`${API_URL}/generate/sub2noreg-app`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode, theme_id: mode === 'pman' ? S.themeId : undefined }) });
     if (!res.ok) { const e = await res.json().catch(()=>({detail:`HTTP ${res.status}`})); throw new Error(e.detail || `HTTP ${res.status}`); }
     const blob = await res.blob();
     if (S._sub2noregAppDocxUrl) URL.revokeObjectURL(S._sub2noregAppDocxUrl);
@@ -4164,7 +4167,7 @@ async function applySub3noregAppMode() {
   confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
   if (resultRow) resultRow.style.display = 'none';
   try {
-    const res = await fetch(`${API_URL}/generate/sub3noreg-app`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode }) });
+    const res = await fetch(`${API_URL}/generate/sub3noreg-app`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode, theme_id: S.themeId }) });
     if (!res.ok) { const e = await res.json().catch(()=>({detail:`HTTP ${res.status}`})); throw new Error(e.detail || `HTTP ${res.status}`); }
     const blob = await res.blob();
     if (S._sub3noregAppDocxUrl) URL.revokeObjectURL(S._sub3noregAppDocxUrl);
@@ -4388,12 +4391,14 @@ function _getPdfjsLib() {
 if (location.protocol !== 'file:') _getPdfjsLib();
 
 async function _doRenderSamplePdf(pdfPath, containerId = 'samplePdfContainer', loadingId = 'samplePdfLoading') {
-  if (!pdfPath) return;
   const container = document.getElementById(containerId);
   const loading   = document.getElementById(loadingId);
   if (!container || !loading) return;
   const mySeq = (_samplePdfSeqs[containerId] = (_samplePdfSeqs[containerId] || 0) + 1);
+  // 切換題型時先清除舊畫布，避免殘留前一個題型的範本
   while (container.children.length > 1) container.removeChild(container.lastChild);
+  loading.style.display = 'none';
+  if (!pdfPath) return;
 
   // file:// 環境下 PDF.js 無法透過 fetch 載入本地檔案，改用 iframe
   if (location.protocol === 'file:') {
@@ -4674,8 +4679,9 @@ function applyTypeLayout(typeId) {
   ['step2-item','step-arrow-12','step3-item','step-arrow-23'].forEach(id => {
     document.getElementById(id).style.display = showFullSteps ? '' : 'none';
   });
-  // 非購物找零：調整首尾步驟的標籤
+  // 非購物找零：調整首尾步驟的標籤（無主題選擇的題型隱藏步驟一）
   document.getElementById('step1-label').textContent = isN2 ? '選主題與題型' : '選主題';
+  document.getElementById('step1-item') && (document.getElementById('step1-item').style.display = (!isN2 && !L.showTheme) ? 'none' : '');
   document.getElementById('step4-label').textContent = '產出下載';
 
   // 右欄：購物找零顯示答案預覽 tabs；其他題型顯示統一 typeTabsCard
@@ -4689,13 +4695,13 @@ function applyTypeLayout(typeId) {
     document.getElementById('type-tab-preview').style.display = 'none';
     document.getElementById('type-tab-gallery').style.display = 'none';
     document.getElementById('type-tab-history').style.display = '';
-    // 觸發 PDF 載入
-    const meta = getReg(typeId).sample;
+    // 觸發 PDF 載入（用 SAMPLE_PDFS 確保字串/物件/null 三種格式都能正確處理）
+    const meta = SAMPLE_PDFS[typeId];
     if (meta && meta.pdf) {
       document.getElementById('typeSampleDownloadBtn').href     = meta.pdf;
       document.getElementById('typeSampleDownloadBtn').download = meta.name;
-      _doRenderSamplePdf(meta.pdf, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
     }
+    _doRenderSamplePdf(meta?.pdf ?? null, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
   }
 
   // 警告框：只在購物找零顯示
@@ -4761,12 +4767,12 @@ function enterConfig(typeId) {
     document.getElementById('tab-'+t).style.display = t === 'history' ? 'block' : 'none';
   });
   if (getReg(S.typeId).layout.interactive) {
-    const _meta = getReg(S.typeId).sample;
+    const _meta = SAMPLE_PDFS[S.typeId];
     if (_meta && _meta.pdf) {
       document.getElementById('sampleDownloadBtn').href     = _meta.pdf;
       document.getElementById('sampleDownloadBtn').download = _meta.name;
-      _doRenderSamplePdf(_meta.pdf, 'samplePdfContainer', 'samplePdfLoading');
     }
+    _doRenderSamplePdf(_meta?.pdf ?? null, 'samplePdfContainer', 'samplePdfLoading');
   }
   update();
 }
