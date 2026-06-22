@@ -4367,6 +4367,22 @@ const SAMPLE_PDFS = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.sample]));
 let _samplePdfCache = {};
 const _samplePdfSeqs = {}; // 每個 containerId 一個 sequence counter，防止非同步渲染互蓋
 
+const _PDFJS_URL    = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+const _PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+let _pdfjsLibPromise = null; // 全域單例，避免重複 import
+
+function _getPdfjsLib() {
+  if (!_pdfjsLibPromise) {
+    _pdfjsLibPromise = import(_PDFJS_URL).then(lib => {
+      lib.GlobalWorkerOptions.workerSrc = _PDFJS_WORKER;
+      return lib;
+    });
+  }
+  return _pdfjsLibPromise;
+}
+// 頁面載入後立即預熱 PDF.js，讓 worker 在背景下載
+if (location.protocol !== 'file:') _getPdfjsLib();
+
 async function _doRenderSamplePdf(pdfPath, containerId = 'samplePdfContainer', loadingId = 'samplePdfLoading') {
   if (!pdfPath) return;
   const container = document.getElementById(containerId);
@@ -4392,9 +4408,7 @@ async function _doRenderSamplePdf(pdfPath, containerId = 'samplePdfContainer', l
   }
   loading.style.display = '';
   try {
-    const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+    const pdfjsLib = await _getPdfjsLib();
     const pdf = await pdfjsLib.getDocument(pdfPath).promise;
     if (mySeq !== _samplePdfSeqs[containerId]) return;
     loading.style.display = 'none';
@@ -4576,9 +4590,7 @@ function renderHomeTypeCards() {
 async function _loadAllThumbs() {
   let pdfjsLib;
   try {
-    pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+    pdfjsLib = await _getPdfjsLib();
   } catch(e) { return; }
 
   for (const t of TYPE_REGISTRY) {
