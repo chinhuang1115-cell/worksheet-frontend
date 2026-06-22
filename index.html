@@ -2617,14 +2617,8 @@ const TYPE_REGISTRY = [
     desc: '三位數退位減法情境題，購物情境，每題附商品圖片，個位均為 0，自動選三位數價位主題',
     sortKey: [2, 3, 2],
     home: { icon: '🛍️', label: '三位數退位應用題', sub: '購物篇情境' },
-    diffInfo: {
-      title: '難度說明',
-      rows: [
-        ['位數', '三位數'],
-        ['步驟', '一步驟'],
-        ['借位', '十位單退位'],
-      ],
-    },
+    diffInfo: { grade: '三年級', level: '基礎', levelColor: '#22c55e', code: 'N-3-2',
+      desc: '三位數退位減法情境題，購物情境，每題附商品圖片，個位均為 0，十位單退位。' },
     sample: { pdf: 'assets/tuiwei3sub-yw_sample.pdf', name: '退位減法（三位數）＿應用題＿購物篇_範本.pdf' },
     layout: {
       panel: 'tuiwei3subYwPanel',
@@ -2844,14 +2838,8 @@ const TYPE_REGISTRY = [
     desc: '三位數退位減法直式計算，6 題練習，三種格式混合（整體式、個位拆分式、百十位拆分式），每次數字隨機。',
     sortKey: [2, 3, 4],
     home: { icon: '🔢', label: '三位數退位減法', sub: '直式計算練習', isNew: true },
-    diffInfo: {
-      title: '難度說明',
-      rows: [
-        ['位數', '三位數'],
-        ['步驟', '6 題練習'],
-        ['借位', '個位退位'],
-      ],
-    },
+    diffInfo: { grade: '三年級', level: '基礎', levelColor: '#22c55e', code: 'N-3-2',
+      desc: '三位數退位減法，6 題練習，三種呈現方式（整體式、個位拆分、百十位拆分），每次數字隨機。' },
     sample: 'assets/sub3borrow_sample.pdf',
     layout: { panel: 'sub3borrowPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub3borrow', body: () => ({}), filename: () => '三位數退位減法.docx' },
