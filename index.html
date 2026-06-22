@@ -4364,7 +4364,9 @@ function renderSanbushuPreview(data) {
 // ── 學習單範本 PDF 預覽 ──
 // 範本 PDF（定義於 TYPE_REGISTRY.sample）
 const SAMPLE_PDFS = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id,
-  t.sample ? { pdf: t.sample, name: t.sample.split('/').pop() } : null
+  !t.sample ? null :
+  typeof t.sample === 'string' ? { pdf: t.sample, name: t.sample.split('/').pop() } :
+  t.sample
 ]));
 let _samplePdfCache = {};
 const _samplePdfSeqs = {}; // 每個 containerId 一個 sequence counter，防止非同步渲染互蓋
