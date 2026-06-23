@@ -3237,12 +3237,21 @@ function renderTypeGallery() {
   const lbl    = document.getElementById('type-gallery-theme');
   if (!grid) return;
 
-  // 找出平均數、分分看、分分看（新版）：無圖庫
+  // 找出平均數、分分看、分分看（新版）：無圖庫，圖示由系統自動選用
   if (typeId === 'pingfen' || typeId === 'fenfen' || typeId === 'fenfennew' || typeId === 'huachu4add' || typeId === 'huachu4sub' || typeId === 'huachu4add-en') {
     document.getElementById('typeGalleryHeader').style.display = 'none';
     grid.style.display  = 'none';
     empty.style.display = '';
     empty.innerHTML = '此題型不使用商品圖庫，<br>圖示由系統依主題自動選用。';
+    if (lbl) lbl.textContent = '—';
+    return;
+  }
+  // 固定版型題型（themeSet === null）：不適用主題選擇
+  if (!getReg(typeId).layout.themeSet) {
+    document.getElementById('typeGalleryHeader').style.display = 'none';
+    grid.style.display  = 'none';
+    empty.style.display = '';
+    empty.innerHTML = '此題型不含商品圖庫，<br>不適用主題選擇功能。';
     if (lbl) lbl.textContent = '—';
     return;
   }
