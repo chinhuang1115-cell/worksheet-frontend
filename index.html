@@ -2176,50 +2176,50 @@ body {
 // ── DATA ──────────────────────────────────────────────────────────────
 const THEMES = {
   飲料店: { emoji:'🧋', items:[
-    {name:'原味奶茶',counter:'杯',price:35,icon:'🧋',file:'飲料店/珍奶_原味.png'},
-    {name:'黑糖珍奶',counter:'杯',price:45,icon:'🧋',file:'飲料店/珍奶_黑糖.png'},
-    {name:'芋頭珍奶',counter:'杯',price:50,icon:'🧋',file:'飲料店/珍奶_芋頭.png'},
-    {name:'百香果茶',counter:'杯',price:30,icon:'🥤',file:'飲料店/珍奶_百香果.png'},
-    {name:'抹茶珍奶',counter:'杯',price:55,icon:'🍵',file:'飲料店/珍奶_抹茶.png'},
-    {name:'奶茶',counter:'杯',price:40,icon:'☕',file:'飲料店/珍奶_奶茶.png'},
+    {name:'原味奶茶',counter:'杯',price:35,price_min:25,price_max:45,icon:'🧋',file:'飲料店/珍奶_原味.png'},
+    {name:'黑糖珍奶',counter:'杯',price:45,price_min:35,price_max:55,icon:'🧋',file:'飲料店/珍奶_黑糖.png'},
+    {name:'芋頭珍奶',counter:'杯',price:50,price_min:40,price_max:65,icon:'🧋',file:'飲料店/珍奶_芋頭.png'},
+    {name:'百香果茶',counter:'杯',price:30,price_min:20,price_max:40,icon:'🥤',file:'飲料店/珍奶_百香果.png'},
+    {name:'抹茶珍奶',counter:'杯',price:55,price_min:45,price_max:65,icon:'🍵',file:'飲料店/珍奶_抹茶.png'},
+    {name:'奶茶',counter:'杯',price:40,price_min:30,price_max:50,icon:'☕',file:'飲料店/珍奶_奶茶.png'},
   ]},
   文具店: { emoji:'✏️', items:[
-    {name:'訂書機',counter:'個',price:75,icon:'🖇️',file:'文具店/訂書機.png'},
-    {name:'橡皮擦',counter:'塊',price:10,icon:'🧹',file:'文具店/橡皮擦.png'},
-    {name:'鉛筆',counter:'枝',price:5,icon:'✏️',file:'文具店/鉛筆.png'},
-    {name:'剪刀',counter:'把',price:25,icon:'✂️',file:'文具店/剪刀.png'},
-    {name:'尺',counter:'把',price:15,icon:'📏',file:'文具店/尺.png'},
-    {name:'膠水棒',counter:'條',price:20,icon:'🖊️',file:'文具店/膠水棒.png'},
-    {name:'削鉛筆機',counter:'個',price:50,icon:'⚙️',file:'文具店/削鉛筆機.png'},
-    {name:'色鉛筆組',counter:'盒',price:80,icon:'🖍️',file:'文具店/色鉛筆組.png'},
-    {name:'蠟筆盒',counter:'盒',price:60,icon:'🖍️',file:'文具店/蠟筆盒_笑臉.png'},
-    {name:'手持風扇',counter:'個',price:120,icon:'🌀',file:'文具店/手持風扇.png'},
-    {name:'玩具手機',counter:'個',price:150,icon:'📱',file:'文具店/玩具手機.png'},
-    {name:'筆袋_圓點',counter:'個',price:80,icon:'👜',file:'文具店/筆袋_圓點.png'},
+    {name:'訂書機',counter:'個',price:75,price_min:60,price_max:90,icon:'🖇️',file:'文具店/訂書機.png'},
+    {name:'橡皮擦',counter:'塊',price:10,price_min:8,price_max:15,icon:'🧹',file:'文具店/橡皮擦.png'},
+    {name:'鉛筆',counter:'枝',price:5,price_min:3,price_max:8,icon:'✏️',file:'文具店/鉛筆.png'},
+    {name:'剪刀',counter:'把',price:25,price_min:18,price_max:35,icon:'✂️',file:'文具店/剪刀.png'},
+    {name:'尺',counter:'把',price:15,price_min:10,price_max:20,icon:'📏',file:'文具店/尺.png'},
+    {name:'膠水棒',counter:'條',price:20,price_min:15,price_max:28,icon:'🖊️',file:'文具店/膠水棒.png'},
+    {name:'削鉛筆機',counter:'個',price:50,price_min:35,price_max:65,icon:'⚙️',file:'文具店/削鉛筆機.png'},
+    {name:'色鉛筆組',counter:'盒',price:80,price_min:60,price_max:100,icon:'🖍️',file:'文具店/色鉛筆組.png'},
+    {name:'蠟筆盒',counter:'盒',price:60,price_min:45,price_max:80,icon:'🖍️',file:'文具店/蠟筆盒_笑臉.png'},
+    {name:'手持風扇',counter:'個',price:120,price_min:95,price_max:150,icon:'🌀',file:'文具店/手持風扇.png'},
+    {name:'玩具手機',counter:'個',price:150,price_min:120,price_max:180,icon:'📱',file:'文具店/玩具手機.png'},
+    {name:'筆袋_圓點',counter:'個',price:80,price_min:60,price_max:100,icon:'👜',file:'文具店/筆袋_圓點.png'},
   ]},
   玩具店: { emoji:'🧸', items:[
-    {name:'積木組',counter:'套',price:50,icon:'🧱',file:'玩具店/積木.png'},
-    {name:'玩具熊',counter:'隻',price:80,icon:'🧸',file:'玩具店/熊.png'},
-    {name:'玩具車',counter:'輛',price:60,icon:'🚗',file:'玩具店/玩具車.png'},
-    {name:'疊疊環',counter:'套',price:45,icon:'🔄',file:'玩具店/疊疊環.png'},
-    {name:'保齡球組',counter:'組',price:70,icon:'🎳',file:'玩具店/保齡球.png'},
-    {name:'玩具火車',counter:'組',price:90,icon:'🚂',file:'玩具店/火車.png'},
+    {name:'積木組',counter:'套',price:50,price_min:40,price_max:65,icon:'🧱',file:'玩具店/積木.png'},
+    {name:'玩具熊',counter:'隻',price:80,price_min:65,price_max:95,icon:'🧸',file:'玩具店/熊.png'},
+    {name:'玩具車',counter:'輛',price:60,price_min:45,price_max:75,icon:'🚗',file:'玩具店/玩具車.png'},
+    {name:'疊疊環',counter:'套',price:45,price_min:35,price_max:60,icon:'🔄',file:'玩具店/疊疊環.png'},
+    {name:'保齡球組',counter:'組',price:70,price_min:55,price_max:85,icon:'🎳',file:'玩具店/保齡球.png'},
+    {name:'玩具火車',counter:'組',price:90,price_min:70,price_max:110,icon:'🚂',file:'玩具店/火車.png'},
   ]},
   甜點店: { emoji:'🍦', items:[
-    {name:'冰淇淋',counter:'球',price:40,icon:'🍦',file:'甜點店/冰淇淋.png'},
-    {name:'棒棒糖',counter:'支',price:15,icon:'🍭',file:'甜點店/棒棒糖.png'},
-    {name:'杯子蛋糕',counter:'個',price:55,icon:'🧁',file:'甜點店/杯子蛋糕.png'},
-    {name:'鯛魚燒',counter:'個',price:35,icon:'🐟',file:'甜點店/鯛魚燒.png'},
-    {name:'棉花糖',counter:'包',price:20,icon:'☁️',file:'甜點店/棉花糖.png'},
-    {name:'珍珠奶茶',counter:'杯',price:45,icon:'🧋',file:'甜點店/珍奶_可愛.png'},
+    {name:'冰淇淋',counter:'球',price:40,price_min:25,price_max:45,icon:'🍦',file:'甜點店/冰淇淋.png'},
+    {name:'棒棒糖',counter:'支',price:15,price_min:10,price_max:20,icon:'🍭',file:'甜點店/棒棒糖.png'},
+    {name:'杯子蛋糕',counter:'個',price:55,price_min:40,price_max:65,icon:'🧁',file:'甜點店/杯子蛋糕.png'},
+    {name:'鯛魚燒',counter:'個',price:35,price_min:20,price_max:40,icon:'🐟',file:'甜點店/鯛魚燒.png'},
+    {name:'棉花糖',counter:'包',price:20,price_min:15,price_max:25,icon:'☁️',file:'甜點店/棉花糖.png'},
+    {name:'珍珠奶茶',counter:'杯',price:45,price_min:35,price_max:55,icon:'🧋',file:'甜點店/珍奶_可愛.png'},
   ]},
   便當店: { emoji:'🍱', items:[
-    {name:'日式便當',counter:'個',price:80,icon:'🍱',file:'便當店/便當_日式.png'},
-    {name:'雞腿便當',counter:'個',price:70,icon:'🍗',file:'便當店/便當_雞腿.png'},
-    {name:'兒童便當',counter:'個',price:60,icon:'🍱',file:'便當店/便當_兒童.png'},
-    {name:'沙拉便當',counter:'個',price:65,icon:'🥗',file:'便當店/便當_沙拉.png'},
-    {name:'韓式便當',counter:'個',price:75,icon:'🫙',file:'便當店/便當_韓式.png'},
-    {name:'咖哩飯',counter:'份',price:55,icon:'🍛',file:'便當店/咖哩飯.png'},
+    {name:'日式便當',counter:'個',price:80,price_min:65,price_max:95,icon:'🍱',file:'便當店/便當_日式.png'},
+    {name:'雞腿便當',counter:'個',price:70,price_min:55,price_max:85,icon:'🍗',file:'便當店/便當_雞腿.png'},
+    {name:'兒童便當',counter:'個',price:60,price_min:50,price_max:75,icon:'🍱',file:'便當店/便當_兒童.png'},
+    {name:'沙拉便當',counter:'個',price:65,price_min:55,price_max:80,icon:'🥗',file:'便當店/便當_沙拉.png'},
+    {name:'韓式便當',counter:'個',price:75,price_min:60,price_max:90,icon:'🫙',file:'便當店/便當_韓式.png'},
+    {name:'咖哩飯',counter:'份',price:55,price_min:45,price_max:70,icon:'🍛',file:'便當店/咖哩飯.png'},
   ]},
   鞋子店: { emoji:'👟', items:[
     {name:'運動鞋A',counter:'雙',price:1200,icon:'👟',file:'鞋子店/運動鞋A.png'},
@@ -3211,13 +3211,15 @@ function _renderPriceGroup(themeId, label) {
     ? `<div class="price-group-label">${label}・${themeId}</div>`
     : '';
   const rows = items.map(it => {
-    const val = S.priceOverrides[it.name] ?? it.price;
+    const val = S.priceOverrides[it.name] ?? '';
+    const ph  = (it.price_min && it.price_max) ? `${it.price_min}–${it.price_max}` : it.price;
     return `<div class="price-row">
       <img class="price-row-img" src="./images/${it.file}" alt="${it.name}"
            onerror="this.style.display='none'">
       <span class="price-row-name">${it.name}</span>
       <input class="price-row-input" type="number" min="1" step="1" value="${val}"
-             onchange="S.priceOverrides['${it.name}']=Math.max(1,Math.round(+this.value)||${it.price})">
+             placeholder="${ph}"
+             onchange="if(+this.value>0) S.priceOverrides['${it.name}']=Math.round(+this.value); else delete S.priceOverrides['${it.name}']">
       <span class="price-row-unit">元</span>
     </div>`;
   }).join('');
