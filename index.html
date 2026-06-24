@@ -455,11 +455,11 @@ body {
 }
 .verify-card.ok { border-color: var(--green); background: var(--green-light); }
 .verify-card.warn { border-color: var(--red); background: var(--red-light); }
-.vc-q { font-size: 12px; color: var(--gray); margin-bottom: 3px; }
+.vc-q { font-size: 10px; color: var(--gray); margin-bottom: 3px; }
 .vc-q.ok { color: var(--green); }
 .vc-q.warn { color: var(--red); }
-.vc-eq { font-size: 14px; color: var(--ink); margin-bottom: 2px; font-family: 'Space Mono', monospace; }
-.vc-ans { font-size: 16px; font-weight: 700; }
+.vc-eq { font-size: 12px; color: var(--ink); margin-bottom: 2px; font-family: 'Space Mono', monospace; }
+.vc-ans { font-size: 14px; font-weight: 700; }
 .vc-ans.ok { color: var(--teal-dark); }
 .vc-ans.warn { color: var(--red); }
 
@@ -477,7 +477,7 @@ body {
 }
 .preview-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
 .preview-table tr:last-child td { border-bottom: none; }
-.preview-table .eq { font-family: 'Space Mono', monospace; font-size: 14px; }
+.preview-table .eq { font-family: 'Space Mono', monospace; font-size: 12px; }
 .tag-ok { display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;background:var(--green-light);color:var(--green);font-weight:600; }
 .tag-warn { display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;background:var(--red-light);color:var(--red);font-weight:600; }
 .answer-box {
@@ -508,7 +508,7 @@ body {
 .gi-icon { font-size: 16px; display: block; margin-bottom: 2px; }
 .gi-img  { width: 100%; max-height: 58px; object-fit: contain; display: block; margin: 0 auto 4px; }
 .gi-name { font-size: 11px; font-weight: 600; color: var(--ink); display: block; margin-bottom: 1px; }
-.gi-price { font-size: 11px; color: var(--gray); }
+.gi-price { font-size: 13px; color: var(--gray); }
 .gi-counter { display:inline-block;font-size:7px;padding:1px 3px;border-radius:99px;background:var(--teal-light);color:var(--teal-dark);margin-top:1px; }
 /* ── PRICE EDIT ── */
 .price-row { display:flex; align-items:center; gap:8px; padding:3px 0; }
@@ -2491,7 +2491,7 @@ const TYPE_REGISTRY = [
     diffInfo:{ grade:'二年級', level:'基礎', levelColor:'#22c55e', code:'N-2-4',
       desc:'甜點店 4 件商品，學生手邊有一些錢但不夠，計算還差幾元。一步驟減法，適合剛學減法的學生。' },
     sample:{ pdf:'assets/haochashao_sample.pdf', name:'還差多少_一步驟減法_兩位數_範本.pdf' },
-    layout:{ panel:'haochashaoPanel', themeSet:'cheap', showTheme:true, prices:true, interactive:false },
+    layout:{ panel:'haochashaoPanel', themeSet:'cheap', themes:['飲料店','文具店','甜點店'], showTheme:true, prices:true, interactive:false },
     api:{
       endpoint:'/generate/haochashao',
       body:_themePriceBody,
@@ -2954,7 +2954,9 @@ function applyDiff(d, reCalcPrices=true) {
 const CHEAP_THEMES     = ['飲料店','文具店','玩具店','甜點店','便當店'];
 const EXPENSIVE_THEMES = ['玩具車','懷舊玩具','體育用品店','3C產品店'];
 function allowedThemes() {
-  return getReg(getType().id).layout.themeSet === 'expensive' ? EXPENSIVE_THEMES : CHEAP_THEMES;
+  const lo = getReg(getType().id).layout;
+  if (lo.themes) return lo.themes;
+  return lo.themeSet === 'expensive' ? EXPENSIVE_THEMES : CHEAP_THEMES;
 }
 
 // 各題型難度資訊（非購物找零用）
