@@ -2952,7 +2952,7 @@ function applyDiff(d, reCalcPrices=true) {
 // ── RENDER THEMES ──
 // 依題型區分適用主題：兩位數/三位數 vs 四位數
 const CHEAP_THEMES     = ['飲料店','文具店','玩具店','甜點店','便當店'];
-const EXPENSIVE_THEMES = ['鞋子店','玩具車','懷舊玩具','童裝店','家電行'];
+const EXPENSIVE_THEMES = ['玩具車','懷舊玩具','體育用品店','3C產品店'];
 function allowedThemes() {
   return getReg(getType().id).layout.themeSet === 'expensive' ? EXPENSIVE_THEMES : CHEAP_THEMES;
 }
