@@ -4699,6 +4699,9 @@ function applyTypeLayout(typeId) {
   document.getElementById('rightTabsCard').style.display = isN2 ? '' : 'none';
   document.getElementById('typeTabsCard').style.display = isN2 ? 'none' : '';
   if (!isN2) {
+    // 圖庫瀏覽 tab：無主題選擇的題型（showTheme:false）不顯示，因為沒有圖庫可瀏覽
+    document.getElementById('typeTab-gallery').style.display = L.showTheme ? '' : 'none';
+
     // 預設顯示「學習單範本」tab
     document.getElementById('typeTab-preview').classList.remove('active');
     document.getElementById('typeTab-gallery').classList.remove('active');
