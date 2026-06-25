@@ -4708,19 +4708,8 @@ function applyTypeLayout(typeId) {
   document.getElementById('rightTabsCard').style.display = isN2 ? '' : 'none';
   document.getElementById('typeTabsCard').style.display = isN2 ? 'none' : '';
   if (!isN2) {
-    // 圖庫瀏覽 tab 按鈕：無主題選擇的題型（showTheme:false）不顯示，因為沒有圖庫可瀏覽
+    // 圖庫瀏覽 tab：無主題選擇的題型（showTheme:false）完全隱藏，不提供圖庫功能
     document.getElementById('typeTab-gallery').style.display = L.showTheme ? '' : 'none';
-    // 圖庫瀏覽 tab 內容：無主題選擇時顯示說明訊息，隱藏商品格
-    const _typeGalleryEmpty = document.getElementById('type-gallery-empty');
-    const _typeGalleryGrid  = document.getElementById('typeGalleryGrid');
-    if (!L.showTheme) {
-      _typeGalleryEmpty.textContent = '此題型不含商品圖庫，不適用主題選擇功能。';
-      _typeGalleryEmpty.style.display = '';
-      _typeGalleryGrid.style.display  = 'none';
-    } else {
-      _typeGalleryEmpty.style.display = 'none';
-      _typeGalleryGrid.style.display  = '';
-    }
 
     // 預設顯示「學習單範本」tab
     document.getElementById('typeTab-preview').classList.remove('active');
