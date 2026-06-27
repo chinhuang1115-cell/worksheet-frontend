@@ -6,36 +6,36 @@
 <title>學習單產生器 — 資源班數學教材工具</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink: #1a1208;
-  --cream: #faf7f0;
-  --warm-white: #fffef9;
-  --amber: #f59e0b;
-  --amber-light: #fef3c7;
-  --amber-dark: #92400e;
-  --teal: #0d9488;
-  --teal-light: #ccfbf1;
-  --teal-dark: #134e4a;
+  --ink: #0F172A;
+  --cream: #F8FAFC;
+  --warm-white: #FFFFFF;
+  --amber: #0891B2;
+  --amber-light: #E0F2FE;
+  --amber-dark: #0369A1;
+  --teal: #0891B2;
+  --teal-light: #E0F2FE;
+  --teal-dark: #0369A1;
   --red: #dc2626;
   --red-light: #fee2e2;
   --green: #16a34a;
   --green-light: #dcfce7;
-  --gray: #6b7280;
-  --gray-light: #f3f4f6;
-  --border: #e5e0d5;
-  --shadow-sm: 0 1px 3px rgba(26,18,8,.08);
-  --shadow-md: 0 4px 16px rgba(26,18,8,.10);
-  --shadow-lg: 0 8px 32px rgba(26,18,8,.12);
-  --r: 12px;
-  --r-sm: 8px;
+  --gray: #64748B;
+  --gray-light: #F1F5F9;
+  --border: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,.06);
+  --shadow-md: 0 4px 12px rgba(15,23,42,.08);
+  --shadow-lg: 0 8px 24px rgba(15,23,42,.10);
+  --r: 8px;
+  --r-sm: 4px;
   --trial-limit: 9999;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Noto Sans TC', sans-serif;
+  font-family: 'Inter', 'Noto Sans TC', sans-serif;
   background: var(--cream);
   color: var(--ink);
   min-height: 100vh;
@@ -504,7 +504,7 @@ body {
   transition: all .15s;
 }
 .gallery-item:hover { border-color: var(--amber); }
-.gallery-item.selected { border-color: var(--amber); background: #fff; box-shadow: 0 0 0 3px rgba(245,158,11,.3); }
+.gallery-item.selected { border-color: var(--amber); background: #fff; box-shadow: 0 0 0 3px rgba(8,145,178,.3); }
 .gi-icon { font-size: 16px; display: block; margin-bottom: 2px; }
 .gi-img  { width: 100%; max-height: 58px; object-fit: contain; display: block; margin: 0 auto 4px; }
 .gi-name { font-size: 11px; font-weight: 600; color: var(--ink); display: block; margin-bottom: 1px; }
@@ -1775,7 +1775,7 @@ body {
       </div>
 
       <div id="tab-history" style="display:none;">
-        <div id="samplePdfContainer" style="background:#e8e4dc;padding:12px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div id="samplePdfContainer" style="background:#EFF6FF;padding:12px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
           <div id="samplePdfLoading" style="padding:32px;color:var(--gray);font-size:13px;text-align:center;">
             <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;"></div>
             載入預覽中…
@@ -2085,7 +2085,7 @@ body {
 
       <!-- 學習單範本 tab 內容 -->
       <div id="type-tab-history" style="display:none;">
-        <div id="typeSamplePdfContainer" style="background:#e8e4dc;padding:12px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div id="typeSamplePdfContainer" style="background:#EFF6FF;padding:12px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
           <div id="typeSamplePdfLoading" style="padding:32px;color:var(--gray);font-size:13px;text-align:center;">
             <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;"></div>
             載入預覽中…
@@ -4315,6 +4315,19 @@ function _cvUpdateDesc() {
   if (el) el.textContent = (_CV_LEVEL_DESCS[lv] || '') + ' ' + (_CV_STYLE_DESCS[st] || '');
 }
 
+function _cvUpdatePdf() {
+  const lv = S.coinvalueLevel || 'L1';
+  const st = S.coinvalueStyle || 'simple';
+  // 目前只有 simple 風格有 sample PDF
+  const pdfPath = st === 'simple' ? `assets/coinvalue_${lv}_simple_sample.pdf` : null;
+  const dlBtn = document.getElementById('typeSampleDownloadBtn');
+  if (dlBtn) {
+    dlBtn.href     = pdfPath || '#';
+    dlBtn.download = pdfPath ? `coinvalue_${lv}_simple_sample.pdf` : '';
+  }
+  _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
+}
+
 function selectCoinvalueLevel(level, fromUser = false) {
   S.coinvalueLevel = level;
   ['L1','L2','L3','L4','L5'].forEach(lv => {
@@ -4322,6 +4335,7 @@ function selectCoinvalueLevel(level, fromUser = false) {
     if (btn) btn.classList.toggle('active', lv === level);
   });
   _cvUpdateDesc();
+  _cvUpdatePdf();
   if (fromUser) {
     const confirmBtn = document.getElementById('cvConfirmBtn');
     const resultRow  = document.getElementById('cvResultRow');
@@ -4337,6 +4351,7 @@ function selectCoinvalueStyle(style, fromUser = false) {
     if (btn) btn.classList.toggle('active', st === style);
   });
   _cvUpdateDesc();
+  _cvUpdatePdf();
   if (fromUser) {
     const confirmBtn = document.getElementById('cvConfirmBtn');
     const resultRow  = document.getElementById('cvResultRow');
