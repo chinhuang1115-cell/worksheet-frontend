@@ -4335,8 +4335,8 @@ function selectCoinvalueLevel(level, fromUser = false) {
     if (btn) btn.classList.toggle('active', lv === level);
   });
   _cvUpdateDesc();
-  _cvUpdatePdf();
   if (fromUser) {
+    _cvUpdatePdf();
     const confirmBtn = document.getElementById('cvConfirmBtn');
     const resultRow  = document.getElementById('cvResultRow');
     if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
@@ -4351,8 +4351,8 @@ function selectCoinvalueStyle(style, fromUser = false) {
     if (btn) btn.classList.toggle('active', st === style);
   });
   _cvUpdateDesc();
-  _cvUpdatePdf();
   if (fromUser) {
+    _cvUpdatePdf();
     const confirmBtn = document.getElementById('cvConfirmBtn');
     const resultRow  = document.getElementById('cvResultRow');
     if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
@@ -4949,6 +4949,7 @@ function applyTypeLayout(typeId) {
     selectCoinvalueLevel(S.coinvalueLevel || 'L1');
     selectCoinvalueStyle(S.coinvalueStyle || 'simple');
     _cvUpdateDesc();
+    _cvUpdatePdf();
   }
 
   // 所有動態題型都顯示產出按鈕和試用條
