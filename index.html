@@ -1061,35 +1061,6 @@ body {
   gap: 6px;
 }
 .type-card-feature::before { content: '✓'; color: var(--teal); font-weight: 700; }
-/* NEW 標示（暫時醒目標示，確認後可移除 isNew 欄位） */
-.type-card { position: relative; }
-.new-badge {
-  position: absolute;
-  top: 12px; right: 14px;
-  background: #f97316;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .08em;
-  padding: 2px 8px;
-  border-radius: 99px;
-  box-shadow: 0 1px 4px rgba(249,115,22,.35);
-  pointer-events: none;
-}
-.config-nav-new {
-  display: inline-block;
-  background: #f97316;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .06em;
-  padding: 1px 7px;
-  border-radius: 99px;
-  margin-left: 6px;
-  vertical-align: middle;
-  position: relative;
-  top: -1px;
-}
 .type-card-btn {
   margin-top: 8px;
   padding: 11px 0;
@@ -2327,8 +2298,7 @@ const DIFF_CFG = {
 const OP_META = {
   all:{label:'全部',cls:'f-all'},add:{label:'加法',cls:'f-add'},
   sub:{label:'減法',cls:'f-sub'},mul:{label:'乘法',cls:'f-mul'},
-  div:{label:'除法',cls:'f-div'},mix:{label:'混合',cls:'f-mix'},
-  comprehensive:{label:'綜合',cls:'f-mix'},
+  div:{label:'除法',cls:'f-div'},
   addsub:{label:'加減混合',cls:'f-sub'},
   addsubmul:{label:'加減乘混合',cls:'f-mul'},
   fenfen:{label:'分分看',cls:'f-div'},
@@ -2810,7 +2780,7 @@ const TYPE_REGISTRY = [
     keywords: ['兩位數', '不退位', '減法', '直式'],
     desc: '兩位數不退位減法直式計算，3 題示範（固定）+ 9 題練習（隨機），每次數字隨機。',
     sortKey: [2, 2, 1],
-    home: { icon: '➖', label: '兩位數不退位減法', sub: '直式計算練習', isNew: true },
+    home: { icon: '➖', label: '兩位數不退位減法', sub: '直式計算練習' },
     diffInfo: { grade: '二年級', level: '基礎', levelColor: '#22c55e', code: 'N-2-2',
       desc: '兩位數不退位減法，3 題示範（題目與錢幣圖固定）＋ 9 題隨機練習，每次數字不同。' },
     sample: 'assets/sub2noreg_sample.pdf',
@@ -2827,7 +2797,7 @@ const TYPE_REGISTRY = [
     keywords: ['兩位數', '不退位', '減法', '應用題', '撲滿', '找錢'],
     desc: '兩位數不退位減法應用題，含撲滿版（12 題共用 X）、找幾個 10 元版、找 10 元+1 元版，每次數字隨機。',
     sortKey: [2, 2, 2],
-    home: { icon: '🐷', label: '兩位數不退位應用題', sub: '撲滿 / 找零版', isNew: true },
+    home: { icon: '🐷', label: '兩位數不退位應用題', sub: '撲滿 / 找零版' },
     diffInfo: null,
     sample: 'assets/sub2noreg-app_pman_sample.pdf',
     layout: { panel: 'sub2noregAppPanel', themeSet: 'cheap', showTheme: true, prices: false, interactive: false },
@@ -2843,7 +2813,7 @@ const TYPE_REGISTRY = [
     keywords: ['兩位數', '退位', '減法', '直式', '個位退位'],
     desc: '兩位數退位減法直式計算，含示範版（8 題圖示退位過程）與練習版（3 題示範 + 21 題練習），每次數字隨機。',
     sortKey: [2, 2, 3],
-    home: { icon: '🔢', label: '兩位數退位減法', sub: '直式計算練習', isNew: true },
+    home: { icon: '🔢', label: '兩位數退位減法', sub: '直式計算練習' },
     diffInfo: null,
     sample: 'assets/sub2borrow_demo_sample.pdf',
     layout: { panel: 'sub2borrowPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
@@ -2859,7 +2829,7 @@ const TYPE_REGISTRY = [
     keywords: ['兩位數', '個位數', '退位', '減法'],
     desc: '兩位數減個位數的退位減法練習（被減數 11–19），2 題示範附個位拆分步驟，4 題練習，每次數字隨機。',
     sortKey: [2, 2, 4],
-    home: { icon: '➖', label: '兩位數減個位數', sub: '退位減法', isNew: true },
+    home: { icon: '➖', label: '兩位數減個位數', sub: '退位減法' },
     diffInfo: { grade: '二年級', level: '基礎', levelColor: '#22c55e', code: 'N-2-2',
       desc: '被減數 11–19，個位退位。2 題示範附拆分步驟，4 題隨機練習。' },
     sample: 'assets/sub2borrow-1d_sample.pdf',
@@ -2876,7 +2846,7 @@ const TYPE_REGISTRY = [
     keywords: ['三位數', '不退位', '減法', '應用題', '撲滿'],
     desc: '三位數不退位減法應用題，含三種版型：標準版（X 整十，Y 三位數）、被減數兩位版、混合版，每次數字隨機。',
     sortKey: [2, 3, 3],
-    home: { icon: '🐷', label: '三位數不退位應用題', sub: '撲滿情境', isNew: true },
+    home: { icon: '🐷', label: '三位數不退位應用題', sub: '撲滿情境' },
     diffInfo: null,
     sample: 'assets/sub3noreg-app_std_sample.pdf',
     layout: { panel: 'sub3noregAppPanel', themeSet: 'cheap', showTheme: true, prices: false, interactive: false },
@@ -2892,7 +2862,7 @@ const TYPE_REGISTRY = [
     keywords: ['三位數', '退位', '減法', '直式'],
     desc: '三位數退位減法直式計算，6 題練習，三種格式混合（整體式、個位拆分式、百十位拆分式），每次數字隨機。',
     sortKey: [2, 3, 4],
-    home: { icon: '🔢', label: '三位數退位減法', sub: '直式計算練習', isNew: true },
+    home: { icon: '🔢', label: '三位數退位減法', sub: '直式計算練習' },
     diffInfo: { grade: '三年級', level: '基礎', levelColor: '#22c55e', code: 'N-3-2',
       desc: '三位數退位減法，6 題練習，三種呈現方式（整體式、個位拆分、百十位拆分），每次數字隨機。' },
     sample: 'assets/sub3borrow_sample.pdf',
@@ -4742,10 +4712,11 @@ function renderHomeTypeCards() {
       if (curGrade !== 'all' && String(t.grade) !== curGrade) return false;
       if (op === 'all') return true;
       const o = t.ops;
-      if (op === 'comprehensive') return o.includes('add') && o.includes('sub');
-      if (op === 'addsub')        return o.includes('add') && o.includes('sub') && !o.includes('mul');
-      if (op === 'addsubmul')     return o.includes('add') && o.includes('sub') &&  o.includes('mul');
-      if (op === 'fenfen')        return t.id === 'fenfen';
+      if (op === 'fenfen')    return t.keywords.includes('fenfen');
+      if (op === 'div')       return o.includes('div') && !t.keywords.includes('fenfen');
+      if (op === 'mul')       return o.includes('mul') && !o.includes('add') && !o.includes('div');
+      if (op === 'addsub')    return o.includes('add') && o.includes('sub') && !o.includes('mul');
+      if (op === 'addsubmul') return o.includes('add') && o.includes('sub') &&  o.includes('mul');
       return o.length === 1 && o.includes(op);
     })
     .sort((a, b) => {
@@ -4768,7 +4739,6 @@ function renderHomeTypeCards() {
         const m = HOME_TYPE_META[t.id] || {};
         return `
         <div class="type-card" onclick="enterConfig('${t.id}')">
-          ${m.isNew ? '<span class="new-badge">NEW</span>' : ''}
           <div class="type-card-icon">${m.icon || '📄'}</div>
           <div>
             <div class="type-card-name">${coloredName(t.name)}</div>
@@ -4975,10 +4945,8 @@ function enterConfig(typeId) {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'flex';
   document.getElementById('configScreen').style.display = '';
-  const _navReg = getReg(typeId);
-  const _navNew = _navReg?.home?.isNew ? '<span class="config-nav-new">NEW</span>' : '';
   document.getElementById('configNavType').innerHTML =
-    coloredName(TYPES.find(t => t.id === typeId)?.name || '') + _navNew;
+    coloredName(TYPES.find(t => t.id === typeId)?.name || '');
 
   // 套用題型版面並清除舊預覽
   applyTypeLayout(typeId);
