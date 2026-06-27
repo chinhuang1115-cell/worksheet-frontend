@@ -1635,6 +1635,55 @@ body {
       </div>
     </div>
 
+    <!-- coinvalue 難度與風格選項卡 -->
+    <div class="card" id="coinvalueModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title">難度 &amp; 風格選擇</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">
+          選取難度與風格 → 確認套用 → 下載學習單
+        </div>
+
+        <!-- 難度選擇 -->
+        <div style="font-size:12px;font-weight:600;color:var(--text);">難度</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="cvLevelL1" class="fenfen-set-btn active" onclick="selectCoinvalueLevel('L1',true)">L1 只有 100/10/1</button>
+          <button id="cvLevelL2" class="fenfen-set-btn"        onclick="selectCoinvalueLevel('L2',true)">L2 加入 5 元</button>
+          <button id="cvLevelL3" class="fenfen-set-btn"        onclick="selectCoinvalueLevel('L3',true)">L3 加 50 元</button>
+          <button id="cvLevelL4" class="fenfen-set-btn"        onclick="selectCoinvalueLevel('L4',true)">L4 加 500 元</button>
+          <button id="cvLevelL5" class="fenfen-set-btn"        onclick="selectCoinvalueLevel('L5',true)">L5 全混合</button>
+        </div>
+
+        <!-- 風格選擇 -->
+        <div style="font-size:12px;font-weight:600;color:var(--text);">錢幣風格</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="cvStyleSimple" class="fenfen-set-btn active" onclick="selectCoinvalueStyle('simple',true)">簡單圖形</button>
+          <button id="cvStylePhoto"  class="fenfen-set-btn"        onclick="selectCoinvalueStyle('photo', true)">照片版</button>
+        </div>
+
+        <!-- 說明 -->
+        <div id="cvDesc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
+
+        <!-- 確認套用 -->
+        <button id="cvConfirmBtn" onclick="applyCoinvalueMode()"
+          style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);
+                 background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">
+          確認套用
+        </button>
+
+        <!-- 結果列 -->
+        <div id="cvResultRow"
+          style="display:none;padding:10px 12px;background:var(--teal-light);
+                 border-radius:var(--r-sm);display:flex;align-items:center;
+                 justify-content:space-between;gap:8px;">
+          <span id="cvResultLabel" style="font-size:12px;color:var(--teal-dark);"></span>
+          <a id="cvDownloadLink" href="#" download="coinvalue.docx"
+             style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">
+            ⬇ 下載學習單
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- 單價調整卡（三步驟、還差多少、兩步驟） -->
     <div class="card" id="priceEditCard" style="display:none;">
       <div class="card-head">
@@ -2012,6 +2061,14 @@ body {
             三位數退位減法直式計算練習，6 題，個位退位。<br>
             三種格式混合（整體式、個位拆分式、百十位拆分式），每次數字隨機。
           </p>
+        </div>
+
+        <!-- coinvaluePanel -->
+        <div id="coinvaluePanel" class="type-panel" style="display:none;">
+          <div class="panel-desc">
+            數一數位值板上的錢幣，一共多少元？<br>
+            題 1 為示範題（已填答案），題 2–6 學生自行計數填答。
+          </div>
         </div>
 
       </div><!-- /type-tab-preview -->
@@ -2842,6 +2899,36 @@ const TYPE_REGISTRY = [
     layout: { panel: 'sub3borrowPanel', themeSet: null, showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub3borrow', body: () => ({}), filename: () => '三位數退位減法.docx' },
   },
+  {
+    id: 'coinvalue',
+    code: 'coinvalue',
+    name: '認識錢幣＿位值板計數',
+    grade: 2,
+    ops: ['add'],
+    keywords: ['coinvalue', 'money', '錢幣', '位值板'],
+    desc: '數一數位值板上的錢幣，一共多少元？循序漸進認識 100/10/1、5、50、500 元。',
+    sortKey: [1, 2, 1],
+    home: {
+      badge: '認識錢幣',
+      title: '認識錢幣＿位值板計數',
+      sub: '5 個難度層次 × 2 種風格',
+      tags: ['加法', '二年級', '錢幣'],
+    },
+    diffInfo: null,
+    sample: null,
+    layout: {
+      panel: 'coinvaluePanel',
+      themeSet: null,
+      showTheme: false,
+      prices: false,
+      interactive: false,
+    },
+    api: {
+      endpoint: '/generate/coinvalue',
+      body: () => ({ level: S.coinvalueLevel || 'L1', style: S.coinvalueStyle || 'simple' }),
+      filename: () => `認識錢幣_位值板_${S.coinvalueLevel || 'L1'}_${S.coinvalueStyle || 'simple'}.docx`,
+    },
+  },
 ];
 
 // ── 由 registry 衍生的相容層（下游程式碼不需更動）──
@@ -2884,6 +2971,9 @@ let S = {
   sub3noregAppMode: 'std',
   sub3noregAppPendingMode: 'std',
   _sub3noregAppDocxUrl: null,
+  coinvalueLevel: 'L1',
+  coinvalueStyle: 'simple',
+  _coinvalueDocxUrl: null,
 };
 let curGrade = 'all';
 let curOps = new Set(['all']);
@@ -3290,7 +3380,7 @@ function renderTypeGallery() {
            onerror="this.style.display='none';this.nextSibling.style.display='block'">
       <span class="gi-icon" style="display:none;">${it.icon}</span>
       <span class="gi-name">${it.name}</span>
-      <span class="gi-price">${it.price} 元</span>
+      <span class="gi-price">${(it.price_min && it.price_max) ? `${it.price_min}–${it.price_max}` : it.price} 元</span>
     </div>`).join('');
 }
 
@@ -3305,7 +3395,7 @@ function renderGallery() {
            onerror="this.style.display='none';this.nextSibling.style.display='block'">
       <span class="gi-icon" style="display:none;">${it.icon}</span>
       <span class="gi-name">${it.name}</span>
-      <span class="gi-price">${it.price} 元</span>
+      <span class="gi-price">${(it.price_min && it.price_max) ? `${it.price_min}–${it.price_max}` : it.price} 元</span>
       <span class="gi-counter">${it.counter}</span>
     </div>`).join('');
 }
@@ -3545,6 +3635,9 @@ async function directDownload() {
 
   try {
     let reg = getReg(type.id);
+    if (type.id === 'coinvalue') {
+      return applyCoinvalueMode();
+    }
     if (type.id === 'fenfen') {
       const sub = S.fenfenSubtype || 'norem';
       const endpointMap = {
@@ -4202,6 +4295,92 @@ async function applySub3noregAppMode() {
   }
 }
 
+// ── coinvalue（認識錢幣＿位值板計數）─────────────────────────────────────
+const _CV_LEVEL_DESCS = {
+  L1: '使用 100、10、1 元三種面值，最大合計約 344 元。',
+  L2: '加入 5 元硬幣，個位欄含 5 元與 1 元。',
+  L3: '再加入 50 元硬幣，十位欄含 50 元與 10 元。',
+  L4: '再加入 500 元鈔票，百位欄含 500 元與 100 元。',
+  L5: '5、50、500 元各至少出現 1 枚，最高難度。',
+};
+const _CV_STYLE_DESCS = {
+  simple: '（簡單圖形版：方框表示鈔票，圓圈表示硬幣）',
+  photo:  '（照片版：使用台灣錢幣真實照片）',
+};
+
+function _cvUpdateDesc() {
+  const lv = S.coinvalueLevel;
+  const st = S.coinvalueStyle;
+  const el = document.getElementById('cvDesc');
+  if (el) el.textContent = (_CV_LEVEL_DESCS[lv] || '') + ' ' + (_CV_STYLE_DESCS[st] || '');
+}
+
+function selectCoinvalueLevel(level, fromUser = false) {
+  S.coinvalueLevel = level;
+  ['L1','L2','L3','L4','L5'].forEach(lv => {
+    const btn = document.getElementById('cvLevel' + lv);
+    if (btn) btn.classList.toggle('active', lv === level);
+  });
+  _cvUpdateDesc();
+  if (fromUser) {
+    const confirmBtn = document.getElementById('cvConfirmBtn');
+    const resultRow  = document.getElementById('cvResultRow');
+    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
+    if (resultRow)  resultRow.style.display = 'none';
+  }
+}
+
+function selectCoinvalueStyle(style, fromUser = false) {
+  S.coinvalueStyle = style;
+  ['simple','photo'].forEach(st => {
+    const btn = document.getElementById('cvStyle' + (st === 'simple' ? 'Simple' : 'Photo'));
+    if (btn) btn.classList.toggle('active', st === style);
+  });
+  _cvUpdateDesc();
+  if (fromUser) {
+    const confirmBtn = document.getElementById('cvConfirmBtn');
+    const resultRow  = document.getElementById('cvResultRow');
+    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
+    if (resultRow)  resultRow.style.display = 'none';
+  }
+}
+
+async function applyCoinvalueMode() {
+  const level  = S.coinvalueLevel || 'L1';
+  const style  = S.coinvalueStyle || 'simple';
+  const confirmBtn  = document.getElementById('cvConfirmBtn');
+  const resultRow   = document.getElementById('cvResultRow');
+  const resultLabel = document.getElementById('cvResultLabel');
+  const dlLink      = document.getElementById('cvDownloadLink');
+
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = '生成中…';
+
+  try {
+    const res = await fetch(API_URL + '/generate/coinvalue', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ level, style }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const blob = await res.blob();
+    if (S._coinvalueDocxUrl) URL.revokeObjectURL(S._coinvalueDocxUrl);
+    S._coinvalueDocxUrl = URL.createObjectURL(blob);
+    const filename = `認識錢幣_位值板_${level}_${style}.docx`;
+    dlLink.href = S._coinvalueDocxUrl;
+    dlLink.download = filename;
+    const lvLabel = { L1:'只有100/10/1', L2:'加入5元', L3:'加50元', L4:'加500元', L5:'全混合' };
+    const stLabel = { simple:'簡單圖形', photo:'照片版' };
+    resultLabel.textContent = `✓ 已依「${lvLabel[level]}・${stLabel[style]}」生成`;
+    resultRow.style.display = '';
+    confirmBtn.style.display = 'none';
+  } catch (e) {
+    alert('生成失敗：' + e.message);
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = '確認套用';
+  }
+}
+
 function selectFenfenSubtype(sub, fromUser = false) {
   S.fenfenSubtype = sub;
   const subLabel = {
@@ -4664,7 +4843,7 @@ function applyTypeLayout(typeId) {
   document.getElementById('savedConfigCard').style.display = isN2 ? '' : 'none';
   const hideDiffInfo = isN2 || typeId === 'fenfen' || typeId === 'tuiwei3sub' || typeId === 'sub1'
     || typeId === 'sub2noreg-app' || typeId === 'sub2borrow'
-    || typeId === 'sub3noreg-app';
+    || typeId === 'sub3noreg-app' || typeId === 'coinvalue';
   document.getElementById('diffInfoCard').style.display   = hideDiffInfo ? 'none' : '';
   if (!hideDiffInfo) renderDiffInfoCard(typeId);
 
@@ -4685,6 +4864,7 @@ function applyTypeLayout(typeId) {
   document.getElementById('sub2noregAppModeCard').style.display = (typeId === 'sub2noreg-app') ? '' : 'none';
   document.getElementById('sub2borrowModeCard').style.display   = (typeId === 'sub2borrow')    ? '' : 'none';
   document.getElementById('sub3noregAppModeCard').style.display = (typeId === 'sub3noreg-app') ? '' : 'none';
+  document.getElementById('coinvalueModeCard').style.display = (typeId === 'coinvalue') ? '' : 'none';
 
   // 單價調整卡：由 registry layout.prices 控制
   document.getElementById('priceEditCard').style.display = L.prices ? '' : 'none';
@@ -4750,6 +4930,11 @@ function applyTypeLayout(typeId) {
   if (typeId === 'sub2noreg-app') selectSub2noregAppMode(S.sub2noregAppMode ?? 'pman');
   if (typeId === 'sub2borrow')   selectSub2borrowMode(S.sub2borrowMode ?? 'demo');
   if (typeId === 'sub3noreg-app') selectSub3noregAppMode(S.sub3noregAppMode ?? 'std');
+  if (typeId === 'coinvalue') {
+    selectCoinvalueLevel(S.coinvalueLevel || 'L1');
+    selectCoinvalueStyle(S.coinvalueStyle || 'simple');
+    _cvUpdateDesc();
+  }
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
@@ -4757,7 +4942,7 @@ function applyTypeLayout(typeId) {
 
   // 「選項卡 + 確認套用」模式的題型：下載在選項卡內完成，隱藏底部下載按鈕
   const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub' || typeId === 'tuiwei3sub' || typeId === 'sub1'
-    || typeId === 'sub2noreg-app' || typeId === 'sub2borrow' || typeId === 'sub3noreg-app');
+    || typeId === 'sub2noreg-app' || typeId === 'sub2borrow' || typeId === 'sub3noreg-app' || typeId === 'coinvalue');
   document.getElementById('genBtn').closest('.gen-section').style.display = usesOptionCard ? 'none' : '';
 
 }
