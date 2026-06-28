@@ -306,6 +306,7 @@ body {
 .filter-pill.f-mul.active    { background: var(--amber-light); border-color: var(--amber); color: var(--amber-dark); }
 .filter-pill.f-div.active    { background: #fce7f3; border-color: #ec4899; color: #9d174d; }
 .filter-pill.f-mix.active    { background: #ede9fe; border-color: #7c3aed; color: #4c1d95; }
+.filter-pill.f-coin.active   { background: #fef9c3; border-color: #ca8a04; color: #713f12; }
 .home-layout { display: flex; gap: 24px; align-items: flex-start; }
 .home-sidebar { flex: 0 0 96px; position: sticky; top: 60px; }
 .home-sidebar-label { font-size: 11px; font-weight: 600; color: var(--gray); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
@@ -2351,6 +2352,7 @@ const OP_META = {
   div:{label:'除法',cls:'f-div'},
   addsub:{label:'加減混合',cls:'f-sub'},
   addsubmul:{label:'加減乘混合',cls:'f-mul'},
+  coin:{label:'認識錢幣',cls:'f-coin'},
   fenfen:{label:'分分看',cls:'f-div'},
 };
 const OP_TAG_CLS = {add:'ttag-add',sub:'ttag-sub',mul:'ttag-mul',div:'ttag-div',mix:'ttag-mix'};
@@ -4784,7 +4786,7 @@ async function _doRenderSamplePdf(pdfPath, containerId = 'samplePdfContainer', l
 // 首頁卡片資料（定義於 TYPE_REGISTRY.home）
 const HOME_TYPE_META = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id, t.home]));
 
-const HOME_OP_KEYS = ['all','add','sub','mul','div','fenfen','addsub','addsubmul'];
+const HOME_OP_KEYS = ['all','add','sub','mul','div','fenfen','addsub','addsubmul','coin'];
 
 const GRADE_KEYS = ['all', '1', '2', '3'];
 const GRADE_META = {
@@ -4867,6 +4869,7 @@ function renderHomeTypeCards() {
       if (curGrade !== 'all' && String(t.grade) !== curGrade) return false;
       if (op === 'all') return true;
       const o = t.ops;
+      if (op === 'coin')      return t.keywords.includes('錢幣');
       if (op === 'fenfen')    return t.keywords.includes('fenfen');
       if (op === 'div')       return o.includes('div') && !t.keywords.includes('fenfen');
       if (op === 'mul')       return o.includes('mul') && !o.includes('add') && !o.includes('div');
