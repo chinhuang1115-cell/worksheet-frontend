@@ -2931,7 +2931,7 @@ const TYPE_REGISTRY = [
   {
     id: 'coinvalue',
     code: 'coinvalue',
-    name: '認識錢幣＿位值板計數',
+    name: '認識錢幣＿至百位',
     grade: 2,
     ops: ['add'],
     keywords: ['coinvalue', 'money', '錢幣', '位值板'],
@@ -2939,7 +2939,7 @@ const TYPE_REGISTRY = [
     sortKey: [1, 2, 1],
     home: {
       badge: '認識錢幣',
-      title: '認識錢幣＿位值板計數',
+      title: '認識錢幣＿至百位',
       sub: '5 個難度層次 × 2 種風格',
       tags: ['加法', '二年級', '錢幣'],
     },
@@ -2955,13 +2955,13 @@ const TYPE_REGISTRY = [
     api: {
       endpoint: '/generate/coinvalue',
       body: () => ({ level: S.coinvalueLevel || 'L1', style: S.coinvalueStyle || 'simple' }),
-      filename: () => `認識錢幣_位值板_${S.coinvalueLevel || 'L1'}_${S.coinvalueStyle || 'simple'}.docx`,
+      filename: () => `認識錢幣_至百位_${S.coinvalueLevel || 'L1'}_${S.coinvalueStyle || 'simple'}.docx`,
     },
   },
   {
     id: 'coinvalue1000',
     code: 'coinvalue1000',
-    name: '認識錢幣 B＿位值板計數（含千位）',
+    name: '認識錢幣＿至千位',
     grade: 3,
     ops: ['add'],
     keywords: ['coinvalue', 'money', '錢幣', '位值板', '千位'],
@@ -2969,7 +2969,7 @@ const TYPE_REGISTRY = [
     sortKey: [1, 3, 1],
     home: {
       badge: '認識錢幣',
-      title: '認識錢幣 B＿位值板計數（含千位）',
+      title: '認識錢幣＿至千位',
       sub: '5 個難度層次，含千元',
       tags: ['加法', '三年級', '錢幣'],
     },
@@ -2985,7 +2985,7 @@ const TYPE_REGISTRY = [
     api: {
       endpoint: '/generate/coinvalue1000',
       body: () => ({ level: S.coinvalue1000Level || 'L1', style: S.coinvalue1000Style || 'simple' }),
-      filename: () => `認識錢幣B_位值板_${S.coinvalue1000Level || 'L1'}_${S.coinvalue1000Style || 'simple'}.docx`,
+      filename: () => `認識錢幣_至千位_${S.coinvalue1000Level || 'L1'}_${S.coinvalue1000Style || 'simple'}.docx`,
     },
   },
 ];
@@ -4360,7 +4360,7 @@ async function applySub3noregAppMode() {
   }
 }
 
-// ── coinvalue（認識錢幣＿位值板計數）─────────────────────────────────────
+// ── coinvalue（認識錢幣＿至百位 / 認識錢幣＿至千位）──────────────────────
 const _CV_LEVEL_DESCS = {
   L1: '使用 100、10、1 元三種面值，最大合計約 344 元。',
   L2: '加入 5 元硬幣，個位欄含 5 元與 1 元。',
@@ -4445,7 +4445,7 @@ async function applyCoinvalueMode() {
     const blob = await res.blob();
     if (S._coinvalueDocxUrl) URL.revokeObjectURL(S._coinvalueDocxUrl);
     S._coinvalueDocxUrl = URL.createObjectURL(blob);
-    const filename = `認識錢幣_位值板_${level}_${style}.docx`;
+    const filename = `認識錢幣_至百位_${level}_${style}.docx`;
     dlLink.href = S._coinvalueDocxUrl;
     dlLink.download = filename;
     const lvLabel = { L1:'只有100/10/1', L2:'加入5元', L3:'加50元', L4:'加500元', L5:'全混合' };
@@ -4533,7 +4533,7 @@ async function applyCoinvalue1000Mode() {
     const blob = await res.blob();
     if (S._coinvalue1000DocxUrl) URL.revokeObjectURL(S._coinvalue1000DocxUrl);
     S._coinvalue1000DocxUrl = URL.createObjectURL(blob);
-    const filename = `認識錢幣B_位值板_${level}_${style}.docx`;
+    const filename = `認識錢幣_至千位_${level}_${style}.docx`;
     dlLink.href = S._coinvalue1000DocxUrl;
     dlLink.download = filename;
     const lvLabel = { L1:'只有1000/100/10/1', L2:'加入5元', L3:'加50元', L4:'加500元', L5:'全混合' };
