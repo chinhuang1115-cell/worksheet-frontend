@@ -4869,7 +4869,7 @@ function renderHomeTypeCards() {
       if (curGrade !== 'all' && String(t.grade) !== curGrade) return false;
       if (op === 'all') return true;
       const o = t.ops;
-      if (op === 'coin')      return t.keywords.includes('錢幣');
+      if (op === 'coin')      return t.keywords.includes('coinvalue');
       if (op === 'fenfen')    return t.keywords.includes('fenfen');
       if (op === 'div')       return o.includes('div') && !t.keywords.includes('fenfen');
       if (op === 'mul')       return o.includes('mul') && !o.includes('add') && !o.includes('div');
