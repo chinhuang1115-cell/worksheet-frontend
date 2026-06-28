@@ -4383,12 +4383,11 @@ function _cvUpdateDesc() {
 function _cvUpdatePdf() {
   const lv = S.coinvalueLevel || 'L1';
   const st = S.coinvalueStyle || 'simple';
-  // 目前只有 simple 風格有 sample PDF
-  const pdfPath = st === 'simple' ? `assets/coinvalue_${lv}_simple_sample.pdf` : null;
+  const pdfPath = `assets/coinvalue_${lv}_${st}_sample.pdf`;
   const dlBtn = document.getElementById('typeSampleDownloadBtn');
   if (dlBtn) {
-    dlBtn.href     = pdfPath || '#';
-    dlBtn.download = pdfPath ? `coinvalue_${lv}_simple_sample.pdf` : '';
+    dlBtn.href     = pdfPath;
+    dlBtn.download = `coinvalue_${lv}_${st}_sample.pdf`;
   }
   _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
@@ -4472,11 +4471,11 @@ const _CV1000_LEVEL_DESCS = {
 function _cv1000UpdatePdf() {
   const lv = S.coinvalue1000Level || 'L1';
   const st = S.coinvalue1000Style || 'simple';
-  const pdfPath = st === 'simple' ? `assets/coinvalue1000_${lv}_simple_sample.pdf` : null;
+  const pdfPath = `assets/coinvalue1000_${lv}_${st}_sample.pdf`;
   const dlBtn = document.getElementById('typeSampleDownloadBtn');
   if (dlBtn) {
-    dlBtn.href     = pdfPath || '#';
-    dlBtn.download = pdfPath ? `coinvalue1000_${lv}_simple_sample.pdf` : '';
+    dlBtn.href     = pdfPath;
+    dlBtn.download = `coinvalue1000_${lv}_${st}_sample.pdf`;
   }
   _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
