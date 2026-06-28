@@ -1656,12 +1656,12 @@ body {
       </div>
     </div>
 
-    <!-- coinvalue1000 難度選項卡 -->
+    <!-- coinvalue1000 難度與風格選項卡 -->
     <div class="card" id="coinvalue1000ModeCard" style="display:none;">
-      <div class="card-head"><span class="card-title">難度選擇</span></div>
+      <div class="card-head"><span class="card-title">難度 &amp; 風格選擇</span></div>
       <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
         <div style="font-size:12px;color:var(--gray);line-height:1.6;">
-          選取難度 → 確認套用 → 下載學習單
+          選取難度與風格 → 確認套用 → 下載學習單
         </div>
 
         <!-- 難度選擇 -->
@@ -1672,6 +1672,13 @@ body {
           <button id="cv1000LevelL3" class="fenfen-set-btn"        onclick="selectCoinvalue1000Level('L3',true)">L3 加 50 元</button>
           <button id="cv1000LevelL4" class="fenfen-set-btn"        onclick="selectCoinvalue1000Level('L4',true)">L4 加 500 元</button>
           <button id="cv1000LevelL5" class="fenfen-set-btn"        onclick="selectCoinvalue1000Level('L5',true)">L5 全混合</button>
+        </div>
+
+        <!-- 風格選擇 -->
+        <div style="font-size:12px;font-weight:600;color:var(--text);">錢幣風格</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="cv1000StyleSimple" class="fenfen-set-btn active" onclick="selectCoinvalue1000Style('simple',true)">簡單圖形</button>
+          <button id="cv1000StylePhoto"  class="fenfen-set-btn"        onclick="selectCoinvalue1000Style('photo', true)">照片版</button>
         </div>
 
         <!-- 說明 -->
@@ -2977,8 +2984,8 @@ const TYPE_REGISTRY = [
     },
     api: {
       endpoint: '/generate/coinvalue1000',
-      body: () => ({ level: S.coinvalue1000Level || 'L1' }),
-      filename: () => `認識錢幣B_位值板_${S.coinvalue1000Level || 'L1'}.docx`,
+      body: () => ({ level: S.coinvalue1000Level || 'L1', style: S.coinvalue1000Style || 'simple' }),
+      filename: () => `認識錢幣B_位值板_${S.coinvalue1000Level || 'L1'}_${S.coinvalue1000Style || 'simple'}.docx`,
     },
   },
 ];
@@ -3027,6 +3034,7 @@ let S = {
   coinvalueStyle: 'simple',
   _coinvalueDocxUrl: null,
   coinvalue1000Level: 'L1',
+  coinvalue1000Style: 'simple',
   _coinvalue1000DocxUrl: null,
 };
 let curGrade = 'all';
@@ -4463,11 +4471,12 @@ const _CV1000_LEVEL_DESCS = {
 
 function _cv1000UpdatePdf() {
   const lv = S.coinvalue1000Level || 'L1';
-  const pdfPath = `assets/coinvalue1000_${lv}_sample.pdf`;
+  const st = S.coinvalue1000Style || 'simple';
+  const pdfPath = st === 'simple' ? `assets/coinvalue1000_${lv}_simple_sample.pdf` : null;
   const dlBtn = document.getElementById('typeSampleDownloadBtn');
   if (dlBtn) {
-    dlBtn.href     = pdfPath;
-    dlBtn.download = `coinvalue1000_${lv}_sample.pdf`;
+    dlBtn.href     = pdfPath || '#';
+    dlBtn.download = pdfPath ? `coinvalue1000_${lv}_simple_sample.pdf` : '';
   }
   _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
@@ -4489,8 +4498,24 @@ function selectCoinvalue1000Level(level, fromUser = false) {
   }
 }
 
+function selectCoinvalue1000Style(style, fromUser = false) {
+  S.coinvalue1000Style = style;
+  ['simple','photo'].forEach(st => {
+    const btn = document.getElementById('cv1000Style' + (st === 'simple' ? 'Simple' : 'Photo'));
+    if (btn) btn.classList.toggle('active', st === style);
+  });
+  if (fromUser) {
+    _cv1000UpdatePdf();
+    const confirmBtn = document.getElementById('cv1000ConfirmBtn');
+    const resultRow  = document.getElementById('cv1000ResultRow');
+    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
+    if (resultRow)  resultRow.style.display = 'none';
+  }
+}
+
 async function applyCoinvalue1000Mode() {
   const level       = S.coinvalue1000Level || 'L1';
+  const style       = S.coinvalue1000Style || 'simple';
   const confirmBtn  = document.getElementById('cv1000ConfirmBtn');
   const resultRow   = document.getElementById('cv1000ResultRow');
   const resultLabel = document.getElementById('cv1000ResultLabel');
@@ -4503,17 +4528,18 @@ async function applyCoinvalue1000Mode() {
     const res = await fetch(API_URL + '/generate/coinvalue1000', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level }),
+      body: JSON.stringify({ level, style }),
     });
     if (!res.ok) throw new Error(await res.text());
     const blob = await res.blob();
     if (S._coinvalue1000DocxUrl) URL.revokeObjectURL(S._coinvalue1000DocxUrl);
     S._coinvalue1000DocxUrl = URL.createObjectURL(blob);
-    const filename = `認識錢幣B_位值板_${level}.docx`;
+    const filename = `認識錢幣B_位值板_${level}_${style}.docx`;
     dlLink.href = S._coinvalue1000DocxUrl;
     dlLink.download = filename;
     const lvLabel = { L1:'只有1000/100/10/1', L2:'加入5元', L3:'加50元', L4:'加500元', L5:'全混合' };
-    resultLabel.textContent = `✓ 已依「${lvLabel[level]}」生成`;
+    const stLabel = { simple:'簡單圖形', photo:'照片版' };
+    resultLabel.textContent = `✓ 已依「${lvLabel[level]}・${stLabel[style]}」生成`;
     resultRow.style.display = '';
     confirmBtn.style.display = 'none';
   } catch (e) {
@@ -5082,6 +5108,7 @@ function applyTypeLayout(typeId) {
   }
   if (typeId === 'coinvalue1000') {
     selectCoinvalue1000Level(S.coinvalue1000Level || 'L1');
+    selectCoinvalue1000Style(S.coinvalue1000Style || 'simple');
     _cv1000UpdatePdf();
   }
 
