@@ -1174,6 +1174,64 @@ body {
   font-size: 12px;
   color: var(--gray);
 }
+/* ── CAROUSEL ── */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,.45);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .18s;
+  padding: 0;
+}
+.type-sample-card:hover .carousel-nav { opacity: 1; }
+.carousel-prev { left: 5px; }
+.carousel-next { right: 5px; }
+.carousel-label {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-size: 10px;
+  font-family: 'Noto Sans TC', sans-serif;
+  padding: 2px 8px;
+  border-radius: 10px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 3;
+}
+.carousel-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  z-index: 3;
+}
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.45);
+  cursor: pointer;
+  transition: background .18s;
+}
+.carousel-dot.active { background: #fff; }
 .sample-card-footer {
   padding: 12px 14px;
   display: flex;
@@ -2759,7 +2817,11 @@ const TYPE_REGISTRY = [
     },
     diffInfo:{ grade:'三年級', level:'進階', levelColor:'#f59e0b', code:'N-3-1',
       desc:'四位數減法（含退位），以畫錢幣輔助學生理解借位過程，提供百位借位、十位借位、雙重借位三種難度。' },
-    sample:{ pdf:'assets/tuiwei4sub_bai_sample.pdf', name:'退位減法_四位數_百位借位_範本.pdf' },
+    sample:[
+      { pdf:'assets/tuiwei4sub_bai_sample.pdf',    name:'退位減法_四位數_百位借位_範本.pdf', label:'百位借位' },
+      { pdf:'assets/tuiwei4sub_shi_sample.pdf',    name:'退位減法_四位數_十位借位_範本.pdf', label:'十位借位' },
+      { pdf:'assets/tuiwei4sub_double_sample.pdf', name:'退位減法_四位數_雙重借位_範本.pdf', label:'雙重借位' },
+    ],
     layout:{ panel:'tuiwei4subPanel', themeSet:'expensive', showTheme:true, prices:true, interactive:false },
     api:{
       endpoint:'/generate/tuiwei4sub',
@@ -2779,7 +2841,11 @@ const TYPE_REGISTRY = [
     sortKey: [2, 3, 1],
     home: { icon: '🪙', label: '三位數退位減法', sub: '錢幣 / 畫記輔助' },
     diffInfo: null,
-    sample: null,
+    sample: [
+      { pdf:'assets/tuiwei3sub_coin_sample.pdf',  name:'退位減法_三位數_錢幣版_範本.pdf',    label:'錢幣版' },
+      { pdf:'assets/tuiwei3sub_dcoin_sample.pdf', name:'退位減法_三位數_雙退位錢幣_範本.pdf', label:'雙退位錢幣' },
+      { pdf:'assets/tuiwei3sub_tally_sample.pdf', name:'退位減法_三位數_畫記版_範本.pdf',    label:'畫記版' },
+    ],
     layout: {
       panel: 'tuiwei3subPanel',
       themeSet: null,
@@ -2804,7 +2870,13 @@ const TYPE_REGISTRY = [
     sortKey: [2, 1, 1],
     home: { icon: '➖', label: '十以內減法', sub: '5 種版型選擇' },
     diffInfo: null,
-    sample: { pdf: 'assets/sub15_sample.pdf', name: '十以內減法練習_範本.pdf' },
+    sample: [
+      { pdf:'assets/sub10_sample.pdf',    name:'十以內減法_被減數1-5_範本.pdf',  label:'被減數 1–5' },
+      { pdf:'assets/subfig_sample.pdf',   name:'十以內減法_圖輔助版_範本.pdf',   label:'圖輔助版' },
+      { pdf:'assets/sub15_sample.pdf',    name:'十以內減法_被減數6-10_範本.pdf', label:'被減數 6–10' },
+      { pdf:'assets/sub69_sample.pdf',    name:'十以內減法_被減數6-9_範本.pdf',  label:'被減數 6–9' },
+      { pdf:'assets/subborrow_sample.pdf',name:'十以內退位減法_範本.pdf',        label:'退位減法' },
+    ],
     layout: { panel: 'sub1Panel', themeSet: 'cheap', showTheme: false, prices: false, interactive: false },
     api: { endpoint: '/generate/sub15', body: () => ({}), filename: () => '加減計算練習＿減法.docx' },
   },
@@ -3061,7 +3133,13 @@ const TYPE_REGISTRY = [
       tags: ['加法', '二年級', '錢幣'],
     },
     diffInfo: null,
-    sample: null,
+    sample: [
+      { pdf:'assets/coinvalue_L1_simple_sample.pdf', name:'認識錢幣_至百位_L1_範本.pdf', label:'L1' },
+      { pdf:'assets/coinvalue_L2_simple_sample.pdf', name:'認識錢幣_至百位_L2_範本.pdf', label:'L2' },
+      { pdf:'assets/coinvalue_L3_simple_sample.pdf', name:'認識錢幣_至百位_L3_範本.pdf', label:'L3' },
+      { pdf:'assets/coinvalue_L4_simple_sample.pdf', name:'認識錢幣_至百位_L4_範本.pdf', label:'L4' },
+      { pdf:'assets/coinvalue_L5_simple_sample.pdf', name:'認識錢幣_至百位_L5_範本.pdf', label:'L5' },
+    ],
     layout: {
       panel: 'coinvaluePanel',
       themeSet: null,
@@ -3091,7 +3169,13 @@ const TYPE_REGISTRY = [
       tags: ['加法', '三年級', '錢幣'],
     },
     diffInfo: null,
-    sample: null,
+    sample: [
+      { pdf:'assets/coinvalue1000_L1_simple_sample.pdf', name:'認識錢幣_至千位_L1_範本.pdf', label:'L1' },
+      { pdf:'assets/coinvalue1000_L2_simple_sample.pdf', name:'認識錢幣_至千位_L2_範本.pdf', label:'L2' },
+      { pdf:'assets/coinvalue1000_L3_simple_sample.pdf', name:'認識錢幣_至千位_L3_範本.pdf', label:'L3' },
+      { pdf:'assets/coinvalue1000_L4_simple_sample.pdf', name:'認識錢幣_至千位_L4_範本.pdf', label:'L4' },
+      { pdf:'assets/coinvalue1000_L5_simple_sample.pdf', name:'認識錢幣_至千位_L5_範本.pdf', label:'L5' },
+    ],
     layout: {
       panel: 'coinvalue1000Panel',
       themeSet: null,
@@ -3121,7 +3205,11 @@ const TYPE_REGISTRY = [
       tags: ['加法', '二年級', '錢幣', '進位'],
     },
     diffInfo: null,
-    sample: null,
+    sample: [
+      { pdf:'assets/coincarry_L2_simple_sample.pdf', name:'認識錢幣_進位至百位_L2_範本.pdf', label:'L2' },
+      { pdf:'assets/coincarry_L3_simple_sample.pdf', name:'認識錢幣_進位至百位_L3_範本.pdf', label:'L3' },
+      { pdf:'assets/coincarry_L4_simple_sample.pdf', name:'認識錢幣_進位至百位_L4_範本.pdf', label:'L4' },
+    ],
     layout: {
       panel: 'coincarryPanel',
       themeSet: null,
@@ -3151,7 +3239,7 @@ const TYPE_REGISTRY = [
       tags: ['加法', '二年級', '錢幣', '進位'],
     },
     diffInfo: null,
-    sample: null,
+    sample: { pdf:'assets/coincarry_L1_simple_sample.pdf', name:'認識錢幣_進位至十位_範本.pdf' },
     layout: {
       panel: 'coincarry10Panel',
       themeSet: null,
@@ -3181,7 +3269,10 @@ const TYPE_REGISTRY = [
       tags: ['加法', '三年級', '錢幣', '進位'],
     },
     diffInfo: null,
-    sample: null,
+    sample: [
+      { pdf:'assets/coincarry1000_L1_simple_sample.pdf', name:'認識錢幣_進位至千位_L1_範本.pdf', label:'L1' },
+      { pdf:'assets/coincarry1000_L2_simple_sample.pdf', name:'認識錢幣_進位至千位_L2_範本.pdf', label:'L2' },
+    ],
     layout: {
       panel: 'coincarry1000Panel',
       themeSet: null,
@@ -5151,9 +5242,16 @@ function renderSanbushuPreview(data) {
 // 範本 PDF（定義於 TYPE_REGISTRY.sample）
 const SAMPLE_PDFS = Object.fromEntries(TYPE_REGISTRY.map(t=>[t.id,
   !t.sample ? null :
+  Array.isArray(t.sample) ? { pdf: t.sample[0].pdf, name: t.sample[0].name } :
   typeof t.sample === 'string' ? { pdf: t.sample, name: t.sample.split('/').pop() } :
   t.sample
 ]));
+// 輪播陣列：typeId → [{pdf, name, label}]（僅 sample 為陣列的 type）
+const SAMPLE_ARRAYS = Object.fromEntries(
+  TYPE_REGISTRY.filter(t => Array.isArray(t.sample)).map(t => [t.id, t.sample])
+);
+const _carouselIdx = {};        // typeId → 目前顯示的 slide index
+const _thumbMultiCache = {};    // typeId → [dataUrl, ...]
 let _samplePdfCache = {};
 const _samplePdfSeqs = {}; // 每個 containerId 一個 sequence counter，防止非同步渲染互蓋
 
@@ -5382,15 +5480,21 @@ function renderHomeTypeCards() {
   document.getElementById('typeSampleGrid').innerHTML = filtered.length
     ? filtered.map(t => {
         const sample = SAMPLE_PDFS[t.id];
+        const arr    = SAMPLE_ARRAYS[t.id];
         const hasPdf = sample?.pdf;
+        const isCarousel = !!arr;
         return `
         <div class="type-sample-card" onclick="enterConfig('${t.id}')">
           <div class="sample-thumb-wrap">
             ${hasPdf
               ? `<img class="sample-thumb-img" id="thumb-img-${t.id}" style="display:none;" alt="${t.name}">
-                 <div class="sample-thumb-loading" id="thumb-loading-${t.id}">
-                   <span>載入中…</span>
-                 </div>`
+                 <div class="sample-thumb-loading" id="thumb-loading-${t.id}"><span>載入中…</span></div>
+                 ${isCarousel ? `
+                   <button class="carousel-nav carousel-prev" onclick="event.stopPropagation();_carouselNav('${t.id}',-1)">‹</button>
+                   <button class="carousel-nav carousel-next" onclick="event.stopPropagation();_carouselNav('${t.id}',1)">›</button>
+                   <div class="carousel-label" id="carousel-label-${t.id}">${arr[0].label}</div>
+                   <div class="carousel-dots" id="carousel-dots-${t.id}">${arr.map((_,i)=>`<span class="carousel-dot${i===0?' active':''}" onclick="event.stopPropagation();_carouselGo('${t.id}',${i})"></span>`).join('')}</div>
+                 ` : ''}`
               : `<div class="sample-thumb-placeholder">尚無範本預覽</div>`}
           </div>
           <div class="sample-card-footer">
@@ -5412,10 +5516,16 @@ async function _loadAllThumbs() {
   } catch(e) { return; }
 
   for (const t of TYPE_REGISTRY) {
+    // 輪播型：只預載 slide 0
+    if (SAMPLE_ARRAYS[t.id]) {
+      if (document.getElementById(`thumb-img-${t.id}`)) _loadOneThumb(t.id, 0, pdfjsLib);
+      continue;
+    }
+
     const sample = SAMPLE_PDFS[t.id];
     if (!sample?.pdf) continue;
     const img = document.getElementById(`thumb-img-${t.id}`);
-    if (!img) continue; // 被 filter 排除或不在 DOM 中
+    if (!img) continue;
 
     if (_thumbCache[t.id]) {
       img.src = _thumbCache[t.id];
@@ -5442,6 +5552,77 @@ async function _loadAllThumbs() {
       if (el) el.innerHTML = '<span style="color:var(--red);font-size:11px;">載入失敗</span>';
     }
   }
+}
+
+// ── 輪播控制 ──
+function _carouselNav(typeId, dir) {
+  const arr = SAMPLE_ARRAYS[typeId];
+  if (!arr) return;
+  const cur = _carouselIdx[typeId] ?? 0;
+  _carouselGo(typeId, (cur + dir + arr.length) % arr.length);
+}
+
+function _carouselGo(typeId, idx) {
+  const arr = SAMPLE_ARRAYS[typeId];
+  if (!arr || idx >= arr.length) return;
+  _carouselIdx[typeId] = idx;
+
+  // label
+  const label = document.getElementById(`carousel-label-${typeId}`);
+  if (label) label.textContent = arr[idx].label;
+
+  // dots
+  document.querySelectorAll(`#carousel-dots-${typeId} .carousel-dot`).forEach((d, i) => {
+    d.classList.toggle('active', i === idx);
+  });
+
+  // 圖片：已快取直接顯示，否則觸發載入
+  if (_thumbMultiCache[typeId]?.[idx]) {
+    _carouselShowCached(typeId, idx);
+  } else {
+    const img = document.getElementById(`thumb-img-${typeId}`);
+    if (img) img.style.display = 'none';
+    const loading = document.getElementById(`thumb-loading-${typeId}`);
+    if (loading) { loading.innerHTML = '<span>載入中…</span>'; loading.style.display = 'flex'; }
+    _loadOneThumb(typeId, idx);
+  }
+}
+
+async function _loadOneThumb(typeId, idx, pdfjsLib) {
+  if (!pdfjsLib) {
+    try { pdfjsLib = await _getPdfjsLib(); } catch(e) { return; }
+  }
+  const arr = SAMPLE_ARRAYS[typeId];
+  if (!arr || idx >= arr.length) return;
+  if (_thumbMultiCache[typeId]?.[idx]) {
+    if ((_carouselIdx[typeId] ?? 0) === idx) _carouselShowCached(typeId, idx);
+    return;
+  }
+  try {
+    const pdf = await pdfjsLib.getDocument(arr[idx].pdf).promise;
+    const page = await pdf.getPage(1);
+    const vp = page.getViewport({ scale: 1.0 });
+    const offscreen = document.createElement('canvas');
+    offscreen.width = vp.width; offscreen.height = vp.height;
+    await page.render({ canvasContext: offscreen.getContext('2d'), viewport: vp }).promise;
+    const dataUrl = offscreen.toDataURL('image/jpeg', 0.88);
+    if (!_thumbMultiCache[typeId]) _thumbMultiCache[typeId] = [];
+    _thumbMultiCache[typeId][idx] = dataUrl;
+    if ((_carouselIdx[typeId] ?? 0) === idx) _carouselShowCached(typeId, idx);
+  } catch(e) {
+    if ((_carouselIdx[typeId] ?? 0) === idx) {
+      const el = document.getElementById(`thumb-loading-${typeId}`);
+      if (el) el.innerHTML = '<span style="color:var(--red);font-size:11px;">載入失敗</span>';
+    }
+  }
+}
+
+function _carouselShowCached(typeId, idx) {
+  const img = document.getElementById(`thumb-img-${typeId}`);
+  if (!img) return;
+  img.src = _thumbMultiCache[typeId][idx];
+  img.style.display = 'block';
+  document.getElementById(`thumb-loading-${typeId}`)?.remove();
 }
 
 function applyTypeLayout(typeId) {
