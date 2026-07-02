@@ -3958,8 +3958,9 @@ function loadSave(i) {
 
 function delSave(i) { saves.splice(i,1); renderSaved(); }
 
-// ── API 設定（部署後改成你的 Railway 網址）──
-const API_URL = window.WORKSHEET_API_URL || 'https://web-production-0542f.up.railway.app';
+// ── API 設定（本機開發用 localhost，線上測試改回 Railway 網址）──
+const API_URL = window.WORKSHEET_API_URL || 'http://localhost:8000';
+// 線上: 'https://web-production-0542f.up.railway.app'
 
 // ── PREVIEW STATE ──
 let _previewBlob = null;
