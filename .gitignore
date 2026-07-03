@@ -1,3 +1,14 @@
 .DS_Store
 Thumbs.db
 .worktrees/
+
+# Claude Code 本機狀態
+.claude/
+
+# 暫存 / 誤存檔
+*.tmp
+assets/*.pdf.docx
+assets/*_sample.docx
+
+# 測試腳本
+test_script.js
