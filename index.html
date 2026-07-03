@@ -1666,189 +1666,43 @@ body {
     </div>
 
     <!-- coinvalue 難度與風格選項卡 -->
-    <div class="card" id="coinvalueModeCard" style="display:none;">
-      <div class="card-head"><span class="card-title">難度 &amp; 風格選擇</span></div>
+    <!-- 認識錢幣系列泛用選項卡（coinvalue / coinvalue1000 / coincarry / coincarry10 / coincarry1000）
+         內容由 COIN_TYPES config 驅動，renderCoinModeCard() 依 S.typeId 動態填入 -->
+    <div class="card" id="coinModeCard" style="display:none;">
+      <div class="card-head"><span class="card-title" id="coinModeTitle"></span></div>
       <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:12px;color:var(--gray);line-height:1.6;">
-          選取難度與風格 → 確認套用 → 下載學習單
-        </div>
+        <div id="coinModeHint" style="font-size:12px;color:var(--gray);line-height:1.6;"></div>
 
-        <!-- 難度選擇 -->
+        <!-- 難度選擇（按鈕動態生成）-->
         <div style="font-size:12px;font-weight:600;color:var(--text);">難度</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button id="cvLevelL1" class="fenfen-set-btn active" onclick="selectCoinvalueLevel('L1',true)">L1 只有 100/10/1</button>
-          <button id="cvLevelL2" class="fenfen-set-btn"        onclick="selectCoinvalueLevel('L2',true)">L2 加入 5 元</button>
-          <button id="cvLevelL3" class="fenfen-set-btn"        onclick="selectCoinvalueLevel('L3',true)">L3 加 50 元</button>
-          <button id="cvLevelL4" class="fenfen-set-btn"        onclick="selectCoinvalueLevel('L4',true)">L4 加 500 元</button>
-          <button id="cvLevelL5" class="fenfen-set-btn"        onclick="selectCoinvalueLevel('L5',true)">L5 全混合</button>
-        </div>
+        <div id="coinLevelBtns" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
 
-        <!-- 風格選擇 -->
-        <div style="font-size:12px;font-weight:600;color:var(--text);">錢幣風格</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button id="cvStyleSimple" class="fenfen-set-btn active" onclick="selectCoinvalueStyle('simple',true)">簡單圖形</button>
-          <button id="cvStylePhoto"  class="fenfen-set-btn"        onclick="selectCoinvalueStyle('photo', true)">照片版</button>
+        <!-- 風格選擇（僅 hasStyle 的題型顯示）-->
+        <div id="coinStyleSection" style="display:none;flex-direction:column;gap:10px;">
+          <div style="font-size:12px;font-weight:600;color:var(--text);">錢幣風格</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button id="coinStyleSimple" class="fenfen-set-btn active" onclick="coinSelectStyle('simple',true)">簡單圖形</button>
+            <button id="coinStylePhoto"  class="fenfen-set-btn"        onclick="coinSelectStyle('photo', true)">照片版</button>
+          </div>
         </div>
 
         <!-- 說明 -->
-        <div id="cvDesc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
+        <div id="coinDesc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
 
         <!-- 確認套用 -->
-        <button id="cvConfirmBtn" onclick="applyCoinvalueMode()"
+        <button id="coinConfirmBtn" onclick="coinApplyMode()"
           style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);
                  background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">
           確認套用
         </button>
 
         <!-- 結果列 -->
-        <div id="cvResultRow"
+        <div id="coinResultRow"
           style="display:none;padding:10px 12px;background:var(--teal-light);
                  border-radius:var(--r-sm);display:flex;align-items:center;
                  justify-content:space-between;gap:8px;">
-          <span id="cvResultLabel" style="font-size:12px;color:var(--teal-dark);"></span>
-          <a id="cvDownloadLink" href="#" download="coinvalue.docx"
-             style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">
-            ⬇ 下載學習單
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- coinvalue1000 難度與風格選項卡 -->
-    <div class="card" id="coinvalue1000ModeCard" style="display:none;">
-      <div class="card-head"><span class="card-title">難度 &amp; 風格選擇</span></div>
-      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:12px;color:var(--gray);line-height:1.6;">
-          選取難度與風格 → 確認套用 → 下載學習單
-        </div>
-
-        <!-- 難度選擇 -->
-        <div style="font-size:12px;font-weight:600;color:var(--text);">難度</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button id="cv1000LevelL1" class="fenfen-set-btn active" onclick="selectCoinvalue1000Level('L1',true)">L1 只有 1000/100/10/1</button>
-          <button id="cv1000LevelL2" class="fenfen-set-btn"        onclick="selectCoinvalue1000Level('L2',true)">L2 加入 5 元</button>
-          <button id="cv1000LevelL3" class="fenfen-set-btn"        onclick="selectCoinvalue1000Level('L3',true)">L3 加 50 元</button>
-          <button id="cv1000LevelL4" class="fenfen-set-btn"        onclick="selectCoinvalue1000Level('L4',true)">L4 加 500 元</button>
-          <button id="cv1000LevelL5" class="fenfen-set-btn"        onclick="selectCoinvalue1000Level('L5',true)">L5 全混合</button>
-        </div>
-
-        <!-- 風格選擇 -->
-        <div style="font-size:12px;font-weight:600;color:var(--text);">錢幣風格</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button id="cv1000StyleSimple" class="fenfen-set-btn active" onclick="selectCoinvalue1000Style('simple',true)">簡單圖形</button>
-          <button id="cv1000StylePhoto"  class="fenfen-set-btn"        onclick="selectCoinvalue1000Style('photo', true)">照片版</button>
-        </div>
-
-        <!-- 說明 -->
-        <div id="cv1000Desc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
-
-        <!-- 確認套用 -->
-        <button id="cv1000ConfirmBtn" onclick="applyCoinvalue1000Mode()"
-          style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);
-                 background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">
-          確認套用
-        </button>
-
-        <!-- 結果列 -->
-        <div id="cv1000ResultRow"
-          style="display:none;padding:10px 12px;background:var(--teal-light);
-                 border-radius:var(--r-sm);display:flex;align-items:center;
-                 justify-content:space-between;gap:8px;">
-          <span id="cv1000ResultLabel" style="font-size:12px;color:var(--teal-dark);"></span>
-          <a id="cv1000DownloadLink" href="#" download="coinvalue1000.docx"
-             style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">
-            ⬇ 下載學習單
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- coincarry 難度與風格選項卡 -->
-    <div class="card" id="coincarryModeCard" style="display:none;">
-      <div class="card-head"><span class="card-title">難度選擇</span></div>
-      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:12px;color:var(--gray);line-height:1.6;">
-          選取難度 → 確認套用 → 下載學習單
-        </div>
-        <div style="font-size:12px;font-weight:600;color:var(--text);">難度</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button id="ccLevelL2" class="fenfen-set-btn active" onclick="selectCoincarryLevel('L2',true)">L2 10元進百位</button>
-          <button id="ccLevelL4" class="fenfen-set-btn"        onclick="selectCoincarryLevel('L4',true)">L4 加入50元</button>
-        </div>
-        <div id="ccDesc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
-        <button id="ccConfirmBtn" onclick="applyCoincarryMode()"
-          style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);
-                 background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">
-          確認套用
-        </button>
-        <div id="ccResultRow"
-          style="display:none;padding:10px 12px;background:var(--teal-light);
-                 border-radius:var(--r-sm);display:flex;align-items:center;
-                 justify-content:space-between;gap:8px;">
-          <span id="ccResultLabel" style="font-size:12px;color:var(--teal-dark);"></span>
-          <a id="ccDownloadLink" href="#" download="coincarry.docx"
-             style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">
-            ⬇ 下載學習單
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- coincarry10 難度選項卡 -->
-    <div class="card" id="coincarry10ModeCard" style="display:none;">
-      <div class="card-head"><span class="card-title">難度選擇</span></div>
-      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:12px;color:var(--gray);line-height:1.6;">
-          選取難度 → 確認套用 → 下載學習單
-        </div>
-        <div style="font-size:12px;font-weight:600;color:var(--text);">難度</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button id="cc10LevelL1" class="fenfen-set-btn active" onclick="selectCoincarry10Level('L1',true)">L1 1元進十位</button>
-          <button id="cc10LevelL3" class="fenfen-set-btn"        onclick="selectCoincarry10Level('L3',true)">L3 加入5元</button>
-        </div>
-        <div id="cc10Desc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
-        <button id="cc10ConfirmBtn" onclick="applyCoincarry10Mode()"
-          style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);
-                 background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">
-          確認套用
-        </button>
-        <div id="cc10ResultRow"
-          style="display:none;padding:10px 12px;background:var(--teal-light);
-                 border-radius:var(--r-sm);display:flex;align-items:center;
-                 justify-content:space-between;gap:8px;">
-          <span id="cc10ResultLabel" style="font-size:12px;color:var(--teal-dark);"></span>
-          <a id="cc10DownloadLink" href="#" download="coincarry10.docx"
-             style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">
-            ⬇ 下載學習單
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- coincarry1000 難度與風格選項卡 -->
-    <div class="card" id="coincarry1000ModeCard" style="display:none;">
-      <div class="card-head"><span class="card-title">難度選擇</span></div>
-      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:12px;color:var(--gray);line-height:1.6;">
-          選取難度 → 確認套用 → 下載學習單
-        </div>
-        <div style="font-size:12px;font-weight:600;color:var(--text);">難度</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button id="cc1kLevelL1" class="fenfen-set-btn active" onclick="selectCoincarry1000Level('L1',true)">L1 100元進千位</button>
-          <button id="cc1kLevelL2" class="fenfen-set-btn"        onclick="selectCoincarry1000Level('L2',true)">L2 加入500元</button>
-        </div>
-        <div id="cc1kDesc" style="font-size:12px;color:var(--gray);background:var(--gray-light);border-radius:var(--r-sm);padding:8px 12px;line-height:1.8;"></div>
-        <button id="cc1kConfirmBtn" onclick="applyCoincarry1000Mode()"
-          style="display:none;width:100%;padding:9px 0;border:none;border-radius:var(--r-sm);
-                 background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">
-          確認套用
-        </button>
-        <div id="cc1kResultRow"
-          style="display:none;padding:10px 12px;background:var(--teal-light);
-                 border-radius:var(--r-sm);display:flex;align-items:center;
-                 justify-content:space-between;gap:8px;">
-          <span id="cc1kResultLabel" style="font-size:12px;color:var(--teal-dark);"></span>
-          <a id="cc1kDownloadLink" href="#" download="coincarry1000.docx"
+          <span id="coinResultLabel" style="font-size:12px;color:var(--teal-dark);"></span>
+          <a id="coinDownloadLink" href="#" download="coin.docx"
              style="font-size:12px;font-weight:700;color:var(--teal-dark);white-space:nowrap;">
             ⬇ 下載學習單
           </a>
@@ -3992,20 +3846,8 @@ async function directDownload() {
 
   try {
     let reg = getReg(type.id);
-    if (type.id === 'coinvalue') {
-      return applyCoinvalueMode();
-    }
-    if (type.id === 'coinvalue1000') {
-      return applyCoinvalue1000Mode();
-    }
-    if (type.id === 'coincarry') {
-      return applyCoincarryMode();
-    }
-    if (type.id === 'coincarry10') {
-      return applyCoincarry10Mode();
-    }
-    if (type.id === 'coincarry1000') {
-      return applyCoincarry1000Mode();
+    if (COIN_TYPES[type.id]) {
+      return coinApplyMode();
     }
     if (type.id === 'fenfen') {
       const sub = S.fenfenSubtype || 'norem';
@@ -4713,379 +4555,165 @@ async function applySub3noregAppMode() {
 }
 
 // ── coinvalue（認識錢幣＿至百位 / 認識錢幣＿至千位）──────────────────────
-const _CV_LEVEL_DESCS = {
-  L1: '使用 100、10、1 元三種面值，最大合計約 344 元。',
-  L2: '加入 5 元硬幣，個位欄含 5 元與 1 元。',
-  L3: '再加入 50 元硬幣，十位欄含 50 元與 10 元。',
-  L4: '再加入 500 元鈔票，百位欄含 500 元與 100 元。',
-  L5: '5、50、500 元各至少出現 1 枚，最高難度。',
-};
-const _CV_STYLE_DESCS = {
-  simple: '（簡單圖形版：方框表示鈔票，圓圈表示硬幣）',
-  photo:  '（照片版：使用台灣錢幣真實照片）',
+// ── 認識錢幣系列泛用選項卡（config 驅動，取代原 5 套重複的 select/apply/update 函式）──
+const COIN_TYPES = {
+  coinvalue: {
+    title: '難度 & 風格選擇', hasStyle: true,
+    endpoint: '/generate/coinvalue', samplePrefix: 'coinvalue', defaultLevel: 'L1',
+    levels: [
+      { v:'L1', label:'L1 只有 100/10/1', short:'只有100/10/1', desc:'使用 100、10、1 元三種面值，最大合計約 344 元。' },
+      { v:'L2', label:'L2 加入 5 元',       short:'加入5元',      desc:'加入 5 元硬幣，個位欄含 5 元與 1 元。' },
+      { v:'L3', label:'L3 加 50 元',        short:'加50元',       desc:'再加入 50 元硬幣，十位欄含 50 元與 10 元。' },
+      { v:'L4', label:'L4 加 500 元',       short:'加500元',      desc:'再加入 500 元鈔票，百位欄含 500 元與 100 元。' },
+      { v:'L5', label:'L5 全混合',          short:'全混合',       desc:'5、50、500 元各至少出現 1 枚，最高難度。' },
+    ],
+    filename: (lv, st) => `認識錢幣_至百位_${lv}_${st}.docx`,
+  },
+  coinvalue1000: {
+    title: '難度 & 風格選擇', hasStyle: true,
+    endpoint: '/generate/coinvalue1000', samplePrefix: 'coinvalue1000', defaultLevel: 'L1',
+    levels: [
+      { v:'L1', label:'L1 只有 1000/100/10/1', short:'只有1000/100/10/1', desc:'使用 1000、100、10、1 元四種面值，最大合計約 3344 元。' },
+      { v:'L2', label:'L2 加入 5 元',           short:'加入5元',           desc:'加入 5 元硬幣，個位欄含 5 元與 1 元。' },
+      { v:'L3', label:'L3 加 50 元',            short:'加50元',            desc:'再加入 50 元硬幣，十位欄含 50 元與 10 元。' },
+      { v:'L4', label:'L4 加 500 元',           short:'加500元',           desc:'再加入 500 元鈔票，百位欄含 500 元與 100 元。' },
+      { v:'L5', label:'L5 全混合',              short:'全混合',            desc:'5、50、500 元各至少出現 1 枚，最高難度。' },
+    ],
+    filename: (lv, st) => `認識錢幣_至千位_${lv}_${st}.docx`,
+  },
+  coincarry: {
+    title: '難度選擇', hasStyle: false,
+    endpoint: '/generate/coincarry', samplePrefix: 'coincarry', defaultLevel: 'L2',
+    levels: [
+      { v:'L2', label:'L2 10元進百位', short:'10元進百位', desc:'十位欄放 10–14 枚 10 元，進位到百位。' },
+      { v:'L4', label:'L4 加入50元',   short:'加入50元',   desc:'十位欄有 1 枚 50 元 + 5–9 枚 10 元（合計 10–14），進位到百位。' },
+    ],
+    filename: (lv) => `認識錢幣_進位至百位_${lv}_simple.docx`,
+  },
+  coincarry10: {
+    title: '難度選擇', hasStyle: false,
+    endpoint: '/generate/coincarry', samplePrefix: 'coincarry', defaultLevel: 'L1',
+    levels: [
+      { v:'L1', label:'L1 1元進十位', short:'1元進十位', desc:'個位欄放 10–14 枚 1 元，進位到十位。' },
+      { v:'L3', label:'L3 加入5元',   short:'加入5元',   desc:'個位欄有 1 枚 5 元 + 5–9 枚 1 元（合計 10–14），進位到十位。' },
+    ],
+    filename: (lv) => `認識錢幣_進位至十位_${lv}.docx`,
+  },
+  coincarry1000: {
+    title: '難度選擇', hasStyle: false,
+    endpoint: '/generate/coincarry1000', samplePrefix: 'coincarry1000', defaultLevel: 'L1',
+    levels: [
+      { v:'L1', label:'L1 100元進千位', short:'100元進千位', desc:'百位欄放 10–14 枚 100 元，進位到千位。' },
+      { v:'L2', label:'L2 加入500元',   short:'加入500元',   desc:'百位欄有 1 枚 500 元 + 5–9 枚 100 元（合計 10–14），進位到千位。' },
+    ],
+    filename: (lv) => `認識錢幣_進位至千位_${lv}_simple.docx`,
+  },
 };
 
-function _cvUpdateDesc() {
-  const lv = S.coinvalueLevel;
-  const st = S.coinvalueStyle;
-  const el = document.getElementById('cvDesc');
-  if (el) el.textContent = (_CV_LEVEL_DESCS[lv] || '') + ' ' + (_CV_STYLE_DESCS[st] || '');
-}
+function _coinCfg()   { return COIN_TYPES[S.typeId]; }
+function _coinLevel() { const c = _coinCfg(); return S[S.typeId + 'Level'] || (c ? c.defaultLevel : 'L1'); }
+function _coinStyle() { const c = _coinCfg(); return (c && c.hasStyle) ? (S[S.typeId + 'Style'] || 'simple') : 'simple'; }
 
-function _cvUpdatePdf() {
-  const lv = S.coinvalueLevel || 'L1';
-  const st = S.coinvalueStyle || 'simple';
-  const pdfPath = `assets/coinvalue_${lv}_${st}_sample.pdf`;
+function _coinUpdatePdf() {
+  const cfg = _coinCfg(); if (!cfg) return;
+  const lv = _coinLevel(), st = _coinStyle();
+  const name = `${cfg.samplePrefix}_${lv}_${st}_sample.pdf`;
+  const path = `assets/${name}`;
   const dlBtn = document.getElementById('typeSampleDownloadBtn');
-  if (dlBtn) {
-    dlBtn.href     = pdfPath;
-    dlBtn.download = `coinvalue_${lv}_${st}_sample.pdf`;
-  }
-  _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
+  if (dlBtn) { dlBtn.href = path; dlBtn.download = name; }
+  _doRenderSamplePdf(path, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
 }
 
-function selectCoinvalueLevel(level, fromUser = false) {
-  S.coinvalueLevel = level;
-  ['L1','L2','L3','L4','L5'].forEach(lv => {
-    const btn = document.getElementById('cvLevel' + lv);
-    if (btn) btn.classList.toggle('active', lv === level);
-  });
-  _cvUpdateDesc();
-  if (fromUser) {
-    _cvUpdatePdf();
-    const confirmBtn = document.getElementById('cvConfirmBtn');
-    const resultRow  = document.getElementById('cvResultRow');
-    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
-    if (resultRow)  resultRow.style.display = 'none';
+function _coinUpdateDesc() {
+  const cfg = _coinCfg(); if (!cfg) return;
+  const lvObj = cfg.levels.find(l => l.v === _coinLevel());
+  let txt = lvObj ? lvObj.desc : '';
+  if (cfg.hasStyle) {
+    txt += ' ' + (_coinStyle() === 'simple'
+      ? '（簡單圖形版：方框表示鈔票，圓圈表示硬幣）'
+      : '（照片版：使用台灣錢幣真實照片）');
   }
+  const el = document.getElementById('coinDesc');
+  if (el) el.textContent = txt;
 }
 
-function selectCoinvalueStyle(style, fromUser = false) {
-  S.coinvalueStyle = style;
-  ['simple','photo'].forEach(st => {
-    const btn = document.getElementById('cvStyle' + (st === 'simple' ? 'Simple' : 'Photo'));
-    if (btn) btn.classList.toggle('active', st === style);
-  });
-  _cvUpdateDesc();
-  if (fromUser) {
-    _cvUpdatePdf();
-    const confirmBtn = document.getElementById('cvConfirmBtn');
-    const resultRow  = document.getElementById('cvResultRow');
-    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
-    if (resultRow)  resultRow.style.display = 'none';
-  }
+function _coinShowConfirm() {
+  const confirmBtn = document.getElementById('coinConfirmBtn');
+  const resultRow  = document.getElementById('coinResultRow');
+  if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
+  if (resultRow)  resultRow.style.display = 'none';
 }
 
-async function applyCoinvalueMode() {
-  const level  = S.coinvalueLevel || 'L1';
-  const style  = S.coinvalueStyle || 'simple';
-  const confirmBtn  = document.getElementById('cvConfirmBtn');
-  const resultRow   = document.getElementById('cvResultRow');
-  const resultLabel = document.getElementById('cvResultLabel');
-  const dlLink      = document.getElementById('cvDownloadLink');
+// applyTypeLayout 進入錢幣題型時呼叫：依 config 填入標題/提示/難度按鈕/風格區塊，載入範本 PDF
+function renderCoinModeCard(typeId) {
+  const cfg = COIN_TYPES[typeId]; if (!cfg) return;
+  document.getElementById('coinModeTitle').textContent = cfg.title;
+  document.getElementById('coinModeHint').textContent =
+    cfg.hasStyle ? '選取難度與風格 → 確認套用 → 下載學習單'
+                 : '選取難度 → 確認套用 → 下載學習單';
+  const cur = _coinLevel();
+  document.getElementById('coinLevelBtns').innerHTML = cfg.levels.map(l =>
+    `<button class="fenfen-set-btn${l.v === cur ? ' active' : ''}" data-lv="${l.v}" onclick="coinSelectLevel('${l.v}',true)">${l.label}</button>`
+  ).join('');
+  const styleSec = document.getElementById('coinStyleSection');
+  styleSec.style.display = cfg.hasStyle ? 'flex' : 'none';
+  if (cfg.hasStyle) {
+    const st = _coinStyle();
+    document.getElementById('coinStyleSimple').classList.toggle('active', st === 'simple');
+    document.getElementById('coinStylePhoto').classList.toggle('active', st === 'photo');
+  }
+  _coinUpdateDesc();
+  _coinUpdatePdf();
+  _coinShowConfirm();
+  // 背景預載此題型所有 level×style 的範本 PDF，切換時即時顯示
+  const styles = cfg.hasStyle ? ['simple', 'photo'] : ['simple'];
+  _prefetchPdfsBackground(
+    cfg.levels.flatMap(l => styles.map(st => `assets/${cfg.samplePrefix}_${l.v}_${st}_sample.pdf`))
+  );
+}
+
+function coinSelectLevel(level, fromUser = false) {
+  S[S.typeId + 'Level'] = level;
+  document.querySelectorAll('#coinLevelBtns .fenfen-set-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lv === level));
+  _coinUpdateDesc();
+  if (fromUser) { _coinUpdatePdf(); _coinShowConfirm(); }
+}
+
+function coinSelectStyle(style, fromUser = false) {
+  S[S.typeId + 'Style'] = style;
+  document.getElementById('coinStyleSimple').classList.toggle('active', style === 'simple');
+  document.getElementById('coinStylePhoto').classList.toggle('active', style === 'photo');
+  _coinUpdateDesc();
+  if (fromUser) { _coinUpdatePdf(); _coinShowConfirm(); }
+}
+
+async function coinApplyMode() {
+  const cfg = _coinCfg(); if (!cfg) return;
+  const typeId = S.typeId;
+  const lv = _coinLevel(), st = _coinStyle();
+  const confirmBtn  = document.getElementById('coinConfirmBtn');
+  const resultRow   = document.getElementById('coinResultRow');
+  const resultLabel = document.getElementById('coinResultLabel');
+  const dlLink      = document.getElementById('coinDownloadLink');
 
   confirmBtn.disabled = true;
   confirmBtn.textContent = '生成中…';
-
   try {
-    const res = await fetch(API_URL + '/generate/coinvalue', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level, style }),
+    const res = await fetch(API_URL + cfg.endpoint, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ level: lv, style: st }),
     });
     if (!res.ok) throw new Error(await res.text());
     const blob = await res.blob();
-    if (S._coinvalueDocxUrl) URL.revokeObjectURL(S._coinvalueDocxUrl);
-    S._coinvalueDocxUrl = URL.createObjectURL(blob);
-    const filename = `認識錢幣_至百位_${level}_${style}.docx`;
-    dlLink.href = S._coinvalueDocxUrl;
-    dlLink.download = filename;
-    const lvLabel = { L1:'只有100/10/1', L2:'加入5元', L3:'加50元', L4:'加500元', L5:'全混合' };
-    const stLabel = { simple:'簡單圖形', photo:'照片版' };
-    resultLabel.textContent = `✓ 已依「${lvLabel[level]}・${stLabel[style]}」生成`;
-    resultRow.style.display = '';
-    confirmBtn.style.display = 'none';
-  } catch (e) {
-    alert('生成失敗：' + e.message);
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = '確認套用';
-  }
-}
-
-const _CV1000_LEVEL_DESCS = {
-  L1: '使用 1000、100、10、1 元四種面值，最大合計約 3344 元。',
-  L2: '加入 5 元硬幣，個位欄含 5 元與 1 元。',
-  L3: '再加入 50 元硬幣，十位欄含 50 元與 10 元。',
-  L4: '再加入 500 元鈔票，百位欄含 500 元與 100 元。',
-  L5: '5、50、500 元各至少出現 1 枚，最高難度。',
-};
-
-function _cv1000UpdatePdf() {
-  const lv = S.coinvalue1000Level || 'L1';
-  const st = S.coinvalue1000Style || 'simple';
-  const pdfPath = `assets/coinvalue1000_${lv}_${st}_sample.pdf`;
-  const dlBtn = document.getElementById('typeSampleDownloadBtn');
-  if (dlBtn) {
-    dlBtn.href     = pdfPath;
-    dlBtn.download = `coinvalue1000_${lv}_${st}_sample.pdf`;
-  }
-  _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
-}
-
-function selectCoinvalue1000Level(level, fromUser = false) {
-  S.coinvalue1000Level = level;
-  ['L1','L2','L3','L4','L5'].forEach(lv => {
-    const btn = document.getElementById('cv1000Level' + lv);
-    if (btn) btn.classList.toggle('active', lv === level);
-  });
-  const el = document.getElementById('cv1000Desc');
-  if (el) el.textContent = _CV1000_LEVEL_DESCS[level] || '';
-  if (fromUser) {
-    _cv1000UpdatePdf();
-    const confirmBtn = document.getElementById('cv1000ConfirmBtn');
-    const resultRow  = document.getElementById('cv1000ResultRow');
-    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
-    if (resultRow)  resultRow.style.display = 'none';
-  }
-}
-
-function selectCoinvalue1000Style(style, fromUser = false) {
-  S.coinvalue1000Style = style;
-  ['simple','photo'].forEach(st => {
-    const btn = document.getElementById('cv1000Style' + (st === 'simple' ? 'Simple' : 'Photo'));
-    if (btn) btn.classList.toggle('active', st === style);
-  });
-  if (fromUser) {
-    _cv1000UpdatePdf();
-    const confirmBtn = document.getElementById('cv1000ConfirmBtn');
-    const resultRow  = document.getElementById('cv1000ResultRow');
-    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
-    if (resultRow)  resultRow.style.display = 'none';
-  }
-}
-
-async function applyCoinvalue1000Mode() {
-  const level       = S.coinvalue1000Level || 'L1';
-  const style       = S.coinvalue1000Style || 'simple';
-  const confirmBtn  = document.getElementById('cv1000ConfirmBtn');
-  const resultRow   = document.getElementById('cv1000ResultRow');
-  const resultLabel = document.getElementById('cv1000ResultLabel');
-  const dlLink      = document.getElementById('cv1000DownloadLink');
-
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = '生成中…';
-
-  try {
-    const res = await fetch(API_URL + '/generate/coinvalue1000', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level, style }),
-    });
-    if (!res.ok) throw new Error(await res.text());
-    const blob = await res.blob();
-    if (S._coinvalue1000DocxUrl) URL.revokeObjectURL(S._coinvalue1000DocxUrl);
-    S._coinvalue1000DocxUrl = URL.createObjectURL(blob);
-    const filename = `認識錢幣_至千位_${level}_${style}.docx`;
-    dlLink.href = S._coinvalue1000DocxUrl;
-    dlLink.download = filename;
-    const lvLabel = { L1:'只有1000/100/10/1', L2:'加入5元', L3:'加50元', L4:'加500元', L5:'全混合' };
-    const stLabel = { simple:'簡單圖形', photo:'照片版' };
-    resultLabel.textContent = `✓ 已依「${lvLabel[level]}・${stLabel[style]}」生成`;
-    resultRow.style.display = '';
-    confirmBtn.style.display = 'none';
-  } catch (e) {
-    alert('生成失敗：' + e.message);
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = '確認套用';
-  }
-}
-
-// ── coincarry（至百位進位）────────────────────────────────────────────────────
-const _CC_LEVEL_DESCS = {
-  L2: '十位欄放 10–14 枚 10 元，進位到百位。',
-  L4: '十位欄有 1 枚 50 元 + 5–9 枚 10 元（合計 10–14），進位到百位。',
-};
-
-function _ccUpdatePdf() {
-  const lv = S.coincarryLevel || 'L1';
-  const pdfPath = `assets/coincarry_${lv}_simple_sample.pdf`;
-  const dlBtn = document.getElementById('typeSampleDownloadBtn');
-  if (dlBtn) { dlBtn.href = pdfPath; dlBtn.download = `coincarry_${lv}_simple_sample.pdf`; }
-  _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
-}
-
-function selectCoincarryLevel(level, fromUser = false) {
-  S.coincarryLevel = level;
-  ['L2','L4'].forEach(lv => {
-    const btn = document.getElementById('ccLevel' + lv);
-    if (btn) btn.classList.toggle('active', lv === level);
-  });
-  const el = document.getElementById('ccDesc');
-  if (el) el.textContent = _CC_LEVEL_DESCS[level] || '';
-  if (fromUser) {
-    _ccUpdatePdf();
-    const confirmBtn = document.getElementById('ccConfirmBtn');
-    const resultRow  = document.getElementById('ccResultRow');
-    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
-    if (resultRow)  resultRow.style.display = 'none';
-  }
-}
-
-async function applyCoincarryMode() {
-  const level       = S.coincarryLevel || 'L1';
-  const style       = 'simple';
-  const confirmBtn  = document.getElementById('ccConfirmBtn');
-  const resultRow   = document.getElementById('ccResultRow');
-  const resultLabel = document.getElementById('ccResultLabel');
-  const dlLink      = document.getElementById('ccDownloadLink');
-
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = '生成中…';
-
-  try {
-    const res = await fetch(API_URL + '/generate/coincarry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level, style }),
-    });
-    if (!res.ok) throw new Error(await res.text());
-    const blob = await res.blob();
-    if (S._coincarryDocxUrl) URL.revokeObjectURL(S._coincarryDocxUrl);
-    S._coincarryDocxUrl = URL.createObjectURL(blob);
-    const filename = `認識錢幣_進位至百位_${level}_${style}.docx`;
-    dlLink.href = S._coincarryDocxUrl;
-    dlLink.download = filename;
-    const lvLabel = { L1:'1元進十位', L2:'10元進百位', L3:'加入5元', L4:'加入50元' };
-    resultLabel.textContent = `✓ 已依「${lvLabel[level]}」生成`;
-    resultRow.style.display = '';
-    confirmBtn.style.display = 'none';
-  } catch (e) {
-    alert('生成失敗：' + e.message);
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = '確認套用';
-  }
-}
-
-// ── coincarry10（至十位進位）─────────────────────────────────────────────────
-const _CC10_LEVEL_DESCS = {
-  L1: '個位欄放 10–14 枚 1 元，進位到十位。',
-  L3: '個位欄有 1 枚 5 元 + 5–9 枚 1 元（合計 10–14），進位到十位。',
-};
-
-function _cc10UpdatePdf() {
-  const lv = S.coincarry10Level || 'L1';
-  const pdfPath = `assets/coincarry_${lv}_simple_sample.pdf`;
-  const dlBtn = document.getElementById('typeSampleDownloadBtn');
-  if (dlBtn) { dlBtn.href = pdfPath; dlBtn.download = `coincarry_${lv}_simple_sample.pdf`; }
-  _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
-}
-
-function selectCoincarry10Level(level, fromUser = false) {
-  S.coincarry10Level = level;
-  ['L1','L3'].forEach(lv => {
-    const btn = document.getElementById('cc10Level' + lv);
-    if (btn) btn.classList.toggle('active', lv === level);
-  });
-  const el = document.getElementById('cc10Desc');
-  if (el) el.textContent = _CC10_LEVEL_DESCS[level] || '';
-  if (fromUser) {
-    _cc10UpdatePdf();
-    const confirmBtn = document.getElementById('cc10ConfirmBtn');
-    const resultRow  = document.getElementById('cc10ResultRow');
-    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
-    if (resultRow)  resultRow.style.display = 'none';
-  }
-}
-
-async function applyCoincarry10Mode() {
-  const level       = S.coincarry10Level || 'L1';
-  const confirmBtn  = document.getElementById('cc10ConfirmBtn');
-  const resultRow   = document.getElementById('cc10ResultRow');
-  const resultLabel = document.getElementById('cc10ResultLabel');
-  const dlLink      = document.getElementById('cc10DownloadLink');
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = '生成中…';
-  try {
-    const res = await fetch(API_URL + '/generate/coincarry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level, style: 'simple' }),
-    });
-    if (!res.ok) throw new Error(await res.text());
-    const blob = await res.blob();
-    if (S._coincarry10DocxUrl) URL.revokeObjectURL(S._coincarry10DocxUrl);
-    S._coincarry10DocxUrl = URL.createObjectURL(blob);
-    const filename = `認識錢幣_進位至十位_${level}.docx`;
-    dlLink.href = S._coincarry10DocxUrl;
-    dlLink.download = filename;
-    const lvLabel = { L1:'1元進十位', L3:'加入5元' };
-    resultLabel.textContent = `✓ 已依「${lvLabel[level]}」生成`;
-    resultRow.style.display = '';
-    confirmBtn.style.display = 'none';
-  } catch (e) {
-    alert('生成失敗：' + e.message);
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = '確認套用';
-  }
-}
-
-// ── coincarry1000（至千位進位）───────────────────────────────────────────────
-const _CC1K_LEVEL_DESCS = {
-  L1: '百位欄放 10–14 枚 100 元，進位到千位。',
-  L2: '百位欄有 1 枚 500 元 + 5–9 枚 100 元（合計 10–14），進位到千位。',
-};
-
-function _cc1kUpdatePdf() {
-  const lv = S.coincarry1000Level || 'L1';
-  const pdfPath = `assets/coincarry1000_${lv}_simple_sample.pdf`;
-  const dlBtn = document.getElementById('typeSampleDownloadBtn');
-  if (dlBtn) { dlBtn.href = pdfPath; dlBtn.download = `coincarry1000_${lv}_simple_sample.pdf`; }
-  _doRenderSamplePdf(pdfPath, 'typeSamplePdfContainer', 'typeSamplePdfLoading');
-}
-
-function selectCoincarry1000Level(level, fromUser = false) {
-  S.coincarry1000Level = level;
-  ['L1','L2'].forEach(lv => {
-    const btn = document.getElementById('cc1kLevel' + lv);
-    if (btn) btn.classList.toggle('active', lv === level);
-  });
-  const el = document.getElementById('cc1kDesc');
-  if (el) el.textContent = _CC1K_LEVEL_DESCS[level] || '';
-  if (fromUser) {
-    _cc1kUpdatePdf();
-    const confirmBtn = document.getElementById('cc1kConfirmBtn');
-    const resultRow  = document.getElementById('cc1kResultRow');
-    if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.disabled = false; confirmBtn.textContent = '確認套用'; }
-    if (resultRow)  resultRow.style.display = 'none';
-  }
-}
-
-async function applyCoincarry1000Mode() {
-  const level       = S.coincarry1000Level || 'L1';
-  const style       = 'simple';
-  const confirmBtn  = document.getElementById('cc1kConfirmBtn');
-  const resultRow   = document.getElementById('cc1kResultRow');
-  const resultLabel = document.getElementById('cc1kResultLabel');
-  const dlLink      = document.getElementById('cc1kDownloadLink');
-
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = '生成中…';
-
-  try {
-    const res = await fetch(API_URL + '/generate/coincarry1000', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level, style }),
-    });
-    if (!res.ok) throw new Error(await res.text());
-    const blob = await res.blob();
-    if (S._coincarry1000DocxUrl) URL.revokeObjectURL(S._coincarry1000DocxUrl);
-    S._coincarry1000DocxUrl = URL.createObjectURL(blob);
-    const filename = `認識錢幣_進位至千位_${level}_${style}.docx`;
-    dlLink.href = S._coincarry1000DocxUrl;
-    dlLink.download = filename;
-    const lvLabel = { L1:'100元進千位', L2:'加入500元' };
-    resultLabel.textContent = `✓ 已依「${lvLabel[level]}」生成`;
+    const urlKey = '_' + typeId + 'DocxUrl';
+    if (S[urlKey]) URL.revokeObjectURL(S[urlKey]);
+    S[urlKey] = URL.createObjectURL(blob);
+    dlLink.href = S[urlKey];
+    dlLink.download = cfg.filename(lv, st);
+    const lvObj = cfg.levels.find(l => l.v === lv);
+    const stTxt = cfg.hasStyle ? '・' + (st === 'simple' ? '簡單圖形' : '照片版') : '';
+    resultLabel.textContent = `✓ 已依「${lvObj ? lvObj.short : lv}${stTxt}」生成`;
     resultRow.style.display = '';
     confirmBtn.style.display = 'none';
   } catch (e) {
@@ -5695,11 +5323,8 @@ function applyTypeLayout(typeId) {
   document.getElementById('sub2noregAppModeCard').style.display = (typeId === 'sub2noreg-app') ? '' : 'none';
   document.getElementById('sub2borrowModeCard').style.display   = (typeId === 'sub2borrow')    ? '' : 'none';
   document.getElementById('sub3noregAppModeCard').style.display = (typeId === 'sub3noreg-app') ? '' : 'none';
-  document.getElementById('coinvalueModeCard').style.display    = (typeId === 'coinvalue')      ? '' : 'none';
-  document.getElementById('coinvalue1000ModeCard').style.display = (typeId === 'coinvalue1000') ? '' : 'none';
-  document.getElementById('coincarryModeCard').style.display     = (typeId === 'coincarry')     ? '' : 'none';
-  document.getElementById('coincarry10ModeCard').style.display   = (typeId === 'coincarry10')   ? '' : 'none';
-  document.getElementById('coincarry1000ModeCard').style.display = (typeId === 'coincarry1000') ? '' : 'none';
+  // 認識錢幣系列泛用選項卡（coinvalue / coinvalue1000 / coincarry / coincarry10 / coincarry1000）
+  document.getElementById('coinModeCard').style.display = COIN_TYPES[typeId] ? '' : 'none';
 
   // 主題確認套用卡：sanbushu / liangbushu / chenghe / haochashao
   const showThemeConfirm = _THEME_TYPES.includes(typeId);
@@ -5770,49 +5395,7 @@ function applyTypeLayout(typeId) {
   if (typeId === 'sub2noreg-app') selectSub2noregAppMode(S.sub2noregAppMode ?? 'pman', true);
   if (typeId === 'sub2borrow')   selectSub2borrowMode(S.sub2borrowMode ?? 'demo', true);
   if (typeId === 'sub3noreg-app') selectSub3noregAppMode(S.sub3noregAppMode ?? 'std', true);
-  if (typeId === 'coinvalue') {
-    selectCoinvalueLevel(S.coinvalueLevel || 'L1');
-    selectCoinvalueStyle(S.coinvalueStyle || 'simple', true);
-    _cvUpdateDesc();
-    _cvUpdatePdf();
-    // 進入面板後在背景預載其餘 9 個 PDF，讓切換 level/style 即時顯示
-    _prefetchPdfsBackground(
-      ['L1','L2','L3','L4','L5'].flatMap(lv =>
-        ['simple','photo'].map(st => `assets/coinvalue_${lv}_${st}_sample.pdf`)
-      )
-    );
-  }
-  if (typeId === 'coinvalue1000') {
-    selectCoinvalue1000Level(S.coinvalue1000Level || 'L1');
-    selectCoinvalue1000Style(S.coinvalue1000Style || 'simple', true);
-    _cv1000UpdatePdf();
-    _prefetchPdfsBackground(
-      ['L1','L2','L3','L4','L5'].flatMap(lv =>
-        ['simple','photo'].map(st => `assets/coinvalue1000_${lv}_${st}_sample.pdf`)
-      )
-    );
-  }
-  if (typeId === 'coincarry') {
-    selectCoincarryLevel(S.coincarryLevel || 'L2', true);
-    _ccUpdatePdf();
-    _prefetchPdfsBackground(
-      ['L2','L4'].map(lv => `assets/coincarry_${lv}_simple_sample.pdf`)
-    );
-  }
-  if (typeId === 'coincarry10') {
-    selectCoincarry10Level(S.coincarry10Level || 'L1', true);
-    _cc10UpdatePdf();
-    _prefetchPdfsBackground(
-      ['L1','L3'].map(lv => `assets/coincarry_${lv}_simple_sample.pdf`)
-    );
-  }
-  if (typeId === 'coincarry1000') {
-    selectCoincarry1000Level(S.coincarry1000Level || 'L1', true);
-    _cc1kUpdatePdf();
-    _prefetchPdfsBackground(
-      ['L1','L2'].map(lv => `assets/coincarry1000_${lv}_simple_sample.pdf`)
-    );
-  }
+  if (COIN_TYPES[typeId]) renderCoinModeCard(typeId);
 
   // 所有動態題型都顯示產出按鈕和試用條
   document.getElementById('genBtn').closest('.gen-section').style.display = '';
