@@ -5720,16 +5720,16 @@ function applyTypeLayout(typeId) {
     if (el) el.style.display = (t.id === typeId) ? '' : 'none';
   });
   if (typeId === 'fenfennew') renderFenfennewThemeGrid();
-  if (typeId === 'fenfen') selectFenfenSubtype(S.fenfenSubtype || 'norem');
-  if (typeId === 'tuiwei4sub') selectTuweiMode(S.tuweiMode ?? 'bai');
-  if (typeId === 'tuiwei3sub') selectTuiwei3subMode(S.tuiwei3subMode ?? 'coin');
-  if (typeId === 'sub1') selectSub1Mode(S.sub1Mode ?? 'sub15');
-  if (typeId === 'sub2noreg-app') selectSub2noregAppMode(S.sub2noregAppMode ?? 'pman');
-  if (typeId === 'sub2borrow')   selectSub2borrowMode(S.sub2borrowMode ?? 'demo');
-  if (typeId === 'sub3noreg-app') selectSub3noregAppMode(S.sub3noregAppMode ?? 'std');
+  if (typeId === 'fenfen') selectFenfenSubtype(S.fenfenSubtype || 'norem', true);
+  if (typeId === 'tuiwei4sub') selectTuweiMode(S.tuweiMode ?? 'bai', true);
+  if (typeId === 'tuiwei3sub') selectTuiwei3subMode(S.tuiwei3subMode ?? 'coin', true);
+  if (typeId === 'sub1') selectSub1Mode(S.sub1Mode ?? 'sub15', true);
+  if (typeId === 'sub2noreg-app') selectSub2noregAppMode(S.sub2noregAppMode ?? 'pman', true);
+  if (typeId === 'sub2borrow')   selectSub2borrowMode(S.sub2borrowMode ?? 'demo', true);
+  if (typeId === 'sub3noreg-app') selectSub3noregAppMode(S.sub3noregAppMode ?? 'std', true);
   if (typeId === 'coinvalue') {
     selectCoinvalueLevel(S.coinvalueLevel || 'L1');
-    selectCoinvalueStyle(S.coinvalueStyle || 'simple');
+    selectCoinvalueStyle(S.coinvalueStyle || 'simple', true);
     _cvUpdateDesc();
     _cvUpdatePdf();
     // 進入面板後在背景預載其餘 9 個 PDF，讓切換 level/style 即時顯示
@@ -5741,7 +5741,7 @@ function applyTypeLayout(typeId) {
   }
   if (typeId === 'coinvalue1000') {
     selectCoinvalue1000Level(S.coinvalue1000Level || 'L1');
-    selectCoinvalue1000Style(S.coinvalue1000Style || 'simple');
+    selectCoinvalue1000Style(S.coinvalue1000Style || 'simple', true);
     _cv1000UpdatePdf();
     _prefetchPdfsBackground(
       ['L1','L2','L3','L4','L5'].flatMap(lv =>
@@ -5750,21 +5750,21 @@ function applyTypeLayout(typeId) {
     );
   }
   if (typeId === 'coincarry') {
-    selectCoincarryLevel(S.coincarryLevel || 'L2');
+    selectCoincarryLevel(S.coincarryLevel || 'L2', true);
     _ccUpdatePdf();
     _prefetchPdfsBackground(
       ['L2','L4'].map(lv => `assets/coincarry_${lv}_simple_sample.pdf`)
     );
   }
   if (typeId === 'coincarry10') {
-    selectCoincarry10Level(S.coincarry10Level || 'L1');
+    selectCoincarry10Level(S.coincarry10Level || 'L1', true);
     _cc10UpdatePdf();
     _prefetchPdfsBackground(
       ['L1','L3'].map(lv => `assets/coincarry_${lv}_simple_sample.pdf`)
     );
   }
   if (typeId === 'coincarry1000') {
-    selectCoincarry1000Level(S.coincarry1000Level || 'L1');
+    selectCoincarry1000Level(S.coincarry1000Level || 'L1', true);
     _cc1kUpdatePdf();
     _prefetchPdfsBackground(
       ['L1','L2'].map(lv => `assets/coincarry1000_${lv}_simple_sample.pdf`)
