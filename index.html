@@ -2127,6 +2127,56 @@ body {
           </div>
         </div>
 
+        <!-- ── 數到200 系列 (L6_01–L6_08) ── -->
+        <div id="l6_01Panel" class="type-panel" style="display:none;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            數到 200 單元：認識 151–200 的餅乾計數圖，<br>
+            每次產生固定版型學習單，點「下載學習單」即可。
+          </p>
+        </div>
+        <div id="l6_02Panel" class="type-panel" style="display:none;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            數到 200 單元：認識 151–200 的香蕉計數圖，<br>
+            每次產生固定版型學習單，點「下載學習單」即可。
+          </p>
+        </div>
+        <div id="l6_03Panel" class="type-panel" style="display:none;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            數到 200 單元：餅乾＋香蕉混合計數（各 50–100 個），<br>
+            每次產生固定版型學習單，點「下載學習單」即可。
+          </p>
+        </div>
+        <div id="l6_04Panel" class="type-panel" style="display:none;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            數到 200 單元：積木十位個位計數，<br>
+            每次產生固定版型學習單，點「下載學習單」即可。
+          </p>
+        </div>
+        <div id="l6_05Panel" class="type-panel" style="display:none;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            數到 200 單元：積木百位計數，<br>
+            每次產生固定版型學習單，點「下載學習單」即可。
+          </p>
+        </div>
+        <div id="l6_06Panel" class="type-panel" style="display:none;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            數到 200 單元：認識 100 元、10 元、1 元錢幣，練習計數到 200，<br>
+            每次產生固定版型學習單，點「下載學習單」即可。
+          </p>
+        </div>
+        <div id="l6_07Panel" class="type-panel" style="display:none;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            數到 200 單元：151–200 與 351–400 數字填空，<br>
+            每次隨機選取 32/50 格顯示數字，其餘格留空讓學生填寫。
+          </p>
+        </div>
+        <div id="l6_08Panel" class="type-panel" style="display:none;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.7;">
+            數到 200 單元：用錢幣比較兩個三位數大小，<br>
+            每次隨機產生一對練習數字（101–199），點「下載學習單」即可。
+          </p>
+        </div>
+
       </div><!-- /type-tab-preview -->
 
       <!-- 圖庫瀏覽 tab 內容 -->
@@ -3137,6 +3187,95 @@ const TYPE_REGISTRY = [
       body: () => ({ level: S.coincarry1000Level || 'L1', style: 'simple' }),
       filename: () => `認識錢幣_進位至千位_${S.coincarry1000Level || 'L1'}.docx`,
     },
+  },
+  // ── 數到200 系列 (L6) ─────────────────────────────────────────────────────
+  {
+    id: 'l6_01', code: 'N-1-1', name: '數到200＿餅乾計數', grade: 1,
+    ops: [], keywords: ['數到200', '計數', '一百多', '餅乾'],
+    desc: '認識 151–200：用餅乾圖像計數，每格一包（10 個）或一個，固定版型。',
+    sortKey: [1, 2, 1],
+    home: { icon: '🍪', sub: '認識 151–200', desc: '用餅乾圖像認識 151–200，固定版型，一鍵下載。', features: ['固定版型', '圖像計數', '一年級'] },
+    diffInfo: { grade: '一年級', level: '基礎', levelColor: '#22c55e', code: 'N-1-1', desc: '用具象圖像（餅乾）計數，認識 151–200 的位值結構。' },
+    sample: 'assets/l6_01_sample.pdf',
+    layout: { panel: 'l6_01Panel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/l6_01', body: () => ({}), filename: () => '數到200＿餅乾計數.docx' },
+  },
+  {
+    id: 'l6_02', code: 'N-1-1', name: '數到200＿香蕉計數', grade: 1,
+    ops: [], keywords: ['數到200', '計數', '一百多', '香蕉'],
+    desc: '認識 151–200：用香蕉圖像計數，每串十根或一根，固定版型。',
+    sortKey: [1, 2, 1],
+    home: { icon: '🍌', sub: '認識 151–200', desc: '用香蕉圖像認識 151–200，固定版型，一鍵下載。', features: ['固定版型', '圖像計數', '一年級'] },
+    diffInfo: { grade: '一年級', level: '基礎', levelColor: '#22c55e', code: 'N-1-1', desc: '用具象圖像（香蕉）計數，認識 151–200 的位值結構。' },
+    sample: 'assets/l6_02_sample.pdf',
+    layout: { panel: 'l6_02Panel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/l6_02', body: () => ({}), filename: () => '數到200＿香蕉計數.docx' },
+  },
+  {
+    id: 'l6_03', code: 'N-1-1', name: '數到200＿混合計數', grade: 1,
+    ops: [], keywords: ['數到200', '計數', '一百多', '混合'],
+    desc: '認識 151–200：餅乾＋香蕉混合計數，固定版型。',
+    sortKey: [1, 2, 1],
+    home: { icon: '🔢', sub: '混合計數 151–200', desc: '餅乾＋香蕉混合計數，認識 151–200，固定版型。', features: ['固定版型', '混合圖像', '一年級'] },
+    diffInfo: { grade: '一年級', level: '基礎', levelColor: '#22c55e', code: 'N-1-1', desc: '用餅乾和香蕉兩種圖像混合計數，認識 151–200。' },
+    sample: 'assets/l6_03_sample.pdf',
+    layout: { panel: 'l6_03Panel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/l6_03', body: () => ({}), filename: () => '數到200＿混合計數.docx' },
+  },
+  {
+    id: 'l6_04', code: 'N-1-1', name: '數到200＿積木十位個位', grade: 1,
+    ops: [], keywords: ['數到200', '積木', '十位', '個位', '位值'],
+    desc: '認識 151–200：用積木圖示表示十位與個位，理解位值結構，固定版型。',
+    sortKey: [1, 2, 2],
+    home: { icon: '🧱', sub: '積木十位個位', desc: '積木圖示表示十位＋個位，理解 151–200 位值結構。', features: ['固定版型', '積木位值', '一年級'] },
+    diffInfo: { grade: '一年級', level: '基礎', levelColor: '#22c55e', code: 'N-1-1', desc: '用積木圖示（長條十位＋方塊個位）表示 151–200。' },
+    sample: 'assets/l6_04_sample.pdf',
+    layout: { panel: 'l6_04Panel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/l6_04', body: () => ({}), filename: () => '數到200＿積木十位個位.docx' },
+  },
+  {
+    id: 'l6_05', code: 'N-1-1', name: '數到200＿積木百位', grade: 1,
+    ops: [], keywords: ['數到200', '積木', '百位', '位值'],
+    desc: '認識 151–200：用積木圖示表示百位，理解三位數位值結構，固定版型。',
+    sortKey: [1, 2, 3],
+    home: { icon: '🧊', sub: '積木百位', desc: '積木圖示表示百位，理解三位數位值，固定版型。', features: ['固定版型', '積木百位', '一年級'] },
+    diffInfo: { grade: '一年級', level: '基礎', levelColor: '#22c55e', code: 'N-1-1', desc: '用大積木方塊表示百位，認識 151–200 三位數結構。' },
+    sample: 'assets/l6_05_sample.pdf',
+    layout: { panel: 'l6_05Panel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/l6_05', body: () => ({}), filename: () => '數到200＿積木百位.docx' },
+  },
+  {
+    id: 'l6_06', code: 'N-1-1', name: '數到200＿錢幣計數', grade: 1,
+    ops: [], keywords: ['數到200', '錢幣', '計數', '一百多'],
+    desc: '認識 151–200：用 100 元、10 元、1 元錢幣計數，固定版型。',
+    sortKey: [1, 2, 4],
+    home: { icon: '💰', sub: '錢幣計數 151–200', desc: '用 100/10/1 元錢幣計數，認識 151–200，固定版型。', features: ['固定版型', '錢幣計數', '一年級'] },
+    diffInfo: { grade: '一年級', level: '基礎', levelColor: '#22c55e', code: 'N-1-1', desc: '用 100 元、10 元、1 元錢幣組合，計數到 200。' },
+    sample: 'assets/l6_06_sample.pdf',
+    layout: { panel: 'l6_06Panel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/l6_06', body: () => ({}), filename: () => '數到200＿錢幣計數.docx' },
+  },
+  {
+    id: 'l6_07', code: 'N-1-1', name: '數到200＿數字填空', grade: 1,
+    ops: [], keywords: ['數到200', '數字', '填空', '一百多', '數列'],
+    desc: '151–200 與 351–400 兩段數字格，隨機 32/50 格顯示，其餘格學生填寫。',
+    sortKey: [1, 2, 5],
+    home: { icon: '📝', sub: '數字填空（隨機）', desc: '151–200 與 351–400 數列填空，每次隨機 32/50 格顯示。', features: ['每次隨機', '數字填空', '一年級'] },
+    diffInfo: { grade: '一年級', level: '基礎', levelColor: '#22c55e', code: 'N-1-1', desc: '151–200 與 351–400 兩段數列，每次隨機選 32 格顯示，其餘格讓學生填寫。' },
+    sample: 'assets/l6_07_sample.pdf',
+    layout: { panel: 'l6_07Panel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/l6_07', body: () => ({}), filename: () => '數到200＿數字填空.docx' },
+  },
+  {
+    id: 'l6_08', code: 'N-1-1', name: '數到200＿錢幣比大小', grade: 1,
+    ops: [], keywords: ['數到200', '比大小', '錢幣', '三位數'],
+    desc: '用畫錢幣的方式比較兩個三位數大小，示範題固定，練習題每次隨機（101–199）。',
+    sortKey: [1, 2, 6],
+    home: { icon: '⚖️', sub: '錢幣比大小', desc: '畫錢幣比較兩個三位數大小，練習數字每次隨機。', features: ['每次隨機', '比大小', '一年級'] },
+    diffInfo: { grade: '一年級', level: '基礎', levelColor: '#22c55e', code: 'N-1-1', desc: '示範題比較 143 與 156，練習題比較隨機產生的兩個 101–199 三位數。' },
+    sample: 'assets/l6_08_sample.pdf',
+    layout: { panel: 'l6_08Panel', themeSet: null, showTheme: false, prices: false, interactive: false },
+    api: { endpoint: '/generate/l6_08', body: () => ({}), filename: () => '數到200＿錢幣比大小.docx' },
   },
 ];
 
