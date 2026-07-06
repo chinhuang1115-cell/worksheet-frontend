@@ -3655,7 +3655,7 @@ async function runQADetection() {
     if (!t.name)     issues.push(`[${t.id}] 缺少 name`);
     if (!t.api?.endpoint) issues.push(`[${t.id}] 缺少 api.endpoint`);
     if (!t.api?.body)     issues.push(`[${t.id}] 缺少 api.body`);
-    if (t.home !== null && !t.home?.badge) warnings.push(`[${t.id}] home.badge 為空`);
+    // 注意：home.badge 為可選的裝飾標籤（如「NEW」），未設定屬正常，不列為警告
   }
 
   // 2. Sample PDF 可存取性（抽查有 sample 的前 5 個）
