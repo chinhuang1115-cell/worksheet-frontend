@@ -1393,6 +1393,11 @@ body {
         background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
       解鎖管理
     </button>
+    <button class="admin-only" onclick="goAdminQA()"
+      style="padding:5px 13px;border:1.5px solid var(--gray);border-radius:var(--r-sm);
+        background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
+      QA 總表
+    </button>
     <button class="admin-toggle-btn" id="adminToggleBtn" onclick="toggleAdminMode()">管理端</button>
     <div class="trial-badge">
       試用版　剩餘
@@ -2321,6 +2326,30 @@ body {
     </div>
   </div>
   <div id="adminLockList"></div>
+</div>
+
+<!-- ── ADMIN QA SCREEN ── -->
+<div id="adminQAScreen" style="display:none; padding:24px 32px; max-width:960px; margin:0 auto;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+    <button onclick="exitAdminQA()"
+      style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
+    <h2 style="margin:0;font-size:18px;font-weight:700;">QA 檢核總表</h2>
+    <button onclick="runQADetection()" id="qaDetectBtn"
+      style="margin-left:auto;padding:6px 16px;background:var(--teal);color:#fff;
+        border:none;border-radius:var(--r-sm);font-size:12px;font-weight:700;cursor:pointer;">
+      ⚡ 一鍵自動偵測
+    </button>
+  </div>
+  <div id="qaDetectResult" style="display:none;margin-bottom:12px;"></div>
+  <div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:0;
+    font-size:11px;font-weight:700;color:var(--gray);
+    border-bottom:2px solid var(--border);padding:6px 16px;margin-bottom:4px;">
+    <div style="width:140px;">題型名稱</div>
+    <div>備註（問題說明）</div>
+    <div style="width:100px;text-align:center;">狀態</div>
+    <div style="width:120px;text-align:center;">操作</div>
+  </div>
+  <div id="adminQAList"></div>
 </div>
 
 <!-- ── PREVIEW MODAL ── -->
@@ -3547,6 +3576,64 @@ function goAdminLock() {
 
 function exitAdminLock() {
   document.getElementById('adminLockScreen').style.display = 'none';
+  document.getElementById('homeScreen').style.display = '';
+}
+
+function renderAdminQAScreen() {
+  const list = document.getElementById('adminQAList');
+  if (!list) return;
+  list.innerHTML = TYPE_REGISTRY.map(t => {
+    const qa = getQAStatus(t.id);
+    const dotClass = qa.status === 'none' ? 'none' : qa.status;
+    const statusLabel = { green:'通過', yellow:'待覆核', red:'需修正', none:'未審核' }[qa.status];
+    const badgeClass = `qa-badge qa-badge-${qa.status}`;
+    return `
+      <div id="qa-row-${t.id}" style="display:grid;grid-template-columns:auto 1fr auto auto;
+        align-items:center;gap:8px;padding:10px 16px;
+        border-bottom:1px solid var(--border);background:${qa.status==='red'?'#fff5f5':qa.status==='yellow'?'#fffbeb':''};">
+        <div style="width:140px;">
+          <div style="font-size:13px;font-weight:700;">${t.name.length>12?t.name.slice(0,12)+'…':t.name}</div>
+          <div style="font-size:10px;color:var(--gray);margin-top:1px;">${t.id}</div>
+        </div>
+        <div>
+          <input type="text" value="${(qa.note||'').replace(/"/g,'&quot;')}"
+            placeholder="記錄問題或說明..."
+            onchange="setQANote('${t.id}', this.value)"
+            style="width:100%;border:1px solid var(--border);border-radius:4px;
+              padding:5px 8px;font-size:12px;background:transparent;">
+        </div>
+        <div style="width:100px;text-align:center;">
+          <span class="${badgeClass}">
+            <span class="qa-dot qa-dot-${qa.status}"></span>
+            ${statusLabel}
+          </span>
+        </div>
+        <div style="width:120px;display:flex;gap:4px;justify-content:center;">
+          <button onclick="setQAStatus('${t.id}','green'); renderAdminQAScreen()"
+            title="標記通過" style="padding:3px 7px;border:none;border-radius:4px;
+              background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;cursor:pointer;">✓</button>
+          <button onclick="setQAStatus('${t.id}','yellow'); renderAdminQAScreen()"
+            title="標記待覆核" style="padding:3px 7px;border:none;border-radius:4px;
+              background:#fef9c3;color:#a16207;font-size:11px;font-weight:700;cursor:pointer;">△</button>
+          <button onclick="setQAStatus('${t.id}','red'); renderAdminQAScreen()"
+            title="標記需修正" style="padding:3px 7px;border:none;border-radius:4px;
+              background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:700;cursor:pointer;">✕</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function goAdminQA() {
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('configNav').style.display = 'none';
+  document.getElementById('configScreen').style.display = 'none';
+  document.getElementById('adminLockScreen').style.display = 'none';
+  document.getElementById('adminQAScreen').style.display = '';
+  renderAdminQAScreen();
+}
+
+function exitAdminQA() {
+  document.getElementById('adminQAScreen').style.display = 'none';
   document.getElementById('homeScreen').style.display = '';
 }
 
@@ -5517,6 +5604,11 @@ function renderHomeTypeCards() {
             ${getLockState()[t.id] ? '🔓 已解鎖' : '🔒 鎖定中'}
           </button>` : '';
         const adminCardStyle = adminMode ? 'border-left:3px solid var(--teal);' : '';
+        const qaInfo = getQAStatus(t.id);
+        const qaDot = adminMode && qaInfo.status !== 'none'
+          ? `<span class="qa-dot qa-dot-${qaInfo.status}"
+              style="position:absolute;top:8px;left:8px;z-index:3;width:10px;height:10px;"></span>`
+          : '';
         return `
         <div class="type-card" style="position:relative;${adminCardStyle}" onclick="${cardOnclick}">
           <div class="type-card-icon">${m.icon || '📄'}</div>
@@ -5531,6 +5623,7 @@ function renderHomeTypeCards() {
           <button class="type-card-btn" onclick="event.stopPropagation();${cardOnclick}">立即使用 →</button>
           ${lockedOverlay}
           ${lockToggleBtn}
+          ${qaDot}
         </div>`;
       }).join('')
     : empty;
@@ -5561,6 +5654,11 @@ function renderHomeTypeCards() {
             ${getLockState()[t.id] ? '🔓 已解鎖' : '🔒 鎖定中'}
           </button>` : '';
         const adminCardStyle = adminMode ? 'border-left:3px solid var(--teal);' : '';
+        const qaInfo = getQAStatus(t.id);
+        const qaDot = adminMode && qaInfo.status !== 'none'
+          ? `<span class="qa-dot qa-dot-${qaInfo.status}"
+              style="position:absolute;top:8px;left:8px;z-index:3;width:10px;height:10px;"></span>`
+          : '';
         return `
         <div class="type-sample-card" style="position:relative;${adminCardStyle}" onclick="${cardOnclick}">
           <div class="sample-thumb-wrap">
@@ -5581,6 +5679,7 @@ function renderHomeTypeCards() {
           </div>
           ${lockedOverlay}
           ${lockToggleBtn}
+          ${qaDot}
         </div>`;
       }).join('')
     : empty;
@@ -5868,6 +5967,7 @@ function goHome() {
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
   document.getElementById('adminLockScreen').style.display = 'none';
+  document.getElementById('adminQAScreen').style.display = 'none'; // 新增
 }
 
 // ── BOOT ──
