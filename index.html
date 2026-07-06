@@ -6188,7 +6188,9 @@ renderSortBtns();
 renderHomeTypeCards();
 renderTrialBar(); // 更新 topbar 試用次數
 applyAdminMode(); // 依 localStorage 還原 admin/consumer 模式
-renderCartBadge();
+// 購物車 FAB 標記位於本 script 之後的 body 尾端，直接呼叫會取到 null。
+// 用 DOMContentLoaded 等到 body 解析完再顯示。
+window.addEventListener('DOMContentLoaded', renderCartBadge);
 // 起始顯示首頁，configScreen 已 display:none
 </script>
 <script>
