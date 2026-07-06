@@ -120,6 +120,31 @@ body {
 }
 .admin-mode .admin-mode-banner { display: block; }
 
+/* ── QA TRAFFIC LIGHTS ── */
+.qa-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.qa-dot-green  { background: #22c55e; box-shadow: 0 0 4px #22c55e80; }
+.qa-dot-yellow { background: #f59e0b; box-shadow: 0 0 4px #f59e0b80; }
+.qa-dot-red    { background: #ef4444; box-shadow: 0 0 4px #ef444480; }
+.qa-dot-none   { background: #d1d5db; }
+.qa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.qa-badge-green  { background:#dcfce7; color:#15803d; }
+.qa-badge-yellow { background:#fef9c3; color:#a16207; }
+.qa-badge-red    { background:#fee2e2; color:#b91c1c; }
+.qa-badge-none   { background:#f3f4f6; color:#6b7280; }
+
 /* ── LAYOUT ── */
 .main {
   max-width: 1200px;
@@ -3456,6 +3481,30 @@ function lockAll() {
   setLockState({});
   renderHomeTypeCards();
   if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+}
+
+// ── QA STATE ──
+function getQAState() {
+  try { return JSON.parse(localStorage.getItem('ws_qa_state') || '{}'); }
+  catch { return {}; }
+}
+function getQAStatus(typeId) {
+  return getQAState()[typeId] || { status: 'none', note: '' };
+}
+function setQAStatus(typeId, status, note) {
+  const state = getQAState();
+  state[typeId] = { status, note: note ?? state[typeId]?.note ?? '' };
+  localStorage.setItem('ws_qa_state', JSON.stringify(state));
+}
+function setQANote(typeId, note) {
+  const state = getQAState();
+  if (!state[typeId]) state[typeId] = { status: 'none', note: '' };
+  state[typeId].note = note;
+  localStorage.setItem('ws_qa_state', JSON.stringify(state));
+}
+// AI 作業後呼叫此函式自動設定黃燈
+function markQAYellow(typeId, note) {
+  setQAStatus(typeId, 'yellow', note);
 }
 
 function renderAdminLockScreen() {
