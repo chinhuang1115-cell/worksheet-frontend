@@ -1374,6 +1374,55 @@ body {
 .back-btn:active { transform: translateY(0); box-shadow: none; }
 .config-nav-sep { color: var(--border); font-size: 18px; }
 .config-nav-type { font-size: 15px; font-weight: 700; color: var(--ink); }
+
+/* ── CART ── */
+.cart-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 500;
+  transition: transform 0.15s;
+}
+.cart-fab:hover { transform: scale(1.08); }
+.cart-badge-count {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  width: 18px; height: 18px;
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  display: none;
+}
+.cart-drawer {
+  position: fixed;
+  right: 0; top: 0; bottom: 0;
+  width: 360px;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+  z-index: 600;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+}
+.cart-drawer.open { transform: translateX(0); }
+.cart-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 599;
+  display: none;
+}
+.cart-overlay.open { display: block; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"></script>
@@ -6046,6 +6095,85 @@ function goHome() {
   document.getElementById('adminQAScreen').style.display = 'none'; // 新增
 }
 
+// ── CART ──
+const CART_MAX = 20;
+
+function getCart() {
+  try { return JSON.parse(sessionStorage.getItem('ws_cart') || '[]'); }
+  catch { return []; }
+}
+function saveCart(cart) {
+  sessionStorage.setItem('ws_cart', JSON.stringify(cart));
+}
+function addToCart(item) {
+  const cart = getCart();
+  if (cart.length >= CART_MAX) {
+    alert(`購物車最多 ${CART_MAX} 份，請先下載後再繼續。`);
+    return false;
+  }
+  item.id = `${item.typeId}_${Date.now()}`;
+  item.addedAt = Date.now();
+  cart.push(item);
+  saveCart(cart);
+  renderCartBadge();
+  return true;
+}
+function removeFromCart(itemId) {
+  const cart = getCart().filter(i => i.id !== itemId);
+  saveCart(cart);
+  renderCartBadge();
+  renderCart();
+}
+function clearCart() {
+  sessionStorage.removeItem('ws_cart');
+  renderCartBadge();
+}
+function renderCartBadge() {
+  const n = getCart().length;
+  const badge = document.getElementById('cartBadgeCount');
+  const fab   = document.getElementById('cartFab');
+  if (badge) { badge.textContent = n; badge.style.display = n ? 'flex' : 'none'; }
+  if (fab)   { fab.style.display = adminMode ? 'none' : ''; }
+  const countEl = document.getElementById('cartCount');
+  if (countEl) countEl.textContent = n;
+}
+function openCart() {
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+  renderCart();
+}
+function closeCart() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+function renderCart() {
+  const cart = getCart();
+  const el = document.getElementById('cartItems');
+  if (!el) return;
+  if (!cart.length) {
+    el.innerHTML = `<div style="text-align:center;color:var(--gray);padding:40px 0;font-size:13px;">
+      購物車是空的<br>請選擇學習單加入</div>`;
+    return;
+  }
+  el.innerHTML = cart.map(item => `
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;
+      border-bottom:1px solid var(--border);">
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;">${item.typeName}</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:2px;">
+          ${item.isBundle ? '📦 批次套裝' : '⚙️ 自訂設定'}
+          ${item.mode ? ` · ${item.mode}` : ''}
+        </div>
+      </div>
+      <button onclick="removeFromCart('${item.id}')"
+        style="background:none;border:none;color:var(--gray);font-size:16px;cursor:pointer;padding:0;">✕</button>
+    </div>`).join('');
+}
+// downloadAllCart 完整實作見 Task C5；此處為暫時 stub，避免 Task C3 階段點擊按鈕時拋出未定義錯誤
+async function downloadAllCart() {
+  alert('待 Task C5 實作');
+}
+
 // ── BOOT ──
 initTheme('飲料店');
 renderThemes();
@@ -6060,11 +6188,43 @@ renderSortBtns();
 renderHomeTypeCards();
 renderTrialBar(); // 更新 topbar 試用次數
 applyAdminMode(); // 依 localStorage 還原 admin/consumer 模式
+renderCartBadge();
 // 起始顯示首頁，configScreen 已 display:none
 </script>
 <script>
 // 🔧 開發者設定：部署後將此行改成你的 Railway API 網址
 // window.WORKSHEET_API_URL = 'https://your-api-name.railway.app';
 </script>
+
+<!-- ── CART FAB ── -->
+<button class="cart-fab consumer-only" onclick="openCart()" id="cartFab" style="display:none;">
+  🛒
+  <span class="cart-badge-count" id="cartBadgeCount">0</span>
+</button>
+
+<!-- ── CART OVERLAY ── -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- ── CART DRAWER ── -->
+<div class="cart-drawer" id="cartDrawer">
+  <div style="display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+    <h3 style="margin:0;font-size:16px;font-weight:700;">購物車</h3>
+    <button onclick="closeCart()"
+      style="margin-left:auto;background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">✕</button>
+  </div>
+  <div id="cartItems" style="flex:1;overflow-y:auto;padding:12px 16px;"></div>
+  <div style="padding:16px 20px;border-top:1px solid var(--border);">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:13px;">
+      <span>共 <span id="cartCount">0</span> 份學習單</span>
+      <button onclick="clearCart(); renderCart()"
+        style="background:none;border:none;color:var(--gray);font-size:12px;cursor:pointer;">清空</button>
+    </div>
+    <button onclick="downloadAllCart()" id="cartDownloadBtn"
+      style="width:100%;padding:12px;background:var(--teal);color:#fff;border:none;
+        border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;">
+      ⬇ 確認下載全部
+    </button>
+  </div>
+</div>
 </body>
 </html>
