@@ -2345,8 +2345,8 @@ body {
 
     <div class="gen-section">
       <div class="gen-meta" id="genMeta"></div>
-      <button class="gen-btn" id="genBtn" onclick="directDownload()">
-        下載學習單
+      <button class="gen-btn" id="genBtn" onclick="addToCartFromConfig()">
+        加入購物車
         <span class="arrow">→</span>
       </button>
     </div>
@@ -4399,6 +4399,48 @@ function clearPreviewCache() {
 }
 
 // ── 直接下載（不顯示預覽）──
+// ── ADD TO CART（消費端：取代直接下載）─────────────────────────────────────
+function addToCartFromConfig() {
+  if (adminMode) { directDownload(); return; }
+  if (!isUnlocked(S.typeId)) { showLockedToast(); return; }
+  const reg   = getReg(S.typeId);
+  const body  = reg.api.body();
+  const fname = reg.api.filename();
+  const added = addToCart({
+    typeId:     S.typeId,
+    typeName:   reg.name,
+    config:     body,
+    mode:       S.tuweiMode || S.tuiwei3subMode || S.sub1Mode || null,
+    filename:   fname,
+    isBundle:   false,
+    bundlePath: null,
+  });
+  if (added) {
+    const btn = document.getElementById('genBtn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ 已加入購物車';
+    btn.style.background = 'var(--teal)';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1500);
+    openCart();
+  }
+}
+
+// 供各 ModeCard 的 apply*Mode() 函式在消費端呼叫：以 mode 相關設定組出 cart item
+// 並直接加入購物車（不 fetch，PDF 於結帳時由 /generate-pdf 產生）。
+function _addModeToCart({ typeId, modeLabel, config, filename, mode }) {
+  if (!isUnlocked(typeId)) { showLockedToast(); return false; }
+  const reg = getReg(typeId);
+  return addToCart({
+    typeId,
+    typeName:   reg ? reg.name : typeId,
+    config,
+    mode:       mode ?? null,
+    filename,
+    isBundle:   false,
+    bundlePath: null,
+  });
+}
+
 async function directDownload() {
   if(getTrialLeft()<=0){ openUpgrade(); return; }
 
@@ -4496,6 +4538,21 @@ async function applyThemeDownload() {
   const resultRow  = document.getElementById('themeResultRow');
   const resultLabel = document.getElementById('themeResultLabel');
   const dlLink     = document.getElementById('themeDownloadLink');
+
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId, modeLabel: S.themeId, mode: null,
+      config: reg.api.body(), filename: reg.api.filename(),
+    });
+    if (added) {
+      resultRow.style.display = 'flex';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      resultLabel.textContent = `✓ 已加入購物車（${S.themeId}）`;
+      openCart();
+    }
+    return;
+  }
 
   confirmBtn.disabled = true;
   confirmBtn.textContent = '生成中…';
@@ -4736,6 +4793,22 @@ async function applyTuweiMode() {
   const resultLbl  = document.getElementById('tuweiResultLabel');
   const dlLink     = document.getElementById('tuweiDownloadLink');
 
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId: 'tuiwei4sub', modeLabel: modeLabel[mode], mode,
+      config: { mode, price_overrides: Object.keys(S.priceOverrides).length ? S.priceOverrides : undefined },
+      filename: `退位減法（四位數）＿${modeLabel[mode]}.docx`,
+    });
+    if (added) {
+      resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
+      resultRow.style.display = ''; resultRow.style.background = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
+
   confirmBtn.disabled = true;
   confirmBtn.textContent = '生成中…';
   if (resultRow) resultRow.style.display = 'none';
@@ -4809,6 +4882,21 @@ async function applyTuiwei3subMode() {
   const resultRow  = document.getElementById('tuiwei3subResultRow');
   const resultLbl  = document.getElementById('tuiwei3subResultLabel');
   const dlLink     = document.getElementById('tuiwei3subDownloadLink');
+
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId: 'tuiwei3sub', modeLabel: modeLabel[mode], mode,
+      config: {}, filename: filenameMap[mode],
+    });
+    if (added) {
+      resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
+      resultRow.style.display = ''; resultRow.style.background = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
 
   confirmBtn.disabled = true;
   confirmBtn.textContent = '生成中…';
@@ -4901,6 +4989,21 @@ async function applySub1Mode() {
   const resultLbl  = document.getElementById('sub1ResultLabel');
   const dlLink     = document.getElementById('sub1DownloadLink');
 
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId: 'sub1', modeLabel: modeLabel[mode], mode,
+      config: {}, filename: filenameMap[mode],
+    });
+    if (added) {
+      resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
+      resultRow.style.display = ''; resultRow.style.background = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
+
   confirmBtn.disabled = true;
   confirmBtn.textContent = '生成中…';
   if (resultRow) resultRow.style.display = 'none';
@@ -4959,6 +5062,22 @@ async function applySub2noregMode() {
   const resultRow  = document.getElementById('sub2noregResultRow');
   const resultLbl  = document.getElementById('sub2noregResultLabel');
   const dlLink     = document.getElementById('sub2noregDownloadLink');
+
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId: 'sub2noreg', modeLabel: modeLabel[mode], mode,
+      config: { mode }, filename: filename[mode],
+    });
+    if (added) {
+      resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
+      resultRow.style.display = ''; resultRow.style.background = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
+
   confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
   if (resultRow) resultRow.style.display = 'none';
   try {
@@ -5014,6 +5133,23 @@ async function applySub2noregAppMode() {
   const resultRow  = document.getElementById('sub2noregAppResultRow');
   const resultLbl  = document.getElementById('sub2noregAppResultLabel');
   const dlLink     = document.getElementById('sub2noregAppDownloadLink');
+
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId: 'sub2noreg-app', modeLabel: modeLabel[mode], mode,
+      config: { mode, theme_id: mode === 'pman' ? S.themeId : undefined },
+      filename: filename[mode],
+    });
+    if (added) {
+      resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
+      resultRow.style.display = ''; resultRow.style.background = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
+
   confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
   if (resultRow) resultRow.style.display = 'none';
   try {
@@ -5066,6 +5202,22 @@ async function applySub2borrowMode() {
   const resultRow  = document.getElementById('sub2borrowResultRow');
   const resultLbl  = document.getElementById('sub2borrowResultLabel');
   const dlLink     = document.getElementById('sub2borrowDownloadLink');
+
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId: 'sub2borrow', modeLabel: modeLabel[mode], mode,
+      config: { mode }, filename: filename[mode],
+    });
+    if (added) {
+      resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
+      resultRow.style.display = ''; resultRow.style.background = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
+
   confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
   if (resultRow) resultRow.style.display = 'none';
   try {
@@ -5119,6 +5271,22 @@ async function applySub3noregAppMode() {
   const resultRow  = document.getElementById('sub3noregAppResultRow');
   const resultLbl  = document.getElementById('sub3noregAppResultLabel');
   const dlLink     = document.getElementById('sub3noregAppDownloadLink');
+
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId: 'sub3noreg-app', modeLabel: modeLabel[mode], mode,
+      config: { mode, theme_id: S.themeId }, filename: filename[mode],
+    });
+    if (added) {
+      resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
+      resultRow.style.display = ''; resultRow.style.background = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
+
   confirmBtn.disabled = true; confirmBtn.textContent = '生成中…';
   if (resultRow) resultRow.style.display = 'none';
   try {
@@ -5280,6 +5448,24 @@ async function coinApplyMode() {
   const resultLabel = document.getElementById('coinResultLabel');
   const dlLink      = document.getElementById('coinDownloadLink');
 
+  if (!adminMode) {
+    const lvObj = cfg.levels.find(l => l.v === lv);
+    const stTxt = cfg.hasStyle ? '・' + (st === 'simple' ? '簡單圖形' : '照片版') : '';
+    const modeLabel = `${lvObj ? lvObj.short : lv}${stTxt}`;
+    const added = _addModeToCart({
+      typeId, modeLabel, mode: lv,
+      config: { level: lv, style: st }, filename: cfg.filename(lv, st),
+    });
+    if (added) {
+      resultLabel.textContent = `✓ 已依「${modeLabel}」加入購物車`;
+      resultRow.style.display = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
+
   confirmBtn.disabled = true;
   confirmBtn.textContent = '生成中…';
   try {
@@ -5392,6 +5578,21 @@ async function applyFenfenSubtype() {
   const resultLbl  = document.getElementById('fenfenResultLabel');
   const dlLink     = document.getElementById('fenfenDownloadLink');
   const label = subLabel[sub]();
+
+  if (!adminMode) {
+    const added = _addModeToCart({
+      typeId: 'fenfen', modeLabel: label, mode: sub,
+      config: bodyMap[sub], filename: filenameMap[sub](),
+    });
+    if (added) {
+      resultLbl.textContent = `✓ 已依「${label}」加入購物車`;
+      resultRow.style.display = ''; resultRow.style.background = '';
+      confirmBtn.style.display = 'none';
+      if (dlLink) dlLink.style.display = 'none';
+      openCart();
+    }
+    return;
+  }
 
   confirmBtn.disabled = true;
   confirmBtn.textContent = '生成中…';
