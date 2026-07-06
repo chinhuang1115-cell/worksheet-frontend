@@ -876,6 +876,10 @@ body {
 
 /* ── SPINNER ── */
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateX(-50%) translateY(8px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
 .spinner {
   width: 18px; height: 18px;
   border: 2px solid rgba(255,255,255,.3);
@@ -3427,6 +3431,20 @@ function lockAll() {
   if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
 }
 
+function showLockedToast(msg) {
+  const existing = document.getElementById('_lockedToast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = '_lockedToast';
+  toast.style.cssText = `position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+    background:#333;color:#fff;padding:10px 20px;border-radius:8px;
+    font-size:13px;font-weight:600;z-index:9999;pointer-events:none;
+    animation:fadeInUp 0.2s ease;`;
+  toast.textContent = msg || '🔒 此學習單尚未開放，請等待管理者審核';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
 let curGrade = 'all';
 let curOps = new Set(['all']);
 let curSort = 'default'; // 'default' | 'difficulty' | 'release'
@@ -5361,8 +5379,17 @@ function renderHomeTypeCards() {
   document.getElementById('typeCardGrid').innerHTML = filtered.length
     ? filtered.map(t => {
         const m = HOME_TYPE_META[t.id] || {};
+        const locked = !adminMode && !isUnlocked(t.id);
+        const lockedOverlay = locked ? `
+          <div style="position:absolute;inset:0;background:rgba(255,255,255,0.82);
+            border-radius:inherit;display:flex;flex-direction:column;
+            align-items:center;justify-content:center;gap:6px;z-index:2;pointer-events:none;">
+            <div style="font-size:28px;line-height:1;">🔒</div>
+            <div style="font-size:11px;color:var(--gray);font-weight:600;">尚未開放</div>
+          </div>` : '';
+        const cardOnclick = locked ? `showLockedToast()` : `enterConfig('${t.id}')`;
         return `
-        <div class="type-card" onclick="enterConfig('${t.id}')">
+        <div class="type-card" style="position:relative;" onclick="${cardOnclick}">
           <div class="type-card-icon">${m.icon || '📄'}</div>
           <div>
             <div class="type-card-name">${coloredName(t.name)}</div>
@@ -5372,7 +5399,8 @@ function renderHomeTypeCards() {
           <div class="type-card-features">
             ${(m.features || []).map(f => `<div class="type-card-feature">${f}</div>`).join('')}
           </div>
-          <button class="type-card-btn" onclick="event.stopPropagation();enterConfig('${t.id}')">立即使用 →</button>
+          <button class="type-card-btn" onclick="event.stopPropagation();${cardOnclick}">立即使用 →</button>
+          ${lockedOverlay}
         </div>`;
       }).join('')
     : empty;
@@ -5384,8 +5412,17 @@ function renderHomeTypeCards() {
         const arr    = SAMPLE_ARRAYS[t.id];
         const hasPdf = sample?.pdf;
         const isCarousel = !!arr;
+        const locked = !adminMode && !isUnlocked(t.id);
+        const lockedOverlay = locked ? `
+          <div style="position:absolute;inset:0;background:rgba(255,255,255,0.82);
+            border-radius:inherit;display:flex;flex-direction:column;
+            align-items:center;justify-content:center;gap:6px;z-index:2;pointer-events:none;">
+            <div style="font-size:28px;line-height:1;">🔒</div>
+            <div style="font-size:11px;color:var(--gray);font-weight:600;">尚未開放</div>
+          </div>` : '';
+        const cardOnclick = locked ? `showLockedToast()` : `enterConfig('${t.id}')`;
         return `
-        <div class="type-sample-card" onclick="enterConfig('${t.id}')">
+        <div class="type-sample-card" style="position:relative;" onclick="${cardOnclick}">
           <div class="sample-thumb-wrap">
             ${hasPdf
               ? `<img class="sample-thumb-img" id="thumb-img-${t.id}" style="display:none;" alt="${t.name}">
@@ -5400,8 +5437,9 @@ function renderHomeTypeCards() {
           </div>
           <div class="sample-card-footer">
             <div class="sample-card-name">${coloredName(t.name)}</div>
-            <button class="sample-card-btn" onclick="event.stopPropagation();enterConfig('${t.id}')">使用 →</button>
+            <button class="sample-card-btn" onclick="event.stopPropagation();${cardOnclick}">使用 →</button>
           </div>
+          ${lockedOverlay}
         </div>`;
       }).join('')
     : empty;
@@ -5645,6 +5683,10 @@ function applyTypeLayout(typeId) {
 }
 
 function enterConfig(typeId) {
+  if (!adminMode && !isUnlocked(typeId)) {
+    showLockedToast();
+    return;
+  }
   S.typeId = typeId;
   // 若目前主題不適用此題型，自動切換到第一個合法主題
   const allowed = allowedThemes();
