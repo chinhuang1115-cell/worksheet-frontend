@@ -5388,8 +5388,18 @@ function renderHomeTypeCards() {
             <div style="font-size:11px;color:var(--gray);font-weight:600;">尚未開放</div>
           </div>` : '';
         const cardOnclick = locked ? `showLockedToast()` : `enterConfig('${t.id}')`;
+        const lockToggleBtn = adminMode ? `
+          <button onclick="event.stopPropagation(); toggleLock('${t.id}')"
+            style="position:absolute;top:8px;right:8px;z-index:3;
+              padding:3px 8px;border-radius:20px;border:none;
+              background:${getLockState()[t.id] ? 'var(--teal)' : '#e0e0e0'};
+              color:${getLockState()[t.id] ? '#fff' : 'var(--gray)'};
+              font-size:11px;font-weight:700;cursor:pointer;">
+            ${getLockState()[t.id] ? '🔓 已解鎖' : '🔒 鎖定中'}
+          </button>` : '';
+        const adminCardStyle = adminMode ? 'border-left:3px solid var(--teal);' : '';
         return `
-        <div class="type-card" style="position:relative;" onclick="${cardOnclick}">
+        <div class="type-card" style="position:relative;${adminCardStyle}" onclick="${cardOnclick}">
           <div class="type-card-icon">${m.icon || '📄'}</div>
           <div>
             <div class="type-card-name">${coloredName(t.name)}</div>
@@ -5401,6 +5411,7 @@ function renderHomeTypeCards() {
           </div>
           <button class="type-card-btn" onclick="event.stopPropagation();${cardOnclick}">立即使用 →</button>
           ${lockedOverlay}
+          ${lockToggleBtn}
         </div>`;
       }).join('')
     : empty;
@@ -5421,8 +5432,18 @@ function renderHomeTypeCards() {
             <div style="font-size:11px;color:var(--gray);font-weight:600;">尚未開放</div>
           </div>` : '';
         const cardOnclick = locked ? `showLockedToast()` : `enterConfig('${t.id}')`;
+        const lockToggleBtn = adminMode ? `
+          <button onclick="event.stopPropagation(); toggleLock('${t.id}')"
+            style="position:absolute;top:8px;right:8px;z-index:3;
+              padding:3px 8px;border-radius:20px;border:none;
+              background:${getLockState()[t.id] ? 'var(--teal)' : '#e0e0e0'};
+              color:${getLockState()[t.id] ? '#fff' : 'var(--gray)'};
+              font-size:11px;font-weight:700;cursor:pointer;">
+            ${getLockState()[t.id] ? '🔓 已解鎖' : '🔒 鎖定中'}
+          </button>` : '';
+        const adminCardStyle = adminMode ? 'border-left:3px solid var(--teal);' : '';
         return `
-        <div class="type-sample-card" style="position:relative;" onclick="${cardOnclick}">
+        <div class="type-sample-card" style="position:relative;${adminCardStyle}" onclick="${cardOnclick}">
           <div class="sample-thumb-wrap">
             ${hasPdf
               ? `<img class="sample-thumb-img" id="thumb-img-${t.id}" style="display:none;" alt="${t.name}">
@@ -5440,6 +5461,7 @@ function renderHomeTypeCards() {
             <button class="sample-card-btn" onclick="event.stopPropagation();${cardOnclick}">使用 →</button>
           </div>
           ${lockedOverlay}
+          ${lockToggleBtn}
         </div>`;
       }).join('')
     : empty;
