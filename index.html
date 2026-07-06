@@ -84,6 +84,42 @@ body {
 }
 .trial-count { color: var(--amber); font-weight: 700; }
 
+/* ── ADMIN MODE TOGGLE ── */
+.admin-toggle-btn {
+  padding: 5px 13px;
+  border: 1.5px solid var(--teal);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.admin-mode .admin-toggle-btn {
+  background: var(--teal);
+  color: #fff;
+}
+/* 消費端隱藏管理者專屬元素 */
+.admin-only { display: none !important; }
+.admin-mode .admin-only { display: revert !important; }
+/* 管理端隱藏消費者專屬元素 */
+.consumer-only { display: revert; }
+.admin-mode .consumer-only { display: none !important; }
+/* 管理端標示帶 */
+.admin-mode-banner {
+  display: none;
+  background: var(--teal);
+  color: #fff;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 0;
+  letter-spacing: 0.05em;
+}
+.admin-mode .admin-mode-banner { display: block; }
+
 /* ── LAYOUT ── */
 .main {
   max-width: 1200px;
@@ -1316,15 +1352,19 @@ body {
 </head>
 <body>
 
+<div class="admin-mode-banner">⚙️ 管理端模式</div>
 <div class="topbar">
   <div class="topbar-logo">
     <div class="dot">✏️</div>
     學習單產生器
   </div>
-  <div class="trial-badge">
-    試用版　剩餘
-    <span class="trial-count" id="trialLeft">9999</span>
-    次
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="admin-toggle-btn" id="adminToggleBtn" onclick="toggleAdminMode()">管理端</button>
+    <div class="trial-badge">
+      試用版　剩餘
+      <span class="trial-count" id="trialLeft">9999</span>
+      次
+    </div>
   </div>
 </div>
 
@@ -3332,6 +3372,24 @@ let S = {
   coincarry1000Level: 'L1',
   _coincarry1000DocxUrl: null,
 };
+
+// ── ADMIN MODE ──
+let adminMode = localStorage.getItem('ws_admin_mode') === 'true';
+
+function toggleAdminMode() {
+  adminMode = !adminMode;
+  localStorage.setItem('ws_admin_mode', String(adminMode));
+  applyAdminMode();
+}
+
+function applyAdminMode() {
+  document.body.classList.toggle('admin-mode', adminMode);
+  const btn = document.getElementById('adminToggleBtn');
+  if (btn) btn.textContent = adminMode ? '消費端' : '管理端';
+  renderHomeTypeCards();
+  renderHomeSampleGrid && renderHomeSampleGrid();
+}
+
 let curGrade = 'all';
 let curOps = new Set(['all']);
 let curSort = 'default'; // 'default' | 'difficulty' | 'release'
@@ -5604,6 +5662,7 @@ renderHomeFilter();
 renderSortBtns();
 renderHomeTypeCards();
 renderTrialBar(); // 更新 topbar 試用次數
+applyAdminMode(); // 依 localStorage 還原 admin/consumer 模式
 // 起始顯示首頁，configScreen 已 display:none
 </script>
 <script>
