@@ -1363,6 +1363,11 @@ body {
     學習單產生器
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
+    <button class="admin-only" onclick="goAdminLock()"
+      style="padding:5px 13px;border:1.5px solid var(--gray);border-radius:var(--r-sm);
+        background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
+      解鎖管理
+    </button>
     <button class="admin-toggle-btn" id="adminToggleBtn" onclick="toggleAdminMode()">管理端</button>
     <div class="trial-badge">
       試用版　剩餘
@@ -2269,6 +2274,28 @@ body {
 
   </div>
 
+</div>
+
+<!-- ── ADMIN LOCK SCREEN ── -->
+<div id="adminLockScreen" style="display:none; padding:24px 32px; max-width:900px; margin:0 auto;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <button onclick="exitAdminLock()"
+      style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
+    <h2 style="margin:0;font-size:18px;font-weight:700;">學習單解鎖管理</h2>
+    <div style="margin-left:auto;display:flex;gap:8px;">
+      <button onclick="unlockAll(); renderAdminLockScreen()"
+        style="padding:6px 14px;background:var(--teal);color:#fff;border:none;
+          border-radius:var(--r-sm);font-size:12px;font-weight:700;cursor:pointer;">
+        全部解鎖
+      </button>
+      <button onclick="lockAll(); renderAdminLockScreen()"
+        style="padding:6px 14px;background:#e0e0e0;color:var(--gray);border:none;
+          border-radius:var(--r-sm);font-size:12px;font-weight:700;cursor:pointer;">
+        全部鎖定
+      </button>
+    </div>
+  </div>
+  <div id="adminLockList"></div>
 </div>
 
 <!-- ── PREVIEW MODAL ── -->
@@ -3429,6 +3456,49 @@ function lockAll() {
   setLockState({});
   renderHomeTypeCards();
   if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+}
+
+function renderAdminLockScreen() {
+  const state = getLockState();
+  const list = document.getElementById('adminLockList');
+  if (!list) return;
+  list.innerHTML = TYPE_REGISTRY.map(t => {
+    const unlocked = state[t.id] === true;
+    return `
+      <div style="display:flex;align-items:center;padding:12px 16px;
+        border-bottom:1px solid var(--border);gap:12px;">
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:14px;">${t.name}</div>
+          <div style="font-size:11px;color:var(--gray);margin-top:2px;">${t.id}</div>
+        </div>
+        <div style="font-size:12px;color:${unlocked ? 'var(--teal)' : 'var(--gray)'}; font-weight:600;width:60px;text-align:center;">
+          ${unlocked ? '🔓 開放' : '🔒 鎖定'}
+        </div>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;">
+          <input type="checkbox" ${unlocked ? 'checked' : ''}
+            onchange="setUnlocked('${t.id}', this.checked); renderAdminLockScreen()"
+            style="opacity:0;width:0;height:0;">
+          <span style="position:absolute;inset:0;background:${unlocked ? 'var(--teal)' : '#ccc'};
+            border-radius:12px;transition:0.2s;">
+            <span style="position:absolute;height:18px;width:18px;left:${unlocked ? '22px' : '3px'};
+              bottom:3px;background:white;border-radius:50%;transition:0.2s;"></span>
+          </span>
+        </label>
+      </div>`;
+  }).join('');
+}
+
+function goAdminLock() {
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('configNav').style.display = 'none';
+  document.getElementById('configScreen').style.display = 'none';
+  document.getElementById('adminLockScreen').style.display = '';
+  renderAdminLockScreen();
+}
+
+function exitAdminLock() {
+  document.getElementById('adminLockScreen').style.display = 'none';
+  document.getElementById('homeScreen').style.display = '';
 }
 
 function showLockedToast(msg) {
@@ -5748,6 +5818,7 @@ function goHome() {
   document.getElementById('homeScreen').style.display = '';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
+  document.getElementById('adminLockScreen').style.display = 'none';
 }
 
 // ── BOOT ──
