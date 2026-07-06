@@ -3390,6 +3390,43 @@ function applyAdminMode() {
   renderHomeSampleGrid && renderHomeSampleGrid();
 }
 
+// ── LOCK STATE ──
+function getLockState() {
+  try { return JSON.parse(localStorage.getItem('ws_lock_state') || '{}'); }
+  catch { return {}; }
+}
+function setLockState(state) {
+  localStorage.setItem('ws_lock_state', JSON.stringify(state));
+}
+function isUnlocked(typeId) {
+  // 在 admin mode 中，所有題型皆可存取（不受鎖定限制）
+  if (adminMode) return true;
+  return getLockState()[typeId] === true;
+}
+function setUnlocked(typeId, unlocked) {
+  const state = getLockState();
+  state[typeId] = unlocked;
+  setLockState(state);
+}
+function toggleLock(typeId) {
+  const current = getLockState()[typeId] === true;
+  setUnlocked(typeId, !current);
+  renderHomeTypeCards();
+  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+}
+function unlockAll() {
+  const state = {};
+  TYPE_REGISTRY.forEach(t => { state[t.id] = true; });
+  setLockState(state);
+  renderHomeTypeCards();
+  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+}
+function lockAll() {
+  setLockState({});
+  renderHomeTypeCards();
+  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+}
+
 let curGrade = 'all';
 let curOps = new Set(['all']);
 let curSort = 'default'; // 'default' | 'difficulty' | 'release'
