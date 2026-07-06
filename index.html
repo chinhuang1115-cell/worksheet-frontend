@@ -3418,7 +3418,7 @@ function applyAdminMode() {
   const btn = document.getElementById('adminToggleBtn');
   if (btn) btn.textContent = adminMode ? '消費端' : '管理端';
   renderHomeTypeCards();
-  renderHomeSampleGrid && renderHomeSampleGrid();
+  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
 }
 
 // ── LOCK STATE ──
