@@ -1462,6 +1462,11 @@ body {
     <h1 class="home-title">✏️ 學習單產生器</h1>
     <p class="home-sub">選擇題型，快速產出客製化數學學習單</p>
   </div>
+  <div id="bundleSection" class="consumer-only"
+    style="max-width:960px;margin:0 auto 24px;padding:0 24px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px;">📦 精選套裝組合</div>
+    <div id="bundleList" style="display:flex;gap:12px;flex-wrap:wrap;"></div>
+  </div>
   <div class="home-layout">
     <div class="home-sidebar">
       <div class="home-sidebar-label">運算類型</div>
@@ -6370,9 +6375,94 @@ function renderCart() {
         style="background:none;border:none;color:var(--gray);font-size:16px;cursor:pointer;padding:0;">✕</button>
     </div>`).join('');
 }
-// downloadAllCart 完整實作見 Task C5；此處為暫時 stub，避免 Task C3 階段點擊按鈕時拋出未定義錯誤
+// ── 批次套裝（消費端）──
+async function loadBundles() {
+  try {
+    const r = await fetch(API_URL + '/bundles');
+    if (!r.ok) return;
+    const { bundles } = await r.json();
+    const el = document.getElementById('bundleList');
+    if (!el || !bundles.length) return;
+    el.innerHTML = bundles.map(b => `
+      <div style="border:1px solid var(--border);border-radius:var(--r-sm);
+        padding:14px 16px;min-width:200px;max-width:240px;cursor:pointer;"
+        onclick="addBundleToCart('${b.id}', '${b.label.replace(/'/g, "\\'")}')">
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${b.label}</div>
+        <div style="font-size:11px;color:var(--gray);">共 ${b.pages} 頁 PDF</div>
+        <div style="margin-top:10px;font-size:12px;font-weight:700;color:var(--teal);">
+          + 加入購物車
+        </div>
+      </div>`).join('');
+  } catch {}
+}
+
+function addBundleToCart(bundleId, label) {
+  const added = addToCart({
+    typeId:     bundleId,
+    typeName:   label,
+    config:     {},
+    mode:       '套裝',
+    filename:   label + '.pdf',
+    isBundle:   true,
+    bundlePath: API_URL + '/bundles/' + bundleId,
+  });
+  if (added) openCart();
+}
+
+// ── 購物車結帳：下載全部 ──
 async function downloadAllCart() {
-  alert('待 Task C5 實作');
+  const cart = getCart();
+  if (!cart.length) return;
+
+  const btn = document.getElementById('cartDownloadBtn');
+  btn.disabled = true;
+  btn.textContent = '生成中…';
+
+  const errors = [];
+
+  for (const item of cart) {
+    try {
+      let url;
+      if (item.isBundle && item.bundlePath) {
+        // 批次套裝：直接用存好的 PDF URL
+        const r = await fetch(item.bundlePath);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const blob = await r.blob();
+        url = URL.createObjectURL(blob);
+      } else {
+        // 自訂設定：呼叫 /generate-pdf
+        const r = await fetch(API_URL + '/generate-pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type_id: item.typeId, body: item.config }),
+        });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const blob = await r.blob();
+        url = URL.createObjectURL(blob);
+      }
+      // 觸發下載
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item.filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      // 避免瀏覽器攔截多個同時下載
+      await new Promise(r => setTimeout(r, 600));
+    } catch (e) {
+      errors.push(`${item.typeName}: ${e.message}`);
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '⬇ 確認下載全部';
+
+  if (errors.length) {
+    alert(`部分下載失敗：\n${errors.join('\n')}`);
+  } else {
+    clearCart();
+    renderCartBadge();
+    closeCart();
+  }
 }
 
 // ── BOOT ──
@@ -6389,6 +6479,7 @@ renderSortBtns();
 renderHomeTypeCards();
 renderTrialBar(); // 更新 topbar 試用次數
 applyAdminMode(); // 依 localStorage 還原 admin/consumer 模式
+loadBundles(); // 載入批次套裝清單（消費端）
 // 購物車 FAB 標記位於本 script 之後的 body 尾端，直接呼叫會取到 null。
 // 用 DOMContentLoaded 等到 body 解析完再顯示。
 window.addEventListener('DOMContentLoaded', renderCartBadge);
