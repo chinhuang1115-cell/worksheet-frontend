@@ -4410,7 +4410,7 @@ function addToCartFromConfig() {
     typeId:     S.typeId,
     typeName:   reg.name,
     config:     body,
-    mode:       S.tuweiMode || S.tuiwei3subMode || S.sub1Mode || null,
+    mode:       null,  // ModeCard types add via _addModeToCart; genBtn only fires for direct-download types
     filename:   fname,
     isBundle:   false,
     bundlePath: null,
