@@ -3637,6 +3637,82 @@ function exitAdminQA() {
   document.getElementById('homeScreen').style.display = '';
 }
 
+async function runQADetection() {
+  const btn = document.getElementById('qaDetectBtn');
+  const resultDiv = document.getElementById('qaDetectResult');
+  btn.disabled = true;
+  btn.textContent = '偵測中…';
+  resultDiv.style.display = '';
+  resultDiv.innerHTML = `<div style="padding:12px 16px;background:#f8fafc;border-radius:8px;
+    font-size:12px;color:var(--gray);">正在執行自動偵測...</div>`;
+
+  const issues = [];
+  const warnings = [];
+
+  // 1. TYPE_REGISTRY 完整性檢查
+  for (const t of TYPE_REGISTRY) {
+    if (!t.id)       issues.push(`[${t.name}] 缺少 id`);
+    if (!t.name)     issues.push(`[${t.id}] 缺少 name`);
+    if (!t.api?.endpoint) issues.push(`[${t.id}] 缺少 api.endpoint`);
+    if (!t.api?.body)     issues.push(`[${t.id}] 缺少 api.body`);
+    if (t.home !== null && !t.home?.badge) warnings.push(`[${t.id}] home.badge 為空`);
+  }
+
+  // 2. Sample PDF 可存取性（抽查有 sample 的前 5 個）
+  const withSample = TYPE_REGISTRY.filter(t => t.sample && typeof t.sample === 'string').slice(0, 5);
+  for (const t of withSample) {
+    try {
+      const r = await fetch(t.sample.startsWith('http') ? t.sample : ('./' + t.sample),
+        { method: 'HEAD', cache: 'no-store' });
+      if (!r.ok) issues.push(`[${t.id}] Sample PDF 無法存取: ${t.sample} (${r.status})`);
+    } catch {
+      warnings.push(`[${t.id}] Sample PDF HEAD 請求失敗（可能是 CORS）`);
+    }
+  }
+
+  // 3. 後端 /admin/qa/health
+  let backendOk = false;
+  try {
+    const r = await fetch(API_URL + '/admin/qa/health');
+    if (r.ok) {
+      const data = await r.json();
+      backendOk = true;
+      const regCount = TYPE_REGISTRY.filter(t => t.api?.endpoint).length;
+      if (data.registered_endpoints < regCount) {
+        warnings.push(`前端有 ${regCount} 個 endpoint，後端只列出 ${data.registered_endpoints} 個`);
+      }
+    } else {
+      issues.push(`後端 /admin/qa/health 回應 ${r.status}`);
+    }
+  } catch {
+    issues.push(`無法連接後端 API (${API_URL})，請確認後端服務已啟動`);
+  }
+
+  // 4. 重複 typeId 檢查
+  const ids = TYPE_REGISTRY.map(t => t.id);
+  const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+  if (dupes.length) issues.push(`重複 typeId: ${dupes.join(', ')}`);
+
+  // 渲染結果
+  const total = issues.length + warnings.length;
+  const statusColor = issues.length ? '#ef4444' : warnings.length ? '#f59e0b' : '#22c55e';
+  const statusText  = issues.length ? `發現 ${issues.length} 個錯誤` :
+                      warnings.length ? `${warnings.length} 個警告（無嚴重錯誤）` : '全部通過 ✓';
+
+  resultDiv.innerHTML = `
+    <div style="padding:12px 16px;background:#f8fafc;border-radius:8px;border-left:4px solid ${statusColor};">
+      <div style="font-weight:700;font-size:13px;color:${statusColor};margin-bottom:8px;">
+        偵測結果：${statusText}　（後端 ${backendOk ? '✓ 連線正常' : '✕ 無法連線'}）
+      </div>
+      ${issues.map(e => `<div style="font-size:12px;color:#b91c1c;margin-bottom:2px;">❌ ${e}</div>`).join('')}
+      ${warnings.map(w => `<div style="font-size:12px;color:#a16207;margin-bottom:2px;">⚠️ ${w}</div>`).join('')}
+      ${total === 0 ? '<div style="font-size:12px;color:#15803d;">所有檢查項目均通過</div>' : ''}
+    </div>`;
+
+  btn.disabled = false;
+  btn.textContent = '⚡ 一鍵自動偵測';
+}
+
 function showLockedToast(msg) {
   const existing = document.getElementById('_lockedToast');
   if (existing) existing.remove();
