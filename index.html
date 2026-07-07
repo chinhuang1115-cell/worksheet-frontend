@@ -3610,6 +3610,10 @@ function applyAdminMode() {
   if (btn) btn.textContent = adminMode ? '消費端' : '管理端';
   renderHomeTypeCards();
   if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+  // 若目前在題型設定頁，同步更新管理員檢核表的顯示/隱藏
+  if (S.typeId && document.getElementById('configScreen').style.display !== 'none') {
+    renderAdminChecklist(S.typeId);
+  }
 }
 
 // ── LOCK STATE ──
@@ -3661,6 +3665,12 @@ function setQAStatus(typeId, status, note) {
   const state = getQAState();
   state[typeId] = { status, note: note ?? state[typeId]?.note ?? '' };
   localStorage.setItem('ws_qa_state', JSON.stringify(state));
+  // 審核通過 → 自動解鎖；需修正 → 自動鎖定；並即時更新首頁卡片
+  if (status === 'green' || status === 'red') {
+    setUnlocked(typeId, status === 'green');
+    renderHomeTypeCards();
+    if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+  }
 }
 function setQANote(typeId, note) {
   const state = getQAState();
