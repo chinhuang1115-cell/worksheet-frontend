@@ -5029,6 +5029,13 @@ function renderDiffInfoCard(typeId) {
   const info = TYPE_DIFF_INFO[typeId];
   const el = document.getElementById('diffInfoBody');
   if (!el || !info) return;
+  const pricing = getPricing(typeId);
+  const priceNote = pricing.tier === 'paid'
+    ? `<div style="margin-top:8px;padding:6px 10px;background:#fff7ed;color:#c2410c;
+         border-radius:var(--r-sm);font-size:11px;font-weight:600;">
+         💰 此題型為付費內容，NT$${pricing.price}
+       </div>`
+    : '';
   el.innerHTML = `
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
       <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
@@ -5041,6 +5048,7 @@ function renderDiffInfoCard(typeId) {
             background:var(--gray-light);color:var(--gray);">課綱 ${info.code}</span>
     </div>
     <div style="font-size:12px;color:var(--gray);line-height:1.8;">${info.desc}</div>
+    ${priceNote}
   `;
 }
 
@@ -6930,6 +6938,9 @@ function renderHomeTypeCards() {
           <div>
             <div class="type-card-name">${numBadge}${coloredName(t.name)}</div>
             <span class="type-card-sub">${m.sub || ''}</span>
+            ${(() => { const p = getPricing(t.id); return p.tier === 'paid'
+              ? `<div style="display:inline-block;margin:2px 0;padding:1px 8px;background:#fff7ed;color:#c2410c;
+                   border-radius:10px;font-size:10px;font-weight:700;">💰 NT$${p.price}</div>` : ''; })()}
           </div>
           <div class="type-card-desc">${m.desc || t.desc}</div>
           <div class="type-card-features">
@@ -7411,7 +7422,7 @@ function renderCart() {
     } else if (license) {
       badge = `<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:#dbeafe;color:#1d4ed8;">已購買</span>`;
     } else {
-      badge = `<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:#ffedd5;color:#c2410c;">💰 需購買</span>`;
+      badge = `<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:#ffedd5;color:#c2410c;">💰 需購買 NT$${pricing.price}</span>`;
     }
     const checkbox = (!item.isBundle && pricing.tier === 'paid' && !license)
       ? `<input type="checkbox" class="cart-buy-checkbox" data-type-id="${item.typeId}" style="margin-right:8px;">`
