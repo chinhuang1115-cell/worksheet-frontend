@@ -2426,6 +2426,28 @@ body {
   <div id="publicationList"></div>
 </div>
 
+<!-- ── PUBLICATION EDITOR SCREEN ── -->
+<div id="pubEditorScreen" style="display:none; padding:24px 32px; max-width:1000px; margin:0 auto;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <button onclick="exitPubEditor()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
+    <h2 id="pubEditorTitle" style="margin:0;font-size:18px;font-weight:700;"></h2>
+  </div>
+  <div style="display:flex;gap:20px;">
+    <div style="flex:0 0 42%;max-height:70vh;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px;">題型庫</div>
+      <div id="pubTypeFilter" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;"></div>
+      <div id="pubTypeList"></div>
+    </div>
+    <div style="flex:1;max-height:70vh;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px;">已選題型（可拖曳排序）</div>
+      <div id="pubSlotList"></div>
+      <div id="pubSlotEmpty" style="text-align:center;color:var(--gray);padding:40px 20px;font-size:12px;">
+        從左側題型庫選取題型加入
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ── PREVIEW MODAL ── -->
 <div class="preview-overlay" id="previewOverlay">
   <div class="preview-modal">
@@ -3742,8 +3764,183 @@ function deletePublication(id) {
 }
 
 function openPublicationEditor(id) {
-  // D2 將實作完整編輯畫面（題型/主題/份數 slots 編輯）
-  alert('D2 實作');
+  S._editingPubId = id;
+  const pubs = getPublications();
+  const pub = pubs[id];
+  document.getElementById('adminPublishScreen').style.display = 'none';
+  document.getElementById('pubEditorScreen').style.display = '';
+  document.getElementById('pubEditorTitle').textContent = (pub && pub.name) ? pub.name : '未命名出版品';
+  renderPubTypeFilter();
+  renderPubTypeList('all');
+  renderPubSlots();
+}
+
+function exitPubEditor() {
+  document.getElementById('pubEditorScreen').style.display = 'none';
+  document.getElementById('adminPublishScreen').style.display = '';
+  S._editingPubId = null;
+  renderPublicationList();
+}
+
+const PUB_TYPE_FILTERS = { all:'全部', add:'加法', sub:'減法', mul:'乘法', div:'除法', coin:'認識錢幣' };
+
+function renderPubTypeFilter() {
+  const wrap = document.getElementById('pubTypeFilter');
+  if (!wrap) return;
+  S._pubTypeFilterOp = S._pubTypeFilterOp || 'all';
+  wrap.innerHTML = Object.keys(PUB_TYPE_FILTERS).map(op => `
+    <button class="fenfen-set-btn ${op === S._pubTypeFilterOp ? 'active' : ''}"
+      onclick="_pubSetTypeFilter('${op}')">${PUB_TYPE_FILTERS[op]}</button>
+  `).join('');
+}
+
+function _pubSetTypeFilter(op) {
+  S._pubTypeFilterOp = op;
+  renderPubTypeFilter();
+  renderPubTypeList(op);
+}
+
+function renderPubTypeList(opFilter) {
+  const listEl = document.getElementById('pubTypeList');
+  if (!listEl) return;
+  opFilter = opFilter || 'all';
+
+  const types = TYPE_REGISTRY.filter(t => {
+    if (t.home === null || t.home === undefined) return false;
+    const o = t.ops || [];
+    const kw = t.keywords || [];
+    switch (opFilter) {
+      case 'all': return true;
+      case 'add': return o.length === 1 && o.includes('add');
+      case 'sub': return o.length === 1 && o.includes('sub');
+      case 'mul': return o.includes('mul');
+      case 'div': return o.includes('div') && !kw.includes('fenfen');
+      case 'coin': return kw.includes('coinvalue') || kw.includes('coincarry');
+      default: return true;
+    }
+  });
+
+  if (types.length === 0) {
+    listEl.innerHTML = `<div style="text-align:center;color:var(--gray);padding:24px 12px;font-size:12px;">無符合的題型</div>`;
+    return;
+  }
+
+  listEl.innerHTML = types.map(t => {
+    const name = (t.name || '').replace(/</g,'&lt;');
+    const desc = (t.desc || '').replace(/</g,'&lt;');
+    return `
+      <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 8px;
+        border-bottom:1px solid var(--border);">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12.5px;font-weight:700;">${name}</div>
+          <div style="font-size:11px;color:var(--gray);margin-top:2px;line-height:1.5;">${desc}</div>
+        </div>
+        <button onclick="addSlotToPub('${t.id}')"
+          style="flex-shrink:0;padding:5px 10px;border:none;border-radius:var(--r-sm);
+            background:var(--teal);color:#fff;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+          ＋ 加入
+        </button>
+      </div>`;
+  }).join('');
+}
+
+function addSlotToPub(typeId) {
+  const id = S._editingPubId;
+  if (!id) return;
+  const pubs = getPublications();
+  const pub = pubs[id];
+  if (!pub) return;
+  pub.slots = pub.slots || [];
+  pub.slots.push({ typeId, copies: 1 });
+  pub.updatedAt = new Date().toISOString();
+  savePublications(pubs);
+  renderPubSlots();
+}
+
+function renderPubSlots() {
+  const id = S._editingPubId;
+  const listEl = document.getElementById('pubSlotList');
+  const emptyEl = document.getElementById('pubSlotEmpty');
+  if (!listEl || !emptyEl) return;
+  const pubs = getPublications();
+  const pub = pubs[id];
+  const slots = (pub && pub.slots) || [];
+
+  if (slots.length === 0) {
+    listEl.innerHTML = '';
+    emptyEl.style.display = '';
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  listEl.innerHTML = slots.map((slot, i) => {
+    const reg = getReg(slot.typeId);
+    const name = (reg && reg.name ? reg.name : slot.typeId).replace(/</g,'&lt;');
+    const copies = slot.copies || 1;
+    const copyOptions = [1,2,3,4,5,6].map(n =>
+      `<option value="${n}" ${n === copies ? 'selected' : ''}>${n}</option>`).join('');
+    return `
+      <div class="pub-slot-row" draggable="true" data-idx="${i}"
+        ondragstart="_pubDndStart(${i})" ondragover="event.preventDefault();_pubDndOver(${i})" ondrop="_pubDndDrop(event)"
+        style="display:flex;align-items:center;gap:10px;padding:10px 8px;
+          border-bottom:1px solid var(--border);cursor:grab;">
+        <span style="color:var(--gray);font-size:14px;user-select:none;">⠿</span>
+        <div style="flex:1;min-width:0;font-size:12.5px;font-weight:700;">${name}</div>
+        <select onchange="_pubSetCopies(${i}, this.value)"
+          style="padding:4px 6px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:12px;">
+          ${copyOptions}
+        </select>
+        <span style="font-size:11px;color:var(--gray);">份</span>
+        <button onclick="_pubDeleteSlot(${i})"
+          style="background:none;border:none;color:#b91c1c;font-size:14px;cursor:pointer;padding:2px 6px;">✕</button>
+      </div>`;
+  }).join('');
+}
+
+function _pubSetCopies(idx, val) {
+  const id = S._editingPubId;
+  const pubs = getPublications();
+  const pub = pubs[id];
+  if (!pub || !pub.slots || !pub.slots[idx]) return;
+  pub.slots[idx].copies = parseInt(val, 10) || 1;
+  pub.updatedAt = new Date().toISOString();
+  savePublications(pubs);
+}
+
+function _pubDeleteSlot(idx) {
+  const id = S._editingPubId;
+  const pubs = getPublications();
+  const pub = pubs[id];
+  if (!pub || !pub.slots) return;
+  pub.slots.splice(idx, 1);
+  pub.updatedAt = new Date().toISOString();
+  savePublications(pubs);
+  renderPubSlots();
+}
+
+let _pubDragIdx = null;
+
+function _pubDndStart(i) {
+  _pubDragIdx = i;
+}
+
+function _pubDndOver(i) {
+  if (_pubDragIdx === null || _pubDragIdx === i) return;
+  const id = S._editingPubId;
+  const pubs = getPublications();
+  const pub = pubs[id];
+  if (!pub || !pub.slots) return;
+  const [moved] = pub.slots.splice(_pubDragIdx, 1);
+  pub.slots.splice(i, 0, moved);
+  _pubDragIdx = i;
+  pub.updatedAt = new Date().toISOString();
+  savePublications(pubs);
+  renderPubSlots();
+}
+
+function _pubDndDrop(e) {
+  if (e) e.preventDefault();
+  _pubDragIdx = null;
 }
 
 function _formatPubDate(iso) {
@@ -3808,6 +4005,7 @@ function goAdminPublish() {
   document.getElementById('adminLockScreen').style.display = 'none';
   document.getElementById('adminQAScreen').style.display = 'none';
   document.getElementById('adminPublishScreen').style.display = '';
+  document.getElementById('pubEditorScreen').style.display = 'none';
   renderPublicationList();
 }
 
@@ -6425,6 +6623,7 @@ function goHome() {
   document.getElementById('adminLockScreen').style.display = 'none';
   document.getElementById('adminQAScreen').style.display = 'none'; // 新增
   document.getElementById('adminPublishScreen').style.display = 'none';
+  document.getElementById('pubEditorScreen').style.display = 'none';
 }
 
 // ── CART ──
