@@ -3718,6 +3718,8 @@ async function loadLocks() {
     if (!r.ok) return;
     const data = await r.json();
     LOCK_DATA = data.locks || {};
+    renderHomeTypeCards();
+    if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
   } catch {}
 }
 
@@ -3743,9 +3745,13 @@ async function _saveLockOverride(typeId, unlocked, previous) {
     });
     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
   } catch (e) {
-    LOCK_DATA[typeId] = previous;
+    // 只有在 LOCK_DATA 仍是這次請求設定的值時才回滾，
+    // 避免快速連續切換（雙擊）時舊請求的失敗回滾覆蓋掉新請求的樂觀值
+    if (LOCK_DATA[typeId] === unlocked) {
+      LOCK_DATA[typeId] = previous;
+      renderHomeTypeCards();
+    }
     alert('解鎖狀態儲存失敗，已還原：' + e.message);
-    renderHomeTypeCards();
   }
 }
 function toggleLock(typeId) {
@@ -3902,14 +3908,16 @@ async function _maybeMigrateLocalLocks() {
   const unlockedIds = Object.keys(legacy).filter(id => legacy[id] === true);
   if (!unlockedIds.length) return;
   if (!confirm(`偵測到本機解鎖設定（${unlockedIds.length} 個題型），要同步到伺服器嗎？`)) return;
+  const payload = {};
+  unlockedIds.forEach(id => { payload[id] = true; });
   try {
     const r = await fetch(API_URL + '/admin/locks/bulk', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
-      body: JSON.stringify({ locks: legacy }),
+      body: JSON.stringify({ locks: payload }),
     });
     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
-    LOCK_DATA = legacy;
+    LOCK_DATA = payload;
     localStorage.removeItem('ws_lock_state');
     alert('已同步 ' + unlockedIds.length + ' 個解鎖設定到伺服器');
   } catch (e) {
