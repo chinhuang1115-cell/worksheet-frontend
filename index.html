@@ -2843,6 +2843,7 @@ const TYPE_REGISTRY = [
     diffInfo:{ grade:'二年級', level:'中等', levelColor:'#f59e0b', code:'N-2-7',
       desc:'三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。' },
     sample:{ pdf:'assets/sanbushu_sample.pdf', name:'購物找零_三步驟乘加減_兩位數_範本.pdf' },
+    pricing:{ tier:'paid', price:49 },
     layout:{ panel:'sanbushuPanel', themeSet:'cheap', showTheme:true, prices:true, interactive:false },
     api:{
       endpoint:'/generate/sanbushu',
@@ -3638,6 +3639,7 @@ let adminMode = localStorage.getItem('ws_admin_mode') === 'true';
 function toggleAdminMode() {
   adminMode = !adminMode;
   localStorage.setItem('ws_admin_mode', String(adminMode));
+  if (adminMode) ensureAdminKey();
   applyAdminMode();
   goHome();
 }
@@ -7066,6 +7068,42 @@ function goHome() {
   document.getElementById('adminPublishScreen').style.display = 'none';
   document.getElementById('pubEditorScreen').style.display = 'none';
   document.getElementById('bundleViewScreen').style.display = 'none';
+}
+
+// ── PRICING / LICENSE ──
+function getPricing(typeId) {
+  const reg = getReg(typeId);
+  return (reg && reg.pricing) || { tier: 'free' };
+}
+
+function getLicenseRecords() {
+  try { return JSON.parse(localStorage.getItem('ws_license_records') || '[]'); }
+  catch { return []; }
+}
+
+function saveLicenseRecord(code, email, typeIds) {
+  const records = getLicenseRecords();
+  records.push({ code, email, type_ids: typeIds });
+  localStorage.setItem('ws_license_records', JSON.stringify(records));
+}
+
+function getLicenseForType(typeId) {
+  const records = getLicenseRecords();
+  return records.find(r => r.type_ids.includes(typeId)) || null;
+}
+
+// ── ADMIN KEY ──
+function getAdminKey() {
+  return localStorage.getItem('ws_admin_key') || '';
+}
+
+function ensureAdminKey() {
+  let key = getAdminKey();
+  if (!key) {
+    key = prompt('請輸入管理者金鑰：') || '';
+    if (key) localStorage.setItem('ws_admin_key', key);
+  }
+  return key;
 }
 
 // ── CART ──
