@@ -1432,24 +1432,24 @@ body {
 
 <div class="admin-mode-banner">⚙️ 管理端模式</div>
 <div class="topbar">
-  <div class="topbar-logo">
+  <div class="topbar-logo" onclick="goHome()" style="cursor:pointer;">
     <div class="dot">✏️</div>
     學習單產生器
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <button class="admin-only" onclick="goAdminLock()"
-      style="padding:5px 13px;border:1.5px solid var(--gray);border-radius:var(--r-sm);
-        background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
+      style="padding:5px 13px;border:1.5px solid rgba(255,255,255,0.35);border-radius:var(--r-sm);
+        background:transparent;color:var(--cream);font-size:12px;font-weight:700;cursor:pointer;">
       解鎖管理
     </button>
     <button class="admin-only" onclick="goAdminQA()"
-      style="padding:5px 13px;border:1.5px solid var(--gray);border-radius:var(--r-sm);
-        background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
+      style="padding:5px 13px;border:1.5px solid rgba(255,255,255,0.35);border-radius:var(--r-sm);
+        background:transparent;color:var(--cream);font-size:12px;font-weight:700;cursor:pointer;">
       QA 總表
     </button>
     <button class="admin-only" onclick="goAdminPublish()"
-      style="padding:5px 13px;border:1.5px solid var(--gray);border-radius:var(--r-sm);
-        background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
+      style="padding:5px 13px;border:1.5px solid rgba(255,255,255,0.35);border-radius:var(--r-sm);
+        background:transparent;color:var(--cream);font-size:12px;font-weight:700;cursor:pointer;">
       📚 出版品編輯
     </button>
     <button class="admin-toggle-btn" id="adminToggleBtn" onclick="toggleAdminMode()">管理端</button>
@@ -1893,6 +1893,16 @@ body {
         </div>
         <div class="item-rows" id="itemRows"></div>
       </div>
+    </div>
+
+    <!-- 管理員檢核表（admin mode only） -->
+    <div class="card admin-only" id="adminChecklistCard" style="display:none;border-left:3px solid var(--amber);">
+      <div class="card-head">
+        <span class="card-title">管理員檢核表</span>
+        <button onclick="document.querySelectorAll('#adminChecklistBody input[type=checkbox]').forEach(c=>c.checked=false)"
+          style="font-size:11px;padding:2px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--gray);cursor:pointer;">清除全部</button>
+      </div>
+      <div class="card-body" id="adminChecklistBody" style="padding:8px 16px;"></div>
     </div>
 
   </div>
@@ -3701,6 +3711,86 @@ function goAdminLock() {
   renderAdminLockScreen();
 }
 
+function renderAdminChecklist(typeId) {
+  const card = document.getElementById('adminChecklistCard');
+  const body = document.getElementById('adminChecklistBody');
+  if (!card || !body) return;
+  card.style.display = adminMode ? '' : 'none';
+  if (!adminMode) return;
+
+  const reg = getReg(typeId);
+  if (!reg) return;
+  const L = reg.layout;
+  const isN2 = L.interactive;
+  const qa = getQAStatus(typeId);
+  const qaLabel = { green:'通過', yellow:'待覆核', red:'需修正', none:'未審核' }[qa.status];
+  const qaColor = { green:'#15803d', yellow:'#a16207', red:'#b91c1c', none:'#6b7280' }[qa.status];
+
+  const usesOptionCard = (typeId === 'fenfen' || typeId === 'tuiwei4sub' || typeId === 'tuiwei3sub' || typeId === 'sub1'
+    || typeId === 'sub2noreg-app' || typeId === 'sub2borrow' || typeId === 'sub3noreg-app' || typeId === 'coinvalue'
+    || typeId === 'coinvalue1000' || typeId === 'coincarry' || typeId === 'coincarry10' || typeId === 'coincarry1000'
+    || _THEME_TYPES.includes(typeId));
+
+  const sections = [];
+
+  // 基本資訊區
+  sections.push({ group: '基本資訊', items: [
+    { label: '題型名稱顯示正常', desc: reg.name },
+    { label: '首頁卡片', desc: reg.home ? (reg.home.badge || '有卡片') : '（隱藏，home:null）' },
+    { label: '題型 ID', desc: typeId },
+  ]});
+
+  // 左欄功能
+  const leftItems = [];
+  if (L.showTheme) leftItems.push({ label: '購物主題選擇', desc: L.themes ? `限定 ${L.themes.length} 主題` : '全主題' });
+  if (isN2) leftItems.push({ label: '商品設定卡（互動）', desc: '預算自動計算' });
+  const hideDiffInfo = isN2 || ['fenfen','tuiwei4sub','tuiwei3sub','sub1','sub2noreg-app','sub2borrow','sub3noreg-app','coinvalue','coinvalue1000','coincarry','coincarry10','coincarry1000',..._THEME_TYPES].includes(typeId);
+  if (!hideDiffInfo) leftItems.push({ label: '難度資訊卡', desc: reg.diffInfo ? '靜態說明' : '（無難度說明）' });
+  if (L.prices) leftItems.push({ label: '商品單價調整', desc: '覆蓋預設單價' });
+  if (usesOptionCard) leftItems.push({ label: '選項卡 + 確認套用', desc: '版型/模式選擇' });
+  if (_THEME_TYPES.includes(typeId)) leftItems.push({ label: '確認套用卡', desc: '點擊生成下載' });
+  if (leftItems.length === 0) leftItems.push({ label: '左欄無額外設定', desc: '固定版型題型' });
+  sections.push({ group: '左欄功能', items: leftItems });
+
+  // 右欄功能
+  const rightItems = [];
+  rightItems.push({ label: '答案預覽 Tab', desc: isN2 ? '互動計算結果' : '靜態答案' });
+  if (L.showTheme) rightItems.push({ label: '圖庫瀏覽 Tab', desc: '可預覽商品圖' });
+  const hasSample = !!reg.sample;
+  rightItems.push({ label: '學習單範本 Tab', desc: hasSample ? (Array.isArray(reg.sample) ? `${reg.sample.length} 張輪播` : '單張') : '（無範本 PDF）' });
+  sections.push({ group: '右欄功能', items: rightItems });
+
+  // 下載 / API
+  const apiEndpoint = reg.api ? reg.api.endpoint : '—';
+  sections.push({ group: '下載與 API', items: [
+    { label: '下載方式', desc: usesOptionCard ? '選項卡內下載' : isN2 ? '底部下載按鈕' : '底部下載按鈕' },
+    { label: 'API Endpoint', desc: apiEndpoint },
+  ]});
+
+  // QA 狀態
+  sections.push({ group: 'QA 狀態', items: [
+    { label: '目前狀態', desc: qaLabel, color: qaColor },
+    { label: 'QA 備註', desc: qa.note || '（無）', color: '#6b7280' },
+  ]});
+
+  let html = '';
+  sections.forEach(sec => {
+    html += `<div style="font-size:10px;font-weight:700;color:var(--gray);letter-spacing:.05em;text-transform:uppercase;
+      padding:8px 0 4px;border-top:1px solid var(--border);margin-top:4px;">${sec.group}</div>`;
+    sec.items.forEach((item, i) => {
+      const uid = 'chk_' + typeId.replace(/[^a-z0-9]/gi,'_') + '_' + sec.group.replace(/\s/g,'') + i;
+      html += `<div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0;">
+        <input type="checkbox" id="${uid}" style="margin-top:2px;width:14px;height:14px;accent-color:var(--teal);flex-shrink:0;">
+        <label for="${uid}" style="flex:1;cursor:pointer;line-height:1.4;">
+          <span style="font-size:12px;font-weight:600;">${item.label}</span>
+          <span style="font-size:11px;color:${item.color||'var(--gray)'};display:block;">${item.desc}</span>
+        </label>
+      </div>`;
+    });
+  });
+  body.innerHTML = html;
+}
+
 function exitAdminLock() {
   document.getElementById('adminLockScreen').style.display = 'none';
   document.getElementById('homeScreen').style.display = '';
@@ -3735,16 +3825,16 @@ function renderAdminQAScreen() {
             ${statusLabel}
           </span>
         </div>
-        <div style="width:120px;display:flex;gap:4px;justify-content:center;">
+        <div style="width:140px;display:flex;gap:6px;justify-content:center;">
           <button onclick="setQAStatus('${t.id}','green'); renderAdminQAScreen()"
-            title="標記通過" style="padding:3px 7px;border:none;border-radius:4px;
-              background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;cursor:pointer;">✓</button>
+            title="標記通過" style="padding:6px 12px;border:none;border-radius:6px;
+              background:#dcfce7;color:#15803d;font-size:15px;font-weight:700;cursor:pointer;">✓</button>
           <button onclick="setQAStatus('${t.id}','yellow'); renderAdminQAScreen()"
-            title="標記待覆核" style="padding:3px 7px;border:none;border-radius:4px;
-              background:#fef9c3;color:#a16207;font-size:11px;font-weight:700;cursor:pointer;">△</button>
+            title="標記待覆核" style="padding:6px 12px;border:none;border-radius:6px;
+              background:#fef9c3;color:#a16207;font-size:15px;font-weight:700;cursor:pointer;">△</button>
           <button onclick="setQAStatus('${t.id}','red'); renderAdminQAScreen()"
-            title="標記需修正" style="padding:3px 7px;border:none;border-radius:4px;
-              background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:700;cursor:pointer;">✕</button>
+            title="標記需修正" style="padding:6px 12px;border:none;border-radius:6px;
+              background:#fee2e2;color:#b91c1c;font-size:15px;font-weight:700;cursor:pointer;">✕</button>
         </div>
       </div>`;
   }).join('');
@@ -6674,6 +6764,9 @@ function applyTypeLayout(typeId) {
     || typeId === 'coinvalue1000' || typeId === 'coincarry' || typeId === 'coincarry10' || typeId === 'coincarry1000'
     || _THEME_TYPES.includes(typeId));
   document.getElementById('genBtn').closest('.gen-section').style.display = usesOptionCard ? 'none' : '';
+
+  // 管理員檢核表
+  renderAdminChecklist(typeId);
 
 }
 
