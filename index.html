@@ -2853,7 +2853,6 @@ const TYPE_REGISTRY = [
     diffInfo:{ grade:'二年級', level:'中等', levelColor:'#f59e0b', code:'N-2-7',
       desc:'三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。' },
     sample:{ pdf:'assets/sanbushu_sample.pdf', name:'購物找零_三步驟乘加減_兩位數_範本.pdf' },
-    pricing:{ tier:'paid', price:49 },
     layout:{ panel:'sanbushuPanel', themeSet:'cheap', showTheme:true, prices:true, interactive:false },
     api:{
       endpoint:'/generate/sanbushu',
@@ -7117,9 +7116,20 @@ function goHome() {
 }
 
 // ── PRICING / LICENSE ──
+let PRICING_DATA = { defaults: { single_price: 0, bundle_price: 0, deviation_threshold_pct: 50 }, overrides: {} };
+
+async function loadPricing() {
+  try {
+    const r = await fetch(API_URL + '/pricing');
+    if (!r.ok) return;
+    PRICING_DATA = await r.json();
+  } catch {}
+}
+
 function getPricing(typeId) {
-  const reg = getReg(typeId);
-  return (reg && reg.pricing) || { tier: 'free' };
+  const override = PRICING_DATA.overrides[typeId];
+  if (!override || override.tier !== 'paid') return { tier: 'free' };
+  return { tier: 'paid', price: override.price };
 }
 
 function getLicenseRecords() {
@@ -7531,6 +7541,7 @@ renderHomeTypeCards();
 renderTrialBar(); // 更新 topbar 試用次數
 applyAdminMode(); // 依 localStorage 還原 admin/consumer 模式
 loadBundles(); // 載入批次套裝清單（消費端）
+loadPricing(); // 載入動態定價設定（消費端首頁/購物車/設定頁顯示金額用）
 // 購物車 FAB 標記位於本 script 之後的 body 尾端，直接呼叫會取到 null。
 // 用 DOMContentLoaded 等到 body 解析完再顯示。
 window.addEventListener('DOMContentLoaded', renderCartBadge);
