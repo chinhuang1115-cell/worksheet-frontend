@@ -1447,6 +1447,11 @@ body {
         background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
       QA 總表
     </button>
+    <button class="admin-only" onclick="goAdminPublish()"
+      style="padding:5px 13px;border:1.5px solid var(--gray);border-radius:var(--r-sm);
+        background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
+      📚 出版品編輯
+    </button>
     <button class="admin-toggle-btn" id="adminToggleBtn" onclick="toggleAdminMode()">管理端</button>
     <div class="trial-badge">
       試用版　剩餘
@@ -2404,6 +2409,21 @@ body {
     <div style="width:120px;text-align:center;">操作</div>
   </div>
   <div id="adminQAList"></div>
+</div>
+
+<!-- ── ADMIN PUBLISH SCREEN ── -->
+<div id="adminPublishScreen" style="display:none; padding:24px 32px; max-width:900px; margin:0 auto;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <button onclick="exitAdminPublish()"
+      style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
+    <h2 style="margin:0;font-size:18px;font-weight:700;">出版品編輯器</h2>
+    <button onclick="(function(){ const n = prompt('出版品名稱：', ''); if (n === null) return; const id = createPublication(n.trim()); renderPublicationList(); openPublicationEditor(id); })()" id="newPublicationBtn"
+      style="margin-left:auto;padding:6px 16px;background:var(--teal);color:#fff;
+        border:none;border-radius:var(--r-sm);font-size:12px;font-weight:700;cursor:pointer;">
+      ＋ 新增出版品
+    </button>
+  </div>
+  <div id="publicationList"></div>
 </div>
 
 <!-- ── PREVIEW MODAL ── -->
@@ -3688,6 +3708,111 @@ function goAdminQA() {
 
 function exitAdminQA() {
   document.getElementById('adminQAScreen').style.display = 'none';
+  document.getElementById('homeScreen').style.display = '';
+}
+
+// ── PUBLICATIONS (出版品) STATE ──
+// localStorage['ws_publications'] = { [id]: { id, name, slots, createdAt, updatedAt } }
+// slots = 有序陣列 [{ typeId, mode?, themeId?, copies }]
+function getPublications() {
+  try { return JSON.parse(localStorage.getItem('ws_publications') || '{}'); }
+  catch { return {}; }
+}
+function savePublications(obj) {
+  localStorage.setItem('ws_publications', JSON.stringify(obj));
+}
+function createPublication(name) {
+  const pubs = getPublications();
+  const id = 'pub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  const now = new Date().toISOString();
+  pubs[id] = {
+    id,
+    name: name || '未命名出版品',
+    slots: [],
+    createdAt: now,
+    updatedAt: now,
+  };
+  savePublications(pubs);
+  return id;
+}
+function deletePublication(id) {
+  const pubs = getPublications();
+  delete pubs[id];
+  savePublications(pubs);
+}
+
+function openPublicationEditor(id) {
+  // D2 將實作完整編輯畫面（題型/主題/份數 slots 編輯）
+  alert('D2 實作');
+}
+
+function _formatPubDate(iso) {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso);
+    return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+  } catch { return ''; }
+}
+
+function renderPublicationList() {
+  const list = document.getElementById('publicationList');
+  if (!list) return;
+  const pubs = getPublications();
+  const ids = Object.keys(pubs).sort((a, b) => (pubs[b].updatedAt || '').localeCompare(pubs[a].updatedAt || ''));
+
+  if (ids.length === 0) {
+    list.innerHTML = `
+      <div style="text-align:center;color:var(--gray);padding:60px 20px;font-size:13px;">
+        尚無出版品，點右上角「＋ 新增出版品」開始建立
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = ids.map(id => {
+    const p = pubs[id];
+    const slotCount = (p.slots || []).length;
+    return `
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;
+        border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:10px;">
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;">${(p.name || '未命名出版品').replace(/</g,'&lt;')}</div>
+          <div style="font-size:11px;color:var(--gray);margin-top:4px;">
+            共 ${slotCount} 個題型　建立於 ${_formatPubDate(p.createdAt)}　更新於 ${_formatPubDate(p.updatedAt)}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="openPublicationEditor('${id}')"
+            style="padding:6px 14px;border:1px solid var(--border);border-radius:var(--r-sm);
+              background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;">
+            編輯
+          </button>
+          <button onclick="if(confirm('確定刪除「'+${JSON.stringify(p.name || '未命名出版品')}+'」？')){ deletePublication('${id}'); renderPublicationList(); }"
+            style="padding:6px 14px;border:1px solid var(--border);border-radius:var(--r-sm);
+              background:transparent;color:#b91c1c;font-size:12px;font-weight:700;cursor:pointer;">
+            刪除
+          </button>
+          <button disabled
+            style="padding:6px 14px;border:none;border-radius:var(--r-sm);
+              background:var(--gray-light);color:var(--gray);font-size:12px;font-weight:700;cursor:not-allowed;">
+            生成
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function goAdminPublish() {
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('configNav').style.display = 'none';
+  document.getElementById('configScreen').style.display = 'none';
+  document.getElementById('adminLockScreen').style.display = 'none';
+  document.getElementById('adminQAScreen').style.display = 'none';
+  document.getElementById('adminPublishScreen').style.display = '';
+  renderPublicationList();
+}
+
+function exitAdminPublish() {
+  document.getElementById('adminPublishScreen').style.display = 'none';
   document.getElementById('homeScreen').style.display = '';
 }
 
@@ -6299,6 +6424,7 @@ function goHome() {
   document.getElementById('configScreen').style.display = 'none';
   document.getElementById('adminLockScreen').style.display = 'none';
   document.getElementById('adminQAScreen').style.display = 'none'; // 新增
+  document.getElementById('adminPublishScreen').style.display = 'none';
 }
 
 // ── CART ──
