@@ -7166,20 +7166,93 @@ function renderCart() {
       購物車是空的<br>請選擇學習單加入</div>`;
     return;
   }
-  el.innerHTML = cart.map(item => `
+  el.innerHTML = cart.map(item => {
+    const pricing = item.isBundle ? { tier: 'free' } : getPricing(item.typeId);
+    const license = (!item.isBundle && pricing.tier === 'paid') ? getLicenseForType(item.typeId) : null;
+    let badge;
+    if (pricing.tier === 'free') {
+      badge = `<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:#dcfce7;color:#15803d;">免費</span>`;
+    } else if (license) {
+      badge = `<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:#dbeafe;color:#1d4ed8;">已購買</span>`;
+    } else {
+      badge = `<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:#ffedd5;color:#c2410c;">💰 需購買</span>`;
+    }
+    const checkbox = (!item.isBundle && pricing.tier === 'paid' && !license)
+      ? `<input type="checkbox" class="cart-buy-checkbox" data-type-id="${item.typeId}" style="margin-right:8px;">`
+      : '';
+    return `
     <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;
       border-bottom:1px solid var(--border);">
+      ${checkbox}
       <div style="flex:1;">
         <div style="font-size:13px;font-weight:700;">${item.typeName}</div>
-        <div style="font-size:11px;color:var(--gray);margin-top:2px;">
+        <div style="font-size:11px;color:var(--gray);margin-top:2px;display:flex;align-items:center;gap:6px;">
           ${item.isBundle ? '📦 批次套裝' : '⚙️ 自訂設定'}
           ${item.mode ? ` · ${item.mode}` : ''}
+          ${badge}
         </div>
       </div>
       <button onclick="removeFromCart('${item.id}')"
         style="background:none;border:none;color:var(--gray);font-size:16px;cursor:pointer;padding:0;">✕</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
+
+async function verifyLicenseInput() {
+  const code = document.getElementById('licenseCodeInput').value.trim();
+  const email = document.getElementById('licenseEmailInput').value.trim();
+  const msgEl = document.getElementById('licenseVerifyMsg');
+  if (!code || !email) { msgEl.textContent = '請輸入授權碼與 Email'; return; }
+  try {
+    const r = await fetch(API_URL + '/license/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, email }),
+    });
+    if (!r.ok) { msgEl.textContent = '授權碼或 Email 不正確，請確認輸入'; return; }
+    const { type_ids } = await r.json();
+    saveLicenseRecord(code, email, type_ids);
+    msgEl.textContent = `已解鎖 ${type_ids.length} 個題型`;
+    renderCart();
+  } catch {
+    msgEl.textContent = '驗證失敗，請稍後再試';
+  }
+}
+
+async function purchaseSelected() {
+  const checked = [...document.querySelectorAll('.cart-buy-checkbox:checked')].map(el => el.dataset.typeId);
+  if (!checked.length) { alert('請先勾選要購買的項目'); return; }
+  const email = prompt('請輸入收件 Email（授權碼將寄到這個信箱）：');
+  if (!email) return;
+  try {
+    const r = await fetch(API_URL + '/orders/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type_ids: checked, buyer_email: email }),
+    });
+    if (!r.ok) {
+      const err = await r.json();
+      alert('建立訂單失敗：' + (err.detail || r.status));
+      return;
+    }
+    const { checkout_url, params } = await r.json();
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = checkout_url;
+    Object.entries(params).forEach(([k, v]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = k;
+      input.value = v;
+      form.appendChild(input);
+    });
+    document.body.appendChild(form);
+    form.submit();
+  } catch (e) {
+    alert('建立訂單失敗：' + e.message);
+  }
+}
+
 // ── 批次套裝（消費端）──
 async function loadBundles() {
   try {
@@ -7401,6 +7474,18 @@ window.addEventListener('DOMContentLoaded', renderCartBadge);
     <button onclick="closeCart()"
       style="margin-left:auto;background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">✕</button>
   </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px;">輸入授權碼解鎖</div>
+    <input id="licenseCodeInput" type="text" placeholder="授權碼"
+      style="width:100%;margin-bottom:6px;border:1px solid var(--border);border-radius:4px;padding:6px 8px;font-size:12px;">
+    <input id="licenseEmailInput" type="email" placeholder="購買時填寫的 Email"
+      style="width:100%;margin-bottom:6px;border:1px solid var(--border);border-radius:4px;padding:6px 8px;font-size:12px;">
+    <button onclick="verifyLicenseInput()"
+      style="width:100%;padding:6px 0;border:none;border-radius:4px;background:var(--teal);color:#fff;font-size:12px;font-weight:700;cursor:pointer;">
+      驗證解鎖
+    </button>
+    <div id="licenseVerifyMsg" style="font-size:11px;color:var(--gray);margin-top:4px;"></div>
+  </div>
   <div id="cartItems" style="flex:1;overflow-y:auto;padding:12px 16px;"></div>
   <div style="padding:16px 20px;border-top:1px solid var(--border);">
     <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:13px;">
@@ -7408,6 +7493,11 @@ window.addEventListener('DOMContentLoaded', renderCartBadge);
       <button onclick="clearCart(); renderCart()"
         style="background:none;border:none;color:var(--gray);font-size:12px;cursor:pointer;">清空</button>
     </div>
+    <button onclick="purchaseSelected()"
+      style="width:100%;padding:10px;margin-bottom:8px;background:#fff;color:var(--teal);
+        border:1.5px solid var(--teal);border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;">
+      💰 購買已勾選項目
+    </button>
     <button onclick="downloadAllCart()" id="cartDownloadBtn"
       style="width:100%;padding:12px;background:var(--teal);color:#fff;border:none;
         border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;">
