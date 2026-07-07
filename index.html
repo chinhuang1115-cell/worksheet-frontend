@@ -1601,6 +1601,18 @@ body {
       <div class="card-body" id="diffInfoBody" style="padding:12px 16px;"></div>
     </div>
 
+    <!-- 定價分類卡（僅管理模式顯示） -->
+    <div class="card" id="pricingCategoryCard" style="display:none;">
+      <div class="card-head"><span class="card-title">定價分類</span></div>
+      <div class="card-body" style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">
+          依製作難度選擇類別，價格由「A 類基本價 × 比率」自動推導
+        </div>
+        <div id="pricingCategoryBtns" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+        <div id="pricingCategoryPrice" style="font-size:12px;color:var(--gray);"></div>
+      </div>
+    </div>
+
     <!-- 版型選擇卡（分分看） -->
     <div class="card" id="fenfenSubtypeCard" style="display:none;">
       <div class="card-head"><span class="card-title">版型選擇</span></div>
@@ -4315,6 +4327,40 @@ async function _savePricingOverride(type_id, tier, price) {
     if (!r.ok) { alert('儲存失敗：' + (await r.json()).detail); return; }
     await loadPricing();
     renderAdminPricingScreen();
+  } catch (e) {
+    alert('儲存失敗：' + e.message);
+  }
+}
+
+// ── 題型設定頁：定價分類卡（管理模式） ──
+const PRICING_CATEGORIES = [
+  { v: 'free', label: '免費' },
+  { v: 'A', label: 'A 類' },
+  { v: 'B', label: 'B 類' },
+  { v: 'C', label: 'C 類' },
+];
+
+function renderPricingCategoryCard(typeId) {
+  const cur = getPricing(typeId).category;
+  document.getElementById('pricingCategoryBtns').innerHTML = PRICING_CATEGORIES.map(c => `
+    <button class="fenfen-set-btn ${c.v === cur ? 'active' : ''}"
+      onclick="setPricingCategory('${typeId}', '${c.v}')">${c.label}</button>`).join('');
+  const p = getPricing(typeId);
+  document.getElementById('pricingCategoryPrice').textContent =
+    p.tier === 'paid' ? `目前單價：NT$${p.price}（每加購 1 份 +NT$${PRICING_DATA.defaults.per_copy_fee}）` : '目前為免費題型';
+}
+
+async function setPricingCategory(typeId, category) {
+  try {
+    const r = await fetch(API_URL + '/admin/pricing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
+      body: JSON.stringify({ type_id: typeId, category }),
+    });
+    if (!r.ok) { alert('儲存失敗：' + (await r.json()).detail); return; }
+    await loadPricing();
+    renderPricingCategoryCard(typeId);
+    renderDiffInfoCard(typeId); // 難度資訊卡的付費徽章即時更新
   } catch (e) {
     alert('儲存失敗：' + e.message);
   }
@@ -7222,6 +7268,11 @@ function applyTypeLayout(typeId) {
     || _THEME_TYPES.includes(typeId);
   document.getElementById('diffInfoCard').style.display   = hideDiffInfo ? 'none' : '';
   if (!hideDiffInfo) renderDiffInfoCard(typeId);
+
+  // 定價分類卡：僅管理模式顯示
+  const pcCard = document.getElementById('pricingCategoryCard');
+  pcCard.style.display = adminMode ? '' : 'none';
+  if (adminMode) renderPricingCategoryCard(typeId);
 
   // 版型選擇卡：只在分分看題型顯示
   document.getElementById('fenfenSubtypeCard').style.display = (typeId === 'fenfen') ? '' : 'none';
