@@ -1486,6 +1486,10 @@ body {
           <div class="filter-pills" id="homeSortBtns"></div>
         </div>
       </div>
+      <div id="bundleSection" style="display:none;margin-bottom:20px;">
+        <div style="font-size:13px;font-weight:700;color:var(--gray);margin-bottom:8px;">📦 精選套裝組合</div>
+        <div id="bundleSectionGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;"></div>
+      </div>
       <div class="type-card-grid"   id="typeCardGrid"></div>
       <div class="type-sample-grid" id="typeSampleGrid" style="display:none;"></div>
     </div>
@@ -7262,8 +7266,24 @@ async function loadBundles() {
     if (!bundles || !bundles.length) return;
     S._bundleData = {};
     bundles.forEach(b => { S._bundleData[b.id] = b; });
-    renderHomeFilter(); // 更新左欄 sidebar 顯示精選套裝按鈕
+    renderBundleSection();
   } catch {}
+}
+
+function renderBundleSection() {
+  const section = document.getElementById('bundleSection');
+  const grid = document.getElementById('bundleSectionGrid');
+  if (!section || !grid) return;
+  const bundles = Object.values(S._bundleData || {});
+  if (!bundles.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  grid.innerHTML = bundles.map(b => `
+    <div onclick="openBundleView('${b.id}')" style="cursor:pointer;padding:14px;background:#fff;
+      border:1px solid var(--border);border-radius:var(--r-sm);transition:box-shadow .15s;"
+      onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${b.label}</div>
+      <div style="font-size:11px;color:var(--gray);">📄 共 ${b.pages} 頁學習單</div>
+    </div>`).join('');
 }
 
 function previewBundle(bundleId) {
