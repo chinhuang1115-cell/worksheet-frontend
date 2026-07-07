@@ -3710,12 +3710,19 @@ function applyAdminMode() {
 }
 
 // ── LOCK STATE ──
-function getLockState() {
-  try { return JSON.parse(localStorage.getItem('ws_lock_state') || '{}'); }
-  catch { return {}; }
+let LOCK_DATA = {};
+
+async function loadLocks() {
+  try {
+    const r = await fetch(API_URL + '/locks');
+    if (!r.ok) return;
+    const data = await r.json();
+    LOCK_DATA = data.locks || {};
+  } catch {}
 }
-function setLockState(state) {
-  localStorage.setItem('ws_lock_state', JSON.stringify(state));
+
+function getLockState() {
+  return LOCK_DATA;
 }
 function isUnlocked(typeId) {
   // 在 admin mode 中，所有題型皆可存取（不受鎖定限制）
@@ -3723,9 +3730,23 @@ function isUnlocked(typeId) {
   return getLockState()[typeId] === true;
 }
 function setUnlocked(typeId, unlocked) {
-  const state = getLockState();
-  state[typeId] = unlocked;
-  setLockState(state);
+  const previous = LOCK_DATA[typeId] === true;
+  LOCK_DATA[typeId] = unlocked;
+  _saveLockOverride(typeId, unlocked, previous);
+}
+async function _saveLockOverride(typeId, unlocked, previous) {
+  try {
+    const r = await fetch(API_URL + '/admin/locks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
+      body: JSON.stringify({ type_id: typeId, unlocked }),
+    });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+  } catch (e) {
+    LOCK_DATA[typeId] = previous;
+    alert('解鎖狀態儲存失敗，已還原：' + e.message);
+    renderHomeTypeCards();
+  }
 }
 function toggleLock(typeId) {
   const current = getLockState()[typeId] === true;
@@ -3733,17 +3754,41 @@ function toggleLock(typeId) {
   renderHomeTypeCards();
   if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
 }
-function unlockAll() {
+async function unlockAll() {
   const state = {};
   TYPE_REGISTRY.forEach(t => { state[t.id] = true; });
-  setLockState(state);
+  LOCK_DATA = state;
   renderHomeTypeCards();
   if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+  try {
+    const r = await fetch(API_URL + '/admin/locks/bulk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
+      body: JSON.stringify({ locks: state }),
+    });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+  } catch (e) {
+    alert('全部解鎖儲存失敗：' + e.message);
+    await loadLocks();
+    renderHomeTypeCards();
+  }
 }
-function lockAll() {
-  setLockState({});
+async function lockAll() {
+  LOCK_DATA = {};
   renderHomeTypeCards();
   if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
+  try {
+    const r = await fetch(API_URL + '/admin/locks/bulk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
+      body: JSON.stringify({ locks: {} }),
+    });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+  } catch (e) {
+    alert('全部鎖定儲存失敗：' + e.message);
+    await loadLocks();
+    renderHomeTypeCards();
+  }
 }
 
 // ── QA STATE ──
@@ -3839,13 +3884,37 @@ function renderAdminLockScreen() {
   list.innerHTML = html;
 }
 
-function goAdminLock() {
+async function goAdminLock() {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
   document.getElementById('adminChecklistBanner').style.display = 'none';
   document.getElementById('adminLockScreen').style.display = '';
+  await _maybeMigrateLocalLocks();
   renderAdminLockScreen();
+}
+
+async function _maybeMigrateLocalLocks() {
+  if (Object.keys(LOCK_DATA).length > 0) return; // 後端已有資料，不需遷移
+  let legacy;
+  try { legacy = JSON.parse(localStorage.getItem('ws_lock_state') || '{}'); }
+  catch { legacy = {}; }
+  const unlockedIds = Object.keys(legacy).filter(id => legacy[id] === true);
+  if (!unlockedIds.length) return;
+  if (!confirm(`偵測到本機解鎖設定（${unlockedIds.length} 個題型），要同步到伺服器嗎？`)) return;
+  try {
+    const r = await fetch(API_URL + '/admin/locks/bulk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
+      body: JSON.stringify({ locks: legacy }),
+    });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+    LOCK_DATA = legacy;
+    localStorage.removeItem('ws_lock_state');
+    alert('已同步 ' + unlockedIds.length + ' 個解鎖設定到伺服器');
+  } catch (e) {
+    alert('同步失敗：' + e.message);
+  }
 }
 
 // ── 管理員檢核表狀態（ws_checklist_state） ──────────────────────
@@ -7307,7 +7376,11 @@ function goHome() {
 }
 
 // ── PRICING / LICENSE ──
-let PRICING_DATA = { defaults: { single_price: 0, bundle_price: 0, deviation_threshold_pct: 50 }, overrides: {} };
+let PRICING_DATA = {
+  schema_version: 2,
+  defaults: { base_price_A: 0, ratio_B: 1.5, ratio_C: 2.0, per_copy_fee: 0, bundle_discount_pct: 80 },
+  categories: {},
+};
 
 async function loadPricing() {
   try {
@@ -7315,13 +7388,28 @@ async function loadPricing() {
     if (!r.ok) return;
     PRICING_DATA = await r.json();
     renderHomeTypeCards(); // 首頁卡片在啟動時已先渲染過，取得定價後重繪以補上價格徽章
+    renderBundleSection(); // 套裝卡片補上價格
   } catch {}
 }
 
 function getPricing(typeId) {
-  const override = PRICING_DATA.overrides[typeId];
-  if (!override || override.tier !== 'paid') return { tier: 'free' };
-  return { tier: 'paid', price: override.price };
+  const cat = PRICING_DATA.categories[typeId];
+  if (cat !== 'A' && cat !== 'B' && cat !== 'C') return { tier: 'free', category: 'free' };
+  const d = PRICING_DATA.defaults;
+  const price = cat === 'A' ? d.base_price_A
+    : Math.round(d.base_price_A * (cat === 'B' ? d.ratio_B : d.ratio_C));
+  return { tier: 'paid', category: cat, price };
+}
+
+function getBundlePricing(bundle) {
+  const ids = bundle.type_ids || [];
+  let memberTotal = 0, paidCount = 0;
+  ids.forEach(id => {
+    const p = getPricing(id);
+    if (p.tier === 'paid') { memberTotal += p.price; paidCount++; }
+  });
+  const price = Math.round(memberTotal * PRICING_DATA.defaults.bundle_discount_pct / 100);
+  return { memberTotal, price, paidCount };
 }
 
 function getLicenseRecords() {
@@ -7527,6 +7615,11 @@ function renderBundleSection() {
       onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
       <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${b.label}</div>
       <div style="font-size:11px;color:var(--gray);">📄 共 ${b.pages} 頁學習單</div>
+      ${(() => { const bp = getBundlePricing(b); return bp.price > 0
+        ? `<div style="display:inline-block;margin-top:4px;padding:1px 8px;background:#fff7ed;color:#c2410c;
+             border-radius:10px;font-size:10px;font-weight:700;">💰 NT$${bp.price}</div>`
+        : `<div style="display:inline-block;margin-top:4px;padding:1px 8px;background:#dcfce7;color:#15803d;
+             border-radius:10px;font-size:10px;font-weight:700;">免費</div>`; })()}
     </div>`).join('');
 }
 
@@ -7599,6 +7692,13 @@ function openBundleView(bundleId) {
   document.getElementById('bvInfoCard').innerHTML = `
     <div style="font-size:13px;font-weight:700;margin-bottom:8px;">${b.label}</div>
     <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">共 ${b.pages} 頁學習單</div>
+    ${(() => { const bp = getBundlePricing(b); return bp.price > 0
+      ? `<div style="font-size:13px;margin-top:6px;">
+           <span style="text-decoration:line-through;color:var(--gray);">NT$${bp.memberTotal}</span>
+           <span style="color:#c2410c;font-weight:700;margin-left:6px;">NT$${bp.price}</span>
+           <span style="font-size:11px;color:var(--gray);">（套裝 ${PRICING_DATA.defaults.bundle_discount_pct}%）</span>
+         </div>`
+      : ''; })()}
     ${b.type_ids && b.type_ids.length ? `
       <div style="font-size:11px;color:var(--gray);margin-top:8px;padding-top:8px;
         border-top:1px solid var(--border);">
@@ -7734,6 +7834,7 @@ renderTrialBar(); // 更新 topbar 試用次數
 applyAdminMode(); // 依 localStorage 還原 admin/consumer 模式
 loadBundles(); // 載入批次套裝清單（消費端）
 loadPricing(); // 載入動態定價設定（消費端首頁/購物車/設定頁顯示金額用）
+loadLocks();   // 載入解鎖狀態（消費端跨瀏覽器一致的開放狀態）
 // 購物車 FAB 標記位於本 script 之後的 body 尾端，直接呼叫會取到 null。
 // 用 DOMContentLoaded 等到 body 解析完再顯示。
 window.addEventListener('DOMContentLoaded', renderCartBadge);
