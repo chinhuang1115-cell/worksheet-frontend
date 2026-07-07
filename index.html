@@ -5147,6 +5147,7 @@ function addToCartFromConfig() {
     filename:   fname,
     isBundle:   false,
     bundlePath: null,
+    routeTypeId: S.typeId,
   });
   if (added) {
     const btn = document.getElementById('genBtn');
@@ -5160,7 +5161,7 @@ function addToCartFromConfig() {
 
 // 供各 ModeCard 的 apply*Mode() 函式在消費端呼叫：以 mode 相關設定組出 cart item
 // 並直接加入購物車（不 fetch，PDF 於結帳時由 /generate-pdf 產生）。
-function _addModeToCart({ typeId, modeLabel, config, filename, mode }) {
+function _addModeToCart({ typeId, modeLabel, config, filename, mode, routeTypeId }) {
   if (!isUnlocked(typeId)) { showLockedToast(); return false; }
   const reg = getReg(typeId);
   return addToCart({
@@ -5171,6 +5172,10 @@ function _addModeToCart({ typeId, modeLabel, config, filename, mode }) {
     filename,
     isBundle:   false,
     bundlePath: null,
+    // routeTypeId：/generate-pdf 結帳呼叫實際使用的 ROUTE_MAP type_id（部分題型的
+    // 註冊 typeId 是合併多版型的父題型，如 fenfen/tuiwei3sub/sub1，與後端 ROUTE_MAP
+    // 逐版型獨立 key 不同，須另外傳入正確 key；未提供則退回 typeId）
+    routeTypeId: routeTypeId || typeId,
   });
 }
 
@@ -5620,6 +5625,7 @@ async function applyTuiwei3subMode() {
     const added = _addModeToCart({
       typeId: 'tuiwei3sub', modeLabel: modeLabel[mode], mode,
       config: {}, filename: filenameMap[mode],
+      routeTypeId: 'tuiwei3sub-' + mode,
     });
     if (added) {
       resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
@@ -5726,6 +5732,7 @@ async function applySub1Mode() {
     const added = _addModeToCart({
       typeId: 'sub1', modeLabel: modeLabel[mode], mode,
       config: {}, filename: filenameMap[mode],
+      routeTypeId: mode,
     });
     if (added) {
       resultLbl.textContent = `✓ 已依「${modeLabel[mode]}」加入購物車`;
@@ -6316,6 +6323,7 @@ async function applyFenfenSubtype() {
     const added = _addModeToCart({
       typeId: 'fenfen', modeLabel: label, mode: sub,
       config: bodyMap[sub], filename: filenameMap[sub](),
+      routeTypeId: endpointMap[sub].replace('/generate/', ''),
     });
     if (added) {
       resultLbl.textContent = `✓ 已依「${label}」加入購物車`;
@@ -6642,10 +6650,30 @@ function renderHomeTypeCards() {
 
   const empty = '<div style="text-align:center;padding:40px 0;color:var(--gray);font-size:13px;">此分類尚無題型</div>';
 
+  // 「全部」篩選下：固定舊到新編號＋每十個一區（不受排序影響）
+  const showFixedNum = (op === 'all');
+  const fixedNumMap = {};
+  let renderList = filtered;
+  if (showFixedNum) {
+    renderList = [...filtered].sort((a, b) =>
+      TYPE_REGISTRY.findIndex(t => t.id === a.id) - TYPE_REGISTRY.findIndex(t => t.id === b.id));
+    renderList.forEach((t, i) => { fixedNumMap[t.id] = i + 1; });
+  }
+  function _homeGroupHeader(i, total) {
+    if (!showFixedNum || i % 10 !== 0) return '';
+    const lo = i + 1, hi = Math.min(i + 10, total);
+    return `<div style="grid-column:1/-1;padding:6px 4px;margin-top:${i===0?'0':'10px'};
+      border-top:2px solid var(--border);border-bottom:1px solid var(--border);
+      font-size:11px;font-weight:700;color:var(--gray);letter-spacing:.04em;">
+      第 ${lo}–${hi} 項</div>`;
+  }
+
   // 簡介模式
-  document.getElementById('typeCardGrid').innerHTML = filtered.length
-    ? filtered.map(t => {
+  document.getElementById('typeCardGrid').innerHTML = renderList.length
+    ? renderList.map((t, i) => {
         const m = HOME_TYPE_META[t.id] || {};
+        const numBadge = showFixedNum
+          ? `<span style="color:var(--gray);font-weight:700;margin-right:4px;">${fixedNumMap[t.id]}.</span>` : '';
         const locked = !adminMode && !isUnlocked(t.id);
         const lockedOverlay = locked ? `
           <div style="position:absolute;inset:0;background:rgba(255,255,255,0.82);
@@ -6670,11 +6698,11 @@ function renderHomeTypeCards() {
           ? `<span class="qa-dot qa-dot-${qaInfo.status}"
               style="position:absolute;top:8px;left:8px;z-index:3;width:10px;height:10px;"></span>`
           : '';
-        return `
+        return _homeGroupHeader(i, renderList.length) + `
         <div class="type-card" style="position:relative;${adminCardStyle}" onclick="${cardOnclick}">
           <div class="type-card-icon">${m.icon || '📄'}</div>
           <div>
-            <div class="type-card-name">${coloredName(t.name)}</div>
+            <div class="type-card-name">${numBadge}${coloredName(t.name)}</div>
             <span class="type-card-sub">${m.sub || ''}</span>
           </div>
           <div class="type-card-desc">${m.desc || t.desc}</div>
@@ -6690,8 +6718,10 @@ function renderHomeTypeCards() {
     : empty;
 
   // 範本預覽模式
-  document.getElementById('typeSampleGrid').innerHTML = filtered.length
-    ? filtered.map(t => {
+  document.getElementById('typeSampleGrid').innerHTML = renderList.length
+    ? renderList.map((t, i) => {
+        const numBadge = showFixedNum
+          ? `<span style="color:var(--gray);font-weight:700;margin-right:4px;">${fixedNumMap[t.id]}.</span>` : '';
         const sample = SAMPLE_PDFS[t.id];
         const arr    = SAMPLE_ARRAYS[t.id];
         const hasPdf = sample?.pdf;
@@ -6720,7 +6750,7 @@ function renderHomeTypeCards() {
           ? `<span class="qa-dot qa-dot-${qaInfo.status}"
               style="position:absolute;top:8px;left:8px;z-index:3;width:10px;height:10px;"></span>`
           : '';
-        return `
+        return _homeGroupHeader(i, renderList.length) + `
         <div class="type-sample-card" style="position:relative;${adminCardStyle}" onclick="${cardOnclick}">
           <div class="sample-thumb-wrap">
             ${hasPdf
@@ -6735,7 +6765,7 @@ function renderHomeTypeCards() {
               : `<div class="sample-thumb-placeholder">尚無範本預覽</div>`}
           </div>
           <div class="sample-card-footer">
-            <div class="sample-card-name">${coloredName(t.name)}</div>
+            <div class="sample-card-name">${numBadge}${coloredName(t.name)}</div>
             <button class="sample-card-btn" onclick="event.stopPropagation();${cardOnclick}">使用 →</button>
           </div>
           ${lockedOverlay}
@@ -7256,20 +7286,21 @@ async function downloadAllCart() {
         const blob = await r.blob();
         url = URL.createObjectURL(blob);
       } else {
-        // 自訂設定：呼叫 /generate-pdf
+        // 自訂設定：呼叫 /generate-pdf（type_id 用 routeTypeId，涵蓋 fenfen/tuiwei3sub/sub1
+        // 等合併多版型題型與後端 ROUTE_MAP 各版型獨立 key 的對照，未設定則退回 typeId）
         const r = await fetch(API_URL + '/generate-pdf', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type_id: item.typeId, body: item.config }),
+          body: JSON.stringify({ type_id: item.routeTypeId || item.typeId, body: item.config }),
         });
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const blob = await r.blob();
         url = URL.createObjectURL(blob);
       }
-      // 觸發下載
+      // 觸發下載（後端一律回傳 PDF，檔名副檔名一併校正）
       const a = document.createElement('a');
       a.href = url;
-      a.download = item.filename;
+      a.download = (item.filename || 'worksheet.pdf').replace(/\.docx$/i, '.pdf');
       a.click();
       URL.revokeObjectURL(url);
       // 避免瀏覽器攔截多個同時下載
