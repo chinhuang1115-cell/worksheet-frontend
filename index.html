@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>學習單產生器 — 資源班數學教材工具</title>
+<title>易數教室 — 資源班數學教材工具</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -1434,7 +1434,7 @@ body {
 <div class="topbar">
   <div class="topbar-logo" onclick="goHome()" style="cursor:pointer;">
     <div class="dot">✏️</div>
-    學習單產生器
+    易數教室
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <button class="admin-only" onclick="goAdminLock()"
@@ -1464,35 +1464,8 @@ body {
 <!-- ── HOME SCREEN ── -->
 <div id="homeScreen">
   <div class="home-hero">
-    <h1 class="home-title">✏️ 學習單產生器</h1>
+    <h1 class="home-title">✏️ 易數教室</h1>
     <p class="home-sub">選擇題型，快速產出客製化數學學習單</p>
-  </div>
-  <div id="bundleSection" class="consumer-only"
-    style="max-width:960px;margin:0 auto 24px;padding:0 24px;">
-    <div style="font-size:14px;font-weight:700;margin-bottom:12px;">📦 精選套裝組合</div>
-    <div id="bundleList" style="display:flex;gap:12px;flex-wrap:wrap;"></div>
-  </div>
-
-  <!-- 套裝預覽 Modal -->
-  <div id="bundlePreviewModal" style="display:none;position:fixed;inset:0;
-    background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;">
-    <div style="background:#fff;border-radius:var(--r);padding:24px 28px;
-      max-width:420px;width:92%;box-shadow:0 8px 32px rgba(0,0,0,.18);">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-        <h3 id="bpTitle" style="margin:0;font-size:16px;font-weight:700;"></h3>
-        <button onclick="closeBundlePreview()"
-          style="background:none;border:none;font-size:22px;line-height:1;cursor:pointer;
-            color:var(--gray);padding:0 4px;">✕</button>
-      </div>
-      <div id="bpBody" style="font-size:13px;color:var(--gray);line-height:1.8;
-        margin-bottom:20px;"></div>
-      <button onclick="bundlePreviewAddToCart()"
-        style="width:100%;padding:12px;background:var(--teal);color:#fff;border:none;
-          border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;
-          letter-spacing:.03em;">
-        + 加入購物車
-      </button>
-    </div>
   </div>
   <div class="home-layout">
     <div class="home-sidebar">
@@ -1519,6 +1492,39 @@ body {
   </div>
 </div>
 
+<!-- ── BUNDLE VIEW SCREEN ── -->
+<div id="bundleViewScreen" style="display:none; max-width:1200px; margin:0 auto; padding:20px 20px 80px;">
+  <div style="display:flex;align-items:center;gap:12px;padding-bottom:14px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;">
+    <button onclick="exitBundleView()"
+      style="background:none;border:none;font-size:15px;cursor:pointer;color:var(--gray);
+        padding:4px 10px;border-radius:var(--r-sm);display:flex;align-items:center;gap:4px;">
+      ‹ 首頁
+    </button>
+    <h2 id="bvTitle" style="margin:0;font-size:18px;font-weight:700;flex:1;"></h2>
+  </div>
+  <div style="display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start;">
+    <!-- 左欄：套裝資訊 + 加入購物車 -->
+    <div style="position:sticky;top:60px;">
+      <div id="bvInfoCard" style="border:1px solid var(--border);border-radius:var(--r);
+        background:var(--warm-white);padding:16px 18px;margin-bottom:14px;"></div>
+      <button onclick="bundleViewAddToCart()"
+        class="consumer-only"
+        style="width:100%;padding:12px;background:var(--teal);color:#fff;border:none;
+          border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;">
+        + 加入購物車
+      </button>
+    </div>
+    <!-- 右欄：PDF 全頁預覽 -->
+    <div>
+      <div id="bvPdfLoading"
+        style="font-size:13px;color:var(--gray);padding:16px 0;">載入學習單內容中…</div>
+      <div id="bvPdfContainer"
+        style="display:flex;flex-direction:column;gap:16px;"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ── CONFIG NAV ── -->
 <div class="config-nav" id="configNav" style="display:none;">
   <button class="back-btn" onclick="goHome()">‹ 所有題型</button>
@@ -1526,10 +1532,10 @@ body {
   <span class="config-nav-type" id="configNavType"></span>
 </div>
 
-<!-- 管理員檢核橫幅（topbar 正下方，admin only） -->
+<!-- 管理員檢核橫幅（凍結在 topbar 正下方，admin only） -->
 <div class="admin-only" id="adminChecklistBanner"
-  style="display:none; border-bottom:2px solid var(--amber);
-    background:var(--amber-light); overflow:hidden;">
+  style="display:none; position:sticky; top:52px; z-index:97;
+    border-bottom:2px solid var(--amber); background:var(--amber-light); overflow:hidden;">
   <div style="display:flex;align-items:center;gap:10px;padding:8px 20px;
     border-bottom:1px solid #fde68a;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:var(--amber-dark);">▲ 管理員檢核表</span>
@@ -3781,6 +3787,7 @@ function goAdminLock() {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
+  document.getElementById('adminChecklistBanner').style.display = 'none';
   document.getElementById('adminLockScreen').style.display = '';
   renderAdminLockScreen();
 }
@@ -4049,6 +4056,7 @@ function goAdminQA() {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
+  document.getElementById('adminChecklistBanner').style.display = 'none';
   document.getElementById('adminLockScreen').style.display = 'none';
   document.getElementById('adminQAScreen').style.display = '';
   renderAdminQAScreen();
@@ -6563,10 +6571,31 @@ function renderGradeFilters() {
 }
 
 function renderHomeFilter() {
-  document.getElementById('homeOpFilters').innerHTML = HOME_OP_KEYS.map(op => {
+  const el = document.getElementById('homeOpFilters');
+  if (!el) return;
+  let html = HOME_OP_KEYS.map(op => {
     const m = OP_META[op];
     return `<button class="filter-pill ${m.cls} ${curOps.has(op)?'active':''}" onclick="toggleOp('${op}')">${m.label}</button>`;
   }).join('');
+
+  // 精選套裝（消費端限定，sidebar 底部）
+  const bundles = S._bundleData ? Object.values(S._bundleData) : [];
+  if (!adminMode && bundles.length) {
+    html += `<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);">
+      <div style="font-size:10px;font-weight:700;color:var(--gray);letter-spacing:.06em;
+        text-transform:uppercase;margin-bottom:6px;">精選套裝</div>
+      ${bundles.map(b => `
+        <button onclick="openBundleView('${b.id}')"
+          style="display:block;width:100%;text-align:left;padding:6px 8px;margin-bottom:4px;
+            background:var(--amber-light);border:1px solid #fcd34d;border-radius:var(--r-sm);
+            font-size:12px;font-weight:600;cursor:pointer;color:var(--amber-dark);
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3;"
+          title="${b.label.replace(/"/g,'&quot;')}">
+          📦 ${b.label}
+        </button>`).join('')}
+    </div>`;
+  }
+  el.innerHTML = html;
 }
 
 const _SORT_OPTS = [
@@ -7024,6 +7053,7 @@ function goHome() {
   document.getElementById('adminQAScreen').style.display = 'none';
   document.getElementById('adminPublishScreen').style.display = 'none';
   document.getElementById('pubEditorScreen').style.display = 'none';
+  document.getElementById('bundleViewScreen').style.display = 'none';
 }
 
 // ── CART ──
@@ -7106,27 +7136,10 @@ async function loadBundles() {
     const r = await fetch(API_URL + '/bundles');
     if (!r.ok) return;
     const { bundles } = await r.json();
-    const el = document.getElementById('bundleList');
-    if (!el || !bundles.length) return;
-    // 緩存 bundle 資料供 preview modal 使用
+    if (!bundles || !bundles.length) return;
     S._bundleData = {};
     bundles.forEach(b => { S._bundleData[b.id] = b; });
-    el.innerHTML = bundles.map(b => {
-      const safeLabel = b.label.replace(/'/g, "\\'");
-      return `
-        <div style="border:1px solid var(--border);border-radius:var(--r-sm);
-          padding:14px 16px;min-width:200px;max-width:240px;cursor:pointer;
-          transition:box-shadow .15s;"
-          onmouseenter="this.style.boxShadow='0 2px 10px rgba(0,0,0,.1)'"
-          onmouseleave="this.style.boxShadow=''"
-          onclick="previewBundle('${b.id}')">
-          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${b.label}</div>
-          <div style="font-size:11px;color:var(--gray);">共 ${b.pages} 頁 PDF</div>
-          <div style="margin-top:10px;font-size:12px;font-weight:700;color:var(--teal);">
-            👁 預覽內容 →
-          </div>
-        </div>`;
-    }).join('');
+    renderHomeFilter(); // 更新左欄 sidebar 顯示精選套裝按鈕
   } catch {}
 }
 
@@ -7184,6 +7197,60 @@ function addBundleToCart(bundleId, label) {
   if (!S._bundleData) S._bundleData = {};
   if (!S._bundleData[bundleId]) S._bundleData[bundleId] = { id: bundleId, label, pages: '?' };
   bundlePreviewAddToCart();
+}
+
+// ── 精選套裝瀏覽頁面 ──
+function openBundleView(bundleId) {
+  const b = (S._bundleData || {})[bundleId];
+  if (!b) return;
+  S._viewingBundleId = bundleId;
+
+  // 標題
+  document.getElementById('bvTitle').textContent = b.label;
+
+  // 左欄資訊卡
+  document.getElementById('bvInfoCard').innerHTML = `
+    <div style="font-size:13px;font-weight:700;margin-bottom:8px;">${b.label}</div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">共 ${b.pages} 頁學習單</div>
+    ${b.type_ids && b.type_ids.length ? `
+      <div style="font-size:11px;color:var(--gray);margin-top:8px;padding-top:8px;
+        border-top:1px solid var(--border);">
+        <div style="font-weight:700;margin-bottom:4px;">包含題型</div>
+        ${b.type_ids.map((id, i) => {
+          const reg = getReg(id);
+          return `<div style="padding:2px 0;">${i+1}. ${reg ? reg.name : id}</div>`;
+        }).join('')}
+      </div>` : ''}`;
+
+  // 切換畫面
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('bundleViewScreen').style.display = '';
+
+  // 渲染 PDF（所有頁面）
+  const pdfUrl = API_URL + '/bundles/' + bundleId;
+  _doRenderSamplePdf(pdfUrl, 'bvPdfContainer', 'bvPdfLoading');
+}
+
+function exitBundleView() {
+  document.getElementById('bundleViewScreen').style.display = 'none';
+  document.getElementById('homeScreen').style.display = '';
+  S._viewingBundleId = null;
+}
+
+function bundleViewAddToCart() {
+  const bundleId = S._viewingBundleId;
+  const b = (S._bundleData || {})[bundleId];
+  if (!b) return;
+  const added = addToCart({
+    typeId:     bundleId,
+    typeName:   b.label,
+    config:     {},
+    mode:       '套裝',
+    filename:   b.label + '.pdf',
+    isBundle:   true,
+    bundlePath: API_URL + '/bundles/' + bundleId,
+  });
+  if (added) openCart();
 }
 
 // ── 購物車結帳：下載全部 ──
