@@ -7855,69 +7855,76 @@ async function downloadAllCart() {
 
   const btn = document.getElementById('cartDownloadBtn');
   btn.disabled = true;
-  btn.textContent = '生成中…';
+  btn.textContent = '打包生成中…（首次約需 15–30 秒）';
 
-  const errors = [];
-  let downloaded = 0;
+  const items = [];
   let needBuy = 0;
 
   for (const item of cart) {
-    try {
-      let url;
-      if (item.isBundle && item.bundlePath) {
-        // 批次套裝：直接用存好的 PDF URL（付費解鎖不適用於套裝，套裝本身另有購買機制）
-        const r = await fetch(item.bundlePath);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const blob = await r.blob();
-        url = URL.createObjectURL(blob);
-      } else {
-        // 自訂設定：呼叫 /generate-pdf（type_id 用 routeTypeId，涵蓋 fenfen/tuiwei3sub/sub1
-        // 等合併多版型題型與後端 ROUTE_MAP 各版型獨立 key 的對照，未設定則退回 typeId）
-        const pricing = getPricing(item.typeId);
-        const body = { ...item.config };
-        if (pricing.tier === 'paid' && !adminMode) {
-          const license = getLicenseForType(item.typeId);
-          if (!license) { needBuy++; continue; }
-          body.license_code = license.code;
-          body.license_email = license.email;
-        }
-        const headers = { 'Content-Type': 'application/json' };
-        if (adminMode) headers['X-Admin-Key'] = getAdminKey();
-        const r = await fetch(API_URL + '/generate-pdf', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ type_id: item.routeTypeId || item.typeId, body }),
-        });
-        if (!r.ok) {
-          const err = await r.json().catch(() => ({}));
-          throw new Error(err.detail || `HTTP ${r.status}`);
-        }
-        const blob = await r.blob();
-        url = URL.createObjectURL(blob);
+    if (item.isBundle && item.bundlePath) {
+      const bundleId = item.bundlePath.split('/').pop();
+      items.push({
+        bundle_id: bundleId,
+        filename: (item.filename || 'bundle.pdf').replace(/\.docx$/i, '.pdf'),
+      });
+    } else {
+      // type_id 用 routeTypeId，涵蓋 fenfen/tuiwei3sub/sub1 等合併多版型題型
+      // 與後端 ROUTE_MAP 各版型獨立 key 的對照，未設定則退回 typeId
+      const pricing = getPricing(item.typeId);
+      const body = { ...item.config };
+      if (pricing.tier === 'paid' && !adminMode) {
+        const license = getLicenseForType(item.typeId);
+        if (!license) { needBuy++; continue; }
+        body.license_code = license.code;
+        body.license_email = license.email;
       }
-      // 觸發下載（後端一律回傳 PDF，檔名副檔名一併校正）
+      items.push({
+        type_id: item.routeTypeId || item.typeId,
+        body,
+        filename: (item.filename || 'worksheet.pdf').replace(/\.docx$/i, '.pdf'),
+      });
+    }
+  }
+
+  let downloaded = 0;
+  let failMsg = '';
+
+  if (items.length) {
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (adminMode) headers['X-Admin-Key'] = getAdminKey();
+      const r = await fetch(API_URL + '/generate-pdf-batch', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ items }),
+      });
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+      }
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = (item.filename || 'worksheet.pdf').replace(/\.docx$/i, '.pdf');
+      const stamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '').slice(0, 12);
+      a.download = `學習單_${stamp}.zip`;
       a.click();
       URL.revokeObjectURL(url);
-      downloaded++;
-      // 避免瀏覽器攔截多個同時下載
-      await new Promise(r => setTimeout(r, 600));
+      downloaded = items.length;
     } catch (e) {
-      errors.push(`${item.typeName}: ${e.message}`);
+      failMsg = e.message;
     }
   }
 
   btn.disabled = false;
   btn.textContent = '⬇ 確認下載全部';
 
-  let summary = `已下載 ${downloaded} 份`;
+  let summary = `已下載 ${downloaded} 份（zip）`;
   if (needBuy) summary += `，${needBuy} 份需要購買才能下載`;
-  if (errors.length) summary += `\n部分下載失敗：\n${errors.join('\n')}`;
+  if (failMsg) summary += `\n下載失敗：${failMsg}`;
   alert(summary);
 
-  if (!needBuy && !errors.length) {
+  if (!needBuy && !failMsg) {
     clearCart();
     renderCartBadge();
     closeCart();
