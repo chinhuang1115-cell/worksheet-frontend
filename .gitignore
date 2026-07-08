@@ -12,3 +12,6 @@ assets/*_sample.docx
 
 # 測試腳本
 test_script.js
+
+# build_consumer.py 產出的建置產物（部署前重新產生，不進版控）
+dist/

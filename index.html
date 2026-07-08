@@ -1437,6 +1437,7 @@ body {
     易數教室
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
+    <!-- ADMIN-ONLY-START -->
     <button class="admin-only" onclick="goAdminLock()"
       style="padding:5px 13px;border:1.5px solid rgba(255,255,255,0.35);border-radius:var(--r-sm);
         background:transparent;color:var(--cream);font-size:12px;font-weight:700;cursor:pointer;">
@@ -1458,6 +1459,7 @@ body {
       💰 定價管理
     </button>
     <button class="admin-toggle-btn" id="adminToggleBtn" onclick="toggleAdminMode()">管理端</button>
+    <!-- ADMIN-ONLY-END -->
     <div class="trial-badge">
       試用版　剩餘
       <span class="trial-count" id="trialLeft">9999</span>
@@ -1542,6 +1544,7 @@ body {
 </div>
 
 <!-- 管理員檢核橫幅（凍結在 topbar 正下方，admin only） -->
+<!-- ADMIN-ONLY-START -->
 <div class="admin-only" id="adminChecklistBanner"
   style="display:none; position:sticky; top:52px; z-index:97;
     border-bottom:2px solid var(--amber); background:var(--amber-light); overflow:hidden;">
@@ -1557,6 +1560,7 @@ body {
   <div id="adminChecklistBody"
     style="display:flex;flex-wrap:wrap;padding:10px 12px 6px;gap:0;max-width:1200px;margin:0 auto;"></div>
 </div>
+<!-- ADMIN-ONLY-END -->
 
 <!-- ── CONFIG SCREEN ── -->
 <div class="main" id="configScreen" style="display:none;">
@@ -2434,6 +2438,7 @@ body {
 </div>
 
 <!-- ── ADMIN LOCK SCREEN ── -->
+<!-- ADMIN-ONLY-START -->
 <div id="adminLockScreen" style="display:none; padding:24px 32px; max-width:900px; margin:0 auto;">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
     <button onclick="exitAdminLock()"
@@ -2604,6 +2609,7 @@ body {
     <div id="pubGenerateProgress" style="display:none;margin-top:10px;"></div>
   </div>
 </div>
+<!-- ADMIN-ONLY-END -->
 
 <!-- ── PREVIEW MODAL ── -->
 <div class="preview-overlay" id="previewOverlay">
@@ -3849,7 +3855,8 @@ function setQAStatus(typeId, status, note, toggle = false) {
 function _syncQAUI(typeId) {
   renderHomeTypeCards();
   if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
-  if (document.getElementById('adminQAScreen').style.display !== 'none') {
+  const _qaScreenEl = document.getElementById('adminQAScreen');
+  if (_qaScreenEl && _qaScreenEl.style.display !== 'none') {
     renderAdminQAScreen();
   }
   if (S.typeId === typeId && document.getElementById('configScreen').style.display !== 'none') {
@@ -3919,8 +3926,8 @@ async function goAdminLock() {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
-  document.getElementById('adminChecklistBanner').style.display = 'none';
-  document.getElementById('adminLockScreen').style.display = '';
+  hideEl('adminChecklistBanner');
+  showEl('adminLockScreen');
   await _maybeMigrateLocalLocks();
   renderAdminLockScreen();
 }
@@ -4144,7 +4151,7 @@ function renderAdminChecklist(typeId) {
 }
 
 function exitAdminLock() {
-  document.getElementById('adminLockScreen').style.display = 'none';
+  hideEl('adminLockScreen');
   document.getElementById('homeScreen').style.display = '';
 }
 
@@ -4215,18 +4222,18 @@ function goAdminPricing() {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
-  document.getElementById('adminChecklistBanner').style.display = 'none';
-  document.getElementById('adminLockScreen').style.display = 'none';
-  document.getElementById('adminQAScreen').style.display = 'none';
-  document.getElementById('adminPublishScreen').style.display = 'none';
-  document.getElementById('pubEditorScreen').style.display = 'none';
+  hideEl('adminChecklistBanner');
+  hideEl('adminLockScreen');
+  hideEl('adminQAScreen');
+  hideEl('adminPublishScreen');
+  hideEl('pubEditorScreen');
   document.getElementById('bundleViewScreen').style.display = 'none';
-  document.getElementById('adminPricingScreen').style.display = '';
+  showEl('adminPricingScreen');
   renderAdminPricingScreen();
 }
 
 function exitAdminPricing() {
-  document.getElementById('adminPricingScreen').style.display = 'none';
+  hideEl('adminPricingScreen');
   document.getElementById('homeScreen').style.display = '';
 }
 
@@ -4419,9 +4426,9 @@ function goAdminQA() {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
-  document.getElementById('adminChecklistBanner').style.display = 'none';
-  document.getElementById('adminLockScreen').style.display = 'none';
-  document.getElementById('adminQAScreen').style.display = '';
+  hideEl('adminChecklistBanner');
+  hideEl('adminLockScreen');
+  showEl('adminQAScreen');
   applyQANameColWidth();
   renderAdminQAScreen();
 }
@@ -4462,7 +4469,7 @@ function qaStartColResize(e) {
 }
 
 function exitAdminQA() {
-  document.getElementById('adminQAScreen').style.display = 'none';
+  hideEl('adminQAScreen');
   document.getElementById('homeScreen').style.display = '';
 }
 
@@ -4500,8 +4507,8 @@ function openPublicationEditor(id) {
   S._editingPubId = id;
   const pubs = getPublications();
   const pub = pubs[id];
-  document.getElementById('adminPublishScreen').style.display = 'none';
-  document.getElementById('pubEditorScreen').style.display = '';
+  hideEl('adminPublishScreen');
+  showEl('pubEditorScreen');
   document.getElementById('pubEditorTitle').textContent = (pub && pub.name) ? pub.name : '未命名出版品';
   renderPubTypeFilter();
   renderPubTypeList('all');
@@ -4509,8 +4516,8 @@ function openPublicationEditor(id) {
 }
 
 function exitPubEditor() {
-  document.getElementById('pubEditorScreen').style.display = 'none';
-  document.getElementById('adminPublishScreen').style.display = '';
+  hideEl('pubEditorScreen');
+  showEl('adminPublishScreen');
   S._editingPubId = null;
   renderPublicationList();
 }
@@ -4805,15 +4812,15 @@ function goAdminPublish() {
   document.getElementById('homeScreen').style.display = 'none';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
-  document.getElementById('adminLockScreen').style.display = 'none';
-  document.getElementById('adminQAScreen').style.display = 'none';
-  document.getElementById('adminPublishScreen').style.display = '';
-  document.getElementById('pubEditorScreen').style.display = 'none';
+  hideEl('adminLockScreen');
+  hideEl('adminQAScreen');
+  showEl('adminPublishScreen');
+  hideEl('pubEditorScreen');
   renderPublicationList();
 }
 
 function exitAdminPublish() {
-  document.getElementById('adminPublishScreen').style.display = 'none';
+  hideEl('adminPublishScreen');
   document.getElementById('homeScreen').style.display = '';
 }
 
@@ -5523,6 +5530,16 @@ function loadSave(i) {
 }
 
 function delSave(i) { saves.splice(i,1); renderSaved(); }
+
+// 消費端部署版會移除管理畫面 DOM，所有「隱藏管理畫面」的呼叫一律走 null-safe helper
+function hideEl(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+}
+function showEl(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = '';
+}
 
 // ── API 設定（本機開發用 localhost，線上測試改回 Railway 網址）──
 const API_URL = window.WORKSHEET_API_URL || 'http://localhost:8000';
@@ -7474,13 +7491,13 @@ function goHome() {
   document.getElementById('homeScreen').style.display = '';
   document.getElementById('configNav').style.display = 'none';
   document.getElementById('configScreen').style.display = 'none';
-  document.getElementById('adminChecklistBanner').style.display = 'none';
-  document.getElementById('adminLockScreen').style.display = 'none';
-  document.getElementById('adminQAScreen').style.display = 'none';
-  document.getElementById('adminPublishScreen').style.display = 'none';
-  document.getElementById('pubEditorScreen').style.display = 'none';
+  hideEl('adminChecklistBanner');
+  hideEl('adminLockScreen');
+  hideEl('adminQAScreen');
+  hideEl('adminPublishScreen');
+  hideEl('pubEditorScreen');
   document.getElementById('bundleViewScreen').style.display = 'none';
-  document.getElementById('adminPricingScreen').style.display = 'none';
+  hideEl('adminPricingScreen');
 }
 
 // ── PRICING / LICENSE ──
