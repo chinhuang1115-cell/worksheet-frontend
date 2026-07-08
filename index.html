@@ -3733,7 +3733,6 @@ function applyAdminMode() {
   const btn = document.getElementById('adminToggleBtn');
   if (btn) btn.textContent = adminMode ? '消費端' : '管理端';
   renderHomeTypeCards();
-  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
   // 若目前在題型設定頁，同步更新管理員檢核表的顯示/隱藏
   if (S.typeId && document.getElementById('configScreen').style.display !== 'none') {
     renderAdminChecklist(S.typeId);
@@ -3750,7 +3749,6 @@ async function loadLocks() {
     const data = await r.json();
     LOCK_DATA = data.locks || {};
     renderHomeTypeCards();
-    if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
   } catch {}
 }
 
@@ -3789,14 +3787,12 @@ function toggleLock(typeId) {
   const current = getLockState()[typeId] === true;
   setUnlocked(typeId, !current);
   renderHomeTypeCards();
-  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
 }
 async function unlockAll() {
   const state = {};
   TYPE_REGISTRY.forEach(t => { state[t.id] = true; });
   LOCK_DATA = state;
   renderHomeTypeCards();
-  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
   try {
     const r = await fetch(API_URL + '/admin/locks/bulk', {
       method: 'POST',
@@ -3813,7 +3809,6 @@ async function unlockAll() {
 async function lockAll() {
   LOCK_DATA = {};
   renderHomeTypeCards();
-  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
   try {
     const r = await fetch(API_URL + '/admin/locks/bulk', {
       method: 'POST',
@@ -3854,7 +3849,6 @@ function setQAStatus(typeId, status, note, toggle = false) {
 // 同步所有目前可見的 QA 相關 UI（單一入口）
 function _syncQAUI(typeId) {
   renderHomeTypeCards();
-  if (typeof renderHomeSampleGrid === 'function') renderHomeSampleGrid();
   const _qaScreenEl = document.getElementById('adminQAScreen');
   if (_qaScreenEl && _qaScreenEl.style.display !== 'none') {
     renderAdminQAScreen();
@@ -4152,6 +4146,8 @@ function renderAdminChecklist(typeId) {
 
 function exitAdminLock() {
   hideEl('adminLockScreen');
+  hideEl('configNav');
+  hideEl('configScreen');
   document.getElementById('homeScreen').style.display = '';
 }
 
@@ -4355,7 +4351,15 @@ async function savePricingDefaults() {
   const ratio_C = parseFloat(document.getElementById('pricingRatioC').value);
   const per_copy_fee = parseInt(document.getElementById('pricingPerCopyFee').value, 10);
   const bundle_discount_pct = parseFloat(document.getElementById('pricingBundleDiscount').value);
-  if (!base_price_A || !(ratio_B > 0) || !(ratio_C > 0) || isNaN(per_copy_fee) || !(bundle_discount_pct > 0)) return;
+  const msg = document.getElementById('pricingDefaultsSavedMsg');
+  if (!base_price_A || !(ratio_B > 0) || !(ratio_C > 0) || isNaN(per_copy_fee) || !(bundle_discount_pct > 0)) {
+    if (msg) {
+      msg.style.color = '#d33';
+      msg.textContent = '輸入無效，未儲存';
+      setTimeout(() => { msg.textContent = ''; msg.style.color = ''; }, 1500);
+    }
+    return;
+  }
   try {
     const r = await fetch(API_URL + '/admin/pricing/defaults', {
       method: 'POST',
@@ -4365,7 +4369,6 @@ async function savePricingDefaults() {
     if (!r.ok) { alert('儲存預設值失敗：' + (await r.json()).detail); return; }
     await loadPricing();
     renderAdminPricingScreen();
-    const msg = document.getElementById('pricingDefaultsSavedMsg');
     msg.textContent = '已儲存';
     setTimeout(() => { msg.textContent = ''; }, 1500);
   } catch (e) {
@@ -7044,6 +7047,7 @@ function setHomeView(mode) {
 }
 
 function renderHomeTypeCards() {
+  const _lockStateSnapshot = getLockState();
   const op = [...curOps][0];
   const filtered = TYPES
     .filter(t => {
@@ -7110,10 +7114,10 @@ function renderHomeTypeCards() {
           <button onclick="event.stopPropagation(); toggleLock('${t.id}')"
             style="position:absolute;top:8px;right:8px;z-index:3;
               padding:3px 8px;border-radius:20px;border:none;
-              background:${getLockState()[t.id] ? 'var(--teal)' : '#e0e0e0'};
-              color:${getLockState()[t.id] ? '#fff' : 'var(--gray)'};
+              background:${_lockStateSnapshot[t.id] ? 'var(--teal)' : '#e0e0e0'};
+              color:${_lockStateSnapshot[t.id] ? '#fff' : 'var(--gray)'};
               font-size:11px;font-weight:700;cursor:pointer;">
-            ${getLockState()[t.id] ? '🔓 已解鎖' : '🔒 鎖定中'}
+            ${_lockStateSnapshot[t.id] ? '🔓 已解鎖' : '🔒 鎖定中'}
           </button>` : '';
         const adminCardStyle = adminMode ? 'border-left:3px solid var(--teal);' : '';
         const qaInfo = getQAStatus(t.id);
@@ -7165,10 +7169,10 @@ function renderHomeTypeCards() {
           <button onclick="event.stopPropagation(); toggleLock('${t.id}')"
             style="position:absolute;top:8px;right:8px;z-index:3;
               padding:3px 8px;border-radius:20px;border:none;
-              background:${getLockState()[t.id] ? 'var(--teal)' : '#e0e0e0'};
-              color:${getLockState()[t.id] ? '#fff' : 'var(--gray)'};
+              background:${_lockStateSnapshot[t.id] ? 'var(--teal)' : '#e0e0e0'};
+              color:${_lockStateSnapshot[t.id] ? '#fff' : 'var(--gray)'};
               font-size:11px;font-weight:700;cursor:pointer;">
-            ${getLockState()[t.id] ? '🔓 已解鎖' : '🔒 鎖定中'}
+            ${_lockStateSnapshot[t.id] ? '🔓 已解鎖' : '🔒 鎖定中'}
           </button>` : '';
         const adminCardStyle = adminMode ? 'border-left:3px solid var(--teal);' : '';
         const qaInfo = getQAStatus(t.id);
@@ -7778,6 +7782,14 @@ async function loadBundles() {
   } catch {}
 }
 
+function _esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function renderBundleSection() {
   const section = document.getElementById('bundleSection');
   const grid = document.getElementById('bundleSectionGrid');
@@ -7789,7 +7801,7 @@ function renderBundleSection() {
     <div onclick="openBundleView('${b.id}')" style="cursor:pointer;padding:14px;background:#fff;
       border:1px solid var(--border);border-radius:var(--r-sm);transition:box-shadow .15s;"
       onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
-      <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${b.label}</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${_esc(b.label)}</div>
       <div style="font-size:11px;color:var(--gray);">📄 共 ${b.pages} 頁學習單</div>
       ${(() => { const bp = getBundlePricing(b); return bp.price > 0
         ? `<div style="display:inline-block;margin-top:4px;padding:1px 8px;background:#fff7ed;color:#c2410c;
@@ -7866,7 +7878,7 @@ function openBundleView(bundleId) {
 
   // 左欄資訊卡
   document.getElementById('bvInfoCard').innerHTML = `
-    <div style="font-size:13px;font-weight:700;margin-bottom:8px;">${b.label}</div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:8px;">${_esc(b.label)}</div>
     <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">共 ${b.pages} 頁學習單</div>
     ${(() => { const bp = getBundlePricing(b); return bp.price > 0
       ? `<div style="font-size:13px;margin-top:6px;">
