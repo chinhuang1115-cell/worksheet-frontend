@@ -7568,6 +7568,7 @@ function addToCart(item) {
   }
   item.id = `${item.typeId}_${Date.now()}`;
   item.addedAt = Date.now();
+  if (!item.copies) item.copies = 1;
   cart.push(item);
   saveCart(cart);
   renderCartBadge();
@@ -7611,8 +7612,12 @@ function renderCart() {
     return;
   }
   el.innerHTML = cart.map(item => {
-    const pricing = item.isBundle ? { tier: 'free' } : getPricing(item.typeId);
-    const license = (!item.isBundle && pricing.tier === 'paid') ? getLicenseForType(item.typeId) : null;
+    const pricing = item.isBundle
+      ? (() => { const b = (S._bundleData || {})[item.typeId];
+           const bp = b ? getBundlePricing(b) : { price: 0 };
+           return bp.price > 0 ? { tier: 'paid', price: bp.price } : { tier: 'free' }; })()
+      : getPricing(item.typeId);
+    const license = (pricing.tier === 'paid') ? getLicenseForType(item.typeId) : null;
     let badge;
     if (pricing.tier === 'free') {
       badge = `<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:#dcfce7;color:#15803d;">免費</span>`;
@@ -7621,9 +7626,21 @@ function renderCart() {
     } else {
       badge = `<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:#ffedd5;color:#c2410c;">💰 需購買 NT$${pricing.price}</span>`;
     }
-    const checkbox = (!item.isBundle && pricing.tier === 'paid' && !license)
-      ? `<input type="checkbox" class="cart-buy-checkbox" data-type-id="${item.typeId}" style="margin-right:8px;">`
+    const checkbox = (pricing.tier === 'paid' && !license)
+      ? `<input type="checkbox" class="cart-buy-checkbox" data-type-id="${item.typeId}" data-is-bundle="${item.isBundle ? 1 : 0}" style="margin-right:8px;">`
       : '';
+    const copies = item.copies || 1;
+    const copiesCtrl = item.isBundle ? '' : `
+      <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+        <span style="font-size:11px;color:var(--gray);">份數</span>
+        <button onclick="updateCartCopies('${item.id}', -1)"
+          style="width:22px;height:22px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;">−</button>
+        <span style="font-size:13px;font-weight:700;width:20px;text-align:center;">${copies}</span>
+        <button onclick="updateCartCopies('${item.id}', 1)"
+          style="width:22px;height:22px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;">＋</button>
+        ${(pricing.tier === 'paid') ? `<span style="font-size:11px;color:#c2410c;font-weight:700;">
+          小計 NT$${pricing.price + PRICING_DATA.defaults.per_copy_fee * (copies - 1)}</span>` : ''}
+      </div>`;
     return `
     <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;
       border-bottom:1px solid var(--border);">
@@ -7635,11 +7652,37 @@ function renderCart() {
           ${item.mode ? ` · ${item.mode}` : ''}
           ${badge}
         </div>
+        ${copiesCtrl}
       </div>
       <button onclick="removeFromCart('${item.id}')"
         style="background:none;border:none;color:var(--gray);font-size:16px;cursor:pointer;padding:0;">✕</button>
     </div>`;
   }).join('');
+
+  const total = cart.reduce((s, item) => {
+    if (item.isBundle) {
+      const b = (S._bundleData || {})[item.typeId];
+      const bp = b ? getBundlePricing(b) : { price: 0 };
+      if (bp.price > 0 && getLicenseForType(item.typeId)) return s;
+      return s + (b ? bp.price : 0);
+    }
+    const p = getPricing(item.typeId);
+    if (p.tier !== 'paid' || getLicenseForType(item.typeId)) return s;
+    return s + p.price + PRICING_DATA.defaults.per_copy_fee * ((item.copies || 1) - 1);
+  }, 0);
+  if (total > 0) {
+    el.innerHTML += `<div style="padding:12px 0;text-align:right;font-size:14px;font-weight:700;color:#c2410c;">
+      待購買合計 NT$${total}</div>`;
+  }
+}
+
+function updateCartCopies(itemId, delta) {
+  const cart = getCart();
+  const item = cart.find(i => i.id === itemId);
+  if (!item) return;
+  item.copies = Math.min(10, Math.max(1, (item.copies || 1) + delta));
+  saveCart(cart);
+  renderCart();
 }
 
 async function verifyLicenseInput() {
@@ -7664,15 +7707,23 @@ async function verifyLicenseInput() {
 }
 
 async function purchaseSelected() {
-  const checked = [...document.querySelectorAll('.cart-buy-checkbox:checked')].map(el => el.dataset.typeId);
+  const cart = getCart();
+  const checked = [...document.querySelectorAll('.cart-buy-checkbox:checked')].map(el => ({
+    id: el.dataset.typeId,
+    is_bundle: el.dataset.isBundle === '1',
+  }));
   if (!checked.length) { alert('請先勾選要購買的項目'); return; }
+  const items = checked.map(c => {
+    const item = cart.find(i => i.typeId === c.id);
+    return { id: c.id, copies: (item && !c.is_bundle) ? (item.copies || 1) : 1, is_bundle: c.is_bundle };
+  });
   const email = prompt('請輸入收件 Email（授權碼將寄到這個信箱）：');
   if (!email) return;
   try {
     const r = await fetch(API_URL + '/orders/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type_ids: checked, buyer_email: email }),
+      body: JSON.stringify({ items, buyer_email: email }),
     });
     if (!r.ok) {
       const err = await r.json();
@@ -7863,10 +7914,19 @@ async function downloadAllCart() {
   for (const item of cart) {
     if (item.isBundle && item.bundlePath) {
       const bundleId = item.bundlePath.split('/').pop();
-      items.push({
+      const b = (S._bundleData || {})[item.typeId];
+      const bp = b ? getBundlePricing(b) : { price: 0 };
+      const batchItem = {
         bundle_id: bundleId,
         filename: (item.filename || 'bundle.pdf').replace(/\.docx$/i, '.pdf'),
-      });
+      };
+      if (bp.price > 0 && !adminMode) {
+        const license = getLicenseForType(item.typeId);
+        if (!license) { needBuy++; continue; }
+        batchItem.license_code = license.code;
+        batchItem.license_email = license.email;
+      }
+      items.push(batchItem);
     } else {
       // type_id 用 routeTypeId，涵蓋 fenfen/tuiwei3sub/sub1 等合併多版型題型
       // 與後端 ROUTE_MAP 各版型獨立 key 的對照，未設定則退回 typeId
@@ -7878,11 +7938,15 @@ async function downloadAllCart() {
         body.license_code = license.code;
         body.license_email = license.email;
       }
-      items.push({
-        type_id: item.routeTypeId || item.typeId,
-        body,
-        filename: (item.filename || 'worksheet.pdf').replace(/\.docx$/i, '.pdf'),
-      });
+      const copies = Math.min(10, Math.max(1, item.copies || 1));
+      const baseFilename = (item.filename || 'worksheet.pdf').replace(/\.docx$/i, '.pdf');
+      for (let k = 1; k <= copies; k++) {
+        items.push({
+          type_id: item.routeTypeId || item.typeId,
+          body,
+          filename: copies > 1 ? baseFilename.replace(/\.pdf$/i, `_${k}.pdf`) : baseFilename,
+        });
+      }
     }
   }
 
