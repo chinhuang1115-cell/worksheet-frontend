@@ -2496,22 +2496,35 @@ body {
   <div class="card" style="margin-bottom:16px;">
     <div class="card-body" style="padding:14px 18px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;">
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">單張學習單預設金額</label>
-        <input type="number" id="pricingDefaultSingle" min="1"
-          onblur="savePricingDefaults()"
-          style="width:100px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:13px;">
+        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">A 類基本價（元）</label>
+        <input type="number" id="pricingBasePriceA" min="1" onblur="savePricingDefaults()"
+          style="width:90px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:13px;">
       </div>
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">套裝組合預設金額</label>
-        <input type="number" id="pricingDefaultBundle" min="1"
-          onblur="savePricingDefaults()"
-          style="width:100px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:13px;">
+        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">B 類比率</label>
+        <input type="number" id="pricingRatioB" min="0.1" step="0.1" onblur="savePricingDefaults()"
+          style="width:70px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:13px;">
       </div>
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">偏差警示門檻（%）</label>
-        <input type="number" id="pricingDeviationPct" min="0" max="100"
-          onblur="savePricingDefaults()"
+        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">C 類比率</label>
+        <input type="number" id="pricingRatioC" min="0.1" step="0.1" onblur="savePricingDefaults()"
+          style="width:70px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:13px;">
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">每份生成費（元）</label>
+        <input type="number" id="pricingPerCopyFee" min="0" onblur="savePricingDefaults()"
           style="width:80px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:13px;">
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">套裝折扣率（%）</label>
+        <input type="number" id="pricingBundleDiscount" min="1" max="100" onblur="savePricingDefaults()"
+          style="width:70px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:13px;">
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;color:var(--gray);margin-bottom:4px;">預計生成份數（試算）</label>
+        <input type="number" id="pricingSimCopies" min="1" max="10" value="1"
+          oninput="renderPricingTables()"
+          style="width:70px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:13px;">
       </div>
       <span id="pricingDefaultsSavedMsg" style="font-size:11px;color:var(--teal);"></span>
     </div>
@@ -2520,7 +2533,7 @@ body {
   <div style="font-size:13px;font-weight:700;margin-bottom:8px;">📄 單張學習單</div>
   <div id="pricingSingleList" style="margin-bottom:20px;"></div>
 
-  <div style="font-size:13px;font-weight:700;margin-bottom:8px;">📦 套裝組合</div>
+  <div style="font-size:13px;font-weight:700;margin-bottom:8px;">📦 套裝組合與出版品</div>
   <div id="pricingBundleList"></div>
 </div>
 
@@ -4217,77 +4230,130 @@ function exitAdminPricing() {
   document.getElementById('homeScreen').style.display = '';
 }
 
-function _pricingDeviationInfo(typeId, price, isBundle) {
-  const d = PRICING_DATA.defaults;
-  const defaultPrice = isBundle ? d.bundle_price : d.single_price;
-  if (!defaultPrice || price === defaultPrice) return { state: 'normal' };
-  const pct = Math.abs(price - defaultPrice) / defaultPrice * 100;
-  if (pct >= d.deviation_threshold_pct) return { state: 'warning', pct: Math.floor(pct) };
-  return { state: 'adjusted' };
+function _simCopies() {
+  const n = parseInt(document.getElementById('pricingSimCopies').value, 10);
+  return (n && n >= 1 && n <= 10) ? n : 1;
 }
 
-function _pricingRowHtml(id, name, isBundle) {
-  const override = PRICING_DATA.overrides[id];
-  const tier = (override && override.tier === 'paid') ? 'paid' : 'free';
-  const price = (override && override.tier === 'paid') ? override.price : '';
-  const dev = tier === 'paid' ? _pricingDeviationInfo(id, override.price, isBundle) : { state: 'normal' };
-  const inputBorder = dev.state === 'warning' ? '2px solid #dc2626' : '1px solid var(--border)';
-  const marker = dev.state === 'warning'
-    ? `<span style="font-size:10px;color:#dc2626;font-weight:700;white-space:nowrap;">⚠ 偏離預設 ${dev.pct}%</span>`
-    : dev.state === 'adjusted'
-      ? `<span style="font-size:10px;color:#2563eb;font-weight:600;white-space:nowrap;">已調整</span>`
-      : '';
-  const barStyle = isBundle ? 'border-left:4px solid #f59e0b;' : '';
-  return `
-    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;${barStyle}
-      background:#fff;border-bottom:1px solid var(--border);">
-      ${isBundle ? '<span style="font-size:14px;">📦</span>' : ''}
-      <div style="flex:1;min-width:0;">
-        <div style="font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
-        <div style="font-size:10px;color:var(--gray);margin-top:1px;">${id}</div>
-      </div>
-      <label style="position:relative;display:inline-block;width:40px;height:22px;cursor:pointer;flex-shrink:0;">
-        <input type="checkbox" ${tier === 'paid' ? 'checked' : ''}
-          onchange="pricingToggleTier('${id}', this.checked, ${isBundle})"
-          style="opacity:0;width:0;height:0;">
-        <span style="position:absolute;inset:0;background:${tier === 'paid' ? 'var(--teal)' : '#ccc'};border-radius:11px;transition:.2s;">
-          <span style="position:absolute;height:16px;width:16px;left:${tier === 'paid' ? '21px' : '3px'};
-            bottom:3px;background:#fff;border-radius:50%;transition:.2s;"></span>
-        </span>
-      </label>
-      <input type="number" min="1" value="${price}"
-        ${tier === 'paid' ? '' : 'disabled'}
-        onblur="pricingSetPrice('${id}', this.value, ${isBundle})"
-        style="width:80px;border:${inputBorder};border-radius:4px;padding:5px 8px;font-size:13px;flex-shrink:0;">
-      ${marker}
+function _pricingCatBtns(typeId, cur) {
+  return ['free', 'A', 'B', 'C'].map(c => `
+    <button onclick="pricingScreenSetCategory('${typeId}', '${c}')"
+      style="padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700;cursor:pointer;
+        border:1px solid ${c === cur ? 'var(--teal)' : 'var(--border)'};
+        background:${c === cur ? 'var(--teal)' : '#fff'};
+        color:${c === cur ? '#fff' : 'var(--gray)'};">${c === 'free' ? '免費' : c}</button>`).join('');
+}
+
+function renderPricingTables() {
+  const n = _simCopies();
+  const fee = PRICING_DATA.defaults.per_copy_fee;
+
+  // ── 表格一：單張學習單 ──
+  let sumPrice = 0, sumWithCopies = 0, paidCount = 0;
+  const singleRows = TYPE_REGISTRY.map((t, i) => {
+    const p = getPricing(t.id);
+    const price = p.tier === 'paid' ? p.price : 0;
+    const withCopies = p.tier === 'paid' ? price + fee * (n - 1) : 0;
+    if (p.tier === 'paid') { paidCount++; sumPrice += price; sumWithCopies += withCopies; }
+    return `
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:#fff;
+        border-bottom:1px solid var(--border);">
+        <span style="width:28px;font-size:11px;color:var(--gray);">${i + 1}.</span>
+        <div style="flex:1;min-width:0;font-weight:600;font-size:13px;white-space:nowrap;
+          overflow:hidden;text-overflow:ellipsis;">${t.name}</div>
+        <div style="display:flex;gap:4px;flex-shrink:0;">${_pricingCatBtns(t.id, p.category)}</div>
+        <span style="width:70px;text-align:right;font-size:13px;font-weight:700;flex-shrink:0;">
+          ${p.tier === 'paid' ? 'NT$' + price : '—'}</span>
+        <span style="width:90px;text-align:right;font-size:12px;color:var(--gray);flex-shrink:0;">
+          ${p.tier === 'paid' ? 'NT$' + withCopies : '—'}</span>
+      </div>`;
+  }).join('');
+  document.getElementById('pricingSingleList').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 14px;font-size:11px;color:var(--gray);
+      background:var(--gray-light);border-bottom:1px solid var(--border);">
+      <span style="width:28px;">#</span><div style="flex:1;">題型名稱</div>
+      <span style="width:148px;">類別</span>
+      <span style="width:70px;text-align:right;">單價</span>
+      <span style="width:90px;text-align:right;">含 ${n} 份</span>
+    </div>
+    ${singleRows}
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream);
+      font-size:13px;font-weight:700;">
+      <div style="flex:1;">彙總：付費題型 ${paidCount} 題</div>
+      <span style="width:70px;text-align:right;">NT$${sumPrice}</span>
+      <span style="width:90px;text-align:right;">NT$${sumWithCopies}</span>
     </div>`;
+
+  // ── 表格二：套裝組合＋出版品 ──
+  const bundles = Object.values(S._bundleData || {}).map(b => ({
+    label: b.label, type_ids: b.type_ids || [], kind: '套裝',
+  }));
+  const pubs = Object.values(getPublications() || {}).map(p => ({
+    label: p.name,
+    type_ids: (p.slots || []).map(s => s && s.typeId).filter(Boolean),
+    kind: '出版品',
+  }));
+  const groups = bundles.concat(pubs);
+  let bSumPrice = 0, bSumWithCopies = 0;
+  const bundleRows = groups.map(g => {
+    const bp = getBundlePricing(g);
+    const withCopies = bp.price + fee * (n - 1) * bp.paidCount;
+    bSumPrice += bp.price; bSumWithCopies += withCopies;
+    return `
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:#fff;
+        border-bottom:1px solid var(--border);border-left:4px solid #f59e0b;">
+        <div style="flex:1;min-width:0;font-weight:600;font-size:13px;white-space:nowrap;
+          overflow:hidden;text-overflow:ellipsis;">📦 ${g.label}
+          <span style="font-size:10px;color:var(--gray);">（${g.kind}）</span></div>
+        <span style="width:56px;text-align:right;font-size:12px;color:var(--gray);">${g.type_ids.length} 題</span>
+        <span style="width:80px;text-align:right;font-size:12px;color:var(--gray);
+          text-decoration:line-through;">NT$${bp.memberTotal}</span>
+        <span style="width:70px;text-align:right;font-size:13px;font-weight:700;">NT$${bp.price}</span>
+        <span style="width:90px;text-align:right;font-size:12px;color:var(--gray);">NT$${withCopies}</span>
+      </div>`;
+  }).join('');
+  document.getElementById('pricingBundleList').innerHTML = groups.length ? `
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 14px;font-size:11px;color:var(--gray);
+      background:var(--gray-light);border-bottom:1px solid var(--border);">
+      <div style="flex:1;">名稱</div>
+      <span style="width:56px;text-align:right;">成員數</span>
+      <span style="width:80px;text-align:right;">成員總價</span>
+      <span style="width:70px;text-align:right;">折扣價</span>
+      <span style="width:90px;text-align:right;">含 ${n} 份</span>
+    </div>
+    ${bundleRows}
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream);
+      font-size:13px;font-weight:700;">
+      <div style="flex:1;">彙總：${groups.length} 組</div>
+      <span style="width:80px;"></span>
+      <span style="width:70px;text-align:right;">NT$${bSumPrice}</span>
+      <span style="width:90px;text-align:right;">NT$${bSumWithCopies}</span>
+    </div>`
+    : `<div style="font-size:12px;color:var(--gray);padding:10px 14px;">目前沒有套裝組合或出版品</div>`;
 }
 
 function renderAdminPricingScreen() {
-  document.getElementById('pricingDefaultSingle').value = PRICING_DATA.defaults.single_price;
-  document.getElementById('pricingDefaultBundle').value = PRICING_DATA.defaults.bundle_price;
-  document.getElementById('pricingDeviationPct').value = PRICING_DATA.defaults.deviation_threshold_pct;
-
-  const singleList = document.getElementById('pricingSingleList');
-  singleList.innerHTML = TYPE_REGISTRY.map(t => _pricingRowHtml(t.id, t.name, false)).join('');
-
-  const bundles = Object.values(S._bundleData || {});
-  const bundleList = document.getElementById('pricingBundleList');
-  bundleList.innerHTML = bundles.length
-    ? bundles.map(b => _pricingRowHtml(b.id, b.label, true)).join('')
-    : `<div style="font-size:12px;color:var(--gray);padding:10px 14px;">目前沒有套裝組合</div>`;
+  const d = PRICING_DATA.defaults;
+  document.getElementById('pricingBasePriceA').value = d.base_price_A;
+  document.getElementById('pricingRatioB').value = d.ratio_B;
+  document.getElementById('pricingRatioC').value = d.ratio_C;
+  document.getElementById('pricingPerCopyFee').value = d.per_copy_fee;
+  document.getElementById('pricingBundleDiscount').value = d.bundle_discount_pct;
+  renderPricingTables();
 }
 
 async function savePricingDefaults() {
-  const single_price = parseInt(document.getElementById('pricingDefaultSingle').value, 10);
-  const bundle_price = parseInt(document.getElementById('pricingDefaultBundle').value, 10);
-  const deviation_threshold_pct = parseFloat(document.getElementById('pricingDeviationPct').value);
-  if (!single_price || !bundle_price || isNaN(deviation_threshold_pct)) return;
+  const base_price_A = parseInt(document.getElementById('pricingBasePriceA').value, 10);
+  const ratio_B = parseFloat(document.getElementById('pricingRatioB').value);
+  const ratio_C = parseFloat(document.getElementById('pricingRatioC').value);
+  const per_copy_fee = parseInt(document.getElementById('pricingPerCopyFee').value, 10);
+  const bundle_discount_pct = parseFloat(document.getElementById('pricingBundleDiscount').value);
+  if (!base_price_A || !(ratio_B > 0) || !(ratio_C > 0) || isNaN(per_copy_fee) || !(bundle_discount_pct > 0)) return;
   try {
     const r = await fetch(API_URL + '/admin/pricing/defaults', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
-      body: JSON.stringify({ single_price, bundle_price, deviation_threshold_pct }),
+      body: JSON.stringify({ base_price_A, ratio_B, ratio_C, per_copy_fee, bundle_discount_pct }),
     });
     if (!r.ok) { alert('儲存預設值失敗：' + (await r.json()).detail); return; }
     await loadPricing();
@@ -4300,33 +4366,16 @@ async function savePricingDefaults() {
   }
 }
 
-async function pricingToggleTier(id, checked, isBundle) {
-  const tier = checked ? 'paid' : 'free';
-  let price = null;
-  if (checked) {
-    const existing = PRICING_DATA.overrides[id];
-    price = (existing && existing.tier === 'paid') ? existing.price
-      : (isBundle ? PRICING_DATA.defaults.bundle_price : PRICING_DATA.defaults.single_price);
-  }
-  await _savePricingOverride(id, tier, price);
-}
-
-async function pricingSetPrice(id, value, isBundle) {
-  const price = parseInt(value, 10);
-  if (!price || price <= 0) return;
-  await _savePricingOverride(id, 'paid', price);
-}
-
-async function _savePricingOverride(type_id, tier, price) {
+async function pricingScreenSetCategory(typeId, category) {
   try {
     const r = await fetch(API_URL + '/admin/pricing', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
-      body: JSON.stringify({ type_id, tier, price }),
+      body: JSON.stringify({ type_id: typeId, category }),
     });
     if (!r.ok) { alert('儲存失敗：' + (await r.json()).detail); return; }
     await loadPricing();
-    renderAdminPricingScreen();
+    renderPricingTables();
   } catch (e) {
     alert('儲存失敗：' + e.message);
   }
