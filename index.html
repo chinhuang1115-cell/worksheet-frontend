@@ -7932,20 +7932,26 @@ async function downloadAllCart() {
       // 與後端 ROUTE_MAP 各版型獨立 key 的對照，未設定則退回 typeId
       const pricing = getPricing(item.typeId);
       const body = { ...item.config };
+      let licenseCode = null, licenseEmail = null;
       if (pricing.tier === 'paid' && !adminMode) {
         const license = getLicenseForType(item.typeId);
         if (!license) { needBuy++; continue; }
-        body.license_code = license.code;
-        body.license_email = license.email;
+        licenseCode = license.code;
+        licenseEmail = license.email;
       }
       const copies = Math.min(10, Math.max(1, item.copies || 1));
       const baseFilename = (item.filename || 'worksheet.pdf').replace(/\.docx$/i, '.pdf');
       for (let k = 1; k <= copies; k++) {
-        items.push({
+        const batchItem = {
           type_id: item.routeTypeId || item.typeId,
           body,
           filename: copies > 1 ? baseFilename.replace(/\.pdf$/i, `_${k}.pdf`) : baseFilename,
-        });
+        };
+        if (licenseCode) {
+          batchItem.license_code = licenseCode;
+          batchItem.license_email = licenseEmail;
+        }
+        items.push(batchItem);
       }
     }
   }
