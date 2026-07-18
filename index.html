@@ -2232,7 +2232,7 @@ class Component extends DCLogic {
       variantQty: {},
       itemMode: {},
       previewIndex: 0,
-      previewTab: 'sheet',
+      previewOverride: {},
       checkoutMsg: '',
       downloading: false,
       purchasing: false,
@@ -2763,7 +2763,7 @@ class Component extends DCLogic {
   }
 
   homeOpenDetail(id) {
-    this.patch('home', { previewIndex: 0 });
+    this.patch('home', { previewIndex: 0, previewOverride: {} });
     this.goScreen('home', { item: id });   // Wrinkle 2：詳情由 hash param 驅動，重整可停留
   }
 
@@ -2812,13 +2812,17 @@ class Component extends DCLogic {
     });
   }
 
+  homePreviewVariant(itemId, key) {
+    this.setState(s => ({ home: { ...s.home, previewOverride: { ...s.home.previewOverride, [itemId]: key } } }));
+  }
+
   homeStepPreview(itemId, delta) {
     const item = ITEMS.find(x => x.id === itemId);
     this.setState(s => {
       const vq = s.home.variantQty[itemId] || presetQtyOf(item);
       const flat = buildFlatPages(item, vq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const next = Math.max(0, Math.min(flat.length - 1, s.home.previewIndex + delta));
-      return { home: { ...s.home, previewIndex: next } };
+      return { home: { ...s.home, previewIndex: next, previewOverride: { ...s.home.previewOverride, [itemId]: null } } };
     });
   }
 
