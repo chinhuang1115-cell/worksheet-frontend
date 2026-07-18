@@ -2069,13 +2069,26 @@ function _checkoutMsgColor(msg) {
 
 /* ══ home screen only：消費端首頁專用常數／helper（自「易數教室 互動原型（消費端）」來源頁原樣移植）══ */
 // 來源的 THEMES 與 config screen 的 THEMES 同名但內容不同，改名 HOME_THEMES 避免覆蓋 config 的主題清單
+const THEME_FOLDER_MAP = {
+  drink: '飲料店', stationery: '文具店', toy: '玩具店', dessert: '甜點店', bento: '便當店',
+};
+function themeImagePath(key, filename) {
+  const folder = THEME_FOLDER_MAP[key];
+  if (!folder || !filename) return null;
+  return 'images/' + encodeURIComponent(folder) + '/' + encodeURIComponent(filename);
+}
 const HOME_THEMES = [
-  { key:'drink', label:'飲料店', icon:'🧋' },
-  { key:'stationery', label:'文具店', icon:'✏️' },
-  { key:'toy', label:'玩具店', icon:'🧸' },
-  { key:'dessert', label:'甜點店', icon:'🍨' },
-  { key:'bento', label:'便當店', icon:'🍱' },
-  { key:'random', label:'隨機', icon:'🎲' },
+  { key:'drink', label:'飲料店', icon:'🧋',
+    gallery:['珍奶_原味.png','珍奶_奶茶.png','珍奶_抹茶.png','珍奶_百香果.png','珍奶_芋頭.png','珍奶_黑糖.png'] },
+  { key:'stationery', label:'文具店', icon:'✏️',
+    gallery:['HK零錢包.png','削鉛筆機.png','剪刀.png','可愛水壺.png','尺.png','手持風扇.png','橡皮擦.png','玩具手機.png','筆袋_圓點.png','膠水棒.png','色鉛筆組.png','蠟筆盒_散放.png','蠟筆盒_笑臉.png','訂書機.png','鉛筆.png'] },
+  { key:'toy', label:'玩具店', icon:'🧸',
+    gallery:['保齡球.png','火車.png','熊.png','玩具車.png','疊疊環.png','積木.png'] },
+  { key:'dessert', label:'甜點店', icon:'🍨',
+    gallery:['冰淇淋.png','杯子蛋糕.png','棉花糖.png','棒棒糖.png','珍奶_可愛.png','鯛魚燒.png'] },
+  { key:'bento', label:'便當店', icon:'🍱',
+    gallery:['便當_兒童.png','便當_日式.png','便當_沙拉.png','便當_雞腿.png','便當_韓式.png','咖哩飯.png'] },
+  { key:'random', label:'隨機', icon:'🎲', gallery:null },
 ];
 const DEFAULT_THEME = 'random';
 const QA_META = {
