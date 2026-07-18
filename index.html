@@ -389,29 +389,6 @@
                 </div>
               </x-import>
 
-              <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="bordered" padding="md" hint-size="100%,150px">
-                <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-primary);margin-bottom:2px;">圖片主題</div>
-                <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
-                  <div style="font-size:var(--text-2xs);color:var(--text-secondary);margin-bottom:10px;">生成學習單時，系統會套用所選情境的圖片與插圖</div>
-                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                    <sc-for list="{{ detailItem.themes }}" as="th" hint-placeholder-count="5">
-                      <div style="{{ th.wrapStyle }}" onClick="{{ th.onSelect }}">
-                        <span style="font-size:22px;line-height:1;flex-shrink:0;">{{ th.icon }}</span>
-                        <span style="font-size:var(--text-xs);font-weight:{{ th.fontWeight }};color:var(--text-primary);">{{ th.label }}</span>
-                      </div>
-                    </sc-for>
-                  </div>
-                </sc-if>
-                <sc-if value="{{ detailItem.themeUnsupported }}" hint-placeholder-val="{{ false }}">
-                  <sc-if value="{{ detailItem.singleVariantNoTheme }}" hint-placeholder-val="{{ false }}">
-                    <div style="font-size:var(--text-2xs);color:var(--text-secondary);line-height:var(--leading-tc);">單一版型學習單不提供圖片主題套用，系統會自動使用預設圖片與插圖來生成學習單內容。</div>
-                  </sc-if>
-                  <sc-if value="{{ detailItem.fixedVisualOnly }}" hint-placeholder-val="{{ true }}">
-                    <div style="font-size:var(--text-2xs);color:var(--text-secondary);line-height:var(--leading-tc);">此題型內容固定使用{{ detailItem.fixedVisualLabel }}呈現，不提供圖片主題套用</div>
-                  </sc-if>
-                </sc-if>
-              </x-import>
-
               <!-- 多版型：系統預設／自由選配 方案卡 -->
               <sc-if value="{{ detailItem.multi }}" hint-placeholder-val="{{ false }}">
                 <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="bordered" padding="md" hint-size="100%,260px">
@@ -495,74 +472,74 @@
               </div><div style="font-size: var(--text-2xs); color: var(--text-muted); background: var(--bg-subtle); border-radius: var(--radius-md); padding: 6px 10px; margin-bottom: 8px; line-height: var(--leading-tc); width: 274px; height: 97px">售價計算方式：<br>系統預設＝單價＋(4-1)張 × 生成費用；<br>自由選配＝單價＋(N-1)張 × 生成費用。<br>例如：單價 5元 ＋ 3張 × 生成費用 2 元 = 11 元<br>（系統預設・每份 4 張）。</div>
             </div>
             <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,600px">
-              <div style="padding:12px 16px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:10px;">
-                <div style="display:inline-flex;background:var(--color-neutral-100);border-radius:var(--radius-md);padding:2px;gap:1px;">
-                  <sc-for list="{{ detailItem.previewTabs }}" as="pt" hint-placeholder-count="2">
-                    <div style="{{ pt.style }}" onClick="{{ pt.onClick }}">{{ pt.label }}</div>
-                  </sc-for>
-                </div>
-                <div style="flex:1;"></div>
-                <sc-if value="{{ detailItem.onSheetTab }}" hint-placeholder-val="{{ true }}">
-                  <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
-                </sc-if>
-                <sc-if value="{{ detailItem.onThemeTab }}" hint-placeholder-val="{{ false }}">
-                  <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
-                    <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.themeLabel }}</span>
-                  </sc-if>
-                </sc-if>
-              </div>
-
-              <sc-if value="{{ detailItem.onThemeTab }}" hint-placeholder-val="{{ false }}">
-                <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
-                  <div style="padding:28px;display:flex;align-items:center;justify-content:center;gap:20px;background:var(--bg-subtle);min-height:480px;">
-                    <span style="font-size:64px;line-height:1;">{{ detailItem.themeIcon }}</span>
-                    <span style="font-size:64px;line-height:1;">{{ detailItem.themeIcon }}</span>
-                    <span style="font-size:64px;line-height:1;">{{ detailItem.themeIcon }}</span>
-                  </div>
-                </sc-if>
-                <sc-if value="{{ detailItem.themeUnsupported }}" hint-placeholder-val="{{ false }}">
-                  <div style="padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--bg-subtle);min-height:480px;text-align:center;">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.41 10.41a2 2 0 1 1-2.83-2.83"></path><line x1="13.5" y1="13.5" x2="6" y2="21"></line><path d="M21 15V5a2 2 0 0 0-2-2H9"></path><path d="M21 15l-5-5L5 21"></path><path d="M3 3l18 18"></path></svg>
-                    <span style="font-size:var(--text-xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型不提供圖片主題套用<br>固定使用{{ detailItem.fixedVisualLabel }}呈現</span>
-                  </div>
-                </sc-if>
-              </sc-if>
-
-              <sc-if value="{{ detailItem.onSheetTab }}" hint-placeholder-val="{{ true }}">
-                <sc-if value="{{ detailItem.previewImgSrc }}" hint-placeholder-val="{{ false }}">
-                  <div style="padding:20px;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);min-height:660px;">
-                    <img src="{{ detailItem.previewImgSrc }}" style="max-width:100%;max-height:660px;width:auto;height:auto;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:block;" />
-                  </div>
-                </sc-if>
-                <sc-if value="{{ !detailItem.previewImgSrc }}" hint-placeholder-val="{{ true }}">
-                  <div style="padding:20px;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);min-height:660px;">
-                    <div style="width:467px;height:660px;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;">
-                      <div style="padding:26px;">
-                        <div style="height:8px;width:60%;background:var(--border-subtle);margin-bottom:10px;border-radius:2px;"></div>
-                        <div style="height:6px;width:90%;background:var(--border-subtle);margin-bottom:6px;"></div>
-                        <div style="height:6px;width:80%;background:var(--border-subtle);margin-bottom:14px;"></div>
-                        <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-brand);text-align:center;margin-bottom:4px;">{{ detailItem.previewVariantLabel }}</div>
-                        <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
-                          <div style="font-size:var(--text-2xs);color:var(--text-muted);text-align:center;margin-bottom:6px;">{{ detailItem.themeLabel }}情境主題</div>
-                          <div style="font-size:44px;text-align:center;margin:16px 0;">{{ detailItem.themeIcon }}{{ detailItem.themeIcon }}{{ detailItem.themeIcon }}</div>
-                        </sc-if>
-                        <sc-if value="{{ detailItem.themeUnsupported }}" hint-placeholder-val="{{ false }}">
-                          <div style="font-size:var(--text-2xs);color:var(--text-muted);text-align:center;margin-bottom:6px;">{{ detailItem.fixedVisualLabel }}</div>
-                          <div style="font-size:44px;text-align:center;margin:16px 0;">🪙🪙🪙</div>
-                        </sc-if>
-                        <div style="height:6px;width:70%;background:var(--border-subtle);margin-bottom:6px;"></div>
-                        <div style="height:6px;width:75%;background:var(--border-subtle);margin-bottom:6px;"></div>
-                        <div style="height:6px;width:50%;background:var(--border-subtle);"></div>
+              <sc-if value="{{ detailItem.showPreviewSelectors }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border-subtle);">
+                  <div style="padding:12px 14px;border-right:1px solid var(--border-subtle);">
+                    <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">主題</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        <sc-for list="{{ detailItem.themes }}" as="th" hint-placeholder-count="5">
+                          <div style="{{ th.pillStyle }}" onClick="{{ th.onSelect }}">
+                            <sc-if value="{{ th.thumbSrc }}" hint-placeholder-val="{{ false }}">
+                              <img src="{{ th.thumbSrc }}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" /><span style="display:none;font-size:12px;">{{ th.icon }}</span>
+                            </sc-if>
+                            <sc-if value="{{ !th.thumbSrc }}" hint-placeholder-val="{{ true }}">
+                              <span style="font-size:12px;">{{ th.icon }}</span>
+                            </sc-if>
+                            <span>{{ th.label }}</span>
+                          </div>
+                        </sc-for>
                       </div>
+                    </sc-if>
+                  </div>
+                  <div style="padding:12px 14px;">
+                    <sc-if value="{{ detailItem.hasMultipleVariants }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">版型預覽</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        <sc-for list="{{ detailItem.variantPreviewPills }}" as="vp" hint-placeholder-count="3">
+                          <div style="{{ vp.pillStyle }}" onClick="{{ vp.onClick }}">{{ vp.label }}</div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+                <sc-if value="{{ detailItem.hasThemeGallery }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:10px 14px;border-bottom:1px solid var(--border-subtle);background:var(--bg-subtle);">
+                    <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:6px;">{{ detailItem.themeGalleryLabel }}</div>
+                    <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;">
+                      <sc-for list="{{ detailItem.themeGalleryImgs }}" as="gi" hint-placeholder-count="6">
+                        <img src="{{ gi.src }}" style="width:44px;height:44px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border-subtle);flex-shrink:0;" />
+                      </sc-for>
                     </div>
                   </div>
                 </sc-if>
-                <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
-                  <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一頁</span>
-                  <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
-                  <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一頁 ›</span>
+              </sc-if>
+
+              <sc-if value="{{ detailItem.previewImgSrc }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:20px;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);min-height:660px;">
+                  <img src="{{ detailItem.previewImgSrc }}" style="max-width:100%;max-height:660px;width:auto;height:auto;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:block;" />
                 </div>
               </sc-if>
+              <sc-if value="{{ !detailItem.previewImgSrc }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:20px;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);min-height:660px;">
+                  <div style="width:467px;height:660px;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;">
+                    <div style="padding:26px;">
+                      <div style="height:8px;width:60%;background:var(--border-subtle);margin-bottom:10px;border-radius:2px;"></div>
+                      <div style="height:6px;width:90%;background:var(--border-subtle);margin-bottom:6px;"></div>
+                      <div style="height:6px;width:80%;background:var(--border-subtle);margin-bottom:14px;"></div>
+                      <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-brand);text-align:center;margin-bottom:4px;">{{ detailItem.previewVariantLabel }}</div>
+                      <div style="height:6px;width:70%;background:var(--border-subtle);margin-bottom:6px;"></div>
+                      <div style="height:6px;width:75%;background:var(--border-subtle);margin-bottom:6px;"></div>
+                      <div style="height:6px;width:50%;background:var(--border-subtle);"></div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+              <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一頁</span>
+                <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
+                <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一頁 ›</span>
+              </div>
             </x-import>
           </div>
         </div>
