@@ -1958,7 +1958,7 @@ window.WORKSHEET_REGISTRY = [
     "grade": 1,
     "ops": [],
     "keywords": ["compare-qty", "比誰多誰少", "數量比較"],
-    "desc": "比較兩堆數量（1–10）的多少，打勾作答，共四種版型：統一圖案、相同圖案互比、不同圖案互比、簡單文字圖。",
+    "desc": "比較兩堆數量（1–10）的多少，打勾作答，共五種版型：統一圖案、相同圖案互比、不同圖案互比、簡單文字圖、手勢。",
     "sortKey": [1, 1, 1],
     "home": {
       "icon": "🆚",
@@ -1971,7 +1971,8 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/compare-qty_unified_sample.pdf", "name": "比誰多誰少_統一圖案_範例.pdf", "label": "統一圖案", "key": "compare-qty-unified" },
       { "pdf": "assets/compare-qty_same_sample.pdf",    "name": "比誰多誰少_相同圖案互比_範例.pdf", "label": "相同圖案互比", "key": "compare-qty-same" },
       { "pdf": "assets/compare-qty_diff_sample.pdf",    "name": "比誰多誰少_不同圖案互比_範例.pdf", "label": "不同圖案互比", "key": "compare-qty-diff" },
-      { "pdf": "assets/compare-qty_text_sample.pdf",    "name": "比誰多誰少_簡單文字圖_範例.pdf", "label": "簡單文字圖", "key": "compare-qty-text" }
+      { "pdf": "assets/compare-qty_text_sample.pdf",    "name": "比誰多誰少_簡單文字圖_範例.pdf", "label": "簡單文字圖", "key": "compare-qty-text" },
+      { "pdf": "assets/compare-qty_gesture_sample.pdf", "name": "比誰多誰少_手勢_範例.pdf", "label": "手勢", "key": "compare-qty-gesture" }
     ],
     "layout": {
       "panel": "compareQtyPanel",
@@ -1984,7 +1985,8 @@ window.WORKSHEET_REGISTRY = [
       { "key": "compare-qty-unified", "label": "統一圖案" },
       { "key": "compare-qty-same",    "label": "相同圖案互比" },
       { "key": "compare-qty-diff",    "label": "不同圖案互比" },
-      { "key": "compare-qty-text",    "label": "簡單文字圖" }
+      { "key": "compare-qty-text",    "label": "簡單文字圖" },
+      { "key": "compare-qty-gesture", "label": "手勢" }
     ]
   }
 ];
