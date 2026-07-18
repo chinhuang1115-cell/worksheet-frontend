@@ -1,0 +1,16 @@
+/* 易數教室 — Web Fonts
+ * Noto Sans TC:   body text, UI labels        (400, 500, 700)
+ * Noto Serif TC:  display headings, branded   (600, 700)
+ * JetBrains Mono: math expressions, scores   (400, 500)
+ *
+ * Substitution note: These are Google Fonts stand-ins. Replace with
+ * licensed fonts (e.g. Noto Sans CJK from Google or Founder fonts) for
+ * production if tighter brand control is required.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --font-sans:    'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+  --font-display: 'Noto Serif TC', 'PingFang TC', Georgia, serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+}

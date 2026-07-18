@@ -1,0 +1,124 @@
+/* 易數教室 — Color Tokens
+ * Palette:
+ *   數藍 (Shù Lán)  — indigo-blue, primary brand hue 258°
+ *   琥珀 (Hǔ Pò)   — warm amber, accent / gamification hue 62°
+ *   暖灰 (Nuǎn Huī) — warm neutral grays (hue 258° at low chroma)
+ *   Semantic        — success 145°, warning 75°, error 25°, info 220°
+ */
+
+:root {
+
+  /* ── 數藍 Brand Blue ───────────────────────────────────────── */
+  --color-brand-50:  oklch(0.970 0.020 258);
+  --color-brand-100: oklch(0.930 0.055 258);
+  --color-brand-200: oklch(0.870 0.105 258);
+  --color-brand-300: oklch(0.770 0.155 258);
+  --color-brand-400: oklch(0.645 0.195 258);
+  --color-brand-500: oklch(0.515 0.240 258);
+  --color-brand-600: oklch(0.430 0.230 258);
+  --color-brand-700: oklch(0.350 0.200 258);
+  --color-brand-800: oklch(0.265 0.160 258);
+  --color-brand-900: oklch(0.185 0.110 258);
+  --color-brand-950: oklch(0.120 0.070 258);
+
+  /* ── 琥珀 Accent Amber ─────────────────────────────────────── */
+  --color-accent-50:  oklch(0.980 0.018 72);
+  --color-accent-100: oklch(0.950 0.050 72);
+  --color-accent-200: oklch(0.910 0.090 70);
+  --color-accent-300: oklch(0.855 0.135 67);
+  --color-accent-400: oklch(0.795 0.165 63);
+  --color-accent-500: oklch(0.730 0.165 58);
+  --color-accent-600: oklch(0.630 0.155 53);
+  --color-accent-700: oklch(0.520 0.135 47);
+  --color-accent-800: oklch(0.410 0.105 42);
+  --color-accent-900: oklch(0.300 0.075 37);
+  --color-accent-950: oklch(0.195 0.048 33);
+
+  /* ── 暖灰 Neutral Gray ─────────────────────────────────────── */
+  --color-neutral-0:   oklch(1.000 0.000   0);
+  --color-neutral-50:  oklch(0.985 0.003 258);
+  --color-neutral-100: oklch(0.965 0.005 258);
+  --color-neutral-200: oklch(0.928 0.007 258);
+  --color-neutral-300: oklch(0.872 0.009 258);
+  --color-neutral-400: oklch(0.720 0.010 258);
+  --color-neutral-500: oklch(0.575 0.009 258);
+  --color-neutral-600: oklch(0.450 0.008 258);
+  --color-neutral-700: oklch(0.340 0.007 258);
+  --color-neutral-800: oklch(0.240 0.005 258);
+  --color-neutral-900: oklch(0.155 0.004 258);
+  --color-neutral-950: oklch(0.095 0.002 258);
+
+  /* ── Semantic — Success ────────────────────────────────────── */
+  --color-success-50:  oklch(0.970 0.030 145);
+  --color-success-100: oklch(0.925 0.070 145);
+  --color-success-200: oklch(0.860 0.115 145);
+  --color-success-300: oklch(0.775 0.160 145);
+  --color-success-400: oklch(0.680 0.185 145);
+  --color-success-500: oklch(0.590 0.180 145);
+  --color-success-600: oklch(0.490 0.160 145);
+  --color-success-700: oklch(0.395 0.140 145);
+
+  /* ── Semantic — Warning ────────────────────────────────────── */
+  --color-warning-50:  oklch(0.980 0.020 80);
+  --color-warning-100: oklch(0.950 0.055 80);
+  --color-warning-500: oklch(0.775 0.155 75);
+  --color-warning-600: oklch(0.665 0.150 70);
+
+  /* ── Semantic — Error ──────────────────────────────────────── */
+  --color-error-50:  oklch(0.975 0.025 25);
+  --color-error-100: oklch(0.935 0.065 25);
+  --color-error-200: oklch(0.880 0.110 25);
+  --color-error-500: oklch(0.585 0.215 25);
+  --color-error-600: oklch(0.490 0.200 25);
+  --color-error-700: oklch(0.395 0.175 25);
+
+  /* ── Semantic — Info ───────────────────────────────────────── */
+  --color-info-50:  oklch(0.970 0.025 220);
+  --color-info-100: oklch(0.930 0.060 220);
+  --color-info-500: oklch(0.575 0.175 220);
+  --color-info-600: oklch(0.480 0.160 220);
+
+  /* ── Semantic Aliases — Backgrounds ───────────────────────── */
+  --bg-base:     var(--color-neutral-0);
+  --bg-subtle:   var(--color-neutral-50);
+  --bg-muted:    var(--color-neutral-100);
+  --bg-emphasis: var(--color-brand-500);
+
+  /* ── Semantic Aliases — Text ───────────────────────────────── */
+  --text-primary:   var(--color-neutral-900);
+  --text-secondary: var(--color-neutral-600);
+  --text-muted:     var(--color-neutral-400);
+  --text-disabled:  var(--color-neutral-300);
+  --text-inverse:   var(--color-neutral-0);
+  --text-brand:     var(--color-brand-600);
+  --text-accent:    var(--color-accent-600);
+  --text-success:   var(--color-success-600);
+  --text-warning:   var(--color-warning-600);
+  --text-error:     var(--color-error-600);
+
+  /* ── Semantic Aliases — Borders ────────────────────────────── */
+  --border-subtle:  var(--color-neutral-200);
+  --border-default: var(--color-neutral-300);
+  --border-strong:  var(--color-neutral-500);
+  --border-brand:   var(--color-brand-500);
+  --border-error:   var(--color-error-500);
+
+  /* ── Semantic Aliases — Interactive ────────────────────────── */
+  --interactive-primary:         var(--color-brand-500);
+  --interactive-primary-hover:   var(--color-brand-600);
+  --interactive-primary-press:   var(--color-brand-700);
+  --interactive-secondary:       var(--color-neutral-100);
+  --interactive-secondary-hover: var(--color-neutral-200);
+  --interactive-secondary-press: var(--color-neutral-300);
+
+  /* ── Semantic Aliases — Surfaces ───────────────────────────── */
+  --surface-base:    var(--color-neutral-0);
+  --surface-raised:  var(--color-neutral-0);
+  --surface-sunken:  var(--color-neutral-50);
+  --surface-brand:   var(--color-brand-500);
+  --surface-accent:  var(--color-accent-500);
+  --surface-success: var(--color-success-50);
+  --surface-warning: var(--color-warning-50);
+  --surface-error:   var(--color-error-50);
+  --surface-info:    var(--color-info-50);
+}

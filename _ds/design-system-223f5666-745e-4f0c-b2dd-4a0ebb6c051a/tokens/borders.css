@@ -1,0 +1,19 @@
+/* 易數教室 — Border & Radius Tokens */
+
+:root {
+  /* ── Border Radius ──────────────────────────────────────────── */
+  --radius-none: 0;
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  20px;
+  --radius-3xl:  24px;
+  --radius-full: 9999px;
+
+  /* ── Border Widths ──────────────────────────────────────────── */
+  --border-1: 1px;
+  --border-2: 2px;
+  --border-4: 4px;
+}

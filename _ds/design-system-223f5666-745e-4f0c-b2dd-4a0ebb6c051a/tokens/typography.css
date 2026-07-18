@@ -1,0 +1,41 @@
+/* 易數教室 — Typography Tokens */
+
+:root {
+  /* ── Font Sizes ─────────────────────────────────────────────── */
+  --text-2xs:  0.625rem;   /*  10px */
+  --text-xs:   0.750rem;   /*  12px */
+  --text-sm:   0.875rem;   /*  14px */
+  --text-base: 1.000rem;   /*  16px */
+  --text-lg:   1.125rem;   /*  18px */
+  --text-xl:   1.250rem;   /*  20px */
+  --text-2xl:  1.500rem;   /*  24px */
+  --text-3xl:  1.875rem;   /*  30px */
+  --text-4xl:  2.250rem;   /*  36px */
+  --text-5xl:  3.000rem;   /*  48px */
+  --text-6xl:  3.750rem;   /*  60px */
+  --text-7xl:  4.500rem;   /*  72px */
+
+  /* ── Font Weights ───────────────────────────────────────────── */
+  --weight-normal:   400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ── Line Heights ───────────────────────────────────────────── */
+  --leading-none:    1.000;
+  --leading-tight:   1.250;
+  --leading-snug:    1.375;
+  --leading-normal:  1.500;
+  --leading-relaxed: 1.625;
+  --leading-loose:   2.000;
+  --leading-tc:      1.800;   /* Recommended for Traditional Chinese body copy */
+
+  /* ── Letter Spacing ─────────────────────────────────────────── */
+  --tracking-tight:    -0.025em;
+  --tracking-normal:    0em;
+  --tracking-wide:      0.025em;
+  --tracking-wider:     0.050em;
+  --tracking-widest:    0.100em;
+  --tracking-tc-title:  0.080em;  /* Elegant spacing for Chinese headings */
+  --tracking-tc-wide:   0.120em;  /* Open spacing for display / hero text */
+}

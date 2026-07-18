@@ -1,0 +1,44 @@
+/* 易數教室 — Shadow Tokens
+ * All shadows tinted with brand hue (258°) at low chroma.
+ * Brand/accent glow shadows are for interactive highlights only.
+ */
+
+:root {
+  --shadow-none:  none;
+
+  --shadow-xs:
+    0 1px 2px oklch(0.14 0.04 258 / 0.08);
+
+  --shadow-sm:
+    0 1px 3px oklch(0.14 0.04 258 / 0.07),
+    0 1px 2px oklch(0.14 0.04 258 / 0.06);
+
+  --shadow-md:
+    0 2px 6px  oklch(0.14 0.04 258 / 0.07),
+    0 4px 10px oklch(0.14 0.04 258 / 0.08);
+
+  --shadow-lg:
+    0 4px 12px oklch(0.14 0.04 258 / 0.07),
+    0 10px 24px oklch(0.14 0.04 258 / 0.10);
+
+  --shadow-xl:
+    0 8px 20px  oklch(0.14 0.04 258 / 0.08),
+    0 20px 40px oklch(0.14 0.04 258 / 0.13);
+
+  --shadow-2xl:
+    0 16px 40px oklch(0.14 0.04 258 / 0.09),
+    0 40px 80px oklch(0.14 0.04 258 / 0.17);
+
+  --shadow-inner:
+    inset 0 2px 4px oklch(0 0 0 / 0.06);
+
+  /* ── Colored Glow Shadows (use sparingly) ───────────────────── */
+  --shadow-brand:
+    0 4px 16px oklch(0.515 0.240 258 / 0.28);
+
+  --shadow-accent:
+    0 4px 16px oklch(0.730 0.165 58 / 0.30);
+
+  --shadow-success:
+    0 4px 12px oklch(0.590 0.180 145 / 0.25);
+}

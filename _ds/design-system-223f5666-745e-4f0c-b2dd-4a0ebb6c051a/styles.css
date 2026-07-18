@@ -1,0 +1,12 @@
+/* 易數教室 Design System — Global Stylesheet Entry
+ * Import this single file in any project that consumes this design system.
+ * Everything it transitively @imports is shipped to consumers.
+ */
+
+@import './tokens/fonts.css';
+@import './tokens/colors.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+@import './tokens/borders.css';
+@import './tokens/shadows.css';
+@import './tokens/motion.css';
