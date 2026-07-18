@@ -508,7 +508,7 @@
                     <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:6px;">{{ detailItem.themeGalleryLabel }}</div>
                     <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;">
                       <sc-for list="{{ detailItem.themeGalleryImgs }}" as="gi" hint-placeholder-count="6">
-                        <img src="{{ gi.src }}" style="width:44px;height:44px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border-subtle);flex-shrink:0;" />
+                        <img src="{{ gi.src }}" style="width:44px;height:44px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border-subtle);flex-shrink:0;" onerror="this.style.display='none';" />
                       </sc-for>
                     </div>
                   </div>
@@ -3292,18 +3292,12 @@ class Component extends DCLogic {
         onAddToCart: () => { if (st.cart[it.id] && st.cart[it.id].presetMode === !isCustom) { this.homeRemoveFromCart(it.id); } else { this.homeAddToCart(it, vq, !isCustom); } },
         onToggleFav: () => this.homeToggleFav(it.id),
         ...this.homeBuildAdminFields(it),
-        themeIcon: theme.icon,
-        themeLabel: theme.label,
         supportsTheme,
-        themeUnsupported: !supportsTheme,
         hasMultipleVariants,
         showPreviewSelectors: supportsTheme || hasMultipleVariants,
         hasThemeGallery: supportsTheme && !!(theme.gallery && theme.gallery.length),
         themeGalleryLabel: theme.label + '・全部圖片',
         themeGalleryImgs: (theme.gallery || []).map(fn => ({ src: themeImagePath(theme.key, fn) })),
-        fixedVisualLabel: it.fixedVisualLabel || (it.variants.length <= 1 ? '系統預設圖片' : '固定圖示'),
-        singleVariantNoTheme: !supportsTheme && it.variants.length <= 1 && it.supportsTheme !== false,
-        fixedVisualOnly: it.supportsTheme === false,
         headerLessonsStyle: `width:${wLessons}px;text-align:center;font-size:var(--text-2xs);font-weight:700;color:var(--text-muted);box-sizing:border-box;`,
         headerPriceStyle: `width:${wPrice}px;text-align:center;font-size:var(--text-2xs);font-weight:700;color:var(--text-muted);box-sizing:border-box;`,
         headerQtyStyle: `width:${wQty}px;text-align:center;font-size:var(--text-2xs);font-weight:700;color:var(--text-muted);box-sizing:border-box;`,
