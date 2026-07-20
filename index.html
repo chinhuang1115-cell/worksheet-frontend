@@ -491,6 +491,10 @@
                         </sc-for>
                       </div>
                     </sc-if>
+                    <sc-if value="{{ !detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
+                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">主題</div>
+                      <div style="font-size:var(--text-2xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型不使用圖片主題，內容固定。</div>
+                    </sc-if>
                   </div>
                   <div style="padding:12px 14px;">
                     <sc-if value="{{ detailItem.hasMultipleVariants }}" hint-placeholder-val="{{ false }}">
@@ -500,6 +504,10 @@
                           <div style="{{ vp.pillStyle }}" onClick="{{ vp.onClick }}">{{ vp.label }}</div>
                         </sc-for>
                       </div>
+                    </sc-if>
+                    <sc-if value="{{ !detailItem.hasMultipleVariants }}" hint-placeholder-val="{{ true }}">
+                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">版型預覽</div>
+                      <div style="font-size:var(--text-2xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型僅一種版型，無其他版型可選。</div>
                     </sc-if>
                   </div>
                 </div>
@@ -516,13 +524,13 @@
               </sc-if>
 
               <sc-if value="{{ detailItem.previewImgSrc }}" hint-placeholder-val="{{ false }}">
-                <div style="padding:20px;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);min-height:660px;">
-                  <img src="{{ detailItem.previewImgSrc }}" style="max-width:100%;max-height:660px;width:auto;height:auto;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:block;" />
+                <div style="padding:20px;display:flex;align-items:flex-start;justify-content:center;background:var(--bg-subtle);">
+                  <img src="{{ detailItem.previewImgSrc }}" style="width:100%;height:auto;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:block;" />
                 </div>
               </sc-if>
               <sc-if value="{{ !detailItem.previewImgSrc }}" hint-placeholder-val="{{ true }}">
-                <div style="padding:20px;display:flex;align-items:center;justify-content:center;background:var(--bg-subtle);min-height:660px;">
-                  <div style="width:467px;height:660px;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;">
+                <div style="padding:20px;display:flex;align-items:flex-start;justify-content:center;background:var(--bg-subtle);">
+                  <div style="width:100%;aspect-ratio:467/660;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;box-sizing:border-box;">
                     <div style="padding:26px;">
                       <div style="height:8px;width:60%;background:var(--border-subtle);margin-bottom:10px;border-radius:2px;"></div>
                       <div style="height:6px;width:90%;background:var(--border-subtle);margin-bottom:6px;"></div>
@@ -1821,7 +1829,7 @@ function _categoryOf(t) {
   if (o.includes('sub') && !o.includes('add')) return 'sub';
   if (o.includes('add') && o.includes('sub')) return 'add';   // 加減混合歸 add（與原型現況一致）
   if (o.includes('add')) return 'add';
-  return 'other';
+  return 'count';   // ops 為空陣列的題型（數到200 系列、比誰多誰少）：數與計數基礎，非加減乘除運算
 }
 function _badgeOf(grade) {   // 對齊原型現有 badge 值域
   return { variant: 'accent', label: '' };   // 難度徽章日後由 sortKey/難度推導；此子專案先給中性值
@@ -1857,6 +1865,8 @@ function adaptRegistry(reg) {
     badgeVariant: _badgeOf(t.grade).variant,
     badgeLabel: _badgeOf(t.grade).label,
     supportsTheme: !!(t.layout && t.layout.showTheme),
+    themeSet: (t.layout && t.layout.themeSet) || null,
+    themeAllowList: (t.layout && t.layout.themes) || null,
     // 頂層 lessons 給中性預設值 1（節數管理頁等直接讀 it.lessons 的地方用），
     // 正式建議節數由「建議節數管理」頁另行設定（task 4 起 POST /admin/lessons，後端為唯一權威）。
     lessons: 1,
@@ -2048,6 +2058,7 @@ function _checkoutMsgColor(msg) {
 // 來源的 THEMES 與 config screen 的 THEMES 同名但內容不同，改名 HOME_THEMES 避免覆蓋 config 的主題清單
 const THEME_FOLDER_MAP = {
   drink: '飲料店', stationery: '文具店', toy: '玩具店', dessert: '甜點店', bento: '便當店',
+  toycar: '玩具車', retro: '懷舊玩具', sports: '體育用品店', electronics: '3C產品店',
 };
 function themeImagePath(key, filename) {
   const folder = THEME_FOLDER_MAP[key];
@@ -2065,9 +2076,41 @@ const HOME_THEMES = [
     gallery:['冰淇淋.png','杯子蛋糕.png','棉花糖.png','棒棒糖.png','珍奶_可愛.png','鯛魚燒.png'] },
   { key:'bento', label:'便當店', icon:'🍱',
     gallery:['便當_兒童.png','便當_日式.png','便當_沙拉.png','便當_雞腿.png','便當_韓式.png','咖哩飯.png'] },
+  { key:'toycar', label:'玩具車', icon:'🚗',
+    gallery:['卡車.png','校車.png','消防車.png','警車.png','跑車.png','農用車.png'] },
+  { key:'retro', label:'懷舊玩具', icon:'🪀',
+    gallery:['呼拉圈.png','小丑盒.png','木琴.png','泰迪熊.png','疊疊環.png','陀螺.png'] },
+  { key:'sports', label:'體育用品店', icon:'🏀',
+    gallery:['啞鈴.png','拳擊手套.png','排球.png','棒球棒.png','球拍組.png','瑜伽墊.png','籃球.png','網球拍.png','美式足球.png','足球.png','躲避球.png','運動鞋.png'] },
+  { key:'electronics', label:'3C產品店', icon:'📱',
+    gallery:['安卓手機.png','平板.png','手機.png','智慧手錶.png','智慧眼鏡.png','筆電.png'] },
   { key:'random', label:'隨機', icon:'🎲', gallery:null },
 ];
 const DEFAULT_THEME = 'random';
+// 主題集合（對齊 backend/library.json 的 cheap／expensive 定價層級，見 CLAUDE.md「library.json 圖庫架構與定價設計」）：
+// cheap＝三位數以下五個生活情境主題；expensive＝三／四位數兩個情境（懷舊玩具·玩具車／體育用品店·3C產品店）。
+const THEME_SET_KEYS = {
+  cheap: ['drink', 'stationery', 'toy', 'dessert', 'bento'],
+  expensive: ['toycar', 'retro', 'sports', 'electronics'],
+};
+// 依題型決定可選主題清單（不是每個題型都套用同一套五選一）：
+// 1. layout.themes（registry 明確列出的中文主題名稱，如 liangbushu 只給 3 個、haochashao 排除玩具店/便當店）優先採用；
+// 2. 否則依 layout.themeSet（'cheap'／'expensive'）取對應主題集合；
+// 3. 支援主題的題型一律在清單尾端補上「隨機」。
+function allowedThemesOf(it) {
+  if (!it.supportsTheme) return [];
+  let list;
+  if (it.themeAllowList && it.themeAllowList.length) {
+    list = it.themeAllowList
+      .map(label => HOME_THEMES.find(th => th.label === label))
+      .filter(Boolean);
+  } else {
+    const keys = THEME_SET_KEYS[it.themeSet] || [];
+    list = keys.map(k => HOME_THEMES.find(th => th.key === k)).filter(Boolean);
+  }
+  const randomTheme = HOME_THEMES.find(th => th.key === DEFAULT_THEME);
+  return randomTheme ? [...list, randomTheme] : list;
+}
 const QA_META = {
   pass: { label: '已通過', bg: 'var(--color-success-100)', color: 'var(--color-success-700)', dot: 'var(--color-success-400)' },
   warn: { label: '維修中', bg: 'var(--color-warning-100)', color: 'var(--color-warning-600)', dot: 'var(--color-warning-500)' },
@@ -2084,6 +2127,7 @@ const CATS = [
   { key:'mul', label:'✖️ 乘法' },
   { key:'div', label:'➗ 除法' },
   { key:'coin', label:'🪙 錢幣情境' },
+  { key:'count', label:'🔢 數與計數' },
 ];
 const GRADES = [
   { key:'all', label:'全部' },
@@ -2138,7 +2182,10 @@ function lessonsRangeOf(it, lessonMap) {
 }
 function themeOf(it, themeMap) {
   const key = (themeMap && themeMap[it.id]) || readJSON(LS_THEME)[it.id] || DEFAULT_THEME;
-  return HOME_THEMES.find(t => t.key === key) || HOME_THEMES[0];
+  const allowed = allowedThemesOf(it);
+  // 儲存的主題若不在此題型目前允許的清單中（例如舊資料、或該題型本就不支援主題），
+  // 回退到允許清單的第一項，避免顯示出「不屬於這個題型」的主題圖庫/名稱。
+  return allowed.find(t => t.key === key) || allowed[0] || HOME_THEMES.find(t => t.key === DEFAULT_THEME);
 }
 function themeChosen(it, themeMap) {
   return !!((themeMap && themeMap[it.id]) || readJSON(LS_THEME)[it.id]);
@@ -3207,7 +3254,7 @@ class Component extends DCLogic {
         ? _pdfPage1Cache[previewPdfUrl] : null;
       const lr = lessonsRangeOf(it, st.itemVariantLessons);
       const theme = themeOf(it, st.itemTheme);
-      const supportsTheme = it.supportsTheme !== false && it.variants.length > 1;
+      const supportsTheme = it.supportsTheme !== false;
       const hasMultipleVariants = it.variants.length > 1;
 
       const wLessons = this.props.colWidthLessons ?? 30;
@@ -3294,7 +3341,7 @@ class Component extends DCLogic {
         ...this.homeBuildAdminFields(it),
         supportsTheme,
         hasMultipleVariants,
-        showPreviewSelectors: supportsTheme || hasMultipleVariants,
+        showPreviewSelectors: true,
         hasThemeGallery: supportsTheme && !!(theme.gallery && theme.gallery.length),
         themeGalleryLabel: theme.label + '・全部圖片',
         themeGalleryImgs: (theme.gallery || []).map(fn => ({ src: themeImagePath(theme.key, fn) })),
@@ -3309,7 +3356,7 @@ class Component extends DCLogic {
             onClick: () => this.homePreviewVariant(it.id, v.key),
           };
         }),
-        themes: HOME_THEMES.map(th => {
+        themes: allowedThemesOf(it).map(th => {
           const active = theme.key === th.key;
           const thumbSrc = th.gallery && th.gallery.length ? themeImagePath(th.key, th.gallery[0]) : null;
           return {
