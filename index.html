@@ -22,6 +22,8 @@
   <style>
     body{margin:0;}
     *{box-sizing:border-box;}
+    .ys-card-arrow{opacity:0;transition:opacity .15s;}
+    .ys-card-thumb-wrap:hover .ys-card-arrow{opacity:1;}
   </style>
 </helmet>
 
@@ -2136,6 +2138,11 @@ const GRADES = [
 ];
 const LS_VLESSONS = 'ys_variant_lessons';
 const LS_THEME = 'ys_item_theme';
+const LS_HOME_VIEW = 'ys_home_view_mode';   // 'text' | 'image' — 首頁卡片格瀏覽模式，全域切換，持久化
+function readHomeViewMode() {
+  const v = localStorage.getItem(LS_HOME_VIEW);
+  return (v === 'image' || v === 'text') ? v : 'text';
+}
 const TIER_COLORS = { free: 'var(--color-success-500)', a: 'var(--color-brand-500)', b: 'var(--color-accent-500)', c: 'var(--color-warning-600)' };
 const DEFAULT_PRICING_PARAMS = { basePrice: 30, bRatio: 1.5, cRatio: 2, genFee: 2 };
 function getTierPrices() {
@@ -2249,6 +2256,8 @@ class Component extends DCLogic {
       grade: 'all',
       search: '',
       sort: 'difficulty',
+      viewMode: readHomeViewMode(),   // 'text' | 'image'，全域切換，localStorage 持久化
+      cardVariantIdx: {},             // { [itemId]: number } — 首頁卡片格圖像模式目前顯示第幾個版型，不持久化
       favorites: {},
       cart: {},
       cartSelected: {},
@@ -2641,6 +2650,21 @@ class Component extends DCLogic {
        物件式 setState→patch('home',…)、函式式 setState→home 雙 spread；detailId 改由 hash param 驅動）══ */
   homeToggleFav(id) {
     this.setState(s => ({ home: { ...s.home, favorites: { ...s.home.favorites, [id]: !s.home.favorites[id] } } }));
+  }
+
+  homeSetViewMode(mode) {
+    localStorage.setItem(LS_HOME_VIEW, mode);
+    this.patch('home', { viewMode: mode });
+  }
+  homeCardCarouselNav(itemId, dir, variantCount) {
+    this.setState(s => {
+      const cur = s.home.cardVariantIdx[itemId] ?? 0;
+      const next = ((cur + dir) % variantCount + variantCount) % variantCount;
+      return { home: { ...s.home, cardVariantIdx: { ...s.home.cardVariantIdx, [itemId]: next } } };
+    });
+  }
+  homeCardCarouselGo(itemId, idx) {
+    this.setState(s => ({ home: { ...s.home, cardVariantIdx: { ...s.home.cardVariantIdx, [itemId]: idx } } }));
   }
 
   homeBuildAdminFields(it) {
