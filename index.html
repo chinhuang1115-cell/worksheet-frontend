@@ -3184,6 +3184,24 @@ class Component extends DCLogic {
 
     const visibleItems = filtered.map(it => {
       const qaStatus = readJSON(LS_QA)[it.id] ?? st.itemAdminStatus[it.id] ?? it.adminQA ?? 'unreviewed';
+      const cardIdx = st.cardVariantIdx[it.id] ?? 0;
+      const cardVariant = it.variants[cardIdx] || it.variants[0];
+      const cardHasMultiVariant = it.variants.length > 1;
+      let cardImgSrc = null;
+      if (st.viewMode === 'image') {
+        const cardSample = cardVariant ? sampleFor(it, cardVariant.key) : it.sample;
+        const cardPdfUrl = cardSample && cardSample.pdf ? (ASSETS_BASE_URL + '/' + cardSample.pdf) : null;
+        if (cardPdfUrl && !_pdfPage1Cache[cardPdfUrl] && !_pdfPage1Inflight[cardPdfUrl]) {
+          _loadPdfPage1(cardPdfUrl).then(() => this.forceUpdate());
+        }
+        cardImgSrc = cardPdfUrl && _pdfPage1Cache[cardPdfUrl] && _pdfPage1Cache[cardPdfUrl] !== 'ERROR'
+          ? _pdfPage1Cache[cardPdfUrl] : null;
+      }
+      const cardDots = it.variants.map((v, i) => ({
+        active: i === cardIdx,
+        style: `width:6px;height:6px;border-radius:50%;cursor:pointer;background:${i === cardIdx ? 'var(--color-brand-500)' : 'var(--border-default)'};`,
+        onClick: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.homeCardCarouselGo(it.id, i); },
+      }));
       // 鎖定與 QA 解耦（task 5）：消費端卡片「是否可購買/可見」的閘門改讀 isUnlockedOf（後端 /locks
       // 唯一權威，task 2 起無本地覆蓋），不再綁 QA 狀態；qaStatus 只用於上面/下面的管理端徽章顯示。
       const locked = !isUnlockedOf(it.id);
@@ -3219,6 +3237,12 @@ class Component extends DCLogic {
         lockLabel,
         lockColor,
         contentFilterStyle: (locked && !isAdmin) ? 'filter:blur(1.5px);opacity:0.5;' : '',
+        cardImgSrc,
+        cardHasMultiVariant,
+        cardVariantLabel: cardVariant ? cardVariant.label : '',
+        cardDots,
+        onCardPrev: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.homeCardCarouselNav(it.id, -1, it.variants.length); },
+        onCardNext: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.homeCardCarouselNav(it.id, 1, it.variants.length); },
       };
     });
 
