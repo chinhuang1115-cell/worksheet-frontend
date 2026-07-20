@@ -103,6 +103,10 @@
             <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="搜尋題型…" style="width:100%;height:32px;border-radius:var(--radius-md);border:1.5px solid var(--border-default);padding:0 10px;font-size:var(--text-xs);font-family:var(--font-sans);">
           </div>
           <div style="flex:1;"></div>
+          <span style="font-size:var(--text-2xs);color:var(--text-muted);letter-spacing:var(--tracking-wide);">瀏覽方式</span>
+          <sc-for list="{{ viewModes }}" as="vm" hint-placeholder-count="2">
+            <span style="{{ vm.style }}" onClick="{{ vm.onClick }}">{{ vm.label }}</span>
+          </sc-for>
           <span style="font-size:var(--text-2xs);color:var(--text-muted);letter-spacing:var(--tracking-wide);">排序</span>
           <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="4">
             <span style="{{ s.style }}" onClick="{{ s.onClick }}">{{ s.label }}</span>
@@ -3148,10 +3152,15 @@ class Component extends DCLogic {
     const catStyle = (active) => `padding:9px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);${active ? 'background:var(--color-brand-500);color:#fff;font-weight:600;' : 'color:var(--text-secondary);'}`;
     const gradeStyle = (active) => `padding:9px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:600;' : 'color:var(--text-secondary);'}`;
     const sortStyle = (active) => `padding:4px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-xs);${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:600;' : 'color:var(--text-secondary);'}`;
+    const viewModeStyle = (active) => `padding:5px 12px;border-radius:var(--radius-full);cursor:pointer;font-size:var(--text-xs);border:1.5px solid ${active ? 'var(--color-brand-500)' : 'var(--border-default)'};${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:700;' : 'color:var(--text-secondary);'}`;
 
     const categories = CATS.map(c => ({ label: c.label, style: catStyle(st.category === c.key), onClick: () => this.patch('home', { category: c.key }) }));
     const grades = GRADES.map(g => ({ label: g.label, style: gradeStyle(st.grade === g.key), onClick: () => this.patch('home', { grade: g.key }) }));
     const sorts = SORTS.map(s => ({ label: s.label, style: sortStyle(st.sort === s.key), onClick: () => this.patch('home', { sort: st.sort === s.key ? 'difficulty' : s.key }) }));
+    const viewModes = [
+      { key: 'text', label: '📝 文字' },
+      { key: 'image', label: '🖼️ 圖像' },
+    ].map(v => ({ label: v.label, style: viewModeStyle(st.viewMode === v.key), onClick: () => this.homeSetViewMode(v.key) }));
 
     let filtered = ITEMS.filter(it => {
       if (!it.hasHome) return false;   // home:null 合併子版型（fenfennew 等）不進消費端首頁卡片格，僅管理端全量列表顯示
@@ -3422,7 +3431,8 @@ class Component extends DCLogic {
         if (it) writeJSON(LS_CHECKLIST, { ...readJSON(LS_CHECKLIST), [it.id]: {} });
         this.setState(s => ({ home: { ...s.home, itemChecklistChecked: { ...s.home.itemChecklistChecked, [detailId]: {} } } }));
       },
-      categories, grades, sorts,
+      categories, grades, sorts, viewModes,
+      isImageMode: st.viewMode === 'image',
       search: st.search,
       onSearch: (e) => this.patch('home', { search: e.target.value }),
       visibleItems,
