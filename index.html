@@ -541,6 +541,15 @@
                           </div>
                         </sc-for>
                       </div>
+                      <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <span style="{{ detailItem.themePreviewBtnStyle }}" onClick="{{ detailItem.onPreviewTheme }}">{{ detailItem.themePreviewBtnLabel }}</span>
+                        <sc-if value="{{ detailItem.showClearThemePreview }}" hint-placeholder-val="{{ false }}">
+                          <span style="font-size:var(--text-2xs);color:var(--text-muted);cursor:pointer;text-decoration:underline;" onClick="{{ detailItem.onClearThemePreview }}">清除，回到範本預覽</span>
+                        </sc-if>
+                      </div>
+                      <sc-if value="{{ detailItem.themePreviewError }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:var(--text-2xs);color:var(--color-error-600);margin-top:4px;">預覽生成失敗：{{ detailItem.themePreviewErrorMsg }}</div>
+                      </sc-if>
                     </sc-if>
                     <sc-if value="{{ !detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
                       <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">主題</div>
@@ -574,12 +583,15 @@
                 </sc-if>
               </sc-if>
 
-              <sc-if value="{{ detailItem.previewImgSrc }}" hint-placeholder-val="{{ false }}">
-                <div style="padding:20px;display:flex;align-items:flex-start;justify-content:center;background:var(--bg-subtle);">
-                  <img src="{{ detailItem.previewImgSrc }}" style="width:100%;height:auto;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:block;" />
+              <sc-if value="{{ detailItem.finalPreviewImgSrc }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:20px;display:flex;flex-direction:column;align-items:center;background:var(--bg-subtle);">
+                  <sc-if value="{{ detailItem.themePreviewBadgeLabel }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:var(--text-2xs);font-weight:700;color:var(--text-brand);margin-bottom:8px;">{{ detailItem.themePreviewBadgeLabel }}</div>
+                  </sc-if>
+                  <img src="{{ detailItem.finalPreviewImgSrc }}" style="width:100%;height:auto;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:block;" />
                 </div>
               </sc-if>
-              <sc-if value="{{ !detailItem.previewImgSrc }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ !detailItem.finalPreviewImgSrc }}" hint-placeholder-val="{{ true }}">
                 <div style="padding:20px;display:flex;align-items:flex-start;justify-content:center;background:var(--bg-subtle);">
                   <div style="width:100%;aspect-ratio:467/660;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;box-sizing:border-box;">
                     <div style="padding:26px;">
@@ -3453,6 +3465,14 @@ class Component extends DCLogic {
       const theme = themeOf(it, st.itemTheme);
       const supportsTheme = it.supportsTheme !== false;
       const hasMultipleVariants = it.variants.length > 1;
+      const themePreviewCacheKey = activeKey ? (activeKey + '::' + theme.key) : null;
+      const themePreviewShownFlag = !!st.themePreviewShown[it.id];
+      const themePreviewEntry = (themePreviewShownFlag && themePreviewCacheKey)
+        ? (st.themePreview[it.id] || {})[themePreviewCacheKey] : null;
+      const themePreviewImgSrc = themePreviewEntry && themePreviewEntry.status === 'ready' ? themePreviewEntry.imgSrc : null;
+      const themePreviewLoading = !!(themePreviewEntry && themePreviewEntry.status === 'loading');
+      const themePreviewErrorFlag = !!(themePreviewEntry && themePreviewEntry.status === 'error');
+      const themePreviewErrorMsgVal = themePreviewErrorFlag ? (themePreviewEntry.message || '生成失敗，請重試') : '';
 
       const wLessons = this.props.colWidthLessons ?? 30;
       const wPrice = this.props.colWidthPrice ?? 52;
@@ -3527,6 +3547,17 @@ class Component extends DCLogic {
         previewLabel: overrideKey ? '版型預覽' : (totalPages > 0 ? `${idx + 1} / ${totalPages} 頁` : '0 / 0 頁'),
         previewVariantLabel: activeVariant ? activeVariant.label : '',
         previewImgSrc,
+        finalPreviewImgSrc: themePreviewImgSrc || previewImgSrc,
+        themePreviewBadgeLabel: themePreviewImgSrc ? ('已套用「' + theme.label + '」預覽') : '',
+        themePreviewBtnLabel: themePreviewLoading ? '生成中…' : (themePreviewImgSrc ? '重新預覽套用效果' : '預覽套用效果'),
+        themePreviewBtnStyle: themePreviewLoading
+          ? 'font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);cursor:default;pointer-events:none;'
+          : 'font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);cursor:pointer;',
+        showClearThemePreview: !!themePreviewImgSrc,
+        themePreviewError: themePreviewErrorFlag,
+        themePreviewErrorMsg: themePreviewErrorMsgVal,
+        onPreviewTheme: () => this.homePreviewTheme(it.id),
+        onClearThemePreview: () => this.homeClearThemePreview(it.id),
         prevColor: idx > 0 ? 'var(--text-brand)' : 'var(--text-muted)',
         nextColor: idx < totalPages - 1 ? 'var(--text-brand)' : 'var(--text-muted)',
         onPrevPage: () => this.homeStepPreview(it.id, -1),
