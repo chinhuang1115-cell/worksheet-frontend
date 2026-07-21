@@ -1342,27 +1342,32 @@ window.WORKSHEET_REGISTRY = [
       {
         "pdf": "assets/coinvalue_L1_simple_sample.pdf",
         "name": "認識錢幣_至百位_L1_範本.pdf",
-        "label": "L1"
+        "label": "L1",
+        "key": "coinvalue-l1"
       },
       {
         "pdf": "assets/coinvalue_L2_simple_sample.pdf",
         "name": "認識錢幣_至百位_L2_範本.pdf",
-        "label": "L2"
+        "label": "L2",
+        "key": "coinvalue-l2"
       },
       {
         "pdf": "assets/coinvalue_L3_simple_sample.pdf",
         "name": "認識錢幣_至百位_L3_範本.pdf",
-        "label": "L3"
+        "label": "L3",
+        "key": "coinvalue-l3"
       },
       {
         "pdf": "assets/coinvalue_L4_simple_sample.pdf",
         "name": "認識錢幣_至百位_L4_範本.pdf",
-        "label": "L4"
+        "label": "L4",
+        "key": "coinvalue-l4"
       },
       {
         "pdf": "assets/coinvalue_L5_simple_sample.pdf",
         "name": "認識錢幣_至百位_L5_範本.pdf",
-        "label": "L5"
+        "label": "L5",
+        "key": "coinvalue-l5"
       }
     ],
     "layout": {
@@ -1371,7 +1376,14 @@ window.WORKSHEET_REGISTRY = [
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "coinvalue-l1", "label": "L1 只有100/10/1" },
+      { "key": "coinvalue-l2", "label": "L2 加入5元" },
+      { "key": "coinvalue-l3", "label": "L3 加50元" },
+      { "key": "coinvalue-l4", "label": "L4 加500元" },
+      { "key": "coinvalue-l5", "label": "L5 全混合" }
+    ]
   },
   {
     "id": "coinvalue1000",
@@ -1409,27 +1421,32 @@ window.WORKSHEET_REGISTRY = [
       {
         "pdf": "assets/coinvalue1000_L1_simple_sample.pdf",
         "name": "認識錢幣_至千位_L1_範本.pdf",
-        "label": "L1"
+        "label": "L1",
+        "key": "coinvalue1000-l1"
       },
       {
         "pdf": "assets/coinvalue1000_L2_simple_sample.pdf",
         "name": "認識錢幣_至千位_L2_範本.pdf",
-        "label": "L2"
+        "label": "L2",
+        "key": "coinvalue1000-l2"
       },
       {
         "pdf": "assets/coinvalue1000_L3_simple_sample.pdf",
         "name": "認識錢幣_至千位_L3_範本.pdf",
-        "label": "L3"
+        "label": "L3",
+        "key": "coinvalue1000-l3"
       },
       {
         "pdf": "assets/coinvalue1000_L4_simple_sample.pdf",
         "name": "認識錢幣_至千位_L4_範本.pdf",
-        "label": "L4"
+        "label": "L4",
+        "key": "coinvalue1000-l4"
       },
       {
         "pdf": "assets/coinvalue1000_L5_simple_sample.pdf",
         "name": "認識錢幣_至千位_L5_範本.pdf",
-        "label": "L5"
+        "label": "L5",
+        "key": "coinvalue1000-l5"
       }
     ],
     "layout": {
@@ -1438,7 +1455,14 @@ window.WORKSHEET_REGISTRY = [
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "coinvalue1000-l1", "label": "L1 只有1000/100/10/1" },
+      { "key": "coinvalue1000-l2", "label": "L2 加入5元" },
+      { "key": "coinvalue1000-l3", "label": "L3 加50元" },
+      { "key": "coinvalue1000-l4", "label": "L4 加500元" },
+      { "key": "coinvalue1000-l5", "label": "L5 全混合" }
+    ]
   },
   {
     "id": "coincarry",
@@ -1477,7 +1501,8 @@ window.WORKSHEET_REGISTRY = [
       {
         "pdf": "assets/coincarry_L2_simple_sample.pdf",
         "name": "認識錢幣_進位至百位_L2_範本.pdf",
-        "label": "L2"
+        "label": "L2",
+        "key": "coincarry-l2"
       },
       {
         "pdf": "assets/coincarry_L3_simple_sample.pdf",
@@ -1487,7 +1512,8 @@ window.WORKSHEET_REGISTRY = [
       {
         "pdf": "assets/coincarry_L4_simple_sample.pdf",
         "name": "認識錢幣_進位至百位_L4_範本.pdf",
-        "label": "L4"
+        "label": "L4",
+        "key": "coincarry-l4"
       }
     ],
     "layout": {
@@ -1496,7 +1522,11 @@ window.WORKSHEET_REGISTRY = [
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "coincarry-l2", "label": "L2 10元進百位" },
+      { "key": "coincarry-l4", "label": "L4 加入50元" }
+    ]
   },
   {
     "id": "coincarry10",
@@ -1581,12 +1611,14 @@ window.WORKSHEET_REGISTRY = [
       {
         "pdf": "assets/coincarry1000_L1_simple_sample.pdf",
         "name": "認識錢幣_進位至千位_L1_範本.pdf",
-        "label": "L1"
+        "label": "L1",
+        "key": "coincarry1000-l1"
       },
       {
         "pdf": "assets/coincarry1000_L2_simple_sample.pdf",
         "name": "認識錢幣_進位至千位_L2_範本.pdf",
-        "label": "L2"
+        "label": "L2",
+        "key": "coincarry1000-l2"
       }
     ],
     "layout": {
@@ -1595,7 +1627,11 @@ window.WORKSHEET_REGISTRY = [
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "coincarry1000-l1", "label": "L1 100元進千位" },
+      { "key": "coincarry1000-l2", "label": "L2 加入500元" }
+    ]
   },
   {
     "id": "l6_01",
