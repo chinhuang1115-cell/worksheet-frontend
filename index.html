@@ -114,7 +114,7 @@
         </div>
 
         <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:{{ gridGap }};">
             <sc-for list="{{ visibleItems }}" as="item" hint-placeholder-count="8">
               <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="bordered" padding="sm" hint-size="100%,262px" style="cursor:{{ item.cardCursor }};position:relative;height:{{ item.cardHeight }};display:flex;flex-direction:column;" onClick="{{ item.openDetail }}">
                 <!-- ADMIN-ONLY-START -->
@@ -3517,6 +3517,7 @@ class Component extends DCLogic {
       },
       categories, grades, sorts, viewModes,
       isImageMode: st.viewMode === 'image',
+      gridGap: st.viewMode === 'image' ? '24px 12px' : '12px',
       search: st.search,
       onSearch: (e) => this.patch('home', { search: e.target.value }),
       visibleItems,
