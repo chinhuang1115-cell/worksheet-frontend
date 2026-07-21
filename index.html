@@ -2953,7 +2953,7 @@ class Component extends DCLogic {
     const selections = selected.map(v => ({ key: v.key, label: v.label, qty: variantQty[v.key] || 1 }));
     this.setState(s => ({
       home: { ...s.home,
-        cart: { ...s.home.cart, [item.id]: { pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, presetMode: !!presetMode, selections } },
+        cart: { ...s.home.cart, [item.id]: { pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, presetMode: !!presetMode, selections, themeKey: theme.key } },
         cartSelected: { ...s.home.cartSelected, [item.id]: true },
       },
     }));
@@ -3039,13 +3039,23 @@ class Component extends DCLogic {
 
       const sels = entry.selections || [{ key: id, label: (it && it.name) || id, qty: entry.pages || 1 }];
       let entryNeedsBuy = false;
+      // 消費者選的主題帶進生成參數；未選／隨機則送空 body 交由後端隨機。
+      // 後端 route 參數名不統一（theme vs theme_id），兩個都帶，各 route 取所需、多的忽略。
+      let themeBody = null;
+      if (it && it.supportsTheme !== false) {
+        const tk = entry.themeKey || (themeOf(it, st.itemTheme) || {}).key;
+        if (tk && tk !== 'random') {
+          const th = HOME_THEMES.find(t => t.key === tk);
+          if (th) themeBody = { theme: th.label, theme_id: th.label };
+        }
+      }
       sels.forEach(sel => {
         const selLicense = !isFree ? getLicenseForType(sel.key) : null;
         if (!isFree && !selLicense) { entryNeedsBuy = true; return; }
         for (let k = 1; k <= sel.qty; k++) {
           const baseName = sels.length === 1 ? ((it && it.name) || sel.label) : sel.label;
           const filename = baseName + (sel.qty > 1 ? `_${k}` : '') + '.pdf';
-          const batchItem = { type_id: sel.key, body: {}, filename };
+          const batchItem = { type_id: sel.key, body: themeBody ? { ...themeBody } : {}, filename };
           if (selLicense) {
             batchItem.license_code = selLicense.code;
             batchItem.license_email = selLicense.email;
