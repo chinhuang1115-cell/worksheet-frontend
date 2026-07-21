@@ -2310,6 +2310,14 @@ function buildFlatPages(item, vq, tierMap, lessonMap) {
   });
   return flat;
 }
+function activeRouteKeyOf(it, st) {
+  const vq = (st.itemMode[it.id] === 'custom') ? (st.variantQty[it.id] || presetQtyOf(it)) : presetQtyOf(it);
+  const flat = buildFlatPages(it, vq, st.itemVariantTier, st.itemVariantLessons);
+  const idx = Math.min(st.previewIndex, Math.max(0, flat.length - 1));
+  const currentPage = flat[idx];
+  const overrideKey = st.previewOverride[it.id] || null;
+  return overrideKey || (currentPage ? currentPage.key : null);
+}
 
 /* ══ 路由 ══ */
 const SCREENS = ['home', 'config', 'lock', 'qa', 'pricing', 'publish', 'lessons'];
@@ -2954,12 +2962,7 @@ class Component extends DCLogic {
     const st = this.state.home;
     const it = ITEMS.find(x => x.id === itemId);
     if (!it) return;
-    const vq = (st.itemMode[itemId] === 'custom') ? (st.variantQty[itemId] || presetQtyOf(it)) : presetQtyOf(it);
-    const flat = buildFlatPages(it, vq, st.itemVariantTier, st.itemVariantLessons);
-    const idx = Math.min(st.previewIndex, Math.max(0, flat.length - 1));
-    const currentPage = flat[idx];
-    const overrideKey = st.previewOverride[itemId] || null;
-    const routeKey = overrideKey || (currentPage ? currentPage.key : null);
+    const routeKey = activeRouteKeyOf(it, st);
     if (!routeKey) return;
     const theme = themeOf(it, st.itemTheme);
     const cacheKey = routeKey + '::' + theme.key;
@@ -3452,7 +3455,7 @@ class Component extends DCLogic {
       const idx = Math.min(st.previewIndex, Math.max(0, flat.length - 1));
       const currentPage = flat[idx];
       const overrideKey = st.previewOverride[it.id] || null;
-      const activeKey = overrideKey || (currentPage ? currentPage.key : null);
+      const activeKey = activeRouteKeyOf(it, st);
       const activeVariant = activeKey ? it.variants.find(v => v.key === activeKey) : null;
       const previewSample = activeKey ? sampleFor(it, activeKey) : null;
       const previewPdfUrl = previewSample && previewSample.pdf ? (ASSETS_BASE_URL + '/' + previewSample.pdf) : null;
