@@ -1693,6 +1693,18 @@ async function _loadPdfPage1(pdfUrl) {
   }
 }
 
+async function _renderPdfBlobFirstPage(blob) {
+  const pdfjsLib = await _getPdfjsLib();
+  const arrayBuffer = await blob.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const page = await pdf.getPage(1);
+  const vp = page.getViewport({ scale: 1.5 });
+  const canvas = document.createElement('canvas');
+  canvas.width = vp.width; canvas.height = vp.height;
+  await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+  return canvas.toDataURL('image/jpeg', 0.9);
+}
+
 const BACKEND = { locks: {}, pricing: null, bundles: [], loaded: false, error: null };
 // task 4：定價/節數讀取者的後端底層 helper（本地覆蓋優先，其次這裡，最後才是硬編預設）。
 // 一律防禦性檢查 BACKEND.pricing 是否存在/欄位是否存在，後端未載入或格式異常時安全回傳 null。
@@ -2330,6 +2342,8 @@ class Component extends DCLogic {
       itemVariantTier: {},
       itemVariantLessons: {},
       itemTheme: {},
+      themePreview: {},        // { [itemId]: { [cacheKey]: {status:'loading'|'ready'|'error', imgSrc?, message?} } } — session 快取，routeKey/themeKey 變了 key 就變
+      themePreviewShown: {},   // { [itemId]: boolean } — 是否顯示「已套用主題」預覽（取代靜態範本圖）；「隨機」主題每次點擊都會重新生成
       itemChecklistChecked: {},
       themeReminder: null,
     },
@@ -2922,6 +2936,61 @@ class Component extends DCLogic {
       const idx = flat.findIndex(p => p.key === key);
       return { home: { ...s.home, previewIndex: idx >= 0 ? idx : 0 } };
     });
+  }
+
+  homePreviewTheme(itemId) {
+    const st = this.state.home;
+    const it = ITEMS.find(x => x.id === itemId);
+    if (!it) return;
+    const vq = (st.itemMode[itemId] === 'custom') ? (st.variantQty[itemId] || presetQtyOf(it)) : presetQtyOf(it);
+    const flat = buildFlatPages(it, vq, st.itemVariantTier, st.itemVariantLessons);
+    const idx = Math.min(st.previewIndex, Math.max(0, flat.length - 1));
+    const currentPage = flat[idx];
+    const overrideKey = st.previewOverride[itemId] || null;
+    const routeKey = overrideKey || (currentPage ? currentPage.key : null);
+    if (!routeKey) return;
+    const theme = themeOf(it, st.itemTheme);
+    const cacheKey = routeKey + '::' + theme.key;
+    const existing = (st.themePreview[itemId] || {})[cacheKey];
+
+    this.setState(s => ({ home: { ...s.home, themePreviewShown: { ...s.home.themePreviewShown, [itemId]: true } } }));
+
+    if (theme.key !== 'random' && existing && existing.status === 'ready') return; // 已快取，直接顯示
+    if (existing && existing.status === 'loading') return; // 已在生成中，避免重複送出
+
+    this.setState(s => ({ home: { ...s.home, themePreview: {
+      ...s.home.themePreview,
+      [itemId]: { ...(s.home.themePreview[itemId] || {}), [cacheKey]: { status: 'loading' } },
+    } } }));
+
+    const body = theme.key !== 'random' ? { theme: theme.label, theme_id: theme.label } : {};
+
+    fetch(API_URL + '/preview-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type_id: routeKey, body }),
+    }).then(async r => {
+      if (!r.ok) {
+        let detail = '';
+        try { detail = (await r.json()).detail || ''; } catch (e) {}
+        throw new Error(detail || ('HTTP ' + r.status));
+      }
+      const blob = await r.blob();
+      const imgSrc = await _renderPdfBlobFirstPage(blob);
+      this.setState(s => ({ home: { ...s.home, themePreview: {
+        ...s.home.themePreview,
+        [itemId]: { ...(s.home.themePreview[itemId] || {}), [cacheKey]: { status: 'ready', imgSrc } },
+      } } }));
+    }).catch(e => {
+      this.setState(s => ({ home: { ...s.home, themePreview: {
+        ...s.home.themePreview,
+        [itemId]: { ...(s.home.themePreview[itemId] || {}), [cacheKey]: { status: 'error', message: e.message || '生成失敗' } },
+      } } }));
+    });
+  }
+
+  homeClearThemePreview(itemId) {
+    this.setState(s => ({ home: { ...s.home, themePreviewShown: { ...s.home.themePreviewShown, [itemId]: false } } }));
   }
 
   homePreviewVariant(itemId, key) {
