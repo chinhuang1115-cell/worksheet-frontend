@@ -38,7 +38,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "layout": {
       "panel": null,
-      "themeSet": "cheap",
+      "themeSet": "d2",
       "showTheme": true,
       "prices": false,
       "interactive": true
@@ -83,7 +83,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "layout": {
       "panel": null,
-      "themeSet": "cheap",
+      "themeSet": "d2",
       "showTheme": true,
       "prices": false,
       "interactive": true
@@ -135,7 +135,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "layout": {
       "panel": "sanbushuPanel",
-      "themeSet": "cheap",
+      "themeSet": "d2",
       "showTheme": true,
       "prices": true,
       "interactive": false
@@ -314,12 +314,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "layout": {
       "panel": "liangbushuPanel",
-      "themeSet": "expensive",
-      "themes": [
-        "玩具車",
-        "懷舊玩具",
-        "體育用品店"
-      ],
+      "themeSet": "d4",
       "showTheme": true,
       "prices": true,
       "interactive": false
@@ -370,7 +365,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "layout": {
       "panel": "chenghePanel",
-      "themeSet": "cheap",
+      "themeSet": "d2",
       "showTheme": true,
       "prices": true,
       "interactive": false
@@ -419,12 +414,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "layout": {
       "panel": "haochashaoPanel",
-      "themeSet": "cheap",
-      "themes": [
-        "飲料店",
-        "文具店",
-        "甜點店"
-      ],
+      "themeSet": "d2",
       "showTheme": true,
       "prices": true,
       "interactive": false
@@ -591,7 +581,7 @@ window.WORKSHEET_REGISTRY = [
     ],
     "layout": {
       "panel": "tuiwei4subPanel",
-      "themeSet": "expensive",
+      "themeSet": "d4",
       "showTheme": true,
       "prices": true,
       "interactive": false
@@ -1105,7 +1095,7 @@ window.WORKSHEET_REGISTRY = [
     ],
     "layout": {
       "panel": "sub2noregAppPanel",
-      "themeSet": "cheap",
+      "themeSet": "d2",
       "showTheme": true,
       "prices": false,
       "interactive": false
@@ -1255,7 +1245,12 @@ window.WORKSHEET_REGISTRY = [
     ],
     "layout": {
       "panel": "sub3noregAppPanel",
-      "themeSet": "cheap",
+      "themeSet": "d3",
+      "variantThemeSet": {
+        "sub3noreg-app-std": "d3",
+        "sub3noreg-app-2digit": "d2",
+        "sub3noreg-app-mixed": ["d3", "d2"]
+      },
       "showTheme": true,
       "prices": false,
       "interactive": false
