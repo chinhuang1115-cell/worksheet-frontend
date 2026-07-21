@@ -162,9 +162,9 @@
                       <span style="font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-muted);">{{ item.code }}</span>
                     </div>
                     <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-primary);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.name }}</div>
-                    <div class="ys-card-thumb-wrap" style="position:relative;width:100%;aspect-ratio:210/297;background:var(--bg-subtle);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                    <div class="ys-card-thumb-wrap" style="position:relative;width:100%;height:300px;background:var(--bg-subtle);border-radius:var(--radius-md);display:flex;align-items:flex-start;justify-content:center;overflow:hidden;">
                       <sc-if value="{{ item.cardImgSrc }}" hint-placeholder-val="{{ false }}">
-                        <img src="{{ item.cardImgSrc }}" title="{{ item.cardVariantLabel }}" style="width:100%;height:100%;object-fit:contain;display:block;" />
+                        <img src="{{ item.cardImgSrc }}" title="{{ item.cardVariantLabel }}" style="width:100%;height:auto;flex-shrink:0;display:block;" />
                       </sc-if>
                       <sc-if value="{{ !item.cardImgSrc }}" hint-placeholder-val="{{ true }}">
                         <div style="width:70%;background:#fff;border:1px solid var(--border-subtle);padding:10px;">
