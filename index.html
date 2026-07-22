@@ -575,9 +575,17 @@
                 <sc-if value="{{ detailItem.hasThemeGallery }}" hint-placeholder-val="{{ false }}">
                   <div style="padding:10px 14px;border-bottom:1px solid var(--border-subtle);background:var(--bg-subtle);">
                     <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:6px;">{{ detailItem.themeGalleryLabel }}</div>
+                    <sc-if value="{{ detailItem.themeGalleryNote }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:6px;line-height:var(--leading-tc);">{{ detailItem.themeGalleryNote }}</div>
+                    </sc-if>
                     <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;">
                       <sc-for list="{{ detailItem.themeGalleryImgs }}" as="gi" hint-placeholder-count="6">
-                        <img src="{{ gi.src }}" style="width:44px;height:44px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border-subtle);flex-shrink:0;" onerror="this.style.display='none';" />
+                        <div style="flex-shrink:0;width:64px;display:flex;flex-direction:column;align-items:center;gap:3px;">
+                          <img src="{{ gi.src }}" title="{{ gi.name }}" style="width:64px;height:64px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border-subtle);" onerror="this.style.display='none';" />
+                          <sc-if value="{{ gi.hasPrice }}" hint-placeholder-val="{{ true }}">
+                            <div style="font-size:var(--text-2xs);color:var(--text-muted);white-space:nowrap;">{{ gi.price }}</div>
+                          </sc-if>
+                        </div>
                       </sc-for>
                     </div>
                   </div>
@@ -2172,6 +2180,26 @@ const THEME_SET_KEYS = {
   d3: ['stationery_adv', 'toy', 'bento', 'toycar', 'retro'],
   d4: ['shoes', 'kidswear', 'sports', 'electronics'],
 };
+// 各題型實際讀取的價格欄位，決定主題預覽縮圖要顯示什麼：
+//   'default' → 讀 default_price（經 auto_config），顯示單一價
+//   'range'   → 讀 price_min-price_max 隨機取價，顯示區間
+//   'none'    → 不讀圖庫價格（數字由程式產生），不顯示價格以免誤導
+const PRICE_FIELD_BY_TYPE = {
+  'sanbushu': 'default', 'n2-change': 'default', 'maxbuy': 'default',
+  'chenghe': 'range', 'haochashao': 'range', 'sub3noreg-app': 'range',
+  'sub2noreg-app': 'none', 'liangbushu': 'none', 'tuiwei4sub': 'none',
+};
+function galleryPriceLabel(typeId, item) {
+  const mode = PRICE_FIELD_BY_TYPE[typeId] || 'range';
+  if (mode === 'none') return null;
+  if (mode === 'default') {
+    return item.defaultPrice != null ? 'NT$' + item.defaultPrice : null;
+  }
+  if (item.priceMin != null && item.priceMax != null) {
+    return 'NT$' + item.priceMin + '–' + item.priceMax;
+  }
+  return null;
+}
 // 依題型（可再指定版型）決定可選主題清單。
 // variantKey 有值且該題型有 variantThemeSet 時，用版型自己的層級；
 // 未傳 variantKey 時回傳該題型所有版型層級的聯集（維持既有呼叫點相容）。
@@ -3583,9 +3611,25 @@ class Component extends DCLogic {
         supportsTheme,
         hasMultipleVariants,
         showPreviewSelectors: true,
-        hasThemeGallery: supportsTheme && !!(theme.gallery && theme.gallery.length),
+        hasThemeGallery: supportsTheme && !!(
+          (window.WORKSHEET_GALLERY || {})[theme.key] || {}).items,
         themeGalleryLabel: theme.label + '・全部圖片',
-        themeGalleryImgs: (theme.gallery || []).map(fn => ({ src: themeImagePath(theme.key, fn) })),
+        // 兩種說明文字（互斥）：
+        // ① 價格不讀圖庫的題型，說明主題只影響圖片；
+        // ② mixed 版型必然橫跨兩個主題（設計文件 5.1）——跨主題本身不是問題，
+        //    靜默跨主題才是使用者最初回報的問題，所以一定要明說。
+        themeGalleryNote: PRICE_FIELD_BY_TYPE[it.id] === 'none'
+          ? '此題型的價格由系統產生，主題僅影響圖片。'
+          : (activeKey === 'sub3noreg-app-mixed'
+              ? '混合版會同時使用兩個主題：您選的主題用於三位數題目，兩位數題目另取一個生活情境主題。'
+              : ''),
+        themeGalleryImgs: ((((window.WORKSHEET_GALLERY || {})[theme.key]
+            || {}).items) || []).map(gi => ({
+          src: 'images/' + gi.file.split('/').map(encodeURIComponent).join('/'),
+          name: gi.name,
+          price: galleryPriceLabel(it.id, gi) || '',
+          hasPrice: !!galleryPriceLabel(it.id, gi),
+        })),
         headerLessonsStyle: `width:${wLessons}px;text-align:center;font-size:var(--text-2xs);font-weight:700;color:var(--text-muted);box-sizing:border-box;`,
         headerPriceStyle: `width:${wPrice}px;text-align:center;font-size:var(--text-2xs);font-weight:700;color:var(--text-muted);box-sizing:border-box;`,
         headerQtyStyle: `width:${wQty}px;text-align:center;font-size:var(--text-2xs);font-weight:700;color:var(--text-muted);box-sizing:border-box;`,
