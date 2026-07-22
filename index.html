@@ -183,7 +183,7 @@
                     <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><span style="font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-muted);">{{ item.code }}</span></div>
                     <div style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);margin-bottom:2px;min-height:2.6em;overflow:hidden;">{{ item.name }}</div>
                     <div style="font-size:var(--text-2xs);color:var(--text-brand);font-weight:500;margin-bottom:6px;">{{ item.tag }}</div>
-                    <div style="font-size:var(--text-2xs);color:var(--text-secondary);line-height:var(--leading-tc);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ item.desc }}</div>
+                    <div style="font-size:var(--text-xs);color:var(--text-secondary);line-height:var(--leading-tc);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ item.desc }}</div>
                     <div style="margin-top:6px;font-size:var(--text-2xs);color:var(--text-muted);">{{ item.gradeLabel }}・建議 {{ item.lessonsLabel }}・單價 {{ item.unitPriceLabel }}</div>
                     <div style="flex:1;"></div>
                     <div style="display:flex;justify-content:flex-end;align-items:baseline;gap:4px;margin-top:6px;">
@@ -2365,6 +2365,7 @@ const CATS = [
 ];
 const GRADES = [
   { key:'all', label:'全部' },
+  { key:1, label:'一年級' },
   { key:2, label:'二年級' },
   { key:3, label:'三年級' },
 ];
@@ -3586,7 +3587,7 @@ class Component extends DCLogic {
       filtered = [...filtered].sort((a, b) => b.id.localeCompare(a.id));
     }
 
-    const gradeLabelOf = (g) => g === 2 ? '二年級' : g === 3 ? '三年級' : '';
+    const gradeLabelOf = (g) => g === 1 ? '一年級' : g === 2 ? '二年級' : g === 3 ? '三年級' : '';
     const isMulti = (it) => it.variants.length > 1;
 
     // 題型卡片格分頁：每頁 6 筆（3 欄 × 2 列），篩選/排序/搜尋/分類/年級變更時 page 已於各 onClick/onSearch 重置為 1
