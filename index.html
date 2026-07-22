@@ -1945,7 +1945,7 @@ function adaptRegistry(reg) {
     badgeLabel: _badgeOf(t.grade).label,
     supportsTheme: !!(t.layout && t.layout.showTheme),
     themeSet: (t.layout && t.layout.themeSet) || null,
-    themeAllowList: (t.layout && t.layout.themes) || null,
+    variantThemeSet: (t.layout && t.layout.variantThemeSet) || null,
     // 頂層 lessons 給中性預設值 1（節數管理頁等直接讀 it.lessons 的地方用），
     // 正式建議節數由「建議節數管理」頁另行設定（task 4 起 POST /admin/lessons，後端為唯一權威）。
     lessons: 1,
@@ -2136,8 +2136,10 @@ function _checkoutMsgColor(msg) {
 /* ══ home screen only：消費端首頁專用常數／helper（自「易數教室 互動原型（消費端）」來源頁原樣移植）══ */
 // 來源的 THEMES 與 config screen 的 THEMES 同名但內容不同，改名 HOME_THEMES 避免覆蓋 config 的主題清單
 const THEME_FOLDER_MAP = {
-  drink: '飲料店', stationery: '文具店', toy: '玩具店', dessert: '甜點店', bento: '便當店',
-  toycar: '玩具車', retro: '懷舊玩具', sports: '體育用品店', electronics: '3C產品店',
+  drink: '飲料店', stationery: '文具店', stationery_adv: '文具店',
+  toy: '玩具店', dessert: '甜點店', bento: '便當店',
+  toycar: '玩具車', retro: '懷舊玩具', sports: '體育用品店',
+  electronics: '3C產品店', shoes: '鞋子店', kidswear: '童裝店',
 };
 function themeImagePath(key, filename) {
   const folder = THEME_FOLDER_MAP[key];
@@ -2145,48 +2147,55 @@ function themeImagePath(key, filename) {
   return 'images/' + encodeURIComponent(folder) + '/' + encodeURIComponent(filename);
 }
 const HOME_THEMES = [
-  { key:'drink', label:'飲料店', icon:'🧋',
-    gallery:['珍奶_原味.png','珍奶_奶茶.png','珍奶_抹茶.png','珍奶_百香果.png','珍奶_芋頭.png','珍奶_黑糖.png'] },
-  { key:'stationery', label:'文具店', icon:'✏️',
-    gallery:['HK零錢包.png','削鉛筆機.png','剪刀.png','可愛水壺.png','尺.png','手持風扇.png','橡皮擦.png','玩具手機.png','筆袋_圓點.png','膠水棒.png','色鉛筆組.png','蠟筆盒_散放.png','蠟筆盒_笑臉.png','訂書機.png','鉛筆.png'] },
-  { key:'toy', label:'玩具店', icon:'🧸',
-    gallery:['保齡球.png','火車.png','熊.png','玩具車.png','疊疊環.png','積木.png'] },
-  { key:'dessert', label:'甜點店', icon:'🍨',
-    gallery:['冰淇淋.png','杯子蛋糕.png','棉花糖.png','棒棒糖.png','珍奶_可愛.png','鯛魚燒.png'] },
-  { key:'bento', label:'便當店', icon:'🍱',
-    gallery:['便當_兒童.png','便當_日式.png','便當_沙拉.png','便當_雞腿.png','便當_韓式.png','咖哩飯.png'] },
-  { key:'toycar', label:'玩具車', icon:'🚗',
-    gallery:['卡車.png','校車.png','消防車.png','警車.png','跑車.png','農用車.png'] },
-  { key:'retro', label:'懷舊玩具', icon:'🪀',
-    gallery:['呼拉圈.png','小丑盒.png','木琴.png','泰迪熊.png','疊疊環.png','陀螺.png'] },
-  { key:'sports', label:'體育用品店', icon:'🏀',
-    gallery:['啞鈴.png','拳擊手套.png','排球.png','棒球棒.png','球拍組.png','瑜伽墊.png','籃球.png','網球拍.png','美式足球.png','足球.png','躲避球.png','運動鞋.png'] },
-  { key:'electronics', label:'3C產品店', icon:'📱',
-    gallery:['安卓手機.png','平板.png','手機.png','智慧手錶.png','智慧眼鏡.png','筆電.png'] },
-  { key:'random', label:'隨機', icon:'🎲', gallery:null },
+  { key:'drink',          label:'飲料店',      icon:'🧋' },
+  { key:'stationery',     label:'文具店',      icon:'✏️' },
+  { key:'toy',            label:'玩具店',      icon:'🧸' },
+  { key:'dessert',        label:'甜點店',      icon:'🍨' },
+  { key:'bento',          label:'便當店',      icon:'🍱' },
+  { key:'stationery_adv', label:'文具店＿進階', icon:'🖍️' },
+  { key:'toycar',         label:'玩具車',      icon:'🚗' },
+  { key:'retro',          label:'懷舊玩具',    icon:'🪀' },
+  { key:'sports',         label:'體育用品店',  icon:'🏀' },
+  { key:'electronics',    label:'3C產品店',    icon:'📱' },
+  { key:'shoes',          label:'鞋子店',      icon:'👟' },
+  { key:'kidswear',       label:'童裝店',      icon:'👕' },
+  { key:'random',         label:'隨機',        icon:'🎲' },
 ];
 const DEFAULT_THEME = 'random';
-// 主題集合（對齊 backend/library.json 的 cheap／expensive 定價層級，見 CLAUDE.md「library.json 圖庫架構與定價設計」）：
-// cheap＝三位數以下五個生活情境主題；expensive＝三／四位數兩個情境（懷舊玩具·玩具車／體育用品店·3C產品店）。
+// 主題位數層級（對齊 backend/library.json 的 tier 欄位，見設計文件
+// docs/superpowers/specs/2026-07-21-theme-tier-alignment-design.md）：
+//   d2＝10-99、d3＝100-999、d4＝1000-9999
+// 每個主題只屬於一層，題型只會看到與自己設計位數相符的主題。
 const THEME_SET_KEYS = {
-  cheap: ['drink', 'stationery', 'toy', 'dessert', 'bento'],
-  expensive: ['toycar', 'retro', 'sports', 'electronics'],
+  d2: ['drink', 'stationery', 'dessert'],
+  d3: ['stationery_adv', 'toy', 'bento', 'toycar', 'retro'],
+  d4: ['shoes', 'kidswear', 'sports', 'electronics'],
 };
-// 依題型決定可選主題清單（不是每個題型都套用同一套五選一）：
-// 1. layout.themes（registry 明確列出的中文主題名稱，如 liangbushu 只給 3 個、haochashao 排除玩具店/便當店）優先採用；
-// 2. 否則依 layout.themeSet（'cheap'／'expensive'）取對應主題集合；
-// 3. 支援主題的題型一律在清單尾端補上「隨機」。
-function allowedThemesOf(it) {
-  if (!it.supportsTheme) return [];
-  let list;
-  if (it.themeAllowList && it.themeAllowList.length) {
-    list = it.themeAllowList
-      .map(label => HOME_THEMES.find(th => th.label === label))
-      .filter(Boolean);
-  } else {
-    const keys = THEME_SET_KEYS[it.themeSet] || [];
-    list = keys.map(k => HOME_THEMES.find(th => th.key === k)).filter(Boolean);
+// 依題型（可再指定版型）決定可選主題清單。
+// variantKey 有值且該題型有 variantThemeSet 時，用版型自己的層級；
+// 未傳 variantKey 時回傳該題型所有版型層級的聯集（維持既有呼叫點相容）。
+function tiersOf(it, variantKey) {
+  const vts = it.variantThemeSet || null;
+  if (vts && variantKey && vts[variantKey]) {
+    const v = vts[variantKey];
+    return Array.isArray(v) ? v : [v];
   }
+  if (vts) {
+    const all = [];
+    Object.values(vts).forEach(v => (Array.isArray(v) ? v : [v]).forEach(x => {
+      if (!all.includes(x)) all.push(x);
+    }));
+    if (all.length) return all;
+  }
+  return it.themeSet ? [it.themeSet] : [];
+}
+function allowedThemesOf(it, variantKey) {
+  if (!it.supportsTheme) return [];
+  const keys = [];
+  tiersOf(it, variantKey).forEach(tier => {
+    (THEME_SET_KEYS[tier] || []).forEach(k => { if (!keys.includes(k)) keys.push(k); });
+  });
+  const list = keys.map(k => HOME_THEMES.find(th => th.key === k)).filter(Boolean);
   const randomTheme = HOME_THEMES.find(th => th.key === DEFAULT_THEME);
   return randomTheme ? [...list, randomTheme] : list;
 }
@@ -3587,7 +3596,7 @@ class Component extends DCLogic {
             onClick: () => this.homePreviewVariant(it.id, v.key),
           };
         }),
-        themes: allowedThemesOf(it).map(th => {
+        themes: allowedThemesOf(it, activeKey).map(th => {
           const active = theme.key === th.key;
           const thumbSrc = th.gallery && th.gallery.length ? themeImagePath(th.key, th.gallery[0]) : null;
           return {
