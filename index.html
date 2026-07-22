@@ -567,12 +567,29 @@
                         </div>
                         <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ false }}">
                           <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--color-brand-200);width:207px;">
-                            <div style="font-size:9px;font-weight:700;color:var(--text-muted);margin-bottom:6px;">主題</div>
-                            <div style="display:flex;flex-wrap:wrap;gap:5px;width:207px;">
-                              <sc-for list="{{ detailItem.themes }}" as="th" hint-placeholder-count="5">
-                                <div style="{{ th.pillStyle }}" onClick="{{ th.onSelect }}"><span style="font-size:11px;">{{ th.icon }}</span><span>{{ th.label }}</span></div>
+                            <div style="display: flex; align-items: center; gap: 8px; padding: 0 4px 4px; width: 207px;">
+                              <span style="width:18px;flex-shrink:0;"></span>
+                              <span style="flex:1;font-size:9px;font-weight:700;color:var(--text-muted);">主題（可複選）</span>
+                              <span style="{{ detailItem.headerQtyStyle }}">張數</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:8px;">
+                              <sc-for list="{{ detailItem.customThemeRows }}" as="th" hint-placeholder-count="4">
+                                <div style="display: flex; align-items: center; gap: 8px; padding: 4px 4px; border-radius: var(--radius-md); width: 202px;">
+                                  <div style="width:18px;height:18px;flex-shrink:0;">
+                                    <div style="width:18px;height:18px;border-radius:4px;border:1.5px solid {{ th.checkBorder }};background:{{ th.checkBg }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;cursor:pointer;" onClick="{{ th.onToggleCheck }}">{{ th.checkMark }}</div>
+                                  </div>
+                                  <span style="flex: 1; font-size: var(--text-xs); color: var(--text-primary); text-align: left"><span style="font-size:11px;margin-right:4px;">{{ th.icon }}</span>{{ th.label }}</span>
+                                  <div style="{{ detailItem.headerQtyStyle }}display:flex;align-items:center;justify-content:center;gap:3px;">
+                                    <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border-default);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;font-weight:700;color:var(--text-secondary);flex-shrink:0;" onClick="{{ th.onDec }}">－</div>
+                                    <span style="font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:700;color:var(--text-primary);min-width:10px;text-align:center;">{{ th.qty }}</span>
+                                    <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border-default);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;font-weight:700;color:var(--text-secondary);flex-shrink:0;" onClick="{{ th.onInc }}">＋</div>
+                                  </div>
+                                </div>
                               </sc-for>
                             </div>
+                            <sc-if value="{{ detailItem.themeQtyMismatchMsg }}" hint-placeholder-val="{{ false }}">
+                              <div style="font-size:var(--text-2xs);color:var(--color-error-600);margin-top:6px;line-height:var(--leading-tc);">{{ detailItem.themeQtyMismatchMsg }}</div>
+                            </sc-if>
                           </div>
                         </sc-if>
                         <div style="margin-top:10px;width:207px;">
@@ -615,24 +632,27 @@
             <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,600px">
               <sc-if value="{{ detailItem.showPreviewSelectors }}" hint-placeholder-val="{{ false }}">
                 <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border-subtle);">
-                  <div style="padding:12px 14px;border-right:1px solid var(--border-subtle);">
+                  <div style="border-right:1px solid var(--border-subtle);">
+                    <div style="background:var(--color-brand-50);padding:10px 14px;">
+                      <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-brand);">🎨 主題</span>
+                    </div>
+                    <div style="padding:12px 14px;">
                     <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ false }}">
-                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">主題</div>
-                      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                      <div style="display:flex;flex-wrap:wrap;gap:8px;">
                         <sc-for list="{{ detailItem.themes }}" as="th" hint-placeholder-count="5">
                           <div style="{{ th.pillStyle }}" onClick="{{ th.onSelect }}">
                             <sc-if value="{{ th.thumbSrc }}" hint-placeholder-val="{{ false }}">
-                              <img src="{{ th.thumbSrc }}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" /><span style="display:none;font-size:12px;">{{ th.icon }}</span>
+                              <img src="{{ th.thumbSrc }}" style="width:18px;height:18px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" /><span style="display:none;font-size:14px;">{{ th.icon }}</span>
                             </sc-if>
                             <sc-if value="{{ !th.thumbSrc }}" hint-placeholder-val="{{ true }}">
-                              <span style="font-size:12px;">{{ th.icon }}</span>
+                              <span style="font-size:14px;">{{ th.icon }}</span>
                             </sc-if>
                             <span>{{ th.label }}</span>
                           </div>
                         </sc-for>
                       </div>
                       <sc-if value="{{ detailItem.themeHint }}" hint-placeholder-val="{{ false }}">
-                        <div style="font-size:var(--text-2xs);color:var(--text-muted);line-height:var(--leading-tc);margin-top:6px;">{{ detailItem.themeHint }}</div>
+                        <div style="font-size:var(--text-xs);color:var(--text-muted);line-height:var(--leading-tc);margin-top:8px;">{{ detailItem.themeHint }}</div>
                       </sc-if>
                       <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <span style="{{ detailItem.themePreviewBtnStyle }}" onClick="{{ detailItem.onPreviewTheme }}">{{ detailItem.themePreviewBtnLabel }}</span>
@@ -645,23 +665,26 @@
                       </sc-if>
                     </sc-if>
                     <sc-if value="{{ !detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
-                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">主題</div>
-                      <div style="font-size:var(--text-2xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型不使用圖片主題，內容固定。</div>
+                      <div style="font-size:var(--text-xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型不使用圖片主題，內容固定。</div>
                     </sc-if>
+                    </div>
                   </div>
-                  <div style="padding:12px 14px;">
+                  <div>
+                    <div style="background:var(--color-brand-50);padding:10px 14px;">
+                      <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-brand);">🗂️ 版型預覽</span>
+                    </div>
+                    <div style="padding:12px 14px;">
                     <sc-if value="{{ detailItem.hasMultipleVariants }}" hint-placeholder-val="{{ false }}">
-                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">版型預覽</div>
-                      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                      <div style="display:flex;flex-wrap:wrap;gap:8px;">
                         <sc-for list="{{ detailItem.variantPreviewPills }}" as="vp" hint-placeholder-count="3">
                           <div style="{{ vp.pillStyle }}" onClick="{{ vp.onClick }}">{{ vp.label }}</div>
                         </sc-for>
                       </div>
                     </sc-if>
                     <sc-if value="{{ !detailItem.hasMultipleVariants }}" hint-placeholder-val="{{ true }}">
-                      <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">版型預覽</div>
-                      <div style="font-size:var(--text-2xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型僅一種版型，無其他版型可選。</div>
+                      <div style="font-size:var(--text-xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型僅一種版型，無其他版型可選。</div>
                     </sc-if>
+                    </div>
                   </div>
                 </div>
                 <sc-if value="{{ detailItem.hasThemeGallery }}" hint-placeholder-val="{{ false }}">
@@ -2499,6 +2522,7 @@ class Component extends DCLogic {
       itemVariantLessons: {},
       itemTheme: {},
       itemThemeConfirmed: {},  // { [itemId]: boolean } — 自由選配模式下，主題／張數是否已按過「確認套用」，未確認前不可加入購物車
+      itemThemeQty: {},        // { [itemId]: { [themeKey]: qty } } — 自由選配下可複選主題，各主題各自設定張數，加總須等於該題型總張數
       themePreview: {},        // { [itemId]: { [cacheKey]: {status:'loading'|'ready'|'error', imgSrc?, message?} } } — session 快取，routeKey/themeKey 變了 key 就變
       themePreviewShown: {},   // { [itemId]: boolean } — 是否顯示「已套用主題」預覽（取代靜態範本圖）；「隨機」主題每次點擊都會重新生成
       itemChecklistChecked: {},
@@ -2612,7 +2636,9 @@ class Component extends DCLogic {
       const variantQty = {};
       (entry.selections || []).forEach(sel => { variantQty[sel.key] = sel.qty; });
       if (!item || !isUnlockedOf(id) || Object.keys(variantQty).length === 0) { removedCount++; return; }
-      this.homeCommitAddToCart(item, variantQty, !!entry.presetMode);
+      const themeQtyMap = {};
+      (entry.themeSelections || []).forEach(t => { themeQtyMap[t.key] = t.qty; });
+      this.homeCommitAddToCart(item, variantQty, !!entry.presetMode, themeQtyMap);
       keepSelected[id] = !!(stored.cartSelected && stored.cartSelected[id]);
     });
     if (Object.keys(keepSelected).length > 0) {
@@ -3055,12 +3081,21 @@ class Component extends DCLogic {
     this.setState(s => {
       const item = ITEMS.find(x => x.id === itemId);
       const next = { itemMode: { ...s.home.itemMode, [itemId]: mode } };
-      if (mode === 'custom' && !s.home.variantQty[itemId]) {
-        next.variantQty = { ...s.home.variantQty, [itemId]: defaultCustomQtyOf(item) };
+      let vq = s.home.variantQty[itemId];
+      if (mode === 'custom' && !vq) {
+        vq = defaultCustomQtyOf(item);
+        next.variantQty = { ...s.home.variantQty, [itemId]: vq };
       }
       // 每次切回自由選配都要求重新「確認套用」，避免沿用上次未經檢視的舊設定。
       if (mode === 'custom') {
         next.itemThemeConfirmed = { ...s.home.itemThemeConfirmed, [itemId]: false };
+        // 第一次進入自由選配時，預設把全部張數分配給目前主動顯示的主題，
+        // 使用者可以再自行拆分成多個主題。
+        if (item.supportsTheme !== false && !s.home.itemThemeQty[itemId]) {
+          const flat = buildFlatPages(item, vq || presetQtyOf(item), s.home.itemVariantTier, s.home.itemVariantLessons);
+          const activeThemeKey = (themeOf(item, s.home.itemTheme) || {}).key || DEFAULT_THEME;
+          next.itemThemeQty = { ...s.home.itemThemeQty, [itemId]: { [activeThemeKey]: flat.length } };
+        }
       }
       return { home: { ...s.home, ...next } };
     });
@@ -3069,6 +3104,26 @@ class Component extends DCLogic {
   // 自由選配下，主題／張數任何一項變動都視為「設定已變更」，需重新按「確認套用」才能加入購物車。
   homeConfirmCustomTheme(itemId) {
     this.setState(s => ({ home: { ...s.home, itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: true } } }));
+  }
+
+  homeSetThemeQty(itemId, key, delta) {
+    this.setState(s => {
+      const current = s.home.itemThemeQty[itemId] || {};
+      const qty = Math.max(0, (current[key] || 0) + delta);
+      const nextTq = { ...current, [key]: qty };
+      return { home: { ...s.home, itemThemeQty: { ...s.home.itemThemeQty, [itemId]: nextTq },
+        itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
+    });
+  }
+
+  homeToggleThemeQty(itemId, key) {
+    this.setState(s => {
+      const current = s.home.itemThemeQty[itemId] || {};
+      const qty = (current[key] || 0) > 0 ? 0 : 1;
+      const nextTq = { ...current, [key]: qty };
+      return { home: { ...s.home, itemThemeQty: { ...s.home.itemThemeQty, [itemId]: nextTq },
+        itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
+    });
   }
 
   homeSetVariantQty(itemId, key, delta) {
@@ -3171,7 +3226,7 @@ class Component extends DCLogic {
     });
   }
 
-  homeAddToCart(item, variantQty, presetMode) {
+  homeAddToCart(item, variantQty, presetMode, themeQtyMap) {
     const selected = item.variants.filter(v => (variantQty[v.key] || 0) > 0);
     if (selected.length === 0) return;
     const st = this.state.home;
@@ -3180,10 +3235,10 @@ class Component extends DCLogic {
       this.patch('home', { themeReminder: { item, variantQty, presetMode } });
       return;
     }
-    this.homeCommitAddToCart(item, variantQty, presetMode);
+    this.homeCommitAddToCart(item, variantQty, presetMode, themeQtyMap);
   }
 
-  homeCommitAddToCart(item, variantQty, presetMode) {
+  homeCommitAddToCart(item, variantQty, presetMode, themeQtyMap) {
     const selected = item.variants.filter(v => (variantQty[v.key] || 0) > 0);
     if (selected.length === 0) return;
     const st = this.state.home;
@@ -3203,14 +3258,25 @@ class Component extends DCLogic {
     const unitPrice = pages > 0 ? price / pages : 0;
     const baseUnitPrice = selected.length > 0 ? selected.reduce((sum, v) => sum + (variantTierOf(item, v, st.itemVariantTier) === 'free' ? 0 : variantPriceOf(item, v, st.itemVariantTier)), 0) / selected.length : 0;
     const genFee = getGenFee();
+    // 自由選配可複選主題（各主題各自設定張數，加總＝pages）；系統預設／未帶入分配時仍是單一主題。
+    const themeSelections = (!presetMode && item.supportsTheme !== false && themeQtyMap)
+      ? Object.keys(themeQtyMap)
+          .filter(k => (themeQtyMap[k] || 0) > 0)
+          .map(k => ({ key: k, label: (HOME_THEMES.find(t => t.key === k) || {}).label || k, qty: themeQtyMap[k] }))
+      : null;
     const theme = presetMode
       ? (HOME_THEMES.find(th => th.key === DEFAULT_THEME) || themeOf(item, st.itemTheme))
-      : themeOf(item, st.itemTheme);
-    const note = (item.variants.length > 1 ? `已選 ${selected.length}/${item.variants.length} 種版型・` : '') + `主題：${theme.label}`;
+      : (themeSelections && themeSelections.length
+          ? (HOME_THEMES.find(th => th.key === themeSelections[0].key) || themeOf(item, st.itemTheme))
+          : themeOf(item, st.itemTheme));
+    const themeNote = (themeSelections && themeSelections.length > 1)
+      ? `主題：${themeSelections.map(t => `${t.label}×${t.qty}`).join('、')}`
+      : `主題：${theme.label}`;
+    const note = (item.variants.length > 1 ? `已選 ${selected.length}/${item.variants.length} 種版型・` : '') + themeNote;
     const selections = selected.map(v => ({ key: v.key, label: v.label, qty: variantQty[v.key] || 1 }));
     this.setState(s => ({
       home: { ...s.home,
-        cart: { ...s.home.cart, [item.id]: { pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, presetMode: !!presetMode, selections, themeKey: theme.key } },
+        cart: { ...s.home.cart, [item.id]: { pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, presetMode: !!presetMode, selections, themeKey: theme.key, themeSelections } },
         cartSelected: { ...s.home.cartSelected, [item.id]: true },
       },
     }));
@@ -3298,22 +3364,30 @@ class Component extends DCLogic {
       let entryNeedsBuy = false;
       // 消費者選的主題帶進生成參數；未選／隨機則送空 body 交由後端隨機。
       // 後端 route 參數名不統一（theme vs theme_id），兩個都帶，各 route 取所需、多的忽略。
-      let themeBody = null;
-      if (it && it.supportsTheme !== false) {
-        const tk = entry.themeKey
-          || (entry.presetMode ? DEFAULT_THEME : ((themeOf(it, st.itemTheme) || {}).key));
-        if (tk && tk !== 'random') {
-          const th = HOME_THEMES.find(t => t.key === tk);
-          if (th) themeBody = { theme: th.label, theme_id: th.label };
-        }
+      const themeBodyForKey = (tk) => {
+        if (!tk || tk === 'random') return {};
+        const th = HOME_THEMES.find(t => t.key === tk);
+        return th ? { theme: th.label, theme_id: th.label } : {};
+      };
+      // 自由選配可複選主題、各主題各自有張數：展開成一份長度＝總張數的主題序列，
+      // 依生成順序逐張分配（例如飲料店×2、文具店×2 → [飲料店,飲料店,文具店,文具店]）。
+      let themeSeq = null;
+      if (it && it.supportsTheme !== false && entry.themeSelections && entry.themeSelections.length) {
+        themeSeq = [];
+        entry.themeSelections.forEach(t => { for (let i = 0; i < t.qty; i++) themeSeq.push(t.key); });
       }
+      let themeSeqIdx = 0;
+      const singleThemeBody = (it && it.supportsTheme !== false && !themeSeq)
+        ? themeBodyForKey(entry.themeKey || (entry.presetMode ? DEFAULT_THEME : ((themeOf(it, st.itemTheme) || {}).key)))
+        : {};
       sels.forEach(sel => {
         const selLicense = !isFree ? getLicenseForType(sel.key) : null;
         if (!isFree && !selLicense) { entryNeedsBuy = true; return; }
         for (let k = 1; k <= sel.qty; k++) {
           const baseName = sels.length === 1 ? ((it && it.name) || sel.label) : sel.label;
           const filename = baseName + (sel.qty > 1 ? `_${k}` : '') + '.pdf';
-          const batchItem = { type_id: sel.key, body: themeBody ? { ...themeBody } : {}, filename };
+          const body = themeSeq ? themeBodyForKey(themeSeq[themeSeqIdx++ % themeSeq.length]) : { ...singleThemeBody };
+          const batchItem = { type_id: sel.key, body, filename };
           if (selLicense) {
             batchItem.license_code = selLicense.code;
             batchItem.license_email = selLicense.email;
@@ -3689,6 +3763,30 @@ class Component extends DCLogic {
       const totalPages = flat.length;
       const totalPrice = flat.reduce((sum, p) => sum + p.price, 0);
 
+      // 自由選配下主題可複選，各主題各自設定張數（比照版型清單的勾選＋數量設計），
+      // 加總必須等於目前的總張數（totalPages）才能「確認套用」。
+      const themeQtyMap = st.itemThemeQty[it.id] || {};
+      const themeQtyTotal = Object.values(themeQtyMap).reduce((sum, q) => sum + (q || 0), 0);
+      const themeQtyOk = !supportsTheme || (themeQtyTotal > 0 && themeQtyTotal === totalPages);
+      const themeQtyMismatchMsg = (isCustom && supportsTheme && hasCustomSelection && themeQtyTotal > 0 && themeQtyTotal !== totalPages)
+        ? `目前已選 ${totalPages} 張，主題共分配 ${themeQtyTotal} 張，請調整一致後再確認套用。`
+        : '';
+      const customThemeRows = supportsTheme ? allowedThemesOf(it, activeKey).map(th => {
+        const qty = themeQtyMap[th.key] || 0;
+        return {
+          key: th.key,
+          label: th.label,
+          icon: th.icon,
+          qty,
+          checkBg: qty > 0 ? 'var(--color-brand-500)' : '#fff',
+          checkBorder: qty > 0 ? 'var(--color-brand-500)' : 'var(--border-default)',
+          checkMark: qty > 0 ? '✓' : '',
+          onToggleCheck: () => this.homeToggleThemeQty(it.id, th.key),
+          onInc: () => this.homeSetThemeQty(it.id, th.key, 1),
+          onDec: () => this.homeSetThemeQty(it.id, th.key, -1),
+        };
+      }) : [];
+
       const presetTotal = it.variants.reduce((sum, v) => sum + variantPubPriceOf(it, v, st.itemVariantTier), 0);
       const presetSummary = it.variants.map(v => v.label).join('、') + '，每版型 4 張（共 ' + it.variants.length + ' 份）'
         + (supportsTheme ? '，主題隨機出貨' : '');
@@ -3756,20 +3854,22 @@ class Component extends DCLogic {
           : ((st.cart[it.id] && st.cart[it.id].presetMode === true) ? '已加入 ✓' : '加入購物車'),
         onAddToCart: () => {
           if (isCustom && !customConfirmed) return;
-          if (st.cart[it.id] && st.cart[it.id].presetMode === !isCustom) { this.homeRemoveFromCart(it.id); } else { this.homeAddToCart(it, vq, !isCustom); }
+          if (st.cart[it.id] && st.cart[it.id].presetMode === !isCustom) { this.homeRemoveFromCart(it.id); } else { this.homeAddToCart(it, vq, !isCustom, themeQtyMap); }
         },
         onToggleFav: () => this.homeToggleFav(it.id),
         ...this.homeBuildAdminFields(it),
         supportsTheme,
         themeHint: !isCustom
           ? '點選主題可預覽套用效果；系統預設出貨仍固定隨機主題。'
-          : (hasCustomSelection && !customConfirmed ? '選好主題後，請至下方「自由選配」卡片點擊「確認套用」。' : ''),
+          : (themeQtyMismatchMsg || (hasCustomSelection && !customConfirmed ? '選好主題並在下方「自由選配」卡片分配張數後，點擊「確認套用」。' : '')),
+        customThemeRows,
+        themeQtyMismatchMsg,
         confirmCustomBtnLabel: customConfirmed ? '✓ 已套用' : '確認套用',
-        confirmCustomBtnStyle: `width:100%;padding:8px 0;border:none;border-radius:var(--radius-md);font-size:var(--text-xs);font-weight:700;cursor:${hasCustomSelection ? 'pointer' : 'not-allowed'};`
+        confirmCustomBtnStyle: `width:100%;padding:8px 0;border:none;border-radius:var(--radius-md);font-size:var(--text-xs);font-weight:700;cursor:${(hasCustomSelection && themeQtyOk) ? 'pointer' : 'not-allowed'};`
           + (customConfirmed
               ? 'background:var(--color-brand-50);color:var(--color-brand-600);'
-              : (hasCustomSelection ? 'background:var(--color-brand-500);color:#fff;' : 'background:var(--bg-subtle);color:var(--text-muted);')),
-        onConfirmCustom: () => { if (hasCustomSelection) this.homeConfirmCustomTheme(it.id); },
+              : ((hasCustomSelection && themeQtyOk) ? 'background:var(--color-brand-500);color:#fff;' : 'background:var(--bg-subtle);color:var(--text-muted);')),
+        onConfirmCustom: () => { if (hasCustomSelection && themeQtyOk) this.homeConfirmCustomTheme(it.id); },
         hasMultipleVariants,
         showPreviewSelectors: true,
         hasThemeGallery: supportsTheme && !!(
@@ -3798,7 +3898,7 @@ class Component extends DCLogic {
           const active = activeKey === v.key;
           return {
             label: v.label,
-            pillStyle: `padding:4px 10px;border-radius:999px;font-size:var(--text-2xs);cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
+            pillStyle: `padding:7px 16px;border-radius:999px;font-size:var(--text-sm);font-weight:600;cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
             onClick: () => this.homePreviewVariant(it.id, v.key),
           };
         }),
@@ -3812,7 +3912,7 @@ class Component extends DCLogic {
             label: th.label,
             icon: th.icon,
             thumbSrc,
-            pillStyle: `display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 6px;border-radius:999px;font-size:var(--text-2xs);cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
+            pillStyle: `display:inline-flex;align-items:center;gap:7px;padding:7px 16px 7px 10px;border-radius:999px;font-size:var(--text-sm);font-weight:600;cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
             onSelect: () => this.setState(s => {
               writeJSON(LS_THEME, { ...readJSON(LS_THEME), [it.id]: th.key });
               return { home: { ...s.home, itemTheme: { ...s.home.itemTheme, [it.id]: th.key },
