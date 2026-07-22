@@ -992,9 +992,9 @@
           <div style="font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;color:var(--text-primary);letter-spacing:var(--tracking-tc-title);">學習單解鎖管理</div>
           <div style="flex:1;"></div>
           <div style="font-size:var(--text-xs);color:var(--text-muted);margin-right:4px;">共 {{ totalCount }} 個題型・已解鎖 {{ unlockedCount }} 個</div>
-          <x-import component-from-global-scope="DesignSystem_223f56.Button" variant="secondary" size="sm" hint-size="auto,36px" onClick="{{ lockAll }}">全部鎖定</x-import>
-          <x-import component-from-global-scope="DesignSystem_223f56.Button" variant="primary" size="sm" hint-size="auto,36px" onClick="{{ unlockAll }}">全部解鎖</x-import>
         </div>
+
+        <div style="padding:0 28px 8px;font-size:var(--text-2xs);color:var(--text-muted);line-height:var(--leading-tc);">{{ readOnlyHint }}</div>
 
         <div style="display:flex;align-items:center;gap:10px;padding:0 28px 14px;flex-wrap:wrap;">
           <div style="width:200px;">
@@ -1015,13 +1015,8 @@
               <div style="display:grid;grid-template-columns:52px 1fr 92px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border-subtle);cursor:pointer;" onClick="{{ it.onOpen }}">
                 <div style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);">{{ it.code }}</div>
                 <div style="font-size:var(--text-sm);font-weight:400;color:var(--text-primary);">{{ it.name }}</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
-                  <button onClick="{{ it.onLock }}" title="鎖定" style="width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;background:{{ it.lockBtnBg }};color:{{ it.lockBtnColor }};display:flex;align-items:center;justify-content:center;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                  </button>
-                  <button onClick="{{ it.onUnlock }}" title="解鎖" style="width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;background:{{ it.unlockBtnBg }};color:{{ it.unlockBtnColor }};display:flex;align-items:center;justify-content:center;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
-                  </button>
+                <div style="display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:var(--text-2xs);font-weight:700;color:#fff;background:{{ it.statusBg }};border-radius:var(--radius-full);padding:3px 10px;">{{ it.statusLabel }}</span>
                 </div>
               </div>
             </sc-for>
@@ -1035,13 +1030,8 @@
               <div style="display:grid;grid-template-columns:52px 1fr 92px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border-subtle);cursor:pointer;" onClick="{{ it.onOpen }}">
                 <div style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);">{{ it.code }}</div>
                 <div style="font-size:var(--text-sm);font-weight:400;color:var(--text-primary);">{{ it.name }}</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
-                  <button onClick="{{ it.onLock }}" title="鎖定" style="width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;background:{{ it.lockBtnBg }};color:{{ it.lockBtnColor }};display:flex;align-items:center;justify-content:center;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                  </button>
-                  <button onClick="{{ it.onUnlock }}" title="解鎖" style="width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;background:{{ it.unlockBtnBg }};color:{{ it.unlockBtnColor }};display:flex;align-items:center;justify-content:center;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
-                  </button>
+                <div style="display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:var(--text-2xs);font-weight:700;color:#fff;background:{{ it.statusBg }};border-radius:var(--radius-full);padding:3px 10px;">{{ it.statusLabel }}</span>
                 </div>
               </div>
             </sc-for>
@@ -1975,8 +1965,8 @@ function _pricingParamDefaults() {
 const LS_ADMIN = 'ys_admin_mode';
 const LS_PREVIEW = 'ys_admin_preview';
 const LS_QA = 'ys_qa_status';
-// 鎖定與 QA 已解耦（task 5）：鎖定改讀後端 /locks（{typeId:true} 只列已解鎖者）；
-// task 2 起後端為唯一權威來源，不再有本地覆蓋。QA（LS_QA）維持獨立，只供管理端審核狀態顯示。
+// 2026-07-22 起 QA 與鎖定重新綁定（推翻 2026-07-16 的解耦設計）：QA 綠燈 = 解鎖，
+// 其餘狀態 = 鎖定，唯一寫入點是 qaSetStatus()；/locks 仍是後端唯一持久化權威。
 function isUnlockedOf(id) {
   return BACKEND.locks[id] === true;   // 後端唯一權威（無 LS_LOCK 覆蓋）
 }
@@ -2736,15 +2726,6 @@ class Component extends DCLogic {
     alert('已儲存');
   }
 
-  async lockSetLocked(code, locked) {
-    // 鎖定與 QA 解耦（task 5）；task 2 起改為 POST /admin/locks，後端為唯一權威。
-    const res = await adminPost('/admin/locks', { type_id: code, unlocked: !locked });
-    if (!res.ok) { this._writeError(res); return; }
-    await this.loadBackend();          // 重取 /locks（連同 pricing/bundles，簡單一致）
-    this.forceUpdate();
-    this._writeOk();
-  }
-
   // task 4 起改 POST /admin/lessons（後端為唯一權威，取代 writeJSON(LS_LESSONS, ...)）。
   async setLesson(id, value) {
     const n = Math.max(1, Math.min(10, parseInt(value, 10) || 1));   // 後端限 1–10
@@ -2753,8 +2734,17 @@ class Component extends DCLogic {
     await this.loadBackend(); this.forceUpdate(); this._writeOk();
   }
 
-  qaSetStatus(code, status) {
+  // 2026-07-22 起 QA 狀態雙向控制消費端鎖定（刻意推翻 2026-07-16 的解耦設計，見
+  // docs/superpowers/specs/2026-07-22-admin-ux-batch-design.md 第 8 節）：
+  // pass -> 解鎖；warn/fail/unreviewed -> 上鎖。/locks 仍是持久化來源，只是唯一寫入點收斂到這裡。
+  async qaSetStatus(code, status) {
     writeJSON(LS_QA, { ...readJSON(LS_QA), [code]: status });
+    this.forceUpdate();
+    const shouldUnlock = (status === 'pass');
+    if (isUnlockedOf(code) === shouldUnlock) return;   // 已是目標狀態，不必打 API
+    const res = await adminPost('/admin/locks', { type_id: code, unlocked: shouldUnlock });
+    if (!res.ok) { this._writeError(res); return; }
+    await this.loadBackend();
     this.forceUpdate();
   }
 
@@ -3013,8 +3003,8 @@ class Component extends DCLogic {
     const st = this.state.home;
     const status = readJSON(LS_QA)[it.id] ?? st.itemAdminStatus[it.id] ?? it.adminQA ?? 'unreviewed';
     const meta = QA_META[status];
-    // 鎖定與 QA 解耦（task 5）：這裡的「已鎖定/已解鎖」是真正的消費端鎖定閘門，改讀 isUnlockedOf，
-    // 不再由 QA 狀態推導（QA 通過與否只影響上面的 adminStatusLabel 等審核徽章）。
+    // 鎖定由 QA 決定（2026-07-22）：這裡的「已鎖定/已解鎖」是真正的消費端鎖定閘門，讀 isUnlockedOf；
+    // 實際寫入由 onAdminPass/Warn/Fail 呼叫 qaSetStatus() 觸發，非本函式直接控制。
     const locked = !isUnlockedOf(it.id);
 
     const checklistData = [
@@ -3082,14 +3072,15 @@ class Component extends DCLogic {
             const willCheck = !isChecked;
             const next = { ...checked, [ci.key]: willCheck };
             writeJSON(LS_CHECKLIST, { ...readJSON(LS_CHECKLIST), [it.id]: next });
+            const shouldAutoWarn = willCheck && status !== 'pass' && status !== 'fail' && status !== 'warn';
             this.setState(s => {
               const update = { itemChecklistChecked: { ...s.home.itemChecklistChecked, [it.id]: next } };
-              if (willCheck && status !== 'pass' && status !== 'fail' && status !== 'warn') {
-                writeJSON(LS_QA, { ...readJSON(LS_QA), [it.id]: 'warn' });
+              if (shouldAutoWarn) {
                 update.itemAdminStatus = { ...s.home.itemAdminStatus, [it.id]: 'warn' };
               }
               return { home: { ...s.home, ...update } };
             });
+            if (shouldAutoWarn) this.qaSetStatus(it.id, 'warn');
           },
         };
       }),
@@ -3109,21 +3100,21 @@ class Component extends DCLogic {
       locked,
       lockLabel: locked ? '已鎖定' : '已解鎖',
       lockChipBg: locked ? 'var(--color-neutral-500)' : 'var(--color-success-500)',
-      onAdminPass: () => this.setState(s => {
+      onAdminPass: () => {
         const nextStatus = status === 'pass' ? 'unreviewed' : 'pass';
-        writeJSON(LS_QA, { ...readJSON(LS_QA), [it.id]: nextStatus });
-        return { home: { ...s.home, itemAdminStatus: { ...s.home.itemAdminStatus, [it.id]: nextStatus } } };
-      }),
-      onAdminWarn: () => this.setState(s => {
+        this.setState(s => ({ home: { ...s.home, itemAdminStatus: { ...s.home.itemAdminStatus, [it.id]: nextStatus } } }));
+        this.qaSetStatus(it.id, nextStatus);
+      },
+      onAdminWarn: () => {
         const nextStatus = status === 'warn' ? 'unreviewed' : 'warn';
-        writeJSON(LS_QA, { ...readJSON(LS_QA), [it.id]: nextStatus });
-        return { home: { ...s.home, itemAdminStatus: { ...s.home.itemAdminStatus, [it.id]: nextStatus } } };
-      }),
-      onAdminFail: () => this.setState(s => {
+        this.setState(s => ({ home: { ...s.home, itemAdminStatus: { ...s.home.itemAdminStatus, [it.id]: nextStatus } } }));
+        this.qaSetStatus(it.id, nextStatus);
+      },
+      onAdminFail: () => {
         const nextStatus = status === 'fail' ? 'unreviewed' : 'fail';
-        writeJSON(LS_QA, { ...readJSON(LS_QA), [it.id]: nextStatus });
-        return { home: { ...s.home, itemAdminStatus: { ...s.home.itemAdminStatus, [it.id]: nextStatus } } };
-      }),
+        this.setState(s => ({ home: { ...s.home, itemAdminStatus: { ...s.home.itemAdminStatus, [it.id]: nextStatus } } }));
+        this.qaSetStatus(it.id, nextStatus);
+      },
       variantSettings: it.variants.map(v => {
         const curTier = variantTierOf(it, v, st.itemVariantTier);
         const curUnitPrice = getTierPrices()[curTier] ?? 0;
@@ -3700,8 +3691,8 @@ class Component extends DCLogic {
         style: `width:6px;height:6px;border-radius:50%;cursor:pointer;background:${i === cardIdx ? 'var(--color-brand-500)' : 'var(--border-default)'};`,
         onClick: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.homeCardCarouselGo(it.id, i); },
       }));
-      // 鎖定與 QA 解耦（task 5）：消費端卡片「是否可購買/可見」的閘門改讀 isUnlockedOf（後端 /locks
-      // 唯一權威，task 2 起無本地覆蓋），不再綁 QA 狀態；qaStatus 只用於上面/下面的管理端徽章顯示。
+      // 鎖定由 QA 決定（2026-07-22）：消費端卡片「是否可購買/可見」的閘門讀 isUnlockedOf（後端 /locks
+      // 唯一持久化權威），該值現由 qaSetStatus() 依 QA 綠燈/其餘狀態同步寫入，兩者已重新綁定。
       const locked = !isUnlockedOf(it.id);
       const lockLabel = '尚未開放';
       const lockColor = 'var(--color-neutral-600)';
@@ -4248,23 +4239,19 @@ class Component extends DCLogic {
     const st = this.state.lock;
     const filtered = ITEMS.filter(it => !st.search || it.name.includes(st.search) || it.code.includes(st.search));
 
+    // 2026-07-22 起鎖定狀態由 QA 檢核結果決定（見 qaSetStatus），本畫面改為唯讀顯示。
     const build = (it) => {
       const isLocked = !isUnlockedOf(it.id);
       return {
         code: it.code, name: it.name,
-        lockBtnBg: isLocked ? 'var(--color-neutral-600)' : 'var(--color-neutral-200)',
-        lockBtnColor: isLocked ? '#fff' : 'var(--color-neutral-400)',
-        unlockBtnBg: !isLocked ? 'var(--color-success-500)' : 'var(--color-neutral-200)',
-        unlockBtnColor: !isLocked ? '#fff' : 'var(--color-neutral-400)',
-        onLock: async (e) => { e.stopPropagation(); await this.lockSetLocked(it.id, true); },
-        onUnlock: async (e) => { e.stopPropagation(); await this.lockSetLocked(it.id, false); },
+        statusLabel: isLocked ? '已鎖定' : '已解鎖',
+        statusBg: isLocked ? 'var(--color-neutral-500)' : 'var(--color-success-500)',
         onOpen: () => this.goScreen('config', { code: it.id }),
       };
     };
 
     const rows = filtered.map(build);
     const mid = Math.ceil(rows.length / 2);
-
     const unlockedCount = ITEMS.filter(it => isUnlockedOf(it.id)).length;
 
     return {
@@ -4275,20 +4262,7 @@ class Component extends DCLogic {
       totalCount: ITEMS.length,
       visibleCount: filtered.length,
       unlockedCount,
-      lockAll: async () => {
-        const locks = {};
-        ITEMS.forEach(it => { locks[it.id] = false; });   // 全部鎖定＝全部 unlocked:false
-        const res = await adminPost('/admin/locks/bulk', { locks });
-        if (!res.ok) { this._writeError(res); return; }
-        await this.loadBackend(); this.forceUpdate(); this._writeOk();
-      },
-      unlockAll: async () => {
-        const locks = {};
-        ITEMS.forEach(it => { locks[it.id] = true; });
-        const res = await adminPost('/admin/locks/bulk', { locks });
-        if (!res.ok) { this._writeError(res); return; }
-        await this.loadBackend(); this.forceUpdate(); this._writeOk();
-      },
+      readOnlyHint: '鎖定狀態由 QA 檢核結果決定：綠燈（已通過）＝解鎖，其餘＝鎖定。請至「QA 檢核總表」調整。',
     };
   }
   qaVals() {
