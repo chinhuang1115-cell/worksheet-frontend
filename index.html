@@ -107,12 +107,12 @@
           </sc-if>
         </div>
       </div>
-    </div>
 
-    <!-- Hero -->
-    <div style="padding:26px 28px 6px;">
-      <div style="font-family:var(--font-display);font-size:var(--text-3xl);font-weight:700;color:var(--text-primary);letter-spacing:var(--tracking-tc-title);">選擇題型，快速產出學習單</div>
-      <div style="font-size:var(--text-sm);color:var(--text-secondary);margin-top:6px;">依運算類型、年級與難度篩選，找到最適合學生的題型</div>
+      <!-- Hero（與管理導覽列／品牌列一起凍結，捲動時不分離）-->
+      <div style="background:var(--color-neutral-50);padding:18px 28px 14px;border-bottom:1px solid var(--border-subtle);">
+        <div style="font-family:var(--font-display);font-size:var(--text-3xl);font-weight:700;color:var(--text-primary);letter-spacing:var(--tracking-tc-title);">選擇題型，快速產出學習單</div>
+        <div style="font-size:var(--text-sm);color:var(--text-secondary);margin-top:6px;">依運算類型、年級與難度篩選，找到最適合學生的題型</div>
+      </div>
     </div>
 
     <div style="padding:16px 28px 60px;display:flex;gap:24px;align-items:flex-start;">
@@ -230,6 +230,13 @@
               </x-import>
             </sc-for>
           </div>
+          <sc-if value="{{ showPagination }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;justify-content:center;align-items:center;gap:20px;padding:28px 0 8px;">
+              <span style="font-size:var(--text-sm);color:{{ paginationPrevColor }};font-weight:600;cursor:pointer;" onClick="{{ onPaginationPrev }}">‹ 上一頁</span>
+              <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ paginationLabel }}</span>
+              <span style="font-size:var(--text-sm);color:{{ paginationNextColor }};font-weight:600;cursor:pointer;" onClick="{{ onPaginationNext }}">下一頁 ›</span>
+            </div>
+          </sc-if>
         </sc-if>
         <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
           <div style="text-align:center;padding:60px 0;color:var(--text-muted);font-size:var(--text-sm);">沒有符合條件的題型，試試清除篩選條件</div>
@@ -2414,6 +2421,7 @@ class Component extends DCLogic {
       grade: 'all',
       search: '',
       sort: 'difficulty',
+      page: 1,                        // 首頁題型卡片格分頁，篩選/排序/搜尋/瀏覽方式變更時重置為 1
       viewMode: readHomeViewMode(),   // 'text' | 'image'，全域切換，localStorage 持久化
       cardVariantIdx: {},             // { [itemId]: number } — 首頁卡片格圖像模式目前顯示第幾個版型，不持久化
       favorites: {},
@@ -3353,7 +3361,7 @@ class Component extends DCLogic {
       showAdminNav: isAdmin && !preview,
       showAdminNavGlobal: isAdmin && !preview && screen !== 'home',
       showAdminNavHome: isAdmin && !preview && screen === 'home',
-      homeStickyTop: (isAdmin && !preview && screen === 'home') ? '104px' : '76px',
+      homeStickyTop: (isAdmin && !preview && screen === 'home') ? '188px' : '150px',   // 2026-07-22 起含 Hero 一併凍結，數值＝實測凍結區塊高度
       navGoHome: () => this.goScreen('home'),
       navGoLock: () => this.goScreen('lock'),
       navGoQa: () => this.goScreen('qa'),
@@ -3384,9 +3392,9 @@ class Component extends DCLogic {
     const sortStyle = (active) => `padding:4px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-xs);${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:600;' : 'color:var(--text-secondary);'}`;
     const viewModeStyle = (active) => `padding:5px 12px;border-radius:var(--radius-full);cursor:pointer;font-size:var(--text-xs);border:1.5px solid ${active ? 'var(--color-brand-500)' : 'var(--border-default)'};${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:700;' : 'color:var(--text-secondary);'}`;
 
-    const categories = CATS.map(c => ({ label: c.label, style: catStyle(st.category === c.key), onClick: () => this.patch('home', { category: c.key }) }));
-    const grades = GRADES.map(g => ({ label: g.label, style: gradeStyle(st.grade === g.key), onClick: () => this.patch('home', { grade: g.key }) }));
-    const sorts = SORTS.map(s => ({ label: s.label, style: sortStyle(st.sort === s.key), onClick: () => this.patch('home', { sort: st.sort === s.key ? 'difficulty' : s.key }) }));
+    const categories = CATS.map(c => ({ label: c.label, style: catStyle(st.category === c.key), onClick: () => this.patch('home', { category: c.key, page: 1 }) }));
+    const grades = GRADES.map(g => ({ label: g.label, style: gradeStyle(st.grade === g.key), onClick: () => this.patch('home', { grade: g.key, page: 1 }) }));
+    const sorts = SORTS.map(s => ({ label: s.label, style: sortStyle(st.sort === s.key), onClick: () => this.patch('home', { sort: st.sort === s.key ? 'difficulty' : s.key, page: 1 }) }));
     const viewModes = [
       { key: 'text', label: '📝 文字' },
       { key: 'image', label: '🖼️ 圖像' },
@@ -3412,7 +3420,14 @@ class Component extends DCLogic {
     const gradeLabelOf = (g) => g === 2 ? '二年級' : g === 3 ? '三年級' : '';
     const isMulti = (it) => it.variants.length > 1;
 
-    const visibleItems = filtered.map(it => {
+    // 題型卡片格分頁：每頁 6 筆（3 欄 × 2 列），篩選/排序/搜尋/分類/年級變更時 page 已於各 onClick/onSearch 重置為 1
+    const HOME_PAGE_SIZE = 6;
+    const totalPages = Math.max(1, Math.ceil(filtered.length / HOME_PAGE_SIZE));
+    const curPage = Math.min(Math.max(1, st.page || 1), totalPages);
+    const pageStart = (curPage - 1) * HOME_PAGE_SIZE;
+    const pagedFiltered = filtered.slice(pageStart, pageStart + HOME_PAGE_SIZE);
+
+    const visibleItems = pagedFiltered.map(it => {
       const qaStatus = readJSON(LS_QA)[it.id] ?? st.itemAdminStatus[it.id] ?? it.adminQA ?? 'unreviewed';
       const cardIdx = st.cardVariantIdx[it.id] ?? 0;
       const cardVariant = it.variants[cardIdx] || it.variants[0];
@@ -3729,10 +3744,16 @@ class Component extends DCLogic {
       gridGap: st.viewMode === 'image' ? '28px 12px' : '12px',
       gridCols: 'repeat(3,1fr)',
       search: st.search,
-      onSearch: (e) => this.patch('home', { search: e.target.value }),
+      onSearch: (e) => this.patch('home', { search: e.target.value, page: 1 }),
       visibleItems,
       hasResults: visibleItems.length > 0,
       noResults: visibleItems.length === 0,
+      showPagination: totalPages > 1,
+      paginationLabel: `第 ${curPage} / ${totalPages} 頁・共 ${filtered.length} 個題型`,
+      paginationPrevColor: curPage > 1 ? 'var(--text-brand)' : 'var(--text-muted)',
+      paginationNextColor: curPage < totalPages ? 'var(--text-brand)' : 'var(--text-muted)',
+      onPaginationPrev: curPage > 1 ? (() => this.patch('home', { page: curPage - 1 })) : (() => {}),
+      onPaginationNext: curPage < totalPages ? (() => this.patch('home', { page: curPage + 1 })) : (() => {}),
       cartCount: cartIds.length,
       cartOpen: st.cartOpen,
       cartEmpty: cartIds.length === 0,
