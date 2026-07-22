@@ -1193,6 +1193,22 @@
           </div>
         </x-import>
 
+        <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="md" hint-size="100%,120px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">特價期間</span>
+            <span style="font-size:var(--text-2xs);font-weight:700;color:{{ saleActiveColor }};">{{ saleActiveLabel }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:var(--text-xs);color:var(--text-secondary);">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input id="saleEnabled" type="checkbox" checked="{{ saleEnabled }}" onChange="{{ onToggleSale }}" />啟用
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;">起<input id="saleStart" type="date" value="{{ saleStart }}" onBlur="{{ onSaleFieldBlur }}" style="border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" /></label>
+            <label style="display:flex;align-items:center;gap:6px;">訖<input id="saleEnd" type="date" value="{{ saleEnd }}" onBlur="{{ onSaleFieldBlur }}" style="border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" /></label>
+            <label style="display:flex;align-items:center;gap:6px;">折扣<input id="saleDiscount" type="number" min="0" max="100" value="{{ saleDiscount }}" onBlur="{{ onSaleFieldBlur }}" style="width:70px;border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" />%</label>
+          </div>
+          <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-top:8px;line-height:var(--leading-tc);">100% ＝ 原價、80% ＝ 八折、0% ＝ 免費期間。日期留空代表無限期。實際金額一律由後端計算。</div>
+        </x-import>
+
         <div style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);margin:20px 0 10px;">📄 單張學習單</div>
 
         <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;margin-bottom:14px;">
@@ -2395,12 +2411,32 @@ function readHomeViewMode() {
 }
 const TIER_COLORS = { free: 'var(--color-success-500)', a: 'var(--color-brand-500)', b: 'var(--color-accent-500)', c: 'var(--color-warning-600)' };
 const DEFAULT_PRICING_PARAMS = { basePrice: 30, bRatio: 1.5, cRatio: 2, genFee: 2 };
-function getTierPrices() {
+// 特價期間（task 7）：是否生效一律信任後端 BACKEND.pricing.sale_active（後端已處理日期區間/時區），
+// 前端只負責讀取折扣百分比並套用在「消費端顯示金額」上，與 backend/pricing.py 的 _apply_sale() 同公式
+// （round-half-up；JS Math.round 本身即 round-half-up，行為一致，見 CLAUDE.md 定價章節）。
+function _saleActive() {
+  return !!(BACKEND.pricing && BACKEND.pricing.sale_active);
+}
+function _saleDiscountPct() {
+  const sale = ((BACKEND.pricing || {}).defaults || {}).sale;
+  return (sale && sale.discount_pct != null) ? Number(sale.discount_pct) : 100;
+}
+function _applySaleDiscount(amount) {
+  if (!amount || !_saleActive()) return amount;
+  return Math.round(amount * _saleDiscountPct() / 100);
+}
+// 未套特價的類別單價（對應後端 _raw_price_for()）
+function getRawTierPrices() {
   const p = { ...DEFAULT_PRICING_PARAMS, ..._mapBackendDefaults(BACKEND.pricing && BACKEND.pricing.defaults) };
   const aPrice = Number(p.basePrice) || DEFAULT_PRICING_PARAMS.basePrice;
   const bPrice = Math.round(aPrice * (Number(p.bRatio) || DEFAULT_PRICING_PARAMS.bRatio));
   const cPrice = Math.round(aPrice * (Number(p.cRatio) || DEFAULT_PRICING_PARAMS.cRatio));
   return { free: 0, a: aPrice, b: bPrice, c: cPrice };
+}
+// 消費端顯示用的類別單價（對應後端 price_for()：類別單價套特價折扣）
+function getTierPrices() {
+  const raw = getRawTierPrices();
+  return { free: 0, a: _applySaleDiscount(raw.a), b: _applySaleDiscount(raw.b), c: _applySaleDiscount(raw.c) };
 }
 function getGenFee() {
   const p = { ...DEFAULT_PRICING_PARAMS, ..._mapBackendDefaults(BACKEND.pricing && BACKEND.pricing.defaults) };
@@ -2418,8 +2454,11 @@ function variantPriceOf(it, v, tierMap) {
   return getTierPrices()[variantTierOf(it, v, tierMap)] ?? 0;
 }
 function variantPubPriceOf(it, v, tierMap) {
-  if (variantTierOf(it, v, tierMap) === 'free') return 0;
-  return variantPriceOf(it, v, tierMap) + (PAGES_PER_PUB - 1) * getGenFee();
+  const tier = variantTierOf(it, v, tierMap);
+  if (tier === 'free') return 0;
+  // 對應後端 copies_price()：折扣套用在「單價 + 生成費」加總之後，而非單獨套用在單價上
+  const raw = getRawTierPrices()[tier] ?? 0;
+  return _applySaleDiscount(raw + (PAGES_PER_PUB - 1) * getGenFee());
 }
 function variantLessonsOf(it, v, lessonMap) {
   const stateVal = lessonMap && lessonMap[it.id] && lessonMap[it.id][v.key];
@@ -2728,6 +2767,19 @@ class Component extends DCLogic {
     await this.loadBackend();
     this.forceUpdate();
     this._writeOk();
+  }
+
+  // 特價期間：後端為唯一權威（POST /admin/pricing/sale），前端只送設定值、不自行算折扣。
+  async saveSale(next) {
+    const body = {
+      enabled: !!next.enabled,
+      start_date: next.start || null,
+      end_date: next.end || null,
+      discount_pct: parseFloat(next.discount),
+    };
+    const res = await adminPost('/admin/pricing/sale', body);
+    if (!res.ok) { this._writeError(res); return; }
+    await this.loadBackend(); this.forceUpdate(); this._writeOk();
   }
 
   /* ══ publish screen only：出版品編輯的選取狀態操作 ══ */
@@ -4499,6 +4551,29 @@ class Component extends DCLogic {
         }, 0);
         return { code: b.id, name: b.label || b.name || b.id, count, pages, origPrice, price: Math.round(origPrice * discount / 100) };
       }),
+      saleEnabled: !!((BACKEND.pricing && BACKEND.pricing.defaults && BACKEND.pricing.defaults.sale) || {}).enabled,
+      saleStart: (((BACKEND.pricing || {}).defaults || {}).sale || {}).start_date || '',
+      saleEnd: (((BACKEND.pricing || {}).defaults || {}).sale || {}).end_date || '',
+      saleDiscount: (((BACKEND.pricing || {}).defaults || {}).sale || {}).discount_pct ?? 100,
+      saleActiveLabel: (BACKEND.pricing && BACKEND.pricing.sale_active) ? '特價生效中' : '目前未生效',
+      saleActiveColor: (BACKEND.pricing && BACKEND.pricing.sale_active) ? 'var(--color-success-600)' : 'var(--text-muted)',
+      onToggleSale: (e) => {
+        const el = e.target;
+        this.saveSale({
+          enabled: el.checked,
+          start: document.getElementById('saleStart').value,
+          end: document.getElementById('saleEnd').value,
+          discount: document.getElementById('saleDiscount').value,
+        });
+      },
+      onSaleFieldBlur: () => {
+        this.saveSale({
+          enabled: document.getElementById('saleEnabled').checked,
+          start: document.getElementById('saleStart').value,
+          end: document.getElementById('saleEnd').value,
+          discount: document.getElementById('saleDiscount').value,
+        });
+      },
     };
   }
   publishVals() {
