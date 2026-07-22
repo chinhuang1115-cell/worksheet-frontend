@@ -3643,7 +3643,10 @@ class Component extends DCLogic {
         }),
         themes: allowedThemesOf(it, activeKey).map(th => {
           const active = theme.key === th.key;
-          const thumbSrc = th.gallery && th.gallery.length ? themeImagePath(th.key, th.gallery[0]) : null;
+          const g = (window.WORKSHEET_GALLERY || {})[th.key];
+          const thumbSrc = (g && g.items && g.items.length)
+            ? 'images/' + g.items[0].file.split('/').map(encodeURIComponent).join('/')
+            : null;
           return {
             label: th.label,
             icon: th.icon,

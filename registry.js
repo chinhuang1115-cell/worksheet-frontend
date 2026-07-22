@@ -1249,7 +1249,7 @@ window.WORKSHEET_REGISTRY = [
       "variantThemeSet": {
         "sub3noreg-app-std": "d3",
         "sub3noreg-app-2digit": "d2",
-        "sub3noreg-app-mixed": ["d3", "d2"]
+        "sub3noreg-app-mixed": "d3"
       },
       "showTheme": true,
       "prices": false,
