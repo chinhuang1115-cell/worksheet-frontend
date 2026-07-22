@@ -713,12 +713,14 @@
                   <sc-if value="{{ detailItem.themePreviewBadgeLabel }}" hint-placeholder-val="{{ false }}">
                     <div style="font-size:var(--text-2xs);font-weight:700;color:var(--text-brand);margin-bottom:8px;">{{ detailItem.themePreviewBadgeLabel }}</div>
                   </sc-if>
-                  <img src="{{ detailItem.finalPreviewImgSrc }}" style="width:100%;height:auto;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:block;" />
+                  <div style="width:100%;aspect-ratio:210/297;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:flex;align-items:flex-start;justify-content:center;overflow:hidden;box-sizing:border-box;">
+                    <img src="{{ detailItem.finalPreviewImgSrc }}" style="max-width:100%;max-height:100%;width:auto;height:auto;display:block;" />
+                  </div>
                 </div>
               </sc-if>
               <sc-if value="{{ !detailItem.finalPreviewImgSrc }}" hint-placeholder-val="{{ true }}">
                 <div style="padding:20px;display:flex;align-items:flex-start;justify-content:center;background:var(--bg-subtle);">
-                  <div style="width:100%;aspect-ratio:467/660;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;box-sizing:border-box;">
+                  <div style="width:100%;aspect-ratio:210/297;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;box-sizing:border-box;">
                     <div style="padding:26px;">
                       <div style="height:8px;width:60%;background:var(--border-subtle);margin-bottom:10px;border-radius:2px;"></div>
                       <div style="height:6px;width:90%;background:var(--border-subtle);margin-bottom:6px;"></div>
