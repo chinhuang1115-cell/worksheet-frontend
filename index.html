@@ -21,7 +21,17 @@
   <link rel="stylesheet" href="_ds/design-system-223f5666-745e-4f0c-b2dd-4a0ebb6c051a/styles.css">
   <script src="_ds/design-system-223f5666-745e-4f0c-b2dd-4a0ebb6c051a/_ds_bundle.js"></script>
   <style>
-    body{margin:0;}
+    @font-face {
+      font-family: 'Iansui';
+      src: url('fonts/Iansui-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-display: swap;
+    }
+    :root {
+      --font-sans: 'Iansui', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+      --font-display: 'Iansui', 'Noto Serif TC', 'PingFang TC', Georgia, serif;
+    }
+    body{margin:0;font-family:var(--font-sans);}
     *{box-sizing:border-box;}
     .ys-card-arrow{opacity:0;transition:opacity .15s;}
     .ys-card-thumb-wrap:hover .ys-card-arrow{opacity:1;}
@@ -43,7 +53,7 @@
   <sc-if value="{{ showAdminNav }}" hint-placeholder-val="{{ false }}">
     <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-md);background:var(--color-warning-500);margin:12px 28px 0;flex-wrap:wrap;">
       <span style="font-size:var(--text-sm);color:#fff;">▾</span>
-      <span style="font-size:var(--text-sm);font-weight:700;color:#fff;letter-spacing:var(--tracking-wide);white-space:nowrap;font-family:'新細明體',PMingLiU,serif;">管理工具（僅管理端可見）</span>
+      <span style="font-size:var(--text-sm);font-weight:700;color:#fff;letter-spacing:var(--tracking-wide);white-space:nowrap;font-family:'Iansui','新細明體',PMingLiU,serif;">管理工具（僅管理端可見）</span>
       <div style="flex:1;"></div>
       <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
         <a onClick="{{ navGoHome }}" style="font-size:var(--text-sm);font-weight:{{ navWeightHome }};color:rgba(255,255,255,.92);white-space:nowrap;cursor:pointer;">檢視首頁</a>
@@ -302,7 +312,7 @@
     <!-- Detail overlay -->
     <sc-if value="{{ detailItem }}" hint-placeholder-val="{{ false }}">
       <div style="position:fixed;inset:0;background:var(--bg-subtle);z-index:40;overflow-y:auto;">
-        <div style="background:var(--color-brand-500);padding:12px 28px;display:flex;align-items:center;gap:16px;">
+        <div style="background:var(--color-brand-500);padding:12px 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:20;">
           <div style="font-family:var(--font-display);font-weight:700;font-size:20pt;color:#fff;letter-spacing:var(--tracking-tc-title);">易數教室</div>
           <div style="flex:1;"></div>
           <div style="position:relative;width:38px;height:38px;border-radius:50%;background:oklch(1 0 0/0.15);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;" onClick="{{ openCart }}">
@@ -324,7 +334,7 @@
               <!-- 題型管理工具列（共用管理導覽列已在頁面最上方；此處僅保留檢核表展開／收合切換）-->
               <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;border-radius:var(--radius-md);background:var(--color-warning-500);flex-wrap:nowrap;" onClick="{{ onToggleAdminPanel }}">
                 <span style="font-size:var(--text-sm);color:#fff;pointer-events:none;">{{ adminPanelCaret }}</span>
-                <span style="font-size:var(--text-sm);font-weight:700;color:#fff;letter-spacing:var(--tracking-wide);pointer-events:none;font-family:'新細明體',PMingLiU,serif;">題型管理工具</span>
+                <span style="font-size:var(--text-sm);font-weight:700;color:#fff;letter-spacing:var(--tracking-wide);pointer-events:none;font-family:'Iansui','新細明體',PMingLiU,serif;">題型管理工具</span>
               </div>
               <sc-if value="{{ adminPanelOpen }}" hint-placeholder-val="{{ true }}">
               <div style="margin-top:12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,1fr);gap:16px;align-items:start;">
@@ -420,7 +430,7 @@
           <!-- ADMIN-ONLY-END -->
 
           <div style="display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start;">
-            <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:76px;z-index:10;max-height:calc(100vh - 92px);overflow-y:auto;">
               <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,300px">
                 <div style="display:grid;grid-template-columns:1fr 108px;">
                   <div style="padding:16px 14px 16px 16px;">
@@ -671,7 +681,7 @@
         <div style="margin:14px 28px 0;">
           <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;border-radius:var(--radius-md);background:var(--color-warning-500);flex-wrap:wrap;" onClick="{{ onToggleAdminPanel }}">
             <span style="font-size:var(--text-sm);color:#fff;pointer-events:none;">{{ adminPanelCaret }}</span>
-            <span style="font-size:var(--text-sm);font-weight:700;color:#fff;letter-spacing:var(--tracking-wide);pointer-events:none;font-family:'新細明體',PMingLiU,serif;">題型管理工具（僅管理端可見）</span>
+            <span style="font-size:var(--text-sm);font-weight:700;color:#fff;letter-spacing:var(--tracking-wide);pointer-events:none;font-family:'Iansui','新細明體',PMingLiU,serif;">題型管理工具（僅管理端可見）</span>
           </div>
 
           <sc-if value="{{ adminPanelOpen }}" hint-placeholder-val="{{ true }}">
@@ -2395,7 +2405,7 @@ class Component extends DCLogic {
       authCode: '',
       authEmail: '',
       licenseVerifyMsg: '',
-      adminPanelOpen: true,
+      adminPanelOpen: false,
       itemAdminStatus: {},
       itemVariantTier: {},
       itemVariantLessons: {},
@@ -2405,7 +2415,7 @@ class Component extends DCLogic {
       itemChecklistChecked: {},
       themeReminder: null,
     },
-    config: { step: 1, theme: 'drink', selectedProducts: { a: true, b: true, c: false }, sheetCount: 3, adminPanelOpen: true },
+    config: { step: 1, theme: 'drink', selectedProducts: { a: true, b: true, c: false }, sheetCount: 3, adminPanelOpen: false },
     lock: { search: '' },
     qa: { filterStatus: 'all', sortBy: 'default' },
     pricing: {
@@ -2462,7 +2472,7 @@ class Component extends DCLogic {
       if (configCodeChanged) {
         this.setState({
           screen, params,
-          config: { step: 1, theme: 'drink', selectedProducts: { a: true, b: true, c: false }, sheetCount: 3, adminPanelOpen: true },
+          config: { step: 1, theme: 'drink', selectedProducts: { a: true, b: true, c: false }, sheetCount: 3, adminPanelOpen: false },
         });
       } else {
         this.setState({ screen, params });
@@ -3338,8 +3348,8 @@ class Component extends DCLogic {
     const isAdmin = adminMode && !previewFlag;
     const previewing = adminMode && previewFlag;
     const rootVars = isAdmin
-      ? '--color-brand-50:oklch(0.970 0.020 258);--color-brand-100:oklch(0.930 0.055 258);--color-brand-200:oklch(0.870 0.105 258);--color-brand-300:oklch(0.770 0.155 258);--color-brand-400:oklch(0.645 0.195 258);--color-brand-500:oklch(0.515 0.240 258);--color-brand-600:oklch(0.430 0.230 258);--color-brand-700:oklch(0.350 0.200 258);--color-brand-800:oklch(0.265 0.160 258);--color-brand-900:oklch(0.185 0.110 258);--text-brand:oklch(0.430 0.230 258);--font-display:\'LXGW WenKai TC\',serif;'
-      : '--color-brand-50:oklch(0.975 0.025 55);--color-brand-100:oklch(0.94 0.05 55);--color-brand-200:oklch(0.87 0.08 55);--color-brand-300:oklch(0.77 0.12 55);--color-brand-400:oklch(0.65 0.15 50);--color-brand-500:oklch(0.55 0.16 45);--color-brand-600:oklch(0.47 0.15 42);--color-brand-700:oklch(0.39 0.13 40);--color-brand-800:oklch(0.30 0.10 38);--color-brand-900:oklch(0.22 0.07 36);--text-brand:oklch(0.47 0.15 42);--font-display:\'LXGW WenKai TC\',serif;';
+      ? '--color-brand-50:oklch(0.970 0.020 258);--color-brand-100:oklch(0.930 0.055 258);--color-brand-200:oklch(0.870 0.105 258);--color-brand-300:oklch(0.770 0.155 258);--color-brand-400:oklch(0.645 0.195 258);--color-brand-500:oklch(0.515 0.240 258);--color-brand-600:oklch(0.430 0.230 258);--color-brand-700:oklch(0.350 0.200 258);--color-brand-800:oklch(0.265 0.160 258);--color-brand-900:oklch(0.185 0.110 258);--text-brand:oklch(0.430 0.230 258);--font-display:\'Iansui\',serif;'
+      : '--color-brand-50:oklch(0.975 0.025 55);--color-brand-100:oklch(0.94 0.05 55);--color-brand-200:oklch(0.87 0.08 55);--color-brand-300:oklch(0.77 0.12 55);--color-brand-400:oklch(0.65 0.15 50);--color-brand-500:oklch(0.55 0.16 45);--color-brand-600:oklch(0.47 0.15 42);--color-brand-700:oklch(0.39 0.13 40);--color-brand-800:oklch(0.30 0.10 38);--color-brand-900:oklch(0.22 0.07 36);--text-brand:oklch(0.47 0.15 42);--font-display:\'Iansui\',serif;';
     const brandBarBg = isAdmin ? 'var(--color-brand-800)' : 'var(--color-brand-500)';
     const catStyle = (active) => `padding:9px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);${active ? 'background:var(--color-brand-500);color:#fff;font-weight:600;' : 'color:var(--text-secondary);'}`;
     const gradeStyle = (active) => `padding:9px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:600;' : 'color:var(--text-secondary);'}`;
