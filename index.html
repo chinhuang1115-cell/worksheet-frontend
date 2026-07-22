@@ -712,6 +712,9 @@
                           <sc-if value="{{ gi.hasPrice }}" hint-placeholder-val="{{ true }}">
                             <div style="font-size:var(--text-2xs);color:var(--text-muted);white-space:nowrap;">{{ gi.price }}</div>
                           </sc-if>
+                          <sc-if value="{{ !gi.hasPrice }}" hint-placeholder-val="{{ false }}">
+                            <div style="font-size:var(--text-2xs);color:var(--text-muted);white-space:nowrap;">{{ detailItem.galleryPriceNote }}</div>
+                          </sc-if>
                         </div>
                       </sc-for>
                     </div>
@@ -3908,6 +3911,7 @@ class Component extends DCLogic {
           : (activeKey === 'sub3noreg-app-mixed'
               ? '混合版會同時使用兩個主題：您選的主題用於三位數題目，兩位數題目另取一個生活情境主題。'
               : ''),
+        galleryPriceNote: PRICE_FIELD_BY_TYPE[it.id] === 'none' ? '價格由系統產生' : '',
         themeGalleryImgs: ((((window.WORKSHEET_GALLERY || {})[theme.key]
             || {}).items) || []).map(gi => ({
           src: 'images/' + gi.file.split('/').map(encodeURIComponent).join('/'),
