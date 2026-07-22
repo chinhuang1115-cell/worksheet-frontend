@@ -585,9 +585,6 @@
                           <sc-if value="{{ gi.hasPrice }}" hint-placeholder-val="{{ true }}">
                             <div style="font-size:var(--text-2xs);color:var(--text-muted);white-space:nowrap;">{{ gi.price }}</div>
                           </sc-if>
-                          <sc-if value="{{ gi.hasCounter }}" hint-placeholder-val="{{ true }}">
-                            <div style="font-size:var(--text-2xs);color:var(--text-brand);background:var(--bg-subtle);border-radius:999px;padding:0 6px;white-space:nowrap;">量詞：{{ gi.counter }}</div>
-                          </sc-if>
                         </div>
                       </sc-for>
                     </div>
@@ -3632,8 +3629,6 @@ class Component extends DCLogic {
           name: gi.name,
           price: galleryPriceLabel(it.id, gi) || '',
           hasPrice: !!galleryPriceLabel(it.id, gi),
-          counter: gi.counter || '',
-          hasCounter: !!gi.counter,
         })),
         headerLessonsStyle: `width:${wLessons}px;text-align:center;font-size:var(--text-2xs);font-weight:700;color:var(--text-muted);box-sizing:border-box;`,
         headerPriceStyle: `width:${wPrice}px;text-align:center;font-size:var(--text-2xs);font-weight:700;color:var(--text-muted);box-sizing:border-box;`,
