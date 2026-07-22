@@ -430,7 +430,7 @@
           <!-- ADMIN-ONLY-END -->
 
           <div style="display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start;">
-            <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:76px;z-index:10;max-height:calc(100vh - 92px);overflow-y:auto;">
+            <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:76px;z-index:10;">
               <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,300px">
                 <div style="display:grid;grid-template-columns:1fr 108px;">
                   <div style="padding:16px 14px 16px 16px;">
@@ -533,6 +533,7 @@
                 </div>
               </div><div style="font-size: var(--text-2xs); color: var(--text-muted); background: var(--bg-subtle); border-radius: var(--radius-md); padding: 6px 10px; margin-bottom: 8px; line-height: var(--leading-tc); width: 274px; height: 97px">售價計算方式：<br>系統預設＝單價＋(4-1)張 × 生成費用；<br>自由選配＝單價＋(N-1)張 × 生成費用。<br>例如：單價 5元 ＋ 3張 × 生成費用 2 元 = 11 元<br>（系統預設・每份 4 張）。</div>
             </div>
+            <div style="max-height:calc(100vh - 92px);overflow-y:auto;">
             <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,600px">
               <sc-if value="{{ detailItem.showPreviewSelectors }}" hint-placeholder-val="{{ false }}">
                 <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border-subtle);">
@@ -631,6 +632,7 @@
                 <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一頁 ›</span>
               </div>
             </x-import>
+            </div>
           </div>
         </div>
 
