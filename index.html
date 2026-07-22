@@ -540,7 +540,7 @@
                       <div style="flex:1;"></div>
                       <span style="font-family:var(--font-mono);font-size:var(--text-base);font-weight:700;color:{{ detailItem.customPriceColor }};">{{ detailItem.customPriceLabel }}</span>
                     </div>
-                    <div style="font-size:var(--text-2xs);color:var(--text-secondary);padding-left:24px;margin-top:4px;">自行挑選版型與張數</div>
+                    <div style="font-size:var(--text-2xs);color:var(--text-secondary);padding-left:24px;margin-top:4px;">自行挑選版型、張數與主題</div>
                     <sc-if value="{{ detailItem.isCustom }}" hint-placeholder-val="{{ false }}">
                       <div style="margin-top: 10px; border-top: 1px dashed var(--color-brand-200); padding-top: 8px; width: 207px;" onClick="{{ stop }}">
                         <div style="display: flex; align-items: center; gap: 8px; padding: 0 4px 4px; width: 207px;">
@@ -605,6 +605,10 @@
                   <div style="padding:12px 14px;border-right:1px solid var(--border-subtle);">
                     <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ false }}">
                       <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-bottom:8px;">主題</div>
+                      <sc-if value="{{ detailItem.themeLocked }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:var(--text-2xs);color:var(--text-muted);line-height:var(--leading-tc);">系統預設由系統隨機套用主題。若要自行指定主題，請改選「自由選配」。</div>
+                      </sc-if>
+                      <sc-if value="{{ !detailItem.themeLocked }}" hint-placeholder-val="{{ true }}">
                       <div style="display:flex;flex-wrap:wrap;gap:6px;">
                         <sc-for list="{{ detailItem.themes }}" as="th" hint-placeholder-count="5">
                           <div style="{{ th.pillStyle }}" onClick="{{ th.onSelect }}">
@@ -618,6 +622,7 @@
                           </div>
                         </sc-for>
                       </div>
+                      </sc-if>
                       <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <span style="{{ detailItem.themePreviewBtnStyle }}" onClick="{{ detailItem.onPreviewTheme }}">{{ detailItem.themePreviewBtnLabel }}</span>
                         <sc-if value="{{ detailItem.showClearThemePreview }}" hint-placeholder-val="{{ false }}">
@@ -2390,6 +2395,17 @@ function themeOf(it, themeMap) {
 function themeChosen(it, themeMap) {
   return !!((themeMap && themeMap[it.id]) || readJSON(LS_THEME)[it.id]);
 }
+// 購買方式決定主題來源：「系統預設」一律由系統隨機套用主題（使用者不需也不能挑），
+// 只有「自由選配」才讓使用者自己選主題。
+function isPresetModeOf(it, modeMap) {
+  return ((modeMap && modeMap[it.id]) || 'preset') !== 'custom';
+}
+function effectiveThemeOf(it, st) {
+  if (isPresetModeOf(it, st.itemMode)) {
+    return HOME_THEMES.find(th => th.key === DEFAULT_THEME) || themeOf(it, st.itemTheme);
+  }
+  return themeOf(it, st.itemTheme);
+}
 const SORTS = [
   { key:'difficulty', label:'難度' },
   { key:'newest', label:'最新' },
@@ -3082,7 +3098,7 @@ class Component extends DCLogic {
     if (!it) return;
     const routeKey = activeRouteKeyOf(it, st);
     if (!routeKey) return;
-    const theme = themeOf(it, st.itemTheme);
+    const theme = effectiveThemeOf(it, st);
     const cacheKey = routeKey + '::' + theme.key;
     const existing = (st.themePreview[itemId] || {})[cacheKey];
 
@@ -3144,7 +3160,8 @@ class Component extends DCLogic {
     const selected = item.variants.filter(v => (variantQty[v.key] || 0) > 0);
     if (selected.length === 0) return;
     const st = this.state.home;
-    if (item.supportsTheme !== false && !themeChosen(item, st.itemTheme)) {
+    // 系統預設一律隨機主題，不需要（也不會）提醒使用者選主題；只有自由選配才要求先選。
+    if (!presetMode && item.supportsTheme !== false && !themeChosen(item, st.itemTheme)) {
       this.patch('home', { themeReminder: { item, variantQty, presetMode } });
       return;
     }
@@ -3171,7 +3188,9 @@ class Component extends DCLogic {
     const unitPrice = pages > 0 ? price / pages : 0;
     const baseUnitPrice = selected.length > 0 ? selected.reduce((sum, v) => sum + (variantTierOf(item, v, st.itemVariantTier) === 'free' ? 0 : variantPriceOf(item, v, st.itemVariantTier)), 0) / selected.length : 0;
     const genFee = getGenFee();
-    const theme = themeOf(item, st.itemTheme);
+    const theme = presetMode
+      ? (HOME_THEMES.find(th => th.key === DEFAULT_THEME) || themeOf(item, st.itemTheme))
+      : themeOf(item, st.itemTheme);
     const note = (item.variants.length > 1 ? `已選 ${selected.length}/${item.variants.length} 種版型・` : '') + `主題：${theme.label}`;
     const selections = selected.map(v => ({ key: v.key, label: v.label, qty: variantQty[v.key] || 1 }));
     this.setState(s => ({
@@ -3266,7 +3285,8 @@ class Component extends DCLogic {
       // 後端 route 參數名不統一（theme vs theme_id），兩個都帶，各 route 取所需、多的忽略。
       let themeBody = null;
       if (it && it.supportsTheme !== false) {
-        const tk = entry.themeKey || (themeOf(it, st.itemTheme) || {}).key;
+        const tk = entry.themeKey
+          || (entry.presetMode ? DEFAULT_THEME : ((themeOf(it, st.itemTheme) || {}).key));
         if (tk && tk !== 'random') {
           const th = HOME_THEMES.find(t => t.key === tk);
           if (th) themeBody = { theme: th.label, theme_id: th.label };
@@ -3608,7 +3628,9 @@ class Component extends DCLogic {
       const previewImgSrc = previewPdfUrl && _pdfPage1Cache[previewPdfUrl] && _pdfPage1Cache[previewPdfUrl] !== 'ERROR'
         ? _pdfPage1Cache[previewPdfUrl] : null;
       const lr = lessonsRangeOf(it, st.itemVariantLessons);
-      const theme = themeOf(it, st.itemTheme);
+      // 系統預設＝隨機主題（主題選單鎖定不可選）；自由選配＝依使用者所選主題。
+      const theme = isCustom ? themeOf(it, st.itemTheme)
+        : (HOME_THEMES.find(th => th.key === DEFAULT_THEME) || themeOf(it, st.itemTheme));
       const supportsTheme = it.supportsTheme !== false;
       const hasMultipleVariants = it.variants.length > 1;
       const themePreviewCacheKey = activeKey ? (activeKey + '::' + theme.key) : null;
@@ -3651,7 +3673,8 @@ class Component extends DCLogic {
       const totalPrice = flat.reduce((sum, p) => sum + p.price, 0);
 
       const presetTotal = it.variants.reduce((sum, v) => sum + variantPubPriceOf(it, v, st.itemVariantTier), 0);
-      const presetSummary = it.variants.map(v => v.label).join('、') + '，每版型 4 張（共 ' + it.variants.length + ' 份）';
+      const presetSummary = it.variants.map(v => v.label).join('、') + '，每版型 4 張（共 ' + it.variants.length + ' 份）'
+        + (supportsTheme ? '，主題隨機' : '');
       const customPerVariant = (v) => {
         const qty = vq[v.key] || 0;
         if (qty <= 0) return 0;
@@ -3714,6 +3737,7 @@ class Component extends DCLogic {
         onToggleFav: () => this.homeToggleFav(it.id),
         ...this.homeBuildAdminFields(it),
         supportsTheme,
+        themeLocked: !isCustom,
         hasMultipleVariants,
         showPreviewSelectors: true,
         hasThemeGallery: supportsTheme && !!(
