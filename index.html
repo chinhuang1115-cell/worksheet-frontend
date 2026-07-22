@@ -522,7 +522,7 @@
                 <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="bordered" padding="md" hint-size="100%,260px">
                   <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-primary);margin-bottom:10px;">選擇購買方式</div>
 
-                  <div style="border: 2px solid {{ detailItem.presetBorder }}; background: {{ detailItem.presetBg }}; border-radius: var(--radius-lg); padding: 12px 14px; cursor: pointer; margin-bottom: 10px; position: relative; width: 232px; height: 82px" onClick="{{ detailItem.onSetPreset }}">
+                  <div style="border: 2px solid {{ detailItem.presetBorder }}; background: {{ detailItem.presetBg }}; border-radius: var(--radius-lg); padding: 12px 14px; cursor: pointer; margin-bottom: 10px; position: relative; width: 232px; min-height: 82px" onClick="{{ detailItem.onSetPreset }}">
                     <span style="position:absolute;top:-9px;right:12px;font-size:9px;font-weight:700;color:#fff;background:var(--color-accent-500);border-radius:var(--radius-full);padding:2px 8px;">推薦</span>
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                       <div style="width:16px;height:16px;border-radius:50%;border:2px solid {{ detailItem.presetRadioBorder }};background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:8px;height:8px;border-radius:50%;background:{{ detailItem.presetRadioDot }};"></div></div>
@@ -3799,7 +3799,7 @@ class Component extends DCLogic {
       }) : [];
 
       const presetTotal = it.variants.reduce((sum, v) => sum + variantPubPriceOf(it, v, st.itemVariantTier), 0);
-      const presetSummary = it.variants.map(v => v.label).join('、') + '，每版型 4 張（共 ' + it.variants.length + ' 份）'
+      const presetSummary = '每版型 ' + PAGES_PER_PUB + ' 張・共 ' + it.variants.length + ' 份'
         + (supportsTheme ? '，主題隨機出貨' : '');
       const customPerVariant = (v) => {
         const qty = vq[v.key] || 0;
