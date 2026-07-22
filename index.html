@@ -1364,51 +1364,6 @@
       </div>
 
       <div style="padding:16px 28px 40px;">
-
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;margin-bottom:14px;">
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <sc-for list="{{ typeFilters }}" as="tf" hint-placeholder-count="3">
-              <span style="{{ tf.style }}" onClick="{{ tf.onClick }}">{{ tf.label }}</span>
-            </sc-for>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:var(--text-2xs);color:var(--text-muted);letter-spacing:var(--tracking-wide);">排序</span>
-            <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="3">
-              <span style="{{ s.style }}" onClick="{{ s.onClick }}">{{ s.label }}</span>
-            </sc-for>
-          </div>
-        </div>
-
-        <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,220px">
-          <div style="display:grid;grid-template-columns:{{ listGridCols }};padding:9px 16px;border-bottom:1px solid var(--border-subtle);font-size:var(--text-2xs);font-weight:700;color:var(--color-neutral-0);letter-spacing:var(--tracking-wide);background:var(--color-neutral-800);">
-            <div>編號</div><div>名稱</div><div style="text-align:center;">類型</div><div style="text-align:center;">題型數</div><div style="text-align:center;">張數</div><div style="text-align:right;">每張均價</div><div style="text-align:right;">售價</div><div style="text-align:right;">售出份數</div><div style="text-align:right;">操作</div>
-          </div>
-          <sc-for list="{{ pubList }}" as="p" hint-placeholder-count="4">
-            <div style="display:grid;grid-template-columns:{{ listGridCols }};align-items:center;padding:11px 16px;border-bottom:1px solid var(--border-subtle);background:{{ p.rowBg }};">
-              <div style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);">{{ p.code }}</div>
-              <div style="font-size:var(--text-sm);font-weight:400;">
-                <sc-if value="{{ p.isSystem }}" hint-placeholder-val="{{ false }}">
-                  <a href="{{ p.worksheetHref }}" style="color:var(--text-primary);">{{ p.name }}</a>
-                </sc-if>
-                <sc-if value="{{ p.isBundleType }}" hint-placeholder-val="{{ true }}">
-                  <span style="color:var(--text-primary);">{{ p.name }}</span>
-                </sc-if>
-              </div>
-              <div style="text-align:center;"><x-import component-from-global-scope="DesignSystem_223f56.Badge" variant="{{ p.typeBadge }}" size="sm" hint-size="auto,20px">{{ p.typeLabel }}</x-import></div>
-              <div style="text-align:center;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-primary);">{{ p.itemCount }}</div>
-              <div style="text-align:center;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-primary);">{{ p.pages }}</div>
-              <div style="text-align:right;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);">{{ p.unitPrice }} 元</div><div style="text-align:right;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-primary);">{{ p.price }} 元</div>
-              <div style="text-align:right;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);">{{ p.sold }} 份</div>
-              <div style="display:flex;gap:10px;justify-content:flex-end;">
-                <span style="font-size:var(--text-xs);color:var(--text-secondary);font-weight:600;cursor:pointer;" onClick="{{ p.onView }}">檢視</span>
-                <sc-if value="{{ p.isBundle }}" hint-placeholder-val="{{ false }}">
-                  <span style="font-size:var(--text-xs);color:var(--text-brand);font-weight:600;cursor:pointer;" onClick="{{ p.onEdit }}">{{ p.editLabel }}</span>
-                </sc-if>
-              </div>
-            </div>
-          </sc-for>
-        </x-import>
-
         <!-- 編輯中 -->
         <sc-if value="{{ hasEditing }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;align-items:center;gap:12px;margin:24px 0 16px;flex-wrap:wrap;">
@@ -1543,6 +1498,51 @@
         <sc-if value="{{ noEditing }}" hint-placeholder-val="{{ false }}">
           <div style="text-align:center;padding:48px 0 8px;color:var(--text-muted);font-size:var(--text-sm);">已收合編輯區・點上方任一套裝組合的「編輯」重新開啟</div>
         </sc-if>
+
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;margin-bottom:14px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <sc-for list="{{ typeFilters }}" as="tf" hint-placeholder-count="3">
+              <span style="{{ tf.style }}" onClick="{{ tf.onClick }}">{{ tf.label }}</span>
+            </sc-for>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:var(--text-2xs);color:var(--text-muted);letter-spacing:var(--tracking-wide);">排序</span>
+            <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="3">
+              <span style="{{ s.style }}" onClick="{{ s.onClick }}">{{ s.label }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,220px">
+          <div style="display:grid;grid-template-columns:{{ listGridCols }};padding:9px 16px;border-bottom:1px solid var(--border-subtle);font-size:var(--text-2xs);font-weight:700;color:var(--color-neutral-0);letter-spacing:var(--tracking-wide);background:var(--color-neutral-800);">
+            <div>編號</div><div>名稱</div><div style="text-align:center;">類型</div><div style="text-align:center;">題型數</div><div style="text-align:center;">張數</div><div style="text-align:right;">每張均價</div><div style="text-align:right;">售價</div><div style="text-align:right;">售出份數</div><div style="text-align:right;">操作</div>
+          </div>
+          <sc-for list="{{ pubList }}" as="p" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:{{ listGridCols }};align-items:center;padding:11px 16px;border-bottom:1px solid var(--border-subtle);background:{{ p.rowBg }};">
+              <div style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);">{{ p.code }}</div>
+              <div style="font-size:var(--text-sm);font-weight:400;">
+                <sc-if value="{{ p.isSystem }}" hint-placeholder-val="{{ false }}">
+                  <a href="{{ p.worksheetHref }}" style="color:var(--text-primary);">{{ p.name }}</a>
+                </sc-if>
+                <sc-if value="{{ p.isBundleType }}" hint-placeholder-val="{{ true }}">
+                  <span style="color:var(--text-primary);">{{ p.name }}</span>
+                </sc-if>
+              </div>
+              <div style="text-align:center;"><x-import component-from-global-scope="DesignSystem_223f56.Badge" variant="{{ p.typeBadge }}" size="sm" hint-size="auto,20px">{{ p.typeLabel }}</x-import></div>
+              <div style="text-align:center;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-primary);">{{ p.itemCount }}</div>
+              <div style="text-align:center;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-primary);">{{ p.pages }}</div>
+              <div style="text-align:right;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);">{{ p.unitPrice }} 元</div><div style="text-align:right;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-primary);">{{ p.price }} 元</div>
+              <div style="text-align:right;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);">{{ p.sold }} 份</div>
+              <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <span style="font-size:var(--text-xs);color:var(--text-secondary);font-weight:600;cursor:pointer;" onClick="{{ p.onView }}">檢視</span>
+                <sc-if value="{{ p.isBundle }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:var(--text-xs);color:var(--text-brand);font-weight:600;cursor:pointer;" onClick="{{ p.onEdit }}">{{ p.editLabel }}</span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </x-import>
+
 
       </div>
     </div>
