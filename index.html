@@ -2008,7 +2008,11 @@ const STATUS_META = {
   fail:       { label:'審核中', badge:'error' },
 };
 const STATUS_ORDER = { unreviewed: 0, warn: 1, fail: 2, pass: 3 };
-const CHECKLIST_LABELS = { name: '題型名稱', homecard: '首頁卡片', id: '題型 ID', preview: '即時預覽', template: '學習單範本', download: '下載方式', api: 'API' };
+const CHECKLIST_LABELS = {
+  name: '題型名稱', homecard: '首頁卡片', id: '題型 ID 與 route',
+  variants: '版型與範本對應', themes: '主題清單', galleryprice: '圖庫價格顯示',
+  preview: '即時預覽', template: '範本內容', download: '下載實測', pricing: '定價與節數',
+};
 
 // config screen only：情境主題與各主題商品清單（即時預覽用的示範資料，非真正出題邏輯）
 const THEMES = [
@@ -2038,13 +2042,18 @@ function configBuildChecklist(code, itemMeta) {
       { key: 'homecard', label: CHECKLIST_LABELS.homecard, value: '有卡片' },
       { key: 'id', label: CHECKLIST_LABELS.id, value: code },
     ]},
-    { title: '右欄功能', items: [
-      { key: 'preview', label: CHECKLIST_LABELS.preview, value: '動態範例題目' },
-      { key: 'template', label: CHECKLIST_LABELS.template, value: '單張' },
+    { title: '版型與主題', items: [
+      { key: 'variants', label: CHECKLIST_LABELS.variants, value: '每個版型都有 sample PDF' },
+      { key: 'themes', label: CHECKLIST_LABELS.themes, value: '主題層級（d2/d3/d4）正確' },
+      { key: 'galleryprice', label: CHECKLIST_LABELS.galleryprice, value: '區間／單價／不顯示三種狀態' },
     ]},
-    { title: '下載 / API', items: [
-      { key: 'download', label: CHECKLIST_LABELS.download, value: '加入購物車後解鎖下載' },
-      { key: 'api', label: CHECKLIST_LABELS.api, value: '/generate/' + code.toLowerCase() },
+    { title: '右欄功能', items: [
+      { key: 'preview', label: CHECKLIST_LABELS.preview, value: '可生成且符合所選主題' },
+      { key: 'template', label: CHECKLIST_LABELS.template, value: '無空白頁、字型正確' },
+    ]},
+    { title: '下載與定價', items: [
+      { key: 'download', label: CHECKLIST_LABELS.download, value: '實測 PDF 與所選版型／主題一致' },
+      { key: 'pricing', label: CHECKLIST_LABELS.pricing, value: '類別與建議節數已設定' },
     ]},
   ];
 }
@@ -2386,7 +2395,7 @@ const QA_META = {
 };
 const PRICING_TIER_LABELS = { free: '免費', a: 'A 類', b: 'B 類', c: 'C 類' };
 const PRICING_TIER_LIST = [ { key: 'free', label: '免費' }, { key: 'a', label: 'A 類' }, { key: 'b', label: 'B 類' }, { key: 'c', label: 'C 類' } ];
-const CHECKLIST_KEYS = ['name', 'homecard', 'id', 'preview', 'template', 'download', 'api', 'note'];
+const CHECKLIST_KEYS = ['name', 'homecard', 'id', 'variants', 'themes', 'galleryprice', 'preview', 'template', 'download', 'pricing', 'note'];
 const CATS = [
   { key:'all', label:'全部' },
   { key:'add', label:'➕ 加法' },
@@ -3010,17 +3019,22 @@ class Component extends DCLogic {
 
     const checklistData = [
       { title: '基本資訊', items: [
-        { key: 'name', label: '題型名稱', value: `${it.code} ${it.name}` },
-        { key: 'homecard', label: '首頁卡片', value: '有卡片' },
-        { key: 'id', label: '題型 ID', value: it.id },
+        { key: 'name', label: CHECKLIST_LABELS.name, value: `${it.code} ${it.name}` },
+        { key: 'homecard', label: CHECKLIST_LABELS.homecard, value: '有卡片' },
+        { key: 'id', label: CHECKLIST_LABELS.id, value: it.id },
+      ]},
+      { title: '版型與主題', items: [
+        { key: 'variants', label: CHECKLIST_LABELS.variants, value: `${it.variants.length} 個版型` },
+        { key: 'themes', label: CHECKLIST_LABELS.themes, value: it.supportsTheme === false ? '不使用主題' : '支援主題' },
+        { key: 'galleryprice', label: CHECKLIST_LABELS.galleryprice, value: PRICE_FIELD_BY_TYPE[it.id] === 'none' ? '不顯示價格' : '顯示圖庫價格' },
       ]},
       { title: '右欄功能', items: [
-        { key: 'preview', label: '即時預覽', value: '動態範例題目' },
-        { key: 'template', label: '學習單範本', value: '單張' },
+        { key: 'preview', label: CHECKLIST_LABELS.preview, value: '動態範例題目' },
+        { key: 'template', label: CHECKLIST_LABELS.template, value: '單張' },
       ]},
-      { title: '下載 / API', items: [
-        { key: 'download', label: '下載方式', value: '加入購物車後解鎖下載' },
-        { key: 'api', label: 'API', value: `/generate/${it.id.toLowerCase()}` },
+      { title: '下載與定價', items: [
+        { key: 'download', label: CHECKLIST_LABELS.download, value: '加入購物車後解鎖下載' },
+        { key: 'pricing', label: CHECKLIST_LABELS.pricing, value: '見左欄定價分類卡' },
       ]},
       { title: 'QA 備註', items: [
         { key: 'note', label: 'QA 備註', value: '（無）' },
