@@ -35,6 +35,10 @@
     *{box-sizing:border-box;}
     .ys-card-arrow{opacity:0;transition:opacity .15s;}
     .ys-card-thumb-wrap:hover .ys-card-arrow{opacity:1;}
+    @keyframes ysIndeterminate {
+      0%   { left: -40%; }
+      100% { left: 100%; }
+    }
   </style>
 </helmet>
 
@@ -660,6 +664,14 @@
                           <span style="font-size:var(--text-2xs);color:var(--text-muted);cursor:pointer;text-decoration:underline;" onClick="{{ detailItem.onClearThemePreview }}">清除，回到範本預覽</span>
                         </sc-if>
                       </div>
+                      <sc-if value="{{ detailItem.themePreviewBusy }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top:8px;">
+                          <div style="position:relative;width:100%;height:3px;border-radius:999px;background:var(--color-brand-100);overflow:hidden;">
+                            <div style="position:absolute;top:0;height:100%;width:40%;border-radius:999px;background:var(--color-brand-500);animation:ysIndeterminate 1.1s linear infinite;"></div>
+                          </div>
+                          <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-top:4px;">生成預覽中…</div>
+                        </div>
+                      </sc-if>
                       <sc-if value="{{ detailItem.themePreviewError }}" hint-placeholder-val="{{ false }}">
                         <div style="font-size:var(--text-2xs);color:var(--color-error-600);margin-top:4px;">預覽生成失敗：{{ detailItem.themePreviewErrorMsg }}</div>
                       </sc-if>
@@ -3845,6 +3857,7 @@ class Component extends DCLogic {
         finalPreviewImgSrc: themePreviewImgSrc || previewImgSrc,
         themePreviewBadgeLabel: themePreviewImgSrc ? ('已套用「' + theme.label + '」預覽') : '',
         themePreviewBtnLabel: themePreviewLoading ? '生成中…' : (themePreviewImgSrc ? '重新預覽套用效果' : '預覽套用效果'),
+        themePreviewBusy: themePreviewLoading,
         themePreviewBtnStyle: themePreviewLoading
           ? 'font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);cursor:default;pointer-events:none;'
           : 'font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);cursor:pointer;',
