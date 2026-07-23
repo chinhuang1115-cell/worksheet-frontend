@@ -2253,6 +2253,9 @@ function writeCartSession(cart, cartSelected) {
 function clearCartSession() {
   try { sessionStorage.removeItem(LS_CART); } catch (e) {}
 }
+// 自由選配購物車 key 的遞增序號，防止同一毫秒內連續呼叫 homeCommitAddToCart（如 restoreCartFromSession
+// 的同步 forEach 迴圈）導致 Date.now() 撞號、後寫入的項目覆蓋前一筆
+let _cartSeq = 0;
 // 授權碼驗證的本地快取（純體驗優化）：一組碼可能同時解鎖多個題型，存成陣列
 // [{code, email, type_ids}]。實際下載/生成一律由後端 store.verify_license() 重新驗證，
 // 此處只用於「購物車項目要不要顯示已解鎖徽章」與「下載時要不要附上這組碼」。
@@ -3396,8 +3399,9 @@ class Component extends DCLogic {
     const note = (item.variants.length > 1 ? `已選 ${selected.length}/${item.variants.length} 種版型・` : '') + themeNote;
     const selections = selected.map(v => ({ key: v.key, label: v.label, qty: variantQty[v.key] || 1 }));
     const qtyLocked = !!presetMode || selections.length > 1 || (themeSelections && themeSelections.length > 1);
-    // 複合 key：系統預設用 `{itemId}::preset`（同題型最多一筆），自由選配用 `{itemId}::custom_{timestamp}`（可多筆）
-    const cartKey = presetMode ? (item.id + '::preset') : (item.id + '::custom_' + Date.now());
+    // 複合 key：系統預設用 `{itemId}::preset`（同題型最多一筆），自由選配用 `{itemId}::custom_{timestamp}_{seq}`（可多筆）
+    // 附加遞增序號 _cartSeq 防止同步連續呼叫（如 restoreCartFromSession）在同一毫秒內 Date.now() 撞號
+    const cartKey = presetMode ? (item.id + '::preset') : (item.id + '::custom_' + Date.now() + '_' + (++_cartSeq));
     this.setState(s => ({
       home: { ...s.home,
         cart: { ...s.home.cart, [cartKey]: { itemId: item.id, pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, presetMode: !!presetMode, selections, themeKey: theme.key, themeSelections, qtyLocked } },
