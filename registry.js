@@ -2,7 +2,7 @@
 window.WORKSHEET_REGISTRY = [
   {
     "id": "n2-change",
-    "code": "N-2-7",
+    "code": "N207",
     "grade": "2",
     "name": "購物找零＿兩步驟乘減（兩位數）",
     "ops": [
@@ -46,7 +46,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "maxbuy",
-    "code": "N-2-8",
+    "code": "N208",
     "grade": "2",
     "name": "最多能買幾個＿預算判斷（兩位數）",
     "ops": [
@@ -91,7 +91,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sanbushu",
-    "code": "N-2-7",
+    "code": "N207",
     "grade": "2",
     "name": "購物找零＿三步驟乘加減（兩位數）",
     "ops": [
@@ -126,7 +126,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "中等",
       "levelColor": "#f59e0b",
-      "code": "N-2-7",
+      "code": "N207",
       "desc": "三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。"
     },
     "sample": {
@@ -143,7 +143,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "fenfen",
-    "code": "N-2-3",
+    "code": "N203",
     "grade": "2",
     "name": "分分看＿一步驟除法（兩位數）",
     "ops": [
@@ -179,7 +179,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-3",
+      "code": "N203",
       "desc": "A版圖示預先繪好，學生數一數即可填答；B版可選主題，圖示隨機產生，是認識等分除法的第一步。"
     },
     "sample": [
@@ -221,7 +221,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "pingfen",
-    "code": "N-2-5",
+    "code": "N205",
     "grade": "2",
     "name": "平分問題＿一步驟除乘（兩位數）",
     "ops": [
@@ -254,7 +254,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-5",
+      "code": "N205",
       "desc": "把 N 個物件平分給 X 人，連結加法（□＋□＋□）與乘法（□×X）。"
     },
     "sample": {
@@ -271,7 +271,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "liangbushu",
-    "code": "N-2-4",
+    "code": "N204",
     "grade": "2",
     "name": "購物找零＿兩步驟加減（四位數）",
     "ops": [
@@ -305,7 +305,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "進階",
       "levelColor": "#f97316",
-      "code": "N-2-4",
+      "code": "N204",
       "desc": "四位數兩步驟加減（先加求合計，再減求找零），適合熟悉進退位的學生。"
     },
     "sample": {
@@ -322,7 +322,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "chenghe",
-    "code": "N-2-7",
+    "code": "N207",
     "grade": "2",
     "name": "倍數購物＿兩步驟乘減（兩位數）",
     "ops": [
@@ -356,7 +356,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "進階",
       "levelColor": "#f97316",
-      "code": "N-2-7",
+      "code": "N207",
       "desc": "九九乘法兩步驟：先乘法求合計，再付款找零，每頁 3 道題，適合乘法已熟練的學生。"
     },
     "sample": {
@@ -373,7 +373,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "haochashao",
-    "code": "N-2-4",
+    "code": "N204",
     "grade": "2",
     "name": "還差多少＿一步驟減法（兩位數）",
     "ops": [
@@ -405,7 +405,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-4",
+      "code": "N204",
       "desc": "甜點店 4 件商品，學生手邊有一些錢但不夠，計算還差幾元。一步驟減法，適合剛學減法的學生。"
     },
     "sample": {
@@ -422,7 +422,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "huachu4add",
-    "code": "N-3-1",
+    "code": "N301",
     "grade": "3",
     "name": "不進位的加法（四位數）＿畫錢幣輔助",
     "ops": [
@@ -455,7 +455,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "三年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-3-1",
+      "code": "N301",
       "desc": "四位數加法（不進位），以畫錢幣輔助學生理解位值，適合四位數加法的入門練習。"
     },
     "sample": {
@@ -472,7 +472,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "huachu4sub",
-    "code": "N-3-1",
+    "code": "N301",
     "grade": "3",
     "name": "不退位的減法（四位數）＿畫錢幣輔助",
     "ops": [
@@ -505,7 +505,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "三年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-3-1",
+      "code": "N301",
       "desc": "四位數減法（不退位），以畫錢幣輔助學生理解位值，適合四位數減法的入門練習。"
     },
     "sample": {
@@ -522,7 +522,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "tuiwei4sub",
-    "code": "N-3-1",
+    "code": "N301",
     "grade": "3",
     "name": "退位減法（四位數）＿畫錢幣輔助",
     "ops": [
@@ -556,7 +556,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "三年級",
       "level": "進階",
       "levelColor": "#f59e0b",
-      "code": "N-3-1",
+      "code": "N301",
       "desc": "四位數減法（含退位），以畫錢幣輔助學生理解借位過程，提供百位借位、十位借位、雙重借位三種難度。"
     },
     "sample": [
@@ -594,7 +594,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "tuiwei3sub",
-    "code": "N-3-2",
+    "code": "N302",
     "name": "退位減法（三位數）＿畫錢幣／畫記輔助",
     "grade": 3,
     "ops": [
@@ -647,7 +647,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sub1",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "加減計算練習＿減法（十以內）",
     "grade": 1,
     "ops": [
@@ -710,7 +710,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "tuiwei3sub-yw",
-    "code": "N-3-2",
+    "code": "N302",
     "name": "退位減法（三位數）＿應用題＿購物篇",
     "grade": 3,
     "ops": [
@@ -732,7 +732,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "三年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-3-2",
+      "code": "N302",
       "desc": "三位數退位減法情境題，購物情境，每題附商品圖片，個位均為 0，十位單退位。"
     },
     "sample": {
@@ -749,7 +749,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "huachu4add-en",
-    "code": "N-3-1",
+    "code": "N301",
     "grade": "3",
     "name": "No-Carry Addition (4-digit) — Draw Coins",
     "ops": [
@@ -782,7 +782,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "Grade 3",
       "level": "Foundation",
       "levelColor": "#22c55e",
-      "code": "N-3-1",
+      "code": "N301",
       "desc": "4-digit addition (no carrying). Students draw coins to understand place value. Suitable for introductory 4-digit addition practice."
     },
     "sample": {
@@ -799,7 +799,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "fenfennew",
-    "code": "N-2-3",
+    "code": "N203",
     "grade": "2",
     "name": "分分看＿一步驟除法（兩位數）",
     "ops": [
@@ -823,7 +823,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-3",
+      "code": "N203",
       "desc": "以具體圖示輔助「等分除法」概念，數幾個、每幾個一組、共幾組，適合除法初學者。"
     },
     "sample": {
@@ -840,7 +840,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "fenfen-rem",
-    "code": "N-2-3",
+    "code": "N203",
     "grade": "2",
     "name": "分分看＿有餘數（兩位數）",
     "ops": [
@@ -864,7 +864,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "進階",
       "levelColor": "#f59e0b",
-      "code": "N-2-3",
+      "code": "N203",
       "desc": "在等組除法基礎上加入餘數概念，圖示固定，學生圈圈後同時填入商與餘數。"
     },
     "sample": {
@@ -881,7 +881,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "fenfen-heap",
-    "code": "N-2-3",
+    "code": "N203",
     "grade": "2",
     "name": "分分看＿分堆畫圈（兩位數）",
     "ops": [
@@ -905,7 +905,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-3",
+      "code": "N203",
       "desc": "學生自己畫圓圈將物品平均分堆，建立等分除法的具體操作概念。"
     },
     "sample": {
@@ -922,7 +922,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "fenfen-pan",
-    "code": "N-2-3",
+    "code": "N203",
     "grade": "2",
     "name": "分分看＿分盤畫圈（兩位數）",
     "ops": [
@@ -947,7 +947,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-3",
+      "code": "N203",
       "desc": "在盤形空間中畫圓圈表示等分，無格線版提供較大自由度，適合初學等分概念。"
     },
     "sample": {
@@ -964,7 +964,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "fenfen-pangrid",
-    "code": "N-2-3",
+    "code": "N203",
     "grade": "2",
     "name": "分分看＿分盤格線（兩位數）",
     "ops": [
@@ -989,7 +989,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-3",
+      "code": "N203",
       "desc": "格線輔助學生在盤中整齊排列圓圈，更有利於等分概念的視覺呈現。"
     },
     "sample": {
@@ -1006,7 +1006,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sub2noreg",
-    "code": "N-2-2",
+    "code": "N202",
     "name": "兩位數不退位減法＿直式計算",
     "grade": 2,
     "ops": [
@@ -1033,7 +1033,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-2",
+      "code": "N202",
       "desc": "兩位數不退位減法，3 題示範（題目與錢幣圖固定）＋ 9 題隨機練習，每次數字不同。"
     },
     "sample": "assets/sub2noreg_sample.pdf",
@@ -1047,7 +1047,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sub2noreg-app",
-    "code": "N-2-2",
+    "code": "N202",
     "name": "兩位數不退位減法＿應用題",
     "grade": 2,
     "ops": [
@@ -1108,7 +1108,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sub2borrow",
-    "code": "N-2-2",
+    "code": "N202",
     "name": "兩位數退位減法＿直式計算",
     "grade": 2,
     "ops": [
@@ -1157,7 +1157,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sub2borrow-1d",
-    "code": "N-2-2",
+    "code": "N202",
     "name": "兩位數減個位數＿退位減法",
     "grade": 2,
     "ops": [
@@ -1184,7 +1184,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-2-2",
+      "code": "N202",
       "desc": "被減數 11–19，個位退位。2 題示範附拆分步驟，4 題隨機練習。"
     },
     "sample": "assets/sub2borrow-1d_sample.pdf",
@@ -1198,7 +1198,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sub3noreg-app",
-    "code": "N-3-2",
+    "code": "N302",
     "name": "三位數不退位減法＿應用題",
     "grade": 3,
     "ops": [
@@ -1263,7 +1263,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sub3borrow",
-    "code": "N-3-2",
+    "code": "N302",
     "name": "三位數退位減法＿直式計算",
     "grade": 3,
     "ops": [
@@ -1290,7 +1290,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "三年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-3-2",
+      "code": "N302",
       "desc": "三位數退位減法，6 題練習，三種呈現方式（整體式、個位拆分、百十位拆分），每次數字隨機。"
     },
     "sample": "assets/sub3borrow_sample.pdf",
@@ -1630,7 +1630,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "l6_01",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "數到200＿餅乾計數",
     "grade": 1,
     "ops": [],
@@ -1660,7 +1660,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "一年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-1-1",
+      "code": "N101",
       "desc": "用具象圖像（餅乾）計數，認識 151–200 的位值結構。"
     },
     "sample": "assets/l6_01_sample.pdf",
@@ -1674,7 +1674,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "l6_02",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "數到200＿香蕉計數",
     "grade": 1,
     "ops": [],
@@ -1704,7 +1704,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "一年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-1-1",
+      "code": "N101",
       "desc": "用具象圖像（香蕉）計數，認識 151–200 的位值結構。"
     },
     "sample": "assets/l6_02_sample.pdf",
@@ -1718,7 +1718,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "l6_03",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "數到200＿混合計數",
     "grade": 1,
     "ops": [],
@@ -1748,7 +1748,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "一年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-1-1",
+      "code": "N101",
       "desc": "用餅乾和香蕉兩種圖像混合計數，認識 151–200。"
     },
     "sample": "assets/l6_03_sample.pdf",
@@ -1762,7 +1762,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "l6_04",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "數到200＿積木十位個位",
     "grade": 1,
     "ops": [],
@@ -1793,7 +1793,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "一年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-1-1",
+      "code": "N101",
       "desc": "用積木圖示（長條十位＋方塊個位）表示 151–200。"
     },
     "sample": "assets/l6_04_sample.pdf",
@@ -1807,7 +1807,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "l6_05",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "數到200＿積木百位",
     "grade": 1,
     "ops": [],
@@ -1837,7 +1837,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "一年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-1-1",
+      "code": "N101",
       "desc": "用大積木方塊表示百位，認識 151–200 三位數結構。"
     },
     "sample": "assets/l6_05_sample.pdf",
@@ -1851,7 +1851,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "l6_06",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "數到200＿錢幣計數",
     "grade": 1,
     "ops": [],
@@ -1881,7 +1881,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "一年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-1-1",
+      "code": "N101",
       "desc": "用 100 元、10 元、1 元錢幣組合，計數到 200。"
     },
     "sample": "assets/l6_06_sample.pdf",
@@ -1895,7 +1895,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "l6_07",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "數到200＿數字填空",
     "grade": 1,
     "ops": [],
@@ -1926,7 +1926,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "一年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-1-1",
+      "code": "N101",
       "desc": "151–200 與 351–400 兩段數列，每次隨機選 32 格顯示，其餘格讓學生填寫。"
     },
     "sample": "assets/l6_07_sample.pdf",
@@ -1940,7 +1940,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "l6_08",
-    "code": "N-1-1",
+    "code": "N101",
     "name": "數到200＿錢幣比大小",
     "grade": 1,
     "ops": [],
@@ -1970,7 +1970,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "一年級",
       "level": "基礎",
       "levelColor": "#22c55e",
-      "code": "N-1-1",
+      "code": "N101",
       "desc": "示範題比較 143 與 156，練習題比較隨機產生的兩個 101–199 三位數。"
     },
     "sample": "assets/l6_08_sample.pdf",
@@ -1984,7 +1984,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "compare-qty",
-    "code": "N-1-2",
+    "code": "N102",
     "name": "比誰多誰少",
     "grade": 1,
     "ops": [],

@@ -551,7 +551,7 @@
                       <div style="margin-top: 10px; border-top: 1px dashed var(--color-brand-200); padding-top: 8px; width: 207px;" onClick="{{ stop }}">
                         <div style="display: flex; align-items: center; gap: 8px; padding: 0 4px 4px; width: 207px;">
                           <span style="width:18px;flex-shrink:0;"></span>
-                          <span style="flex:1;font-size:9px;font-weight:700;color:var(--text-muted);">版型（單選）</span>
+                          <span style="flex:1;font-size:9px;font-weight:700;color:var(--text-muted);">{{ detailItem.variantListHeaderLabel }}</span>
                           <span style="{{ detailItem.headerPriceStyle }}">單價</span>
                           <span style="{{ detailItem.headerQtyStyle }}">數量</span>
                         </div>
@@ -559,7 +559,12 @@
                           <sc-for list="{{ detailItem.variants }}" as="v" hint-placeholder-count="3">
                             <div style="display: flex; align-items: center; gap: 8px; padding: 4px 4px; border-radius: var(--radius-md); width: 202px;">
                               <div style="width:18px;height:18px;flex-shrink:0;">
-                                <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid {{ v.radioBorder }};background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" onClick="{{ v.onToggleCheck }}"><div style="width:9px;height:9px;border-radius:50%;background:{{ v.radioDot }};"></div></div>
+                                <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ false }}">
+                                  <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid {{ v.radioBorder }};background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" onClick="{{ v.onToggleCheck }}"><div style="width:9px;height:9px;border-radius:50%;background:{{ v.radioDot }};"></div></div>
+                                </sc-if>
+                                <sc-if value="{{ !detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
+                                  <div style="width:18px;height:18px;border-radius:4px;border:1.5px solid {{ v.checkBorder }};background:{{ v.checkBg }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;cursor:pointer;" onClick="{{ v.onToggleCheck }}">{{ v.checkMark }}</div>
+                                </sc-if>
                               </div>
                               <span style="flex: 1; font-size: var(--text-xs); color: var(--text-primary); font-weight: {{ v.fontWeight }}; text-align: left">{{ v.label }}</span>
                               <span style="{{ v.priceColStyle }}">{{ v.unitPrice }}</span>
@@ -2507,9 +2512,14 @@ function presetQtyOf(item) {
   return q;
 }
 function defaultCustomQtyOf(item) {
-  // 自由選配的版型改為單選：預設只勾選第一個版型，其餘為 0。
+  // 有圖片主題的多版型題型，自由選配的版型是單選：預設只勾選第一個版型。
+  // 不使用圖片主題的多版型題型（如十以內減法 sub1）維持複選：每個版型都預設勾選。
   const q = {};
-  item.variants.forEach((v, i) => { q[v.key] = i === 0 ? 4 : 0; });
+  if (item.supportsTheme === false) {
+    item.variants.forEach(v => { q[v.key] = 4; });
+  } else {
+    item.variants.forEach((v, i) => { q[v.key] = i === 0 ? 4 : 0; });
+  }
   return q;
 }
 function defaultQuickAddQty(item) {
@@ -3205,15 +3215,23 @@ class Component extends DCLogic {
   }
 
   // 自由選配的版型改為單選：每次異動都只留下 key 這個版型有張數，其餘版型歸零。
+  // 有圖片主題的多版型題型，版型是單選（見下方 homeToggleVariantChecked）；
+  // 不使用圖片主題的多版型題型（如十以內減法 sub1）維持複選，各版型各自張數互不影響。
   homeSetVariantQty(itemId, key, delta) {
     this.setState(s => {
-      const current = s.home.variantQty[itemId] || {};
-      const wasSelected = (current[key] || 0) > 0;
-      const qty = wasSelected ? Math.max(1, (current[key] || 0) + delta) : 1;
-      const nextVq = {};
-      Object.keys(current).forEach(k => { nextVq[k] = 0; });
-      nextVq[key] = qty;
       const item = ITEMS.find(x => x.id === itemId);
+      const current = s.home.variantQty[itemId] || {};
+      let nextVq;
+      if (item.supportsTheme === false) {
+        const qty = Math.max(0, (current[key] || 0) + delta);
+        nextVq = { ...current, [key]: qty };
+      } else {
+        const wasSelected = (current[key] || 0) > 0;
+        const qty = wasSelected ? Math.max(1, (current[key] || 0) + delta) : 1;
+        nextVq = {};
+        Object.keys(current).forEach(k => { nextVq[k] = 0; });
+        nextVq[key] = qty;
+      }
       const flat = buildFlatPages(item, nextVq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const previewIndex = Math.min(s.home.previewIndex, Math.max(0, flat.length - 1));
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
@@ -3221,15 +3239,22 @@ class Component extends DCLogic {
     });
   }
 
-  // 版型清單的勾選改為單選（radio）：點擊即切換成只選這個版型，再次點擊已選中的版型不做任何事。
+  // 版型清單的勾選：有圖片主題的題型是單選（radio，點擊即切換成只選這個版型，
+  // 再次點擊已選中的版型不做任何事）；不使用圖片主題的題型維持複選（checkbox）。
   homeToggleVariantChecked(itemId, key) {
     this.setState(s => {
-      const current = s.home.variantQty[itemId] || {};
-      if ((current[key] || 0) > 0) return {};
-      const nextVq = {};
-      Object.keys(current).forEach(k => { nextVq[k] = 0; });
-      nextVq[key] = 1;
       const item = ITEMS.find(x => x.id === itemId);
+      const current = s.home.variantQty[itemId] || {};
+      let nextVq;
+      if (item.supportsTheme === false) {
+        const qty = (current[key] || 0) > 0 ? 0 : 1;
+        nextVq = { ...current, [key]: qty };
+      } else {
+        if ((current[key] || 0) > 0) return {};
+        nextVq = {};
+        Object.keys(current).forEach(k => { nextVq[k] = 0; });
+        nextVq[key] = 1;
+      }
       const flat = buildFlatPages(item, nextVq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const previewIndex = Math.min(s.home.previewIndex, Math.max(0, flat.length - 1));
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
@@ -3843,9 +3868,13 @@ class Component extends DCLogic {
           priceColStyle: `width:${wPrice}px;text-align:center;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-muted);box-sizing:border-box;`,
           qtyColStyle: `width:${wQty}px;display:flex;align-items:center;justify-content:center;gap:3px;box-sizing:border-box;`,
           checked: (vq[v.key] || 0) > 0,
-          // 自由選配的版型是單選（radio），用圓形勾選鈕呈現，與「勾選＋數量」的複選 UI 區隔。
+          // 有圖片主題的題型：版型是單選，用圓形勾選鈕呈現。
           radioBorder: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : 'var(--border-default)',
           radioDot: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : 'transparent',
+          // 不使用圖片主題的題型：版型維持複選，用方塊 checkbox 呈現（與主題可複選的視覺一致）。
+          checkBg: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : '#fff',
+          checkBorder: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : 'var(--border-default)',
+          checkMark: (vq[v.key] || 0) > 0 ? '✓' : '',
           onToggleCheck: () => this.homeToggleVariantChecked(it.id, v.key),
           onSelect: multi ? (() => this.homeSelectVariantPage(it.id, v.key)) : (() => {}),
           onInc: () => this.homeSetVariantQty(it.id, v.key, 1),
@@ -3956,6 +3985,7 @@ class Component extends DCLogic {
         onToggleFav: () => this.homeToggleFav(it.id),
         ...this.homeBuildAdminFields(it),
         supportsTheme,
+        variantListHeaderLabel: supportsTheme ? '版型（單選）' : '版型（可複選）',
         themeHint: !isCustom
           ? '點選主題可預覽套用效果；系統預設出貨仍固定隨機主題。'
           : (themeQtyMismatchMsg || (hasCustomSelection && !customConfirmed ? '選好主題並在下方「自由選配」卡片分配張數後，點擊「確認套用」。' : '')),
