@@ -257,8 +257,9 @@
       </div>
     </div>
 
-    <!-- Footer：管理者登入／登出 -->
-    <div style="padding:20px 28px 32px;text-align:center;border-top:1px solid var(--border-subtle);">
+    <!-- Footer：教材說明／管理者登入登出 -->
+    <div style="padding:20px 28px 32px;text-align:center;border-top:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:center;gap:16px;">
+      <a onClick="{{ onOpenWelcome }}" style="font-size:var(--text-2xs);color:var(--text-muted);text-decoration:none;cursor:pointer;">📖 教材說明</a>
       <sc-if value="{{ notAdmin }}" hint-placeholder-val="{{ true }}">
         <a onClick="{{ onAdminLogin }}" style="font-size:var(--text-2xs);color:var(--text-muted);text-decoration:none;cursor:pointer;">管理者登入</a>
       </sc-if>
@@ -268,6 +269,68 @@
       </sc-if>
       <!-- ADMIN-ONLY-END -->
     </div>
+
+    <!-- 系統說明頁（首次進入自動顯示一次，之後可從 Footer「📖 教材說明」連結重新開啟）-->
+    <sc-if value="{{ welcomeOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;background:rgba(20,20,20,0.45);z-index:150;display:flex;align-items:center;justify-content:center;padding:20px;" onClick="{{ onCloseWelcome }}">
+        <div style="position:relative;background:#fff;border-radius:var(--radius-xl);width:680px;max-width:100%;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);padding:40px 40px 32px;" onClick="{{ stop }}">
+          <span style="position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:var(--text-lg);cursor:pointer;" onClick="{{ onCloseWelcome }}">✕</span>
+
+          <span style="display:inline-flex;align-items:center;width:fit-content;padding:3px 9px;font-size:var(--text-xs);font-weight:600;line-height:1.4;border-radius:var(--radius-full);background:var(--color-brand-100);color:var(--color-brand-700);letter-spacing:var(--tracking-wide);">特殊教育數學教材</span>
+
+          <h2 style="margin:16px 30px 0 0;font-family:var(--font-display);font-weight:700;font-size:clamp(22px,3vw,30px);line-height:1.5;letter-spacing:var(--tracking-tc-title);color:var(--text-primary);">讓數學看得見！專為特殊學習需求打造的「圖解易數」</h2>
+
+          <p style="margin:14px 0 0;font-weight:700;font-size:var(--text-base);color:var(--color-brand-600);">低認知負擔 × 高結構圖解 × 生活化題型</p>
+          <p style="margin:6px 0 0;font-size:var(--text-sm);line-height:1.8;color:var(--text-secondary);">由資深特教老師傾心研發，拆解四則運算與基礎概念。捨棄繁複文字，讓抽象數學變直覺，陪伴不同學習步調的孩子真正學會！</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;">
+            <div style="display:flex;gap:10px;align-items:flex-start;background:var(--bg-subtle);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><rect x="3" y="14" width="4" height="7" rx="1"></rect><rect x="10" y="9" width="4" height="12" rx="1"></rect><rect x="17" y="4" width="4" height="17" rx="1"></rect></svg>
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <span style="font-weight:700;font-size:var(--text-sm);color:var(--text-primary);">高結構拆解</span>
+                <span style="font-size:var(--text-xs);line-height:1.6;color:var(--text-secondary);">步驟清晰明確，降低工作記憶負擔，清楚指引「下一步」</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;background:var(--bg-subtle);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <span style="font-weight:700;font-size:var(--text-sm);color:var(--text-primary);">視覺化概念</span>
+                <span style="font-size:var(--text-xs);line-height:1.6;color:var(--text-secondary);">抽象原理轉化為清晰圖像，一眼秒懂題意</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;background:var(--bg-subtle);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 2-1.58l1.65-7.42H5.12"></path></svg>
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <span style="font-weight:700;font-size:var(--text-sm);color:var(--text-primary);">情境生活化</span>
+                <span style="font-size:var(--text-xs);line-height:1.6;color:var(--text-secondary);">結合真實生活場景，拉近數學與日常的距離</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;background:var(--bg-subtle);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="14" y2="12"></line><line x1="4" y1="18" x2="9" y2="18"></line></svg>
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <span style="font-weight:700;font-size:var(--text-sm);color:var(--text-primary);">極簡文字化</span>
+                <span style="font-size:var(--text-xs);line-height:1.6;color:var(--text-secondary);">擺脫閱讀障礙干擾，直擊數學概念本質</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:5px;margin-top:18px;">
+            <p style="margin:0;font-size:var(--text-xs);color:var(--text-secondary);"><strong style="color:var(--text-primary);">適合孩子：</strong>認知能力較弱、學習步調不同或普通班數學進度落後的孩子。</p>
+            <p style="margin:0;font-size:var(--text-xs);color:var(--text-secondary);"><strong style="color:var(--text-primary);">適合陪伴者：</strong>特教老師、普通班老師、安親班老師、陪伴在家練習的家長。</p>
+          </div>
+
+          <div style="background:var(--color-brand-500);border-radius:var(--radius-xl);padding:16px 20px;margin-top:18px;color:#fff;">
+            <p style="margin:0 0 6px;font-family:var(--font-display);font-weight:600;font-size:var(--text-base);line-height:1.7;">「用最簡單的視覺語言，奠定穩固的四則運算基礎。」</p>
+            <p style="margin:0;font-size:var(--text-xs);color:rgba(255,255,255,0.85);">—— 實證有效，連理解較為困難的孩子，也能輕鬆看懂、建立信心！</p>
+          </div>
+
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:24px;">
+            <div style="width:220px;"><x-import component-from-global-scope="DesignSystem_223f56.Button" variant="primary" size="md" fullWidth="true" hint-size="100%,44px" onClick="{{ onCloseWelcome }}">開始使用 →</x-import></div>
+            <span style="font-size:9px;color:var(--text-muted);">之後可從頁面下方「📖 教材說明」隨時重新查看</span>
+          </div>
+        </div>
+      </div>
+    </sc-if>
 
     <!-- 預覽中的浮動返回鈕 -->
     <sc-if value="{{ previewing }}" hint-placeholder-val="{{ false }}">
@@ -2299,6 +2362,13 @@ function readAdmin() {
 function readPreview() {
   try { return localStorage.getItem(LS_PREVIEW) === '1'; } catch (e) { return false; }
 }
+const LS_WELCOME_SEEN = 'ys_welcome_seen';
+function readWelcomeSeen() {
+  try { return localStorage.getItem(LS_WELCOME_SEEN) === '1'; } catch (e) { return false; }
+}
+function markWelcomeSeen() {
+  try { localStorage.setItem(LS_WELCOME_SEEN, '1'); } catch (e) {}
+}
 
 // 購物車結帳訊息的顯示顏色：下載/建立訂單失敗＝紅、已下載成功＝綠、其餘提示（請勾選/請先解鎖）＝中性灰
 function _checkoutMsgColor(msg) {
@@ -2654,6 +2724,7 @@ class Component extends DCLogic {
       expandedGroups: {},
     },
     adminMenuOpen: false,   // 漢堡選單（管理員工具列收合）開關，跨畫面共用，見 commonVals()
+    welcomeOpen: !readWelcomeSeen(),   // 首次進入系統顯示的說明頁，關閉後寫入 localStorage 不再自動彈出；可從 Footer「教材說明」連結重新開啟，見 commonVals()
   };
 
   componentDidMount() {
@@ -3662,6 +3733,9 @@ class Component extends DCLogic {
       adminMenuOpen,
       onToggleAdminMenu: () => this.setState(s => ({ adminMenuOpen: !s.adminMenuOpen })),
       closeAdminMenu: () => this.setState({ adminMenuOpen: false }),
+      welcomeOpen: this.state.welcomeOpen,
+      onOpenWelcome: () => this.setState({ welcomeOpen: true }),
+      onCloseWelcome: () => { markWelcomeSeen(); this.setState({ welcomeOpen: false }); },
       homeStickyTop: '150px',   // 2026-07-22 起 Hero 一併凍結；admin 工具列已改漢堡選單、不再佔用凍結區塊高度
       menuItemStyleHome: menuItemStyle('home'),
       menuItemStyleLock: menuItemStyle('lock'),
