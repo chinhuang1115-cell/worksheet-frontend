@@ -3336,8 +3336,11 @@ class Component extends DCLogic {
       price = Math.round(selected.reduce((sum, v) => {
         const qty = variantQty[v.key] || 0;
         if (qty <= 0) return sum;
-        if (variantTierOf(item, v, st.itemVariantTier) === 'free') return sum;
-        return sum + variantPriceOf(item, v, st.itemVariantTier) + (qty - 1) * getGenFee();
+        const tier = variantTierOf(item, v, st.itemVariantTier);
+        if (tier === 'free') return sum;
+        // 同 variantPubPriceOf／customPerVariant：折扣套用在「單價 + 生成費」加總之後，
+        // 避免已折扣單價疊加未折扣生成費，導致購物車金額高於後端 /orders/create 實際結帳金額。
+        return sum + _applySaleDiscount(getRawTierPrices()[tier] + (qty - 1) * getGenFee());
       }, 0));
     }
     const unitPrice = pages > 0 ? price / pages : 0;
@@ -3883,8 +3886,11 @@ class Component extends DCLogic {
       const customPerVariant = (v) => {
         const qty = vq[v.key] || 0;
         if (qty <= 0) return 0;
-        if (variantTierOf(it, v, st.itemVariantTier) === 'free') return 0;
-        return variantPriceOf(it, v, st.itemVariantTier) + (qty - 1) * getGenFee();
+        const tier = variantTierOf(it, v, st.itemVariantTier);
+        if (tier === 'free') return 0;
+        // 對應後端 copies_price()：折扣套用在「單價 + 生成費」加總之後，同 variantPubPriceOf 的算法，
+        // 避免 variantPriceOf() 回傳的已折扣單價再疊加未折扣生成費，造成自由選配總價高於實際結帳金額。
+        return _applySaleDiscount(getRawTierPrices()[tier] + (qty - 1) * getGenFee());
       };
       const customTotal = it.variants.reduce((sum, v) => sum + customPerVariant(v), 0);
       const unitPrices = it.variants.map(v => variantPriceOf(it, v, st.itemVariantTier));
