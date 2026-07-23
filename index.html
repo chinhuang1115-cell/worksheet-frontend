@@ -305,7 +305,10 @@
               <div style="width:20px;height:20px;flex-shrink:0;border-radius:4px;border:2px solid {{ ci.checkColor }};background:{{ ci.checkBg }};display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:2px;" onClick="{{ ci.onToggleSelect }}"><span style="color:#fff;font-size:13px;font-weight:900;line-height:1;">{{ ci.checkMark }}</span></div>
               <div style="width:36px;height:48px;flex-shrink:0;border-radius:3px;border:1px solid var(--border-default);background:linear-gradient(180deg,#fff 0%,var(--color-brand-50) 100%);"></div>
               <div style="flex:1;min-width:0;">
-                <div style="font-size:var(--text-sm);font-weight:600;color:var(--text-primary);">{{ ci.code }} {{ ci.name }}</div>
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                  <div style="font-size:var(--text-sm);font-weight:600;color:var(--text-primary);">{{ ci.code }} {{ ci.name }}</div>
+                  <span style="display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:var(--radius-full);background:{{ ci.modeBadgeBg }};color:{{ ci.modeBadgeColor }};flex-shrink:0;">{{ ci.modeLabel }}</span>
+                </div>
                 <div style="font-size:var(--text-2xs);color:var(--text-secondary);margin-top:2px;">{{ ci.gradeLabel }}・共 {{ ci.pages }} 頁</div>
                 <sc-if value="{{ ci.note }}" hint-placeholder-val="{{ false }}"><div style="font-size:var(--text-2xs);color:var(--text-muted);margin-top:1px;">{{ ci.note }}</div></sc-if>
                 <div style="margin-top:4px;"><span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:var(--radius-full);background:{{ ci.unlockBadgeBg }};color:{{ ci.unlockBadgeColor }};">{{ ci.unlockBadgeLabel }}</span></div>
@@ -3396,7 +3399,12 @@ class Component extends DCLogic {
     const themeNote = (themeSelections && themeSelections.length > 1)
       ? `主題：${themeSelections.map(t => `${t.label}×${t.qty}`).join('、')}`
       : `主題：${theme.label}`;
-    const note = (item.variants.length > 1 ? `已選 ${selected.length}/${item.variants.length} 種版型・` : '') + themeNote;
+    const modeLabel = presetMode ? '系統預設' : '自由選配';
+    // 自由選配是使用者逐項手動指定的結果，清單需列出每個版型與其張數供結帳前確認；
+    // 系統預設固定套用「全部版型各 4 張＋隨機主題」，沿用原本較簡短的已選版型數統計即可。
+    const note = presetMode
+      ? (item.variants.length > 1 ? `已選 ${selected.length}/${item.variants.length} 種版型・` : '') + themeNote
+      : `版型：${selected.map(v => `${v.label}×${variantQty[v.key] || 1}張`).join('、')}・${themeNote}`;
     const selections = selected.map(v => ({ key: v.key, label: v.label, qty: variantQty[v.key] || 1 }));
     const qtyLocked = !!presetMode || selections.length > 1 || (themeSelections && themeSelections.length > 1);
     // 複合 key：系統預設用 `{itemId}::preset`（同題型最多一筆），自由選配用 `{itemId}::custom_{timestamp}_{seq}`（可多筆）
@@ -3404,7 +3412,7 @@ class Component extends DCLogic {
     const cartKey = presetMode ? (item.id + '::preset') : (item.id + '::custom_' + Date.now() + '_' + (++_cartSeq));
     this.setState(s => ({
       home: { ...s.home,
-        cart: { ...s.home.cart, [cartKey]: { itemId: item.id, pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, presetMode: !!presetMode, selections, themeKey: theme.key, themeSelections, qtyLocked } },
+        cart: { ...s.home.cart, [cartKey]: { itemId: item.id, pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, modeLabel, presetMode: !!presetMode, selections, themeKey: theme.key, themeSelections, qtyLocked } },
         cartSelected: { ...s.home.cartSelected, [cartKey]: true },
       },
     }));
@@ -3814,6 +3822,9 @@ class Component extends DCLogic {
         pages: entry.pages,
         price: entry.price,
         note: entry.note,
+        modeLabel: entry.modeLabel || (entry.presetMode ? '系統預設' : '自由選配'),
+        modeBadgeColor: entry.presetMode ? 'var(--color-neutral-600)' : 'var(--color-brand-600)',
+        modeBadgeBg: entry.presetMode ? 'var(--color-neutral-100)' : 'var(--color-brand-50)',
         unlockBadgeLabel: isFree ? '免費' : (allLicensed ? '已解鎖' : '💰 需購買'),
         unlockBadgeColor: (isFree || allLicensed) ? 'var(--color-success-700)' : 'var(--color-error-600)',
         unlockBadgeBg: (isFree || allLicensed) ? 'var(--color-success-50, #ecfdf5)' : 'var(--color-error-50, #fee2e2)',
