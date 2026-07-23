@@ -3470,7 +3470,7 @@ class Component extends DCLogic {
 
   async downloadCart() {
     const st = this.state.home;
-    const selectedIds = Object.keys(st.cart).filter(id => st.cartSelected[id]);
+    const selectedIds = Object.keys(st.cart).filter(cartKey => st.cartSelected[cartKey]);
     if (selectedIds.length === 0) { this.patch('home', { checkoutMsg: '請先勾選要下載的項目' }); return; }
 
     const items = [];
