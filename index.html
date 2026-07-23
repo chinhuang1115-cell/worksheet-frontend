@@ -2699,16 +2699,20 @@ class Component extends DCLogic {
     if (!stored || !stored.cart || Object.keys(stored.cart).length === 0) return;
     let removedCount = 0;
     const keepSelected = {};
-    Object.keys(stored.cart).forEach(id => {
-      const item = ITEMS.find(it => it.id === id);
-      const entry = stored.cart[id];
+    Object.keys(stored.cart).forEach(cartKey => {
+      const entry = stored.cart[cartKey];
+      const itemId = entry.itemId || cartKey;
+      const item = ITEMS.find(it => it.id === itemId);
       const variantQty = {};
       (entry.selections || []).forEach(sel => { variantQty[sel.key] = sel.qty; });
-      if (!item || !isUnlockedOf(id) || Object.keys(variantQty).length === 0) { removedCount++; return; }
+      if (!item || !isUnlockedOf(itemId) || Object.keys(variantQty).length === 0) { removedCount++; return; }
       const themeQtyMap = {};
       (entry.themeSelections || []).forEach(t => { themeQtyMap[t.key] = t.qty; });
       this.homeCommitAddToCart(item, variantQty, !!entry.presetMode, themeQtyMap);
-      keepSelected[id] = !!(stored.cartSelected && stored.cartSelected[id]);
+      // homeCommitAddToCart 會產生新 key（自由選配 timestamp 不同），需用最後寫入的 key 來 map selected 狀態
+      const newKeys = Object.keys(this.state.home.cart).filter(k => k.startsWith(itemId + '::'));
+      const lastKey = newKeys[newKeys.length - 1];
+      if (lastKey) keepSelected[lastKey] = !!(stored.cartSelected && stored.cartSelected[cartKey]);
     });
     if (Object.keys(keepSelected).length > 0) {
       this.patch('home', { cartSelected: { ...this.state.home.cartSelected, ...keepSelected } });
@@ -3370,7 +3374,7 @@ class Component extends DCLogic {
     }
     const unitPrice = pages > 0 ? price / pages : 0;
     const baseUnitPrice = selected.length > 0 ? selected.reduce((sum, v) => sum + (variantTierOf(item, v, st.itemVariantTier) === 'free' ? 0 : variantPriceOf(item, v, st.itemVariantTier)), 0) / selected.length : 0;
-    const genFee = getGenFee();
+    const genFee = price === 0 ? 0 : getGenFee();
     // 自由選配可複選主題（各主題各自設定張數，加總＝pages）；系統預設／未帶入分配時仍是單一主題。
     const themeSelections = (!presetMode && item.supportsTheme !== false && themeQtyMap)
       ? Object.keys(themeQtyMap)
@@ -3387,10 +3391,13 @@ class Component extends DCLogic {
       : `主題：${theme.label}`;
     const note = (item.variants.length > 1 ? `已選 ${selected.length}/${item.variants.length} 種版型・` : '') + themeNote;
     const selections = selected.map(v => ({ key: v.key, label: v.label, qty: variantQty[v.key] || 1 }));
+    const qtyLocked = !!presetMode || selections.length > 1 || (themeSelections && themeSelections.length > 1);
+    // 複合 key：系統預設用 `{itemId}::preset`（同題型最多一筆），自由選配用 `{itemId}::custom_{timestamp}`（可多筆）
+    const cartKey = presetMode ? (item.id + '::preset') : (item.id + '::custom_' + Date.now());
     this.setState(s => ({
       home: { ...s.home,
-        cart: { ...s.home.cart, [item.id]: { pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, presetMode: !!presetMode, selections, themeKey: theme.key, themeSelections } },
-        cartSelected: { ...s.home.cartSelected, [item.id]: true },
+        cart: { ...s.home.cart, [cartKey]: { itemId: item.id, pages, price, unitPrice, baseUnitPrice, genFee, variantCount: selected.length, note, presetMode: !!presetMode, selections, themeKey: theme.key, themeSelections, qtyLocked } },
+        cartSelected: { ...s.home.cartSelected, [cartKey]: true },
       },
     }));
     writeCartSession(this.state.home.cart, this.state.home.cartSelected);
@@ -3409,30 +3416,30 @@ class Component extends DCLogic {
     if (pending) this.goScreen('home', { item: pending.item.id });   // Wrinkle 2：回到該題型詳情
   }
 
-  homeRemoveFromCart(id) {
+  homeRemoveFromCart(cartKey) {
     this.setState(s => {
-      const cart = { ...s.home.cart }; delete cart[id];
-      const sel = { ...s.home.cartSelected }; delete sel[id];
+      const cart = { ...s.home.cart }; delete cart[cartKey];
+      const sel = { ...s.home.cartSelected }; delete sel[cartKey];
       return { home: { ...s.home, cart, cartSelected: sel } };
     });
     writeCartSession(this.state.home.cart, this.state.home.cartSelected);
   }
 
-  homeUpdateCartQty(id, delta) {
+  homeUpdateCartQty(cartKey, delta) {
     this.setState(s => {
-      const entry = s.home.cart[id];
+      const entry = s.home.cart[cartKey];
       if (!entry) return null;
       const pages = Math.max(1, entry.pages + delta);
       const vc = entry.variantCount || 1;
       const price = Math.round((entry.baseUnitPrice || entry.unitPrice) * vc + (pages - vc) * (entry.genFee || 0));
       const unitPrice = pages > 0 ? price / pages : 0;
-      return { home: { ...s.home, cart: { ...s.home.cart, [id]: { ...entry, pages, price, unitPrice } } } };
+      return { home: { ...s.home, cart: { ...s.home.cart, [cartKey]: { ...entry, pages, price, unitPrice } } } };
     });
     writeCartSession(this.state.home.cart, this.state.home.cartSelected);
   }
 
-  homeToggleCartSelect(id) {
-    this.setState(s => ({ home: { ...s.home, cartSelected: { ...s.home.cartSelected, [id]: !s.home.cartSelected[id] } } }));
+  homeToggleCartSelect(cartKey) {
+    this.setState(s => ({ home: { ...s.home, cartSelected: { ...s.home.cartSelected, [cartKey]: !s.home.cartSelected[cartKey] } } }));
     writeCartSession(this.state.home.cart, this.state.home.cartSelected);
   }
 
@@ -3468,12 +3475,12 @@ class Component extends DCLogic {
 
     const items = [];
     let needBuy = 0;
-    selectedIds.forEach(id => {
-      const entry = st.cart[id];
-      const it = ITEMS.find(x => x.id === id);
+    selectedIds.forEach(cartKey => {
+      const entry = st.cart[cartKey];
+      const it = ITEMS.find(x => x.id === entry.itemId);
       const isFree = entry.price === 0;
 
-      const sels = entry.selections || [{ key: id, label: (it && it.name) || id, qty: entry.pages || 1 }];
+      const sels = entry.selections || [{ key: entry.itemId, label: (it && it.name) || entry.itemId, qty: entry.pages || 1 }];
       let entryNeedsBuy = false;
       // 消費者選的主題帶進生成參數；未選／隨機則送空 body 交由後端隨機。
       // 後端 route 參數名不統一（theme vs theme_id），兩個都帶，各 route 取所需、多的忽略。
@@ -3549,11 +3556,11 @@ class Component extends DCLogic {
       return;
     }
     const st = this.state.home;
-    const purchasableIds = Object.keys(st.cart).filter(id => {
-      if (!st.cartSelected[id]) return false;
-      const entry = st.cart[id];
+    const purchasableIds = Object.keys(st.cart).filter(cartKey => {
+      if (!st.cartSelected[cartKey]) return false;
+      const entry = st.cart[cartKey];
       if (entry.price === 0) return false;
-      const sels = entry.selections || [{ key: id }];
+      const sels = entry.selections || [{ key: entry.itemId }];
       return sels.some(sel => !getLicenseForType(sel.key));
     });
     if (purchasableIds.length === 0) { this.patch('home', { checkoutMsg: '沒有需要購買的項目' }); return; }
@@ -3562,9 +3569,9 @@ class Component extends DCLogic {
     if (!email) return;
 
     const items = [];
-    purchasableIds.forEach(id => {
-      const entry = st.cart[id];
-      const sels = entry.selections || [{ key: id, label: id, qty: 1 }];
+    purchasableIds.forEach(cartKey => {
+      const entry = st.cart[cartKey];
+      const sels = entry.selections || [{ key: entry.itemId, label: entry.itemId, qty: 1 }];
       sels.forEach(sel => {
         if (!getLicenseForType(sel.key)) {
           items.push({ id: sel.key, copies: sel.qty, is_bundle: false });
@@ -3680,7 +3687,7 @@ class Component extends DCLogic {
       if (st.grade !== 'all' && it.grade !== st.grade) return false;
       if (st.search && !it.name.includes(st.search) && !it.code.includes(st.search)) return false;
       if (st.sort === 'fav' && !st.favorites[it.id]) return false;
-      if (st.sort === 'cart' && !st.cart[it.id]) return false;
+      if (st.sort === 'cart' && !Object.keys(st.cart).some(k => k === it.id + '::preset' || k.startsWith(it.id + '::custom_'))) return false;
       return true;
     });
 
@@ -3740,11 +3747,11 @@ class Component extends DCLogic {
         unitPriceLabel,
         lessonsLabel,
         favFill: st.favorites[it.id] ? 'var(--color-error-500)' : 'none',
-        cartLabel: locked ? lockLabel : (st.cart[it.id] ? '已加入 ✓' : '加入購物車'),
+        cartLabel: locked ? lockLabel : (st.cart[it.id + '::preset'] ? '已加入 ✓' : '加入購物車'),
         cartDisabled: locked,
         openDetail: (locked && !isAdmin) ? (() => {}) : (() => this.homeOpenDetail(it.id)),
         cardCursor: (locked && !isAdmin) ? 'default' : 'pointer',
-        onAddToCart: locked ? (() => {}) : ((e) => { if (e && e.stopPropagation) e.stopPropagation(); if (st.cart[it.id]) { this.homeRemoveFromCart(it.id); } else { this.homeAddToCart(it, defaultQuickAddQty(it)); } }),
+        onAddToCart: locked ? (() => {}) : ((e) => { if (e && e.stopPropagation) e.stopPropagation(); const presetKey = it.id + '::preset'; if (st.cart[presetKey]) { this.homeRemoveFromCart(presetKey); } else { this.homeAddToCart(it, defaultQuickAddQty(it), true); } }),
         onToggleFav: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.homeToggleFav(it.id); },
         adminQaLabel: QA_META[qaStatus].label,
         adminQaDot: QA_META[qaStatus].dot,
@@ -3772,17 +3779,18 @@ class Component extends DCLogic {
     });
 
     const cartIds = Object.keys(st.cart);
-    const cartItems = cartIds.map(id => {
-      const it = ITEMS.find(x => x.id === id);
+    const cartItems = cartIds.map(cartKey => {
+      const entry = st.cart[cartKey];
+      const it = ITEMS.find(x => x.id === entry.itemId);
       if (!it) return null;
-      const entry = st.cart[id];
-      const selected = !!st.cartSelected[id];
+      const selected = !!st.cartSelected[cartKey];
       // cart entry 本身不存 variants（見 homeCommitAddToCart()），免費／付費判斷直接讀
       // entry.price（加入購物車當下已用真實後端定價算好），不重新呼叫 variantTierOf()
       const isFree = entry.price === 0;
-      const sels = entry.selections || [{ key: id }];
+      const sels = entry.selections || [{ key: entry.itemId }];
       const allLicensed = isFree || sels.every(sel => getLicenseForType(sel.key));
       return {
+        cartKey,
         code: it.code, name: it.name,
         gradeLabel: gradeLabelOf(it.grade),
         pages: entry.pages,
@@ -3791,27 +3799,27 @@ class Component extends DCLogic {
         unlockBadgeLabel: isFree ? '免費' : (allLicensed ? '已解鎖' : '💰 需購買'),
         unlockBadgeColor: (isFree || allLicensed) ? 'var(--color-success-700)' : 'var(--color-error-600)',
         unlockBadgeBg: (isFree || allLicensed) ? 'var(--color-success-50, #ecfdf5)' : 'var(--color-error-50, #fee2e2)',
-        checkColor: selected ? 'var(--color-success-300)' : 'var(--border-default)',
-        checkBg: selected ? 'var(--color-success-300)' : '#fff',
+        checkColor: selected ? 'var(--color-brand-500)' : 'var(--border-default)',
+        checkBg: selected ? 'var(--color-brand-500)' : '#fff',
         checkMark: selected ? '✓' : '',
-        onToggleSelect: () => this.homeToggleCartSelect(id),
-        onRemove: () => this.homeRemoveFromCart(id),
-        editableQty: !entry.presetMode,
-        notEditableQty: !!entry.presetMode,
-        onInc: entry.presetMode ? (() => {}) : (() => this.homeUpdateCartQty(id, 1)),
-        onDec: entry.presetMode ? (() => {}) : (() => this.homeUpdateCartQty(id, -1)),
+        onToggleSelect: () => this.homeToggleCartSelect(cartKey),
+        onRemove: () => this.homeRemoveFromCart(cartKey),
+        editableQty: !entry.qtyLocked,
+        notEditableQty: !!entry.qtyLocked,
+        onInc: entry.qtyLocked ? (() => {}) : (() => this.homeUpdateCartQty(cartKey, 1)),
+        onDec: entry.qtyLocked ? (() => {}) : (() => this.homeUpdateCartQty(cartKey, -1)),
       };
     }).filter(Boolean);
 
-    const selectedIds = cartIds.filter(id => st.cartSelected[id]);
-    const selectedTotal = selectedIds.reduce((sum, id) => sum + st.cart[id].price, 0);
-    const purchasableIds = selectedIds.filter(id => {
-      const entry = st.cart[id];
+    const selectedIds = cartIds.filter(cartKey => st.cartSelected[cartKey]);
+    const selectedTotal = selectedIds.reduce((sum, cartKey) => sum + st.cart[cartKey].price, 0);
+    const purchasableIds = selectedIds.filter(cartKey => {
+      const entry = st.cart[cartKey];
       if (entry.price === 0) return false;
-      const sels = entry.selections || [{ key: id }];
+      const sels = entry.selections || [{ key: entry.itemId }];
       return sels.some(sel => !getLicenseForType(sel.key));
     });
-    const purchaseTotal = purchasableIds.reduce((sum, id) => sum + st.cart[id].price, 0);
+    const purchaseTotal = purchasableIds.reduce((sum, cartKey) => sum + st.cart[cartKey].price, 0);
 
     let detailItem = null;
     if (detailId) {
@@ -3976,11 +3984,11 @@ class Component extends DCLogic {
         // 自由選配需先按過「確認套用」才能加入購物車，避免主題／張數選好卻忘了套用就結帳。
         cartDisabled: isCustom && !customConfirmed,
         cartLabel: isCustom
-          ? (customConfirmed ? ((st.cart[it.id] && st.cart[it.id].presetMode === false) ? '已加入 ✓' : '加入購物車') : '請先確認套用')
-          : ((st.cart[it.id] && st.cart[it.id].presetMode === true) ? '已加入 ✓' : '加入購物車'),
+          ? (customConfirmed ? (Object.keys(st.cart).some(k => k.startsWith(it.id + '::custom_')) ? '已加入 ✓' : '加入購物車') : '請先確認套用')
+          : (st.cart[it.id + '::preset'] ? '已加入 ✓' : '加入購物車'),
         onAddToCart: () => {
           if (isCustom && !customConfirmed) return;
-          if (st.cart[it.id] && st.cart[it.id].presetMode === !isCustom) { this.homeRemoveFromCart(it.id); } else { this.homeAddToCart(it, vq, !isCustom, themeQtyMap); }
+          this.homeAddToCart(it, vq, !isCustom, themeQtyMap);
         },
         onToggleFav: () => this.homeToggleFav(it.id),
         ...this.homeBuildAdminFields(it),
