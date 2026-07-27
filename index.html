@@ -562,27 +562,28 @@
                         <span style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:700;color:var(--color-error-600);">{{ detailItem.variantTotalPrice }} 元</span>
                       </div>
                     </div>
-                  </div>
 
-
-                </div>
-
-                <div style="margin-top:12px;border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); padding: 12px 14px; background-color: var(--color-accent-50);">
-                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                    <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">範本管理</span>
-                    <span style="{{ detailItem.templateModifiedBadgeStyle }}font-size:var(--text-2xs);font-weight:700;color:#fff;background:var(--color-error-600);border-radius:var(--radius-full);padding:3px 10px;">⚠ 範本已修改，待重新產生 sample PDF</span>
-                    <div style="flex:1;"></div>
-                    <span style="font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--color-brand-300);background:#fff;cursor:pointer;" onClick="{{ detailItem.onOpenTemplateFolder }}">{{ detailItem.templateOpenBtnLabel }}</span>
-                    <span style="font-size:var(--text-2xs);font-weight:600;color:#fff;padding:6px 12px;border-radius:var(--radius-md);cursor:pointer;background:{{ detailItem.templateModifiedBtnBg }};" onClick="{{ detailItem.onToggleTemplateModified }}">{{ detailItem.templateModifiedBtnLabel }}</span>
-                  </div>
-                  <sc-if value="{{ detailItem.templateFound }}" hint-placeholder-val="{{ false }}">
-                    <div style="margin-top:8px;font-size:9px;color:var(--text-secondary);font-family:var(--font-mono);line-height:1.7;word-break:break-all;">
-                      <sc-for list="{{ detailItem.templateDirs }}" as="d" hint-placeholder-count="1">
-                        <div>📁 {{ d }}</div>
-                      </sc-for>
+                    <div style="margin-top:12px;border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); padding: 12px 14px; background-color: #fff;">
+                      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">範本管理</span>
+                        <span style="{{ detailItem.templateModifiedBadgeStyle }}font-size:var(--text-2xs);font-weight:700;color:#fff;background:var(--color-error-600);border-radius:var(--radius-full);padding:3px 10px;">⚠ 範本已修改，待重新產生 sample PDF</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                        <span style="font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--color-brand-300);background:#fff;cursor:pointer;" onClick="{{ detailItem.onOpenTemplateFolder }}">{{ detailItem.templateOpenBtnLabel }}</span>
+                        <span style="font-size:var(--text-2xs);font-weight:600;color:#fff;padding:6px 12px;border-radius:var(--radius-md);cursor:pointer;background:{{ detailItem.templateModifiedBtnBg }};" onClick="{{ detailItem.onToggleTemplateModified }}">{{ detailItem.templateModifiedBtnLabel }}</span>
+                      </div>
+                      <sc-if value="{{ detailItem.templateFound }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top:8px;font-size:9px;color:var(--text-secondary);font-family:var(--font-mono);line-height:1.7;word-break:break-all;">
+                          <sc-for list="{{ detailItem.templateDirs }}" as="d" hint-placeholder-count="1">
+                            <div>📁 {{ d }}</div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                      <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">「開啟範本資料夾」僅在後端運行於本機開發環境時有效；雲端部署上會退回顯示路徑供手動複製。</div>
                     </div>
-                  </sc-if>
-                  <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">「開啟範本資料夾」僅在後端運行於本機開發環境時有效；雲端部署上會退回顯示路徑供手動複製。</div>
+                  </div>
+
+
                 </div>
               </sc-if>
             </div>
