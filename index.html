@@ -566,6 +566,24 @@
 
 
                 </div>
+
+                <div style="margin-top:12px;border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); padding: 12px 14px; background-color: var(--color-accent-50);">
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">範本管理</span>
+                    <span style="{{ detailItem.templateModifiedBadgeStyle }}font-size:var(--text-2xs);font-weight:700;color:#fff;background:var(--color-error-600);border-radius:var(--radius-full);padding:3px 10px;">⚠ 範本已修改，待重新產生 sample PDF</span>
+                    <div style="flex:1;"></div>
+                    <span style="font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--color-brand-300);background:#fff;cursor:pointer;" onClick="{{ detailItem.onOpenTemplateFolder }}">{{ detailItem.templateOpenBtnLabel }}</span>
+                    <span style="font-size:var(--text-2xs);font-weight:600;color:#fff;padding:6px 12px;border-radius:var(--radius-md);cursor:pointer;background:{{ detailItem.templateModifiedBtnBg }};" onClick="{{ detailItem.onToggleTemplateModified }}">{{ detailItem.templateModifiedBtnLabel }}</span>
+                  </div>
+                  <sc-if value="{{ detailItem.templateFound }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:8px;font-size:9px;color:var(--text-secondary);font-family:var(--font-mono);line-height:1.7;word-break:break-all;">
+                      <sc-for list="{{ detailItem.templateDirs }}" as="d" hint-placeholder-count="1">
+                        <div>📁 {{ d }}</div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">「開啟範本資料夾」僅在後端運行於本機開發環境時有效；雲端部署上會退回顯示路徑供手動複製。</div>
+                </div>
               </sc-if>
             </div>
           </sc-if>
@@ -1269,9 +1287,9 @@
             <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
               <input id="saleEnabled" type="checkbox" checked="{{ saleEnabled }}" onChange="{{ onToggleSale }}" />啟用
             </label>
-            <label style="display:flex;align-items:center;gap:6px;">起<input id="saleStart" type="date" value="{{ saleStart }}" onBlur="{{ onSaleFieldBlur }}" style="border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" /></label>
-            <label style="display:flex;align-items:center;gap:6px;">訖<input id="saleEnd" type="date" value="{{ saleEnd }}" onBlur="{{ onSaleFieldBlur }}" style="border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" /></label>
-            <label style="display:flex;align-items:center;gap:6px;">折扣<input id="saleDiscount" type="number" min="0" max="100" value="{{ saleDiscount }}" onBlur="{{ onSaleFieldBlur }}" style="width:70px;border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" />%</label>
+            <label style="display:flex;align-items:center;gap:6px;">起<input id="saleStart" type="date" value="{{ saleStart }}" onChange="{{ onSaleFieldChange }}" style="border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" /></label>
+            <label style="display:flex;align-items:center;gap:6px;">訖<input id="saleEnd" type="date" value="{{ saleEnd }}" onChange="{{ onSaleFieldChange }}" style="border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" /></label>
+            <label style="display:flex;align-items:center;gap:6px;">折扣<input id="saleDiscount" type="number" min="0" max="100" value="{{ saleDiscount }}" onChange="{{ onSaleFieldChange }}" style="width:70px;border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;font-size:var(--text-xs);" />%</label>
           </div>
           <div style="font-size:var(--text-2xs);color:var(--text-muted);margin-top:8px;line-height:var(--leading-tc);">100% ＝ 原價、80% ＝ 八折、0% ＝ 免費期間。日期留空代表無限期。實際金額一律由後端計算。</div>
         </x-import>
@@ -2676,6 +2694,7 @@ class Component extends DCLogic {
       themePreviewShown: {},   // { [itemId]: boolean } — 是否顯示「已套用主題」預覽（取代靜態範本圖）；「隨機」主題每次點擊都會重新生成
       itemChecklistChecked: {},
       themeReminder: null,
+      templateInfo: {},        // { [itemId]: { loading, dirs, paths, modified, msg } } — 「開啟範本資料夾」/「標記已修改」狀態快取
     },
     config: { step: 1, theme: 'drink', selectedProducts: { a: true, b: true, c: false }, sheetCount: 3, adminPanelOpen: false },
     lock: { search: '' },
@@ -2820,7 +2839,20 @@ class Component extends DCLogic {
     alert(res.status === 403 ? '管理者金鑰無效，請重試' : (res.detail || '儲存失敗'));
   }
   _writeOk() {
-    alert('已儲存');
+    this._showToast('已儲存');
+  }
+  _showToast(msg) {
+    let el = document.getElementById('_adminToast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = '_adminToast';
+      el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--color-neutral-800);color:#fff;padding:8px 20px;border-radius:var(--radius-md);font-size:var(--text-xs);font-weight:600;z-index:9999;pointer-events:none;opacity:0;transition:opacity .3s;';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.style.opacity = '1';
+    clearTimeout(el._tid);
+    el._tid = setTimeout(() => { el.style.opacity = '0'; }, 1500);
   }
 
   // task 4 起改 POST /admin/lessons（後端為唯一權威，取代 writeJSON(LS_LESSONS, ...)）。
@@ -3242,12 +3274,70 @@ class Component extends DCLogic {
       }),
       checklistCategories,
       variantTotalPrice: it.variants.reduce((sum, v) => sum + variantPubPriceOf(it, v, st.itemVariantTier), 0),
+      ...(() => {
+        const tpl = st.templateInfo[it.id] || {};
+        const dirs = tpl.dirs || [];
+        return {
+          templateLoading: !!tpl.loading,
+          templateFound: dirs.length > 0,
+          templateDirs: dirs,
+          templateModified: !!tpl.modified,
+          templateModifiedBadgeStyle: tpl.modified ? '' : 'display:none;',
+          templateOpenBtnLabel: tpl.loading ? '查詢中…' : '📂 開啟範本資料夾',
+          onOpenTemplateFolder: () => this.openTemplateFolder(it.id),
+          onToggleTemplateModified: () => this.toggleTemplateModified(it.id, !tpl.modified),
+          templateModifiedBtnLabel: tpl.modified ? '✓ 已重新產生 sample PDF，清除提醒' : '⚠ 標記範本已修改（待重新產生 sample PDF）',
+          templateModifiedBtnBg: tpl.modified ? 'var(--color-success-600)' : 'var(--color-warning-600)',
+        };
+      })(),
     };
   }
 
   homeOpenDetail(id) {
     this.patch('home', { previewIndex: 0, previewOverride: {} });
     this.goScreen('home', { item: id });   // Wrinkle 2：詳情由 hash param 驅動，重整可停留
+    if (readAdmin()) this.loadTemplateInfo(id);   // 進詳情頁時預先讀取範本路徑/已修改旗標，供「題型管理工具」顯示
+  }
+
+  // 題型管理工具：範本路徑查詢／開啟資料夾／標記已修改（見 backend/template_registry.py、template_flags.py）
+  async loadTemplateInfo(itemId) {
+    const key = getAdminKey();
+    if (!key) return;
+    this.setState(s => ({ home: { ...s.home, templateInfo: { ...s.home.templateInfo, [itemId]: { ...(s.home.templateInfo[itemId] || {}), loading: true } } } }));
+    try {
+      const r = await fetch(API_URL + '/admin/template-info/' + encodeURIComponent(itemId), { headers: { 'X-Admin-Key': key } });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      this.setState(s => ({ home: { ...s.home, templateInfo: { ...s.home.templateInfo, [itemId]: {
+        loading: false, dirs: data.dirs || [], paths: data.paths || [], modified: !!data.modified, found: !!data.found,
+      } } } }));
+    } catch (e) {
+      this.setState(s => ({ home: { ...s.home, templateInfo: { ...s.home.templateInfo, [itemId]: { loading: false, error: true, dirs: [], paths: [] } } } }));
+    }
+  }
+
+  async openTemplateFolder(itemId) {
+    const key = getAdminKey() || ensureAdminKey();
+    if (!key) return;
+    try {
+      const r = await fetch(API_URL + '/admin/template-open/' + encodeURIComponent(itemId), { method: 'POST', headers: { 'X-Admin-Key': key } });
+      if (r.status === 403) { clearAdminKey(); this._showToast('管理者金鑰無效，請重試'); return; }
+      const data = await r.json();
+      this.setState(s => ({ home: { ...s.home, templateInfo: { ...s.home.templateInfo, [itemId]: {
+        ...(s.home.templateInfo[itemId] || {}), dirs: data.dirs || [], paths: data.paths || [], found: !!data.found,
+      } } } }));
+      if (data.opened) this._showToast('已開啟範本資料夾');
+      else this._showToast(data.dirs && data.dirs.length ? '無法自動開啟（非本機後端），路徑已顯示於下方供複製' : '找不到此題型的範本路徑');
+    } catch (e) {
+      this._showToast('連線失敗，無法開啟資料夾');
+    }
+  }
+
+  async toggleTemplateModified(itemId, modified) {
+    const res = await adminPost('/admin/template-flag', { type_id: itemId, modified });
+    if (!res.ok) { this._writeError(res); return; }
+    this.setState(s => ({ home: { ...s.home, templateInfo: { ...s.home.templateInfo, [itemId]: { ...(s.home.templateInfo[itemId] || {}), modified } } } }));
+    this._showToast(modified ? '已標記「範本已修改」，待重新產生 sample PDF' : '已清除標記');
   }
 
   homeSetPurchaseMode(itemId, mode) {
@@ -4405,7 +4495,7 @@ class Component extends DCLogic {
         code: it.code, name: it.name,
         statusLabel: isLocked ? '已鎖定' : '已解鎖',
         statusBg: isLocked ? 'var(--color-neutral-500)' : 'var(--color-success-500)',
-        onOpen: () => this.goScreen('config', { code: it.id }),
+        onOpen: () => this.homeOpenDetail(it.id),
       };
     };
 
@@ -4444,7 +4534,7 @@ class Component extends DCLogic {
         num: idx + 1,
         code: it.code,
         name: it.name,
-        onOpen: () => this.goScreen('config', { code: it.id }),
+        onOpen: () => this.homeOpenDetail(it.id),
         onPass: (e) => { e.stopPropagation(); this.qaSetStatus(it.id, status === 'pass' ? 'unreviewed' : 'pass'); },
         onWarn: (e) => { e.stopPropagation(); this.qaSetStatus(it.id, status === 'warn' ? 'unreviewed' : 'warn'); },
         onFail: (e) => { e.stopPropagation(); this.qaSetStatus(it.id, status === 'fail' ? 'unreviewed' : 'fail'); },
@@ -4580,7 +4670,7 @@ class Component extends DCLogic {
         sellPrice,
         unitPrice,
         genFee,
-        onOpen: () => this.goScreen('config', { code: it.id }),
+        onOpen: () => this.homeOpenDetail(it.id),
         tierLabel: (TIER_DEFS.find(t => t.key === tier) || TIER_DEFS[0]).label,
         tierPillStyle: (() => { const t = TIER_DEFS.find(td => td.key === tier) || TIER_DEFS[0]; return `flex-shrink:0;font-size:9px;font-weight:700;color:#fff;background:${t.color};border-radius:var(--radius-full);padding:2px 9px;cursor:pointer;border:none;`; })(),
         onTierCycle: async (e) => {
@@ -4713,7 +4803,7 @@ class Component extends DCLogic {
           discount: document.getElementById('saleDiscount').value,
         });
       },
-      onSaleFieldBlur: () => {
+      onSaleFieldChange: () => {
         this.saveSale({
           enabled: document.getElementById('saleEnabled').checked,
           start: document.getElementById('saleStart').value,
