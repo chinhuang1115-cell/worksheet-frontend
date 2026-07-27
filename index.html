@@ -3327,7 +3327,7 @@ class Component extends DCLogic {
       this.setState(s => ({ home: { ...s.home, templateInfo: { ...s.home.templateInfo, [itemId]: {
         ...(s.home.templateInfo[itemId] || {}), dirs: data.dirs || [], paths: data.paths || [], found: !!data.found,
       } } } }));
-      if (data.opened) this._showToast('已開啟範本資料夾');
+      if (data.opened) this._showToast(data.selected ? '已開啟資料夾並選取範本檔案' : '已開啟範本資料夾');
       else this._showToast(data.dirs && data.dirs.length ? '無法自動開啟（非本機後端），路徑已顯示於下方供複製' : '找不到此題型的範本路徑');
     } catch (e) {
       this._showToast('連線失敗，無法開啟資料夾');
