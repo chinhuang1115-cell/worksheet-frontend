@@ -567,19 +567,21 @@
                       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">範本管理</span>
                         <span style="{{ detailItem.templateModifiedBadgeStyle }}font-size:var(--text-2xs);font-weight:700;color:#fff;background:var(--color-error-600);border-radius:var(--radius-full);padding:3px 10px;">⚠ 範本已修改，待重新產生 sample PDF</span>
-                      </div>
-                      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;">
-                        <span style="font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--color-brand-300);background:#fff;cursor:pointer;" onClick="{{ detailItem.onOpenTemplateFolder }}">{{ detailItem.templateOpenBtnLabel }}</span>
+                        <div style="flex:1;"></div>
                         <span style="font-size:var(--text-2xs);font-weight:600;color:#fff;padding:6px 12px;border-radius:var(--radius-md);cursor:pointer;background:{{ detailItem.templateModifiedBtnBg }};" onClick="{{ detailItem.onToggleTemplateModified }}">{{ detailItem.templateModifiedBtnLabel }}</span>
                       </div>
-                      <sc-if value="{{ detailItem.templateFound }}" hint-placeholder-val="{{ false }}">
-                        <div style="margin-top:8px;font-size:9px;color:var(--text-secondary);font-family:var(--font-mono);line-height:1.7;word-break:break-all;">
-                          <sc-for list="{{ detailItem.templateDirs }}" as="d" hint-placeholder-count="1">
-                            <div>📁 {{ d }}</div>
-                          </sc-for>
-                        </div>
+                      <sc-if value="{{ detailItem.templateFileCountLabel }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top:8px;font-size:9px;color:var(--text-muted);">{{ detailItem.templateFileCountLabel }}</div>
                       </sc-if>
-                      <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">「開啟範本資料夾」僅在後端運行於本機開發環境時有效；雲端部署上會退回顯示路徑供手動複製。</div>
+                      <div style="margin-top:8px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden;">
+                        <sc-for list="{{ detailItem.templateFileRows }}" as="tf" hint-placeholder-count="2">
+                          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 10px;border-top:1px solid var(--border-subtle);">
+                            <span style="font-size:9px;font-family:var(--font-mono);color:var(--text-secondary);word-break:break-all;">{{ tf.path }}</span>
+                            <span style="flex-shrink:0;font-size:9px;font-weight:600;color:var(--text-brand);padding:4px 10px;border-radius:var(--radius-sm);border:1px solid var(--color-brand-300);background:#fff;cursor:pointer;white-space:nowrap;" onClick="{{ tf.onClick }}">📂 開啟並選取</span>
+                          </div>
+                        </sc-for>
+                      </div>
+                      <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">僅在後端運行於本機開發環境時能自動開啟並選取；雲端部署上會靜默失敗，路徑仍會顯示供手動複製。</div>
                     </div>
                   </div>
 
@@ -3277,15 +3279,22 @@ class Component extends DCLogic {
       variantTotalPrice: it.variants.reduce((sum, v) => sum + variantPubPriceOf(it, v, st.itemVariantTier), 0),
       ...(() => {
         const tpl = st.templateInfo[it.id] || {};
-        const dirs = tpl.dirs || [];
+        const paths = tpl.paths || [];
+        // 多版型題型（分分看、十以內減法…）各版型是各自獨立的範本檔案，不能只開第一個就了事；
+        // 依 paths 索引逐一列出，各自一顆「開啟並選取」按鈕，呼叫時把 index 傳給後端
+        // 對應 /admin/template-open/{id}?index=N（見 openTemplateFolder(itemId, index)）。
+        const templateFileRows = paths.map((p, idx) => {
+          const filename = p.split(/[\\/]/).pop() || p;
+          const label = filename.replace(/\.docx$/i, '').replace(/_/g, ' ');
+          return { path: p, label, onClick: () => this.openTemplateFolder(it.id, idx) };
+        });
         return {
           templateLoading: !!tpl.loading,
-          templateFound: dirs.length > 0,
-          templateDirs: dirs,
+          templateFound: paths.length > 0,
+          templateFileRows,
+          templateFileCountLabel: paths.length > 1 ? `此題型共 ${paths.length} 個版型範本，各自開啟並選取：` : '',
           templateModified: !!tpl.modified,
           templateModifiedBadgeStyle: tpl.modified ? '' : 'display:none;',
-          templateOpenBtnLabel: tpl.loading ? '查詢中…' : '📂 開啟範本資料夾',
-          onOpenTemplateFolder: () => this.openTemplateFolder(it.id),
           onToggleTemplateModified: () => this.toggleTemplateModified(it.id, !tpl.modified),
           templateModifiedBtnLabel: tpl.modified ? '✓ 已重新產生 sample PDF，清除提醒' : '⚠ 標記範本已修改（待重新產生 sample PDF）',
           templateModifiedBtnBg: tpl.modified ? 'var(--color-success-600)' : 'var(--color-warning-600)',
@@ -3317,11 +3326,11 @@ class Component extends DCLogic {
     }
   }
 
-  async openTemplateFolder(itemId) {
+  async openTemplateFolder(itemId, index = 0) {
     const key = getAdminKey() || ensureAdminKey();
     if (!key) return;
     try {
-      const r = await fetch(API_URL + '/admin/template-open/' + encodeURIComponent(itemId), { method: 'POST', headers: { 'X-Admin-Key': key } });
+      const r = await fetch(API_URL + '/admin/template-open/' + encodeURIComponent(itemId) + '?index=' + index, { method: 'POST', headers: { 'X-Admin-Key': key } });
       if (r.status === 403) { clearAdminKey(); this._showToast('管理者金鑰無效，請重試'); return; }
       const data = await r.json();
       this.setState(s => ({ home: { ...s.home, templateInfo: { ...s.home.templateInfo, [itemId]: {
