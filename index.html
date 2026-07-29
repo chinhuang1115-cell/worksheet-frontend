@@ -1936,7 +1936,7 @@
 /* ══ 共用常數與 helpers（各 screen port 時如有新常數往這裡加）══ */
 // 後端 read-path plumbing（task 3）：API_URL + 開機 fetch /locks /pricing /bundles 存入模組層 BACKEND。
 // 此階段只負責 fetch + 降級橫幅，尚未把 pricing/lock/bundle 的 reader 改讀 BACKEND（見 task 4-5）。
-const API_URL = window.WORKSHEET_API_URL || 'http://localhost:8001';
+const API_URL = window.WORKSHEET_API_URL || 'https://web-production-0542f.up.railway.app';
 
 const ASSETS_BASE_URL = window.WORKSHEET_ASSETS_URL || '.';
 
@@ -2081,7 +2081,7 @@ window._gallerySaveEdit = async (theme, originalName) => {
   const priceVal = parseInt(document.getElementById('gedit_price')?.value);
   const minVal = parseInt(document.getElementById('gedit_min')?.value);
   const maxVal = parseInt(document.getElementById('gedit_max')?.value);
-  if (counterVal !== undefined) updates.counter = counterVal;
+  if (counterVal) updates.counter = counterVal;
   if (!isNaN(priceVal)) updates.default_price = priceVal;
   if (!isNaN(minVal)) updates.price_min = minVal;
   if (!isNaN(maxVal)) updates.price_max = maxVal;
