@@ -2019,5 +2019,121 @@ window.WORKSHEET_REGISTRY = [
       { "key": "compare-qty-text",    "label": "簡單文字圖" },
       { "key": "compare-qty-gesture", "label": "手勢" }
     ]
+  },
+  {
+    "id": "addsub-v1",
+    "code": "N103",
+    "grade": "1",
+    "name": "加減關係＿個位數",
+    "ops": ["add", "sub"],
+    "keywords": ["addsub"],
+    "desc": "看圖數一數，同一組物品同時寫出加法和減法算式，理解加減互逆關係。數字範圍 1-9。",
+    "sortKey": [5, 1, 1],
+    "home": {
+      "icon": "🔄",
+      "sub": "加法 ↔ 減法",
+      "desc": "用同一組物品同時練習加法和減法，理解「加」和「減」是一體兩面。",
+      "features": ["看圖寫加法和減法算式", "個位數範圍（1-9）", "共有/剩下情境交替"]
+    },
+    "diffInfo": {
+      "grade": "一年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N103",
+      "desc": "加減互逆關係，個位數，看圖列式。"
+    },
+    "sample": [
+      { "pdf": "assets/addsub_v1_beads_sample.pdf", "name": "加減關係_個位數_小珠珠.pdf", "label": "小珠珠", "key": "addsub-v1-beads" },
+      { "pdf": "assets/addsub_v1_animal_sample.pdf", "name": "加減關係_個位數_小動物.pdf", "label": "小動物", "key": "addsub-v1-animal" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "addsub-v1-beads", "label": "小珠珠" },
+      { "key": "addsub-v1-animal", "label": "小動物" }
+    ]
+  },
+  {
+    "id": "addsub-v2",
+    "code": "N103",
+    "grade": "1",
+    "name": "加減關係＿十以上的數",
+    "ops": ["add", "sub"],
+    "keywords": ["addsub"],
+    "desc": "十以上的數（11-19），拆成「1個十＋N個一」，同時寫出加法和減法算式。",
+    "sortKey": [5, 1, 2],
+    "home": {
+      "icon": "🔄",
+      "sub": "十位分解",
+      "desc": "把 11-19 的數拆成「1 個十」和「幾個一」，寫出加法和減法算式。",
+      "features": ["十位分解概念", "數字範圍 11-19", "方框＋圓圈圖示"]
+    },
+    "diffInfo": {
+      "grade": "一年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N103",
+      "desc": "加減互逆關係，十以上的數（11-19），十位分解。"
+    },
+    "sample": [
+      { "pdf": "assets/addsub_v2_coindraw_sample.pdf", "name": "加減關係_十以上_硬幣簡圖.pdf", "label": "硬幣簡圖", "key": "addsub-v2-coindraw" },
+      { "pdf": "assets/addsub_v2_coinphoto_sample.pdf", "name": "加減關係_十以上_硬幣照片.pdf", "label": "硬幣照片", "key": "addsub-v2-coinphoto" },
+      { "pdf": "assets/addsub_v2_food_sample.pdf", "name": "加減關係_十以上_食物.pdf", "label": "食物", "key": "addsub-v2-food" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "addsub-v2-coindraw", "label": "硬幣簡圖" },
+      { "key": "addsub-v2-coinphoto", "label": "硬幣照片" },
+      { "key": "addsub-v2-food", "label": "食物" }
+    ]
+  },
+  {
+    "id": "addsub-v3",
+    "code": "N103",
+    "grade": "1",
+    "name": "加減關係＿十以上的分和",
+    "ops": ["add", "sub"],
+    "keywords": ["addsub"],
+    "desc": "二位數分和（20-60），用十位條和個位塊表示數量，同時寫出加法和減法算式。",
+    "sortKey": [5, 1, 3],
+    "home": {
+      "icon": "🔄",
+      "sub": "二位數分和",
+      "desc": "把 20-60 的數拆成兩部分，用積木或糖果圖示，寫出加法和減法算式。",
+      "features": ["二位數分和", "數字範圍 20-60", "十位條＋個位塊"]
+    },
+    "diffInfo": {
+      "grade": "一年級",
+      "level": "進階",
+      "levelColor": "#f59e0b",
+      "code": "N103",
+      "desc": "加減互逆關係，二位數分和（20-60），十位條＋個位塊表示。"
+    },
+    "sample": [
+      { "pdf": "assets/addsub_v3_blocks_sample.pdf", "name": "加減關係_分和_積木.pdf", "label": "積木", "key": "addsub-v3-blocks" },
+      { "pdf": "assets/addsub_v3_candy_sample.pdf", "name": "加減關係_分和_糖果.pdf", "label": "糖果", "key": "addsub-v3-candy" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "addsub-v3-blocks", "label": "積木" },
+      { "key": "addsub-v3-candy", "label": "糖果" }
+    ]
   }
 ];
