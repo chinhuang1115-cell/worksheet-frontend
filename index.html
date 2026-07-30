@@ -2378,6 +2378,9 @@ function adaptRegistry(reg) {
   });
 }
 const ITEMS = adaptRegistry(window.WORKSHEET_REGISTRY);
+// registry.js 陣列順序＝新增題型附加的順序（舊到新），供「最新」排序使用；
+// 不可用 id 字串比較（如 addsub-v1 字母序在很多舊題型之前，會被誤判成「不是最新」）。
+const _ID_ORDER = new Map(ITEMS.map((it, i) => [it.id, i]));
 const _CHILD_VARIANT_IDS = new Set();
 ITEMS.forEach(it => { if (it.variants.length > 1) it.variants.forEach(v => { if (v.key !== it.id) _CHILD_VARIANT_IDS.add(v.key); }); });
 const TOP_ITEMS = ITEMS.filter(it => !_CHILD_VARIANT_IDS.has(it.id));
@@ -4085,7 +4088,7 @@ class Component extends DCLogic {
       const order = { '進階': 0, '中等': 1, '基礎': 2 };
       filtered = [...filtered].sort((a, b) => order[a.badgeLabel] - order[b.badgeLabel]);
     } else if (st.sort === 'newest') {
-      filtered = [...filtered].sort((a, b) => b.id.localeCompare(a.id));
+      filtered = [...filtered].sort((a, b) => _ID_ORDER.get(b.id) - _ID_ORDER.get(a.id));
     }
 
     const gradeLabelOf = (g) => g === 1 ? '一年級' : g === 2 ? '二年級' : g === 3 ? '三年級' : '';
