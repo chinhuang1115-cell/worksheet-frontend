@@ -2183,5 +2183,43 @@ window.WORKSHEET_REGISTRY = [
       { "key": "addsub-mixed-coupon-toy", "label": "折價券（玩具）" },
       { "key": "addsub-mixed-coupon-food", "label": "折價券（食物）" }
     ]
+  },
+  {
+    "id": "sqcm",
+    "code": "N303",
+    "name": "幾平方公分＿數格子（面積）",
+    "grade": 3,
+    "ops": [],
+    "keywords": ["area", "面積", "平方公分"],
+    "desc": "在方格紙上數格子計算圖形面積，比較不同圖形的面積大小。",
+    "sortKey": [9, 0, 1],
+    "home": {
+      "icon": "📐",
+      "sub": "數格子算面積",
+      "desc": "在方格紙上數格子計算圖形面積，比較不同圖形的面積大小。",
+      "features": ["每次隨機", "數格子", "三年級"]
+    },
+    "diffInfo": {
+      "grade": "三年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N303",
+      "desc": "數格子計算面積，比較面積大小。"
+    },
+    "sample": [
+      { "pdf": "assets/sqcm_same_sample.pdf", "name": "幾平方公分_一樣大.pdf", "label": "一樣大", "key": "sqcm-same" },
+      { "pdf": "assets/sqcm_compare_sample.pdf", "name": "幾平方公分_最大最小.pdf", "label": "最大最小", "key": "sqcm-compare" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "sqcm-same", "label": "一樣大" },
+      { "key": "sqcm-compare", "label": "最大最小" }
+    ]
   }
 ];
