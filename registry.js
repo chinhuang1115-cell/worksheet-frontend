@@ -2135,5 +2135,53 @@ window.WORKSHEET_REGISTRY = [
       { "key": "addsub-v3-blocks", "label": "積木" },
       { "key": "addsub-v3-candy", "label": "糖果" }
     ]
+  },
+  {
+    "id": "addsub-mixed",
+    "code": "N206",
+    "grade": "2",
+    "name": "加減混合＿兩步驟（先加再減）",
+    "ops": ["add", "sub"],
+    "keywords": ["addsub"],
+    "desc": "兩步驟加減混合，先算加法再算減法，搭配撲滿畫圖、手勢操作或購物折價券情境。",
+    "sortKey": [5, 2, 2],
+    "home": {
+      "icon": "🔄",
+      "sub": "A + B − C",
+      "desc": "兩步驟加減混合，練習先加後減的計算流程",
+      "features": ["撲滿劃記", "手勢操作", "折價券應用"]
+    },
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N206",
+      "desc": "兩步驟加減混合（先加再減），搭配錢幣教具輔助"
+    },
+    "sample": [
+      { "pdf": "assets/addsub_mixed_tally_nocarry_sample.pdf", "name": "加減混合_劃記_不進位.pdf", "label": "劃記（不進位）", "key": "addsub-mixed-tally-nocarry" },
+      { "pdf": "assets/addsub_mixed_tally_carry_sample.pdf", "name": "加減混合_劃記_進位.pdf", "label": "劃記（進位）", "key": "addsub-mixed-tally-carry" },
+      { "pdf": "assets/addsub_mixed_gesture_addsub_sample.pdf", "name": "加減混合_手勢_先加再減.pdf", "label": "手勢（先加再減）", "key": "addsub-mixed-gesture-addsub" },
+      { "pdf": "assets/addsub_mixed_gesture_subadd_sample.pdf", "name": "加減混合_手勢_先減再加.pdf", "label": "手勢（先減再加）", "key": "addsub-mixed-gesture-subadd" },
+      { "pdf": "assets/addsub_mixed_gesture_blank_sample.pdf", "name": "加減混合_手勢_空白練習.pdf", "label": "手勢（空白練習）", "key": "addsub-mixed-gesture-blank" },
+      { "pdf": "assets/addsub_mixed_coupon_toy_sample.pdf", "name": "加減混合_折價券_玩具.pdf", "label": "折價券（玩具）", "key": "addsub-mixed-coupon-toy" },
+      { "pdf": "assets/addsub_mixed_coupon_food_sample.pdf", "name": "加減混合_折價券_食物.pdf", "label": "折價券（食物）", "key": "addsub-mixed-coupon-food" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "addsub-mixed-tally-nocarry", "label": "劃記（不進位）" },
+      { "key": "addsub-mixed-tally-carry", "label": "劃記（進位）" },
+      { "key": "addsub-mixed-gesture-addsub", "label": "手勢（先加再減）" },
+      { "key": "addsub-mixed-gesture-subadd", "label": "手勢（先減再加）" },
+      { "key": "addsub-mixed-gesture-blank", "label": "手勢（空白練習）" },
+      { "key": "addsub-mixed-coupon-toy", "label": "折價券（玩具）" },
+      { "key": "addsub-mixed-coupon-food", "label": "折價券（食物）" }
+    ]
   }
 ];
