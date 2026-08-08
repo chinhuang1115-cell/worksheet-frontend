@@ -2221,5 +2221,72 @@ window.WORKSHEET_REGISTRY = [
       { "key": "sqcm-same", "label": "一樣大" },
       { "key": "sqcm-compare", "label": "最大最小" }
     ]
+  },
+  {
+    "id": "zonghe-3a",
+    "code": "Z301",
+    "grade": "3",
+    "name": "綜合練習＿四位數加減（三上）",
+    "ops": [
+      "add",
+      "sub"
+    ],
+    "keywords": [
+      "綜合練習",
+      "跨單元",
+      "複習卷",
+      "四位數",
+      "加法",
+      "減法",
+      "退位"
+    ],
+    "desc": "跨單元綜合複習卷，同一張混合四位數不進位加法、不退位減法、四位數退位減法（畫錢幣）與三位數退位減法（畫記），題目交錯排列，訓練學生自行辨識題型並選擇策略。",
+    "sortKey": [
+      2,
+      4,
+      9
+    ],
+    "home": {
+      "icon": "📚",
+      "sub": "跨單元綜合複習",
+      "desc": "同一張學習單混合多個單元的題型，題目交錯排列，學生必須自行判斷每題該用哪一種算法，適合單元教完後的總複習。",
+      "features": [
+        "跨單元混合題型",
+        "題目交錯不連續",
+        "兩種難度配置"
+      ]
+    },
+    "diffInfo": {
+      "grade": "三年級",
+      "level": "綜合",
+      "levelColor": "#8b5cf6",
+      "code": "Z301",
+      "desc": "三上四位數加減的跨單元綜合複習，混合不進位加法、不退位減法、退位減法（畫錢幣／畫記）四種題型，題目交錯排列。"
+    },
+    "sample": [
+      {
+        "pdf": "assets/zonghe-3a-r01_sample.pdf",
+        "name": "綜合練習_四位數加減_A_範本.pdf",
+        "label": "綜合練習 A",
+        "key": "zonghe-3a-r01"
+      },
+      {
+        "pdf": "assets/zonghe-3a-r02_sample.pdf",
+        "name": "綜合練習_四位數加減_B_範本.pdf",
+        "label": "綜合練習 B（加強退位）",
+        "key": "zonghe-3a-r02"
+      }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": true,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "zonghe-3a-r01", "label": "綜合練習 A" },
+      { "key": "zonghe-3a-r02", "label": "綜合練習 B（加強退位）" }
+    ]
   }
 ];
