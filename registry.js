@@ -2281,7 +2281,7 @@ window.WORKSHEET_REGISTRY = [
       "panel": null,
       "themeSet": null,
       "showTheme": false,
-      "prices": true,
+      "prices": false,
       "interactive": false
     },
     "variants": [
