@@ -850,10 +850,17 @@
                 </div>
               </sc-if>
               <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一頁</span>
+                <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一張</span>
                 <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
-                <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一頁 ›</span>
+                <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一張 ›</span>
               </div>
+              <sc-if value="{{ detailItem.showPdfPager }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:var(--text-xs);color:{{ detailItem.pdfPrevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPdfPage }}">‹ 上一頁</span>
+                  <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.pdfPageLabel }}</span>
+                  <span style="font-size:var(--text-xs);color:{{ detailItem.pdfNextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPdfPage }}">下一頁 ›</span>
+                </div>
+              </sc-if>
               </div>
             </x-import>
           </div>
@@ -1978,6 +1985,34 @@ async function _loadPdfPage1(pdfUrl) {
   }
 }
 
+// 詳情頁預覽專用：渲染 PDF 全部頁面。刻意與 _pdfPage1Cache 分開兩套快取，
+// 避免影響首頁縮圖、設定流程精靈、出版品編輯 modal 等既有的單頁取用點。
+const _pdfPagesCache = {};    // pdfUrl -> [dataURL, ...] | 'ERROR'
+const _pdfPagesInflight = {}; // pdfUrl -> true（防止重複觸發載入）
+
+async function _loadPdfAllPages(pdfUrl) {
+  if (_pdfPagesCache[pdfUrl] || _pdfPagesInflight[pdfUrl]) return;
+  _pdfPagesInflight[pdfUrl] = true;
+  try {
+    const pdfjsLib = await _getPdfjsLib();
+    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+    const out = [];
+    for (let n = 1; n <= pdf.numPages; n++) {
+      const page = await pdf.getPage(n);
+      const vp = page.getViewport({ scale: 1.5 });
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width; canvas.height = vp.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      out.push(canvas.toDataURL('image/jpeg', 0.9));
+    }
+    _pdfPagesCache[pdfUrl] = out;
+  } catch (e) {
+    _pdfPagesCache[pdfUrl] = 'ERROR';
+  } finally {
+    delete _pdfPagesInflight[pdfUrl];
+  }
+}
+
 async function _renderPdfBlobFirstPage(blob) {
   const pdfjsLib = await _getPdfjsLib();
   const arrayBuffer = await blob.arrayBuffer();
@@ -2847,6 +2882,7 @@ class Component extends DCLogic {
       variantQty: {},
       itemMode: {},
       previewIndex: 0,
+      previewPdfPage: 0,
       previewOverride: {},
       checkoutMsg: '',
       downloading: false,
@@ -3498,7 +3534,7 @@ class Component extends DCLogic {
   }
 
   homeOpenDetail(id) {
-    this.patch('home', { previewIndex: 0, previewOverride: {} });
+    this.patch('home', { previewIndex: 0, previewOverride: {}, previewPdfPage: 0 });
     this.goScreen('home', { item: id });   // Wrinkle 2：詳情由 hash param 驅動，重整可停留
     if (readAdmin()) this.loadTemplateInfo(id);   // 進詳情頁時預先讀取範本路徑/已修改旗標，供「題型管理工具」顯示
   }
@@ -3702,7 +3738,7 @@ class Component extends DCLogic {
   }
 
   homePreviewVariant(itemId, key) {
-    this.setState(s => ({ home: { ...s.home, previewOverride: { ...s.home.previewOverride, [itemId]: key } } }));
+    this.setState(s => ({ home: { ...s.home, previewPdfPage: 0, previewOverride: { ...s.home.previewOverride, [itemId]: key } } }));
   }
 
   homeStepPreview(itemId, delta) {
@@ -3711,7 +3747,14 @@ class Component extends DCLogic {
       const vq = s.home.variantQty[itemId] || presetQtyOf(item);
       const flat = buildFlatPages(item, vq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const next = Math.max(0, Math.min(flat.length - 1, s.home.previewIndex + delta));
-      return { home: { ...s.home, previewIndex: next, previewOverride: { ...s.home.previewOverride, [itemId]: null } } };
+      return { home: { ...s.home, previewIndex: next, previewPdfPage: 0, previewOverride: { ...s.home.previewOverride, [itemId]: null } } };
+    });
+  }
+
+  homeStepPdfPage(itemId, delta) {
+    this.setState(s => {
+      const next = Math.max(0, s.home.previewPdfPage + delta);
+      return { home: { ...s.home, previewPdfPage: next } };
     });
   }
 
@@ -4237,11 +4280,14 @@ class Component extends DCLogic {
       const activeVariant = activeKey ? it.variants.find(v => v.key === activeKey) : null;
       const previewSample = activeKey ? sampleFor(it, activeKey) : null;
       const previewPdfUrl = previewSample && previewSample.pdf ? (ASSETS_BASE_URL + '/' + previewSample.pdf) : null;
-      if (previewPdfUrl && !_pdfPage1Cache[previewPdfUrl] && !_pdfPage1Inflight[previewPdfUrl]) {
-        _loadPdfPage1(previewPdfUrl).then(() => this.forceUpdate());
+      if (previewPdfUrl && !_pdfPagesCache[previewPdfUrl] && !_pdfPagesInflight[previewPdfUrl]) {
+        _loadPdfAllPages(previewPdfUrl).then(() => this.forceUpdate());
       }
-      const previewImgSrc = previewPdfUrl && _pdfPage1Cache[previewPdfUrl] && _pdfPage1Cache[previewPdfUrl] !== 'ERROR'
-        ? _pdfPage1Cache[previewPdfUrl] : null;
+      const _pdfPages = previewPdfUrl && Array.isArray(_pdfPagesCache[previewPdfUrl])
+        ? _pdfPagesCache[previewPdfUrl] : null;
+      const pdfPageCount = _pdfPages ? _pdfPages.length : 0;
+      const pdfPageIdx = Math.min(st.previewPdfPage || 0, Math.max(0, pdfPageCount - 1));
+      const previewImgSrc = _pdfPages ? _pdfPages[pdfPageIdx] : null;
       const lr = lessonsRangeOf(it, st.itemVariantLessons);
       // 主題選單兩種購買方式下都可挑選／預覽；系統預設實際出貨仍固定隨機
       // （見 homeCommitAddToCart），這裡的選擇只用來讓使用者預覽套用效果。
@@ -4361,7 +4407,7 @@ class Component extends DCLogic {
         onSetPreset: () => this.homeSetPurchaseMode(it.id, 'preset'),
         onSetCustom: () => this.homeSetPurchaseMode(it.id, 'custom'),
         variants,
-        previewLabel: overrideKey ? '版型預覽' : (totalPages > 0 ? `${idx + 1} / ${totalPages} 頁` : '0 / 0 頁'),
+        previewLabel: overrideKey ? '版型預覽' : (totalPages > 0 ? `${idx + 1} / ${totalPages} 張` : '0 / 0 張'),
         previewVariantLabel: activeVariant ? activeVariant.label : '',
         previewImgSrc,
         finalPreviewImgSrc: themePreviewImgSrc || previewImgSrc,
@@ -4380,6 +4426,15 @@ class Component extends DCLogic {
         nextColor: idx < totalPages - 1 ? 'var(--text-brand)' : 'var(--text-muted)',
         onPrevPage: () => this.homeStepPreview(it.id, -1),
         onNextPage: () => this.homeStepPreview(it.id, 1),
+        // PDF 頁數翻頁列：只在該版型的 sample 真的多於 1 頁時顯示，
+        // 所以現有單頁題型畫面完全不變。套用主題即時預覽時隱藏
+        // （/preview-pdf 一律裁成 1 頁，沒有頁可翻）。
+        showPdfPager: pdfPageCount > 1 && !themePreviewImgSrc,
+        pdfPageLabel: `${pdfPageIdx + 1} / ${pdfPageCount} 頁`,
+        pdfPrevColor: pdfPageIdx > 0 ? 'var(--text-brand)' : 'var(--text-muted)',
+        pdfNextColor: pdfPageIdx < pdfPageCount - 1 ? 'var(--text-brand)' : 'var(--text-muted)',
+        onPrevPdfPage: () => this.homeStepPdfPage(it.id, -1),
+        onNextPdfPage: () => this.homeStepPdfPage(it.id, 1),
         favFill: st.favorites[it.id] ? 'var(--color-error-500)' : 'none',
         // 自由選配需先按過「確認套用」才能加入購物車，避免主題／張數選好卻忘了套用就結帳。
         cartDisabled: isCustom && !customConfirmed,
