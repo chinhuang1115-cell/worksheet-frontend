@@ -2318,6 +2318,9 @@ function _categoryOf(t) {
   // 否則 huachu4add（ops 含 add）、tuiwei4sub（ops 含 sub）等錢幣情境題型會被歸到 add/sub，
   // 導致首頁「🪙 錢幣情境」篩選與出版品題型庫的 coin 分類永遠比對不到任何項目。
   const kw = (t && t.keywords) || [];
+  // 跨單元綜合複習卷：ops 含 add+sub 會被誤判成加法，需在 ops 判斷之前攔截。
+  // 用關鍵字判斷而非 id 前綴，比照下方 coin 分類的既有慣例。
+  if (kw.includes('綜合練習')) return 'zonghe';
   if (kw.includes('coinvalue') || kw.includes('coincarry')) return 'coin';
   const o = (t && t.ops) || [];
   if (o.includes('div')) return 'div';
@@ -2666,6 +2669,7 @@ const CATS = [
   { key:'div', label:'➗ 除法' },
   { key:'coin', label:'🪙 錢幣情境' },
   { key:'count', label:'🔢 數與計數' },
+  { key:'zonghe', label:'📚 綜合練習' },
 ];
 const GRADES = [
   { key:'all', label:'全部' },
