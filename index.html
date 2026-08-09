@@ -1359,6 +1359,7 @@
                       <span style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--color-accent-700);background:var(--color-accent-50);border-radius:var(--radius-full);padding:1px 7px;">共 {{ g.count }} 版</span>
                     </div>
                     <span style="font-family:var(--font-mono);font-size:var(--text-xs);font-weight:700;color:var(--color-error-600);width:100px;text-align:right;flex-shrink:0;">{{ g.priceLabel }}</span>
+                    <span style="{{ g.parentTierPillStyle }}" onClick="{{ g.onParentTierCycle }}">{{ g.parentTierLabel }}</span>
                   </div>
                   <sc-if value="{{ g.expanded }}" hint-placeholder-val="{{ false }}">
                     <div style="background:var(--color-neutral-50);">
@@ -1413,6 +1414,7 @@
                       <span style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--color-accent-700);background:var(--color-accent-50);border-radius:var(--radius-full);padding:1px 7px;">共 {{ g.count }} 版</span>
                     </div>
                     <span style="font-family:var(--font-mono);font-size:var(--text-xs);font-weight:700;color:var(--color-error-600);width:100px;text-align:right;flex-shrink:0;">{{ g.priceLabel }}</span>
+                    <span style="{{ g.parentTierPillStyle }}" onClick="{{ g.onParentTierCycle }}">{{ g.parentTierLabel }}</span>
                   </div>
                   <sc-if value="{{ g.expanded }}" hint-placeholder-val="{{ false }}">
                     <div style="background:var(--color-neutral-50);">
@@ -4986,6 +4988,10 @@ class Component extends DCLogic {
       groups = [...groups].sort((a, b) => a.it.code.localeCompare(b.it.code));
     }
 
+    // 多版型題型的父列分類：直接命中 categories[it.id]（不透過 variant_parent 再往上找，
+    // 因為 it.id 本身就是 fallback 鏈的終點），未設定時回退到題型預設分類。
+    const parentTierOf = (it) => _backendTierLc(it.id) || tierDefault(it) || 'free';
+
     const buildGroup = ({ it, variants }) => {
       const multi = it.variants.length > 1;
       const prices = variants.map(v => v.sellPrice);
@@ -4993,12 +4999,27 @@ class Component extends DCLogic {
       const priceLabel = min === max ? `${min} 元` : `${min}–${max} 元`;
       // 單版型（標準版）題型直接呈現資料，不提供收合；只有多版型才可收合切換
       const expanded = !multi ? true : (isFiltering ? true : (st.expandedGroups[it.id] ?? false));
+      const parentTier = multi ? parentTierOf(it) : null;
+      const parentTierDef = multi ? (TIER_DEFS.find(t => t.key === parentTier) || TIER_DEFS[0]) : null;
       return {
         code: it.code,
         name: it.name,
         multi,
         count: it.variants.length,
         priceLabel,
+        // 父列分類 chip：僅多版型顯示，點擊直接對「父題型 id」設分類（未逐版型覆蓋的子版型會沿用此值）
+        parentTier,
+        parentTierLabel: parentTierDef ? parentTierDef.label : '',
+        parentTierPillStyle: parentTierDef ? `flex-shrink:0;font-size:9px;font-weight:700;color:#fff;background:${parentTierDef.color};border-radius:var(--radius-full);padding:2px 9px;cursor:pointer;border:none;` : '',
+        onParentTierCycle: multi ? async (e) => {
+          if (e && e.stopPropagation) e.stopPropagation();
+          const currentTier = parentTierOf(it);
+          const idx = TIER_DEFS.findIndex(t => t.key === currentTier);
+          const nextTier = TIER_DEFS[(idx + 1) % TIER_DEFS.length].key;
+          const res = await adminPost('/admin/pricing', { type_id: it.id, category: _tierToBackend(nextTier) });
+          if (!res.ok) { this._writeError(res); return; }
+          await this.loadBackend(); this.forceUpdate(); this._writeOk();
+        } : () => {},
         previewDots: variants.map(v => {
           const t = TIER_DEFS.find(td => td.key === v.tier);
           return `width:9px;height:9px;border-radius:50%;background:${t ? t.color : 'var(--color-neutral-300)'};flex-shrink:0;`;
