@@ -849,11 +849,13 @@
                   </div>
                 </div>
               </sc-if>
+              <sc-if value="{{ detailItem.showPurchasePager }}" hint-placeholder-val="{{ true }}">
               <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
                 <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一張</span>
                 <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
                 <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一張 ›</span>
               </div>
+              </sc-if>
               <sc-if value="{{ detailItem.showPdfPager }}" hint-placeholder-val="{{ false }}">
                 <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
                   <span style="font-size:var(--text-xs);color:{{ detailItem.pdfPrevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPdfPage }}">‹ 上一頁</span>
@@ -2653,6 +2655,12 @@ const PRICE_FIELD_BY_TYPE = {
   'chenghe': 'range', 'haochashao': 'range', 'sub3noreg-app': 'range',
   'sub2noreg-app': 'none', 'liangbushu': 'none', 'tuiwei4sub': 'none',
 };
+// 「上一張／下一張」購買序列翻頁器與「版型預覽」pill 是兩套各自獨立的預覽切換方式，
+// 翻頁器點擊會清除 pill 選取的 previewOverride、跳回購買序列，兩者並存容易讓使用者混淆
+// （尤其是不使用圖片主題的多版型題型：每個版型內容固定、預設常只買 1 份，翻頁器實質上
+// 跟 pill 做同一件事）。此類題型（sub1、tuiwei3sub、tuiwei4sub、fenfen、zonghe-3a、
+// coinvalue 系列…）一律隱藏翻頁器、只保留 pill 切換；有圖片主題的多版型題型（sanbushu、
+// chenghe 等）翻頁器仍有「瀏覽實際購買序列」的價值，維持原樣不動。
 function galleryPriceLabel(typeId, item) {
   const mode = PRICE_FIELD_BY_TYPE[typeId] || 'range';
   if (mode === 'none') return null;
@@ -4434,6 +4442,7 @@ class Component extends DCLogic {
         nextColor: idx < totalPages - 1 ? 'var(--text-brand)' : 'var(--text-muted)',
         onPrevPage: () => this.homeStepPreview(it.id, -1),
         onNextPage: () => this.homeStepPreview(it.id, 1),
+        showPurchasePager: !(hasMultipleVariants && !supportsTheme),
         // PDF 頁數翻頁列：只在該版型的 sample 真的多於 1 頁時顯示，
         // 所以現有單頁題型畫面完全不變。套用主題即時預覽時隱藏
         // （/preview-pdf 一律裁成 1 頁，沒有頁可翻）。
