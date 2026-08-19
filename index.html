@@ -585,6 +585,17 @@
                         </sc-for>
                       </div>
                       <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">僅在後端運行於本機開發環境時能自動開啟並選取；雲端部署上會靜默失敗，路徑仍會顯示供手動複製。</div>
+                      <sc-if value="{{ detailItem.docxShow }}" hint-placeholder-val="{{ true }}">
+                        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                          <span style="font-size:var(--text-xs);font-weight:700;color:var(--text-primary);">檢視用下載</span>
+                          <div style="flex:1;"></div>
+                          <span style="{{ detailItem.docxBtnStyle }}" onClick="{{ detailItem.onDownloadDocxCurrent }}">{{ detailItem.docxCurrentLabel }}</span>
+                          <sc-if value="{{ detailItem.docxAllShow }}" hint-placeholder-val="{{ true }}">
+                            <span style="{{ detailItem.docxBtnStyle }}" onClick="{{ detailItem.onDownloadDocxAll }}">{{ detailItem.docxAllLabel }}</span>
+                          </sc-if>
+                        </div>
+                        <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">依右欄目前選中的版型與主題即時生成 Word 檔（不轉 PDF，速度較快），供檢查題目內容是否正確。</div>
+                      </sc-if>
                     </div>
                   </div>
 
@@ -2914,6 +2925,7 @@ class Component extends DCLogic {
       themePreviewShown: {},   // { [itemId]: boolean } — 是否顯示「已套用主題」預覽（取代靜態範本圖）；「隨機」主題每次點擊都會重新生成
       itemChecklistChecked: {},
       themeReminder: null,
+      docxDownloading: {},     // { [itemId]: 'current'|'all' } — 管理端「下載 Word 檔」進行中的按鈕，避免重複點擊
       templateInfo: {},        // { [itemId]: { loading, dirs, paths, modified, msg } } — 「開啟範本資料夾」/「標記已修改」狀態快取
     },
     config: { step: 1, theme: 'drink', selectedProducts: { a: true, b: true, c: false }, sheetCount: 3, adminPanelOpen: false },
@@ -3372,6 +3384,74 @@ class Component extends DCLogic {
     this.setState(s => ({ home: { ...s.home, cardVariantIdx: { ...s.home.cardVariantIdx, [itemId]: idx } } }));
   }
 
+  // ── 管理端「下載 Word 檔」（檢視內容用）─────────────────────────────────
+  // 走 /admin/generate-docx（需 X-Admin-Key），直接拿產生器輸出的 docx，不經 LibreOffice 轉檔。
+  // body 的 theme/theme_id 兩個都帶，各 route 取所需、多的忽略（同 downloadCart() 慣例）。
+  _docxThemeBody(themeKey) {
+    if (!themeKey || themeKey === 'random') return {};
+    const th = HOME_THEMES.find(t => t.key === themeKey);
+    return th ? { theme: th.label, theme_id: th.label } : {};
+  }
+
+  async downloadAdminDocx(it, scope) {
+    const key = getAdminKey() || ensureAdminKey();
+    if (!key) return;
+    const st = this.state.home;
+    const theme = (it.supportsTheme === false) ? null : themeOf(it, st.itemTheme);
+    const themeKey = theme ? theme.key : null;
+    const themeSuffix = (theme && theme.key !== 'random') ? ('_' + theme.label) : '';
+
+    let items;
+    if (scope === 'all') {
+      items = it.variants.map(v => ({
+        type_id: v.key,
+        body: this._docxThemeBody(themeKey),
+        filename: `${it.name}_${v.label}${themeSuffix}.docx`,
+      }));
+    } else {
+      const activeKey = activeRouteKeyOf(it, st) || it.variants[0].key;
+      const v = it.variants.find(x => x.key === activeKey) || it.variants[0];
+      items = [{
+        type_id: v.key,
+        body: this._docxThemeBody(themeKey),
+        filename: `${it.name}_${v.label}${themeSuffix}.docx`,
+      }];
+    }
+
+    this.setState(s => ({ home: { ...s.home, docxDownloading: { ...(s.home.docxDownloading || {}), [it.id]: scope } } }));
+    try {
+      const r = await fetch(API_URL + '/admin/generate-docx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key },
+        body: JSON.stringify({ items }),
+      });
+      if (r.status === 403) { clearAdminKey(); this._showToast('管理者金鑰無效，請重試'); return; }
+      if (!r.ok) {
+        let detail = '';
+        try { detail = (await r.json()).detail || ''; } catch (e) {}
+        throw new Error(detail || ('HTTP ' + r.status));
+      }
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = items.length === 1
+        ? items[0].filename
+        : `${it.name}_全版型_${new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '')}.zip`;
+      a.click();
+      URL.revokeObjectURL(url);
+      this._showToast(items.length === 1 ? '已下載 Word 檔' : `已下載 ${items.length} 個版型的 Word 檔（zip）`);
+    } catch (e) {
+      this._showToast('下載失敗：' + (e.message || ''));
+    } finally {
+      this.setState(s => {
+        const next = { ...(s.home.docxDownloading || {}) };
+        delete next[it.id];
+        return { home: { ...s.home, docxDownloading: next } };
+      });
+    }
+  }
+
   homeBuildAdminFields(it) {
     const st = this.state.home;
     const status = readJSON(LS_QA)[it.id] ?? st.itemAdminStatus[it.id] ?? it.adminQA ?? 'unreviewed';
@@ -3541,6 +3621,22 @@ class Component extends DCLogic {
           onToggleTemplateModified: () => this.toggleTemplateModified(it.id, !tpl.modified),
           templateModifiedBtnLabel: tpl.modified ? '✓ 已重新產生 sample PDF，清除提醒' : '⚠ 標記範本已修改（待重新產生 sample PDF）',
           templateModifiedBtnBg: tpl.modified ? 'var(--color-success-600)' : 'var(--color-warning-600)',
+          ...(() => {
+            // 檢視用 Word 下載：綜合練習（zonghe）直接產 PDF，沒有 docx 中間產物，整區隱藏。
+            const busy = (st.docxDownloading || {})[it.id] || null;
+            const isZonghe = it.variants.every(v => /^zonghe/.test(v.key));
+            return {
+              docxShow: !isZonghe,
+              docxAllShow: !isZonghe && it.variants.length > 1,
+              docxCurrentLabel: busy === 'current' ? '生成中…' : '⬇ 下載 Word（目前版型）',
+              docxAllLabel: busy === 'all' ? '生成中…' : `⬇ 下載 Word（全部 ${it.variants.length} 個版型 zip）`,
+              docxBtnStyle: busy
+                ? 'font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-default);background:var(--color-neutral-100);cursor:default;'
+                : 'font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--color-brand-300);background:#fff;cursor:pointer;',
+              onDownloadDocxCurrent: busy ? (() => {}) : (() => this.downloadAdminDocx(it, 'current')),
+              onDownloadDocxAll: busy ? (() => {}) : (() => this.downloadAdminDocx(it, 'all')),
+            };
+          })(),
         };
       })(),
     };
