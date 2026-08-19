@@ -594,7 +594,7 @@
                             <span style="{{ detailItem.docxBtnStyle }}" onClick="{{ detailItem.onDownloadDocxAll }}">{{ detailItem.docxAllLabel }}</span>
                           </sc-if>
                         </div>
-                        <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">依右欄目前選中的版型與主題即時生成 Word 檔（不轉 PDF，速度較快），供檢查題目內容是否正確。</div>
+                        <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">{{ detailItem.docxHint }}</div>
                       </sc-if>
                     </div>
                   </div>
@@ -3622,12 +3622,16 @@ class Component extends DCLogic {
           templateModifiedBtnLabel: tpl.modified ? '✓ 已重新產生 sample PDF，清除提醒' : '⚠ 標記範本已修改（待重新產生 sample PDF）',
           templateModifiedBtnBg: tpl.modified ? 'var(--color-success-600)' : 'var(--color-warning-600)',
           ...(() => {
-            // 檢視用 Word 下載：綜合練習（zonghe）直接產 PDF，沒有 docx 中間產物，整區隱藏。
+            // 檢視用 Word 下載。綜合練習（zonghe）是 HTML 引擎題型，沒有 docx 中間產物，
+            // 後端改由 LibreOffice 從同一份 HTML 轉一次；版面會攤平，故另給一段警語。
             const busy = (st.docxDownloading || {})[it.id] || null;
-            const isZonghe = it.variants.every(v => /^zonghe/.test(v.key));
+            const isZonghe = it.variants.some(v => /^zonghe/.test(v.key));
             return {
-              docxShow: !isZonghe,
-              docxAllShow: !isZonghe && it.variants.length > 1,
+              docxShow: true,
+              docxAllShow: it.variants.length > 1,
+              docxHint: isZonghe
+                ? '此題型由 HTML 轉出 Word 檔，只保留題目內容（雙欄會變單欄、計算格框線會消失），適合檢查題目與數字是否正確；版面請改看 PDF。'
+                : '依右欄目前選中的版型與主題即時生成 Word 檔（不轉 PDF，速度較快），供檢查題目內容是否正確。',
               docxCurrentLabel: busy === 'current' ? '生成中…' : '⬇ 下載 Word（目前版型）',
               docxAllLabel: busy === 'all' ? '生成中…' : `⬇ 下載 Word（全部 ${it.variants.length} 個版型 zip）`,
               docxBtnStyle: busy
