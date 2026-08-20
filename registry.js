@@ -2224,7 +2224,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "sqcmhalf",
-    "code": "N303",
+    "code": "N304",
     "name": "幾平方公分＿合併半格（面積）",
     "grade": 3,
     "ops": [],
@@ -2241,7 +2241,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "三年級",
       "level": "進階",
       "levelColor": "#f59e0b",
-      "code": "N303",
+      "code": "N304",
       "desc": "含半格三角形的面積計算，需先合併半格再計數。"
     },
     "sample": [
@@ -2262,7 +2262,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "geoarea",
-    "code": "N303",
+    "code": "N305",
     "name": "幾平方公分＿釘板圖形（面積）",
     "grade": 3,
     "ops": [],
@@ -2279,7 +2279,7 @@ window.WORKSHEET_REGISTRY = [
       "grade": "三年級",
       "level": "進階",
       "levelColor": "#f59e0b",
-      "code": "N303",
+      "code": "N305",
       "desc": "釘板上的多邊形面積，基礎版全為 45 度斜邊，進階版含其他斜率。"
     },
     "sample": [
