@@ -2223,6 +2223,44 @@ window.WORKSHEET_REGISTRY = [
     ]
   },
   {
+    "id": "sqcmhalf",
+    "code": "N303",
+    "name": "幾平方公分＿合併半格（面積）",
+    "grade": 3,
+    "ops": [],
+    "keywords": ["area", "面積", "平方公分", "半格", "三角形"],
+    "desc": "圖形含半格三角形，先把兩個三角形合併成一個完整正方形，再數出總面積。",
+    "sortKey": [9, 0, 2],
+    "home": {
+      "icon": "🔺",
+      "sub": "合併半格算面積",
+      "desc": "圖形由整格與半格三角形組成，學生要先把兩個三角形合併成一個完整正方形，才數得出面積。",
+      "features": ["每次隨機", "合併半格", "三年級"]
+    },
+    "diffInfo": {
+      "grade": "三年級",
+      "level": "進階",
+      "levelColor": "#f59e0b",
+      "code": "N303",
+      "desc": "含半格三角形的面積計算，需先合併半格再計數。"
+    },
+    "sample": [
+      { "pdf": "assets/sqcmhalf_same_sample.pdf", "name": "幾平方公分_合併半格_一樣大.pdf", "label": "一樣大", "key": "sqcmhalf-same" },
+      { "pdf": "assets/sqcmhalf_compare_sample.pdf", "name": "幾平方公分_合併半格_最大最小.pdf", "label": "最大最小", "key": "sqcmhalf-compare" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "sqcmhalf-same", "label": "一樣大" },
+      { "key": "sqcmhalf-compare", "label": "最大最小" }
+    ]
+  },
+  {
     "id": "zonghe-3a",
     "code": "Z301",
     "grade": "3",
