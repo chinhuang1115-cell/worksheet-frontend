@@ -2261,6 +2261,44 @@ window.WORKSHEET_REGISTRY = [
     ]
   },
   {
+    "id": "geoarea",
+    "code": "N303",
+    "name": "幾平方公分＿釘板圖形（面積）",
+    "grade": 3,
+    "ops": [],
+    "keywords": ["area", "面積", "平方公分", "釘板", "點陣", "多邊形"],
+    "desc": "在點陣釘板上計算多邊形的面積並比較大小；進階版含非 45 度斜邊，無法直接數格子。",
+    "sortKey": [9, 0, 3],
+    "home": {
+      "icon": "📌",
+      "sub": "釘板算面積",
+      "desc": "圖形畫在點陣釘板上，只有外框沒有格線。基礎版可沿用數格子的方法，進階版的斜邊不是 45 度，必須切割重組才算得出來。",
+      "features": ["每次隨機", "點陣釘板", "兩種難度"]
+    },
+    "diffInfo": {
+      "grade": "三年級",
+      "level": "進階",
+      "levelColor": "#f59e0b",
+      "code": "N303",
+      "desc": "釘板上的多邊形面積，基礎版全為 45 度斜邊，進階版含其他斜率。"
+    },
+    "sample": [
+      { "pdf": "assets/geoarea_basic_sample.pdf", "name": "幾平方公分_釘板圖形_基礎.pdf", "label": "基礎", "key": "geoarea-basic" },
+      { "pdf": "assets/geoarea_adv_sample.pdf", "name": "幾平方公分_釘板圖形_進階.pdf", "label": "進階", "key": "geoarea-adv" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "geoarea-basic", "label": "基礎" },
+      { "key": "geoarea-adv", "label": "進階" }
+    ]
+  },
+  {
     "id": "zonghe-3a",
     "code": "Z301",
     "grade": "3",
