@@ -3856,6 +3856,16 @@ class Component extends DCLogic {
     this.setState(s => ({ home: { ...s.home, themePreviewShown: { ...s.home.themePreviewShown, [itemId]: false } } }));
   }
 
+  // 點選主題 pill：切換選中的主題，並依提示文字「點選主題可預覽套用效果」自動觸發該主題的預覽生成，
+  // 不需要再另外點擊「預覽套用效果」按鈕（僅在已生成/生成中時才需要用該按鈕手動重新整理）。
+  homeSelectTheme(itemId, themeKey) {
+    this.setState(s => {
+      writeJSON(LS_THEME, { ...readJSON(LS_THEME), [itemId]: themeKey });
+      return { home: { ...s.home, itemTheme: { ...s.home.itemTheme, [itemId]: themeKey },
+        itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
+    }, () => this.homePreviewTheme(itemId));
+  }
+
   homePreviewVariant(itemId, key) {
     this.setState(s => ({ home: { ...s.home, previewPdfPage: 0, previewOverride: { ...s.home.previewOverride, [itemId]: key } } }));
   }
@@ -4624,11 +4634,7 @@ class Component extends DCLogic {
             icon: th.icon,
             thumbSrc,
             pillStyle: `display:inline-flex;align-items:center;gap:7px;padding:7px 16px 7px 10px;border-radius:999px;font-size:var(--text-sm);font-weight:600;cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
-            onSelect: () => this.setState(s => {
-              writeJSON(LS_THEME, { ...readJSON(LS_THEME), [it.id]: th.key });
-              return { home: { ...s.home, itemTheme: { ...s.home.itemTheme, [it.id]: th.key },
-                itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [it.id]: false } } };
-            }),
+            onSelect: () => this.homeSelectTheme(it.id, th.key),
           };
         }),
       };
