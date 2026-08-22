@@ -594,8 +594,13 @@
                           <sc-if value="{{ detailItem.docxAllShow }}" hint-placeholder-val="{{ true }}">
                             <span style="{{ detailItem.docxBtnStyle }}" onClick="{{ detailItem.onDownloadDocxAll }}">{{ detailItem.docxAllLabel }}</span>
                           </sc-if>
+                          <span style="{{ detailItem.pdfBtnStyle }}" onClick="{{ detailItem.onDownloadPdfCurrent }}">{{ detailItem.pdfCurrentLabel }}</span>
+                          <sc-if value="{{ detailItem.docxAllShow }}" hint-placeholder-val="{{ true }}">
+                            <span style="{{ detailItem.pdfBtnStyle }}" onClick="{{ detailItem.onDownloadPdfAll }}">{{ detailItem.pdfAllLabel }}</span>
+                          </sc-if>
                         </div>
                         <div style="margin-top:6px;font-size:9px;color:var(--text-muted);">{{ detailItem.docxHint }}</div>
+                        <div style="margin-top:2px;font-size:9px;color:var(--text-muted);">PDF 為正式排版（實際跑一次轉檔），可用來確認 Word 檔在不同系統開啟時的版面落差，是系統顯示問題還是學習單本身的問題。</div>
                       </sc-if>
                     </div>
                   </div>
@@ -2928,6 +2933,7 @@ class Component extends DCLogic {
       itemChecklistChecked: {},
       themeReminder: null,
       docxDownloading: {},     // { [itemId]: 'current'|'all' } — 管理端「下載 Word 檔」進行中的按鈕，避免重複點擊
+      pdfDownloading: {},      // { [itemId]: 'current'|'all' } — 管理端「下載 PDF 檔」進行中的按鈕，避免重複點擊
       templateInfo: {},        // { [itemId]: { loading, dirs, paths, modified, msg } } — 「開啟範本資料夾」/「標記已修改」狀態快取
     },
     config: { step: 1, theme: 'drink', selectedProducts: { a: true, b: true, c: false }, sheetCount: 3, adminPanelOpen: false },
@@ -3454,6 +3460,68 @@ class Component extends DCLogic {
     }
   }
 
+  // ── 管理端「下載 PDF 檔」（檢視內容用）─────────────────────────────────
+  // 走 /admin/generate-pdf（需 X-Admin-Key），走真正的正式排版轉檔，用來比對 Word 檔在不同系統
+  // 開啟時是否有版面偏移（系統顯示問題 vs. 學習單本身問題）。body 結構同 downloadAdminDocx()。
+  async downloadAdminPdf(it, scope) {
+    const key = getAdminKey() || ensureAdminKey();
+    if (!key) return;
+    const st = this.state.home;
+    const theme = (it.supportsTheme === false) ? null : themeOf(it, st.itemTheme);
+    const themeKey = theme ? theme.key : null;
+    const themeSuffix = (theme && theme.key !== 'random') ? ('_' + theme.label) : '';
+
+    let items;
+    if (scope === 'all') {
+      items = it.variants.map(v => ({
+        type_id: v.key,
+        body: this._docxThemeBody(themeKey),
+        filename: `${it.name}_${v.label}${themeSuffix}.pdf`,
+      }));
+    } else {
+      const activeKey = activeRouteKeyOf(it, st) || it.variants[0].key;
+      const v = it.variants.find(x => x.key === activeKey) || it.variants[0];
+      items = [{
+        type_id: v.key,
+        body: this._docxThemeBody(themeKey),
+        filename: `${it.name}_${v.label}${themeSuffix}.pdf`,
+      }];
+    }
+
+    this.setState(s => ({ home: { ...s.home, pdfDownloading: { ...(s.home.pdfDownloading || {}), [it.id]: scope } } }));
+    try {
+      const r = await fetch(API_URL + '/admin/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key },
+        body: JSON.stringify({ items }),
+      });
+      if (r.status === 403) { clearAdminKey(); this._showToast('管理者金鑰無效，請重試'); return; }
+      if (!r.ok) {
+        let detail = '';
+        try { detail = (await r.json()).detail || ''; } catch (e) {}
+        throw new Error(detail || ('HTTP ' + r.status));
+      }
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = items.length === 1
+        ? items[0].filename
+        : `${it.name}_全版型_${new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '')}.zip`;
+      a.click();
+      URL.revokeObjectURL(url);
+      this._showToast(items.length === 1 ? '已下載 PDF 檔' : `已下載 ${items.length} 個版型的 PDF 檔（zip）`);
+    } catch (e) {
+      this._showToast('下載失敗：' + (e.message || ''));
+    } finally {
+      this.setState(s => {
+        const next = { ...(s.home.pdfDownloading || {}) };
+        delete next[it.id];
+        return { home: { ...s.home, pdfDownloading: next } };
+      });
+    }
+  }
+
   homeBuildAdminFields(it) {
     const st = this.state.home;
     const status = readJSON(LS_QA)[it.id] ?? st.itemAdminStatus[it.id] ?? it.adminQA ?? 'unreviewed';
@@ -3627,6 +3695,7 @@ class Component extends DCLogic {
             // 檢視用 Word 下載。綜合練習（zonghe）是 HTML 引擎題型，沒有 docx 中間產物，
             // 後端改由 LibreOffice 從同一份 HTML 轉一次；版面會攤平，故另給一段警語。
             const busy = (st.docxDownloading || {})[it.id] || null;
+            const pdfBusy = (st.pdfDownloading || {})[it.id] || null;
             const isZonghe = it.variants.some(v => /^zonghe/.test(v.key));
             return {
               docxShow: true,
@@ -3642,6 +3711,13 @@ class Component extends DCLogic {
                 : 'font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--color-brand-300);background:#fff;cursor:pointer;',
               onDownloadDocxCurrent: busy ? (() => {}) : (() => this.downloadAdminDocx(it, 'current')),
               onDownloadDocxAll: busy ? (() => {}) : (() => this.downloadAdminDocx(it, 'all')),
+              pdfCurrentLabel: pdfBusy === 'current' ? '生成中…' : '⬇ 下載 PDF（目前版型）',
+              pdfAllLabel: pdfBusy === 'all' ? '生成中…' : `⬇ 下載 PDF（全部 ${it.variants.length} 個版型 zip）`,
+              pdfBtnStyle: pdfBusy
+                ? 'font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-default);background:var(--color-neutral-100);cursor:default;'
+                : 'font-size:var(--text-2xs);font-weight:600;color:var(--text-brand);padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--color-brand-300);background:#fff;cursor:pointer;',
+              onDownloadPdfCurrent: pdfBusy ? (() => {}) : (() => this.downloadAdminPdf(it, 'current')),
+              onDownloadPdfAll: pdfBusy ? (() => {}) : (() => this.downloadAdminPdf(it, 'all')),
             };
           })(),
         };
