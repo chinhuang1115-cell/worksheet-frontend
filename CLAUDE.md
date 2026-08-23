@@ -37,3 +37,19 @@
 - sub-agent 回報後，仍依原則 1 由 Opus 做最後審查；不可把 sub-agent 的回報直接當成完成。
 
 簡單、單一檔案、一兩步就結束的工作，不需要動用 sub-agent。
+
+### 3. 完成後直接合併回 main
+
+每次修改完成並通過審查後，直接把工作分支合併回 `main` 並推送，不需另外開 pull request、也不必再詢問。
+
+流程：
+
+1. 在工作分支上完成修改，commit 並 push。
+2. `git fetch origin main`，先把本地 `main` 更新到最新的 `origin/main`。
+3. 把工作分支合併進 `main`，再 `git push origin main`。
+4. 合併後切回工作分支繼續後續工作。
+
+注意事項：
+
+- 合併前務必先同步 `origin/main`，避免蓋掉別人的新 commit；有衝突就先解掉再合。
+- 未通過原則 1 的審查階段之前，不得合併。
