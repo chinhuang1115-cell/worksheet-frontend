@@ -2425,6 +2425,7 @@ function adaptRegistry(reg) {
     supportsTheme: !!(t.layout && t.layout.showTheme),
     themeSet: (t.layout && t.layout.themeSet) || null,
     variantThemeSet: (t.layout && t.layout.variantThemeSet) || null,
+    excludeThemes: (t.layout && t.layout.excludeThemes) || null,
     // 頂層 lessons 給中性預設值 1（節數管理頁等直接讀 it.lessons 的地方用），
     // 正式建議節數由「建議節數管理」頁另行設定（task 4 起 POST /admin/lessons，後端為唯一權威）。
     lessons: 1,
@@ -2714,7 +2715,9 @@ function allowedThemesOf(it, variantKey) {
   tiersOf(it, variantKey).forEach(tier => {
     (THEME_SET_KEYS[tier] || []).forEach(k => { if (!keys.includes(k)) keys.push(k); });
   });
-  const list = keys.map(k => HOME_THEMES.find(th => th.key === k)).filter(Boolean);
+  const excluded = (it.excludeThemes && it.excludeThemes.length) ? it.excludeThemes : null;
+  const filteredKeys = excluded ? keys.filter(k => !excluded.includes(k)) : keys;
+  const list = filteredKeys.map(k => HOME_THEMES.find(th => th.key === k)).filter(Boolean);
   const randomTheme = HOME_THEMES.find(th => th.key === DEFAULT_THEME);
   return randomTheme ? [...list, randomTheme] : list;
 }

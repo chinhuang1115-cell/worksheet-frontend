@@ -317,7 +317,8 @@ window.WORKSHEET_REGISTRY = [
       "themeSet": "d4",
       "showTheme": true,
       "prices": true,
-      "interactive": false
+      "interactive": false,
+      "excludeThemes": ["electronics"]
     }
   },
   {
