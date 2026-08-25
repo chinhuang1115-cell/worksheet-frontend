@@ -4634,7 +4634,11 @@ class Component extends DCLogic {
         nextColor: idx < totalPages - 1 ? 'var(--text-brand)' : 'var(--text-muted)',
         onPrevPage: () => this.homeStepPreview(it.id, -1),
         onNextPage: () => this.homeStepPreview(it.id, 1),
-        showPurchasePager: !(hasMultipleVariants && !supportsTheme),
+        // 購買序列翻頁列：只有真的多於一張可翻時才顯示。
+        // 單一版型題型（如 N208 最多能買幾個）在系統預設下 flat.length===1，
+        // 舊版仍會渲染一條「1 / 1 張」的死翻頁列（兩側箭頭皆不可點），與下方
+        // 的 PDF 頁數翻頁列疊在一起造成誤解，故加上 totalPages > 1 條件。
+        showPurchasePager: totalPages > 1 && !(hasMultipleVariants && !supportsTheme),
         // PDF 頁數翻頁列：只在該版型的 sample 真的多於 1 頁時顯示，
         // 所以現有單頁題型畫面完全不變。套用主題即時預覽時隱藏
         // （/preview-pdf 一律裁成 1 頁，沒有頁可翻）。
