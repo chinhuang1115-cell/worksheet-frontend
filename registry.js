@@ -317,8 +317,7 @@ window.WORKSHEET_REGISTRY = [
       "themeSet": "d4",
       "showTheme": true,
       "prices": true,
-      "interactive": false,
-      "excludeThemes": ["electronics"]
+      "interactive": false
     }
   },
   {
@@ -475,31 +474,32 @@ window.WORKSHEET_REGISTRY = [
     "id": "huachu4sub",
     "code": "N301B",
     "grade": "3",
-    "name": "不退位的減法（四位數）＿畫錢幣輔助",
+    "name": "不進位的加法（四位數）＿畫錢幣輔助（含寫一寫）",
     "ops": [
-      "sub"
+      "add"
     ],
     "keywords": [
       "畫出錢幣",
       "四位數",
-      "不退位",
-      "減法",
-      "錢幣"
+      "不進位",
+      "加法",
+      "錢幣",
+      "寫一寫"
     ],
-    "desc": "5 道四位數不退位減法題（畫出錢幣並計算），搭配寫一寫練習千位遞減數列。數字每次隨機產生，不退位保證各位數 A ≥ B。",
+    "desc": "5 道四位數不進位加法題（畫出錢幣並計算），搭配寫一寫練習千位遞增數列。比 N301A 多兩題並加上寫一寫，數字每次隨機產生，不進位保證每位數和 ≤ 9。",
     "sortKey": [
-      2,
+      1,
       4,
       1
     ],
     "home": {
       "icon": "🪙",
-      "sub": "四位數不退位減法",
-      "desc": "畫出錢幣表示四位數，5 道不退位減法題，搭配寫一寫練習千位遞減，建立四位數減法的數感。",
+      "sub": "四位數不進位加法（5 題＋寫一寫）",
+      "desc": "畫出錢幣表示四位數，5 道不進位加法題，搭配寫一寫練習千位遞增，建立四位數加法的數感。題數比 N301A 多，並加上寫一寫。",
       "features": [
-        "四位數不退位減法",
+        "四位數不進位加法 5 題",
         "畫出錢幣輔助理解",
-        "寫一寫千位遞減練習"
+        "寫一寫千位遞增練習"
       ]
     },
     "diffInfo": {
@@ -507,11 +507,11 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N301B",
-      "desc": "四位數減法（不退位），以畫錢幣輔助學生理解位值，適合四位數減法的入門練習。"
+      "desc": "四位數加法（不進位），以畫錢幣輔助學生理解位值，5 題並附寫一寫，適合 N301A 之後的延伸練習。"
     },
     "sample": {
       "pdf": "assets/huachu4sub_sample.pdf",
-      "name": "不退位的減法_四位數_畫錢幣輔助_範本.pdf"
+      "name": "不進位的加法_四位數_畫錢幣輔助_含寫一寫_範本.pdf"
     },
     "layout": {
       "panel": "huachu4subPanel",
