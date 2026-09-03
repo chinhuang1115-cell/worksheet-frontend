@@ -867,19 +867,26 @@
                   </div>
                 </div>
               </sc-if>
-              <sc-if value="{{ detailItem.showPurchasePager }}" hint-placeholder-val="{{ true }}">
-              <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一張</span>
-                <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
-                <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一張 ›</span>
+              <sc-if value="{{ detailItem.showAnyPager }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;gap:12px;">
+                <sc-if value="{{ detailItem.showPurchasePager }}" hint-placeholder-val="{{ true }}">
+                  <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一張</span>
+                    <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
+                    <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一張 ›</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ detailItem.showPagerDivider }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:1px;align-self:stretch;background:var(--border-subtle);"></div>
+                </sc-if>
+                <sc-if value="{{ detailItem.showPdfPager }}" hint-placeholder-val="{{ false }}">
+                  <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <span style="font-size:var(--text-xs);color:{{ detailItem.pdfPrevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPdfPage }}">‹ 上一頁</span>
+                    <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.pdfPageLabel }}</span>
+                    <span style="font-size:var(--text-xs);color:{{ detailItem.pdfNextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPdfPage }}">下一頁 ›</span>
+                  </div>
+                </sc-if>
               </div>
-              </sc-if>
-              <sc-if value="{{ detailItem.showPdfPager }}" hint-placeholder-val="{{ false }}">
-                <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
-                  <span style="font-size:var(--text-xs);color:{{ detailItem.pdfPrevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPdfPage }}">‹ 上一頁</span>
-                  <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.pdfPageLabel }}</span>
-                  <span style="font-size:var(--text-xs);color:{{ detailItem.pdfNextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPdfPage }}">下一頁 ›</span>
-                </div>
               </sc-if>
               </div>
             </x-import>
@@ -2672,7 +2679,9 @@ const THEME_SET_KEYS = {
 const PRICE_FIELD_BY_TYPE = {
   'sanbushu': 'default', 'n2-change': 'default', 'maxbuy': 'default',
   'chenghe': 'range', 'haochashao': 'range', 'sub3noreg-app': 'range',
-  'sub2noreg-app': 'none', 'liangbushu': 'none', 'tuiwei4sub': 'none',
+  // tuiwei4sub 自 2026-09-03 起改由 library.json 的 price_min–price_max 出價
+  // （見 backend/gen_tuiwei4sub.py 的 _price_candidates），所以改回顯示價格區間。
+  'sub2noreg-app': 'none', 'liangbushu': 'none', 'tuiwei4sub': 'range',
 };
 // 「上一張／下一張」購買序列翻頁器與「版型預覽」pill 是兩套各自獨立的預覽切換方式，
 // 翻頁器點擊會清除 pill 選取的 previewOverride、跳回購買序列，兩者並存容易讓使用者混淆
@@ -4557,6 +4566,11 @@ class Component extends DCLogic {
       const totalPages = flat.length;
       const totalPrice = flat.reduce((sum, p) => sum + p.price, 0);
 
+      // 兩組翻頁器：張次＝購買序列裡的第幾張學習單，頁次＝該張學習單的第幾頁內頁。
+      // 兩者併在同一列顯示（見 showAnyPager / showPagerDivider），先在這裡算好旗標。
+      const showPurchasePagerFlag = totalPages > 1 && !(hasMultipleVariants && !supportsTheme);
+      const showPdfPagerFlag = pdfPageCount > 1 && !themePreviewImgSrc;
+
       // 自由選配下主題可複選，各主題各自設定張數（比照版型清單的勾選＋數量設計），
       // 加總必須等於目前的總張數（totalPages）才能「確認套用」。
       const themeQtyMap = st.itemThemeQty[it.id] || {};
@@ -4625,7 +4639,9 @@ class Component extends DCLogic {
         onSetPreset: () => this.homeSetPurchaseMode(it.id, 'preset'),
         onSetCustom: () => this.homeSetPurchaseMode(it.id, 'custom'),
         variants,
-        previewLabel: overrideKey ? '版型預覽' : (totalPages > 0 ? `${idx + 1} / ${totalPages} 張` : '0 / 0 張'),
+        // 兩組翻頁器併在同一列，光看「3 / 3」分不出是第幾張學習單還是第幾頁內頁，
+        // 所以標籤各自帶上「張次」「頁次」。
+        previewLabel: overrideKey ? '版型預覽' : (totalPages > 0 ? `張次 ${idx + 1} / ${totalPages}` : '張次 0 / 0'),
         previewVariantLabel: activeVariant ? activeVariant.label : '',
         previewImgSrc,
         finalPreviewImgSrc: themePreviewImgSrc || previewImgSrc,
@@ -4648,12 +4664,16 @@ class Component extends DCLogic {
         // 單一版型題型（如 N208 最多能買幾個）在系統預設下 flat.length===1，
         // 舊版仍會渲染一條「1 / 1 張」的死翻頁列（兩側箭頭皆不可點），與下方
         // 的 PDF 頁數翻頁列疊在一起造成誤解，故加上 totalPages > 1 條件。
-        showPurchasePager: totalPages > 1 && !(hasMultipleVariants && !supportsTheme),
+        showPurchasePager: showPurchasePagerFlag,
         // PDF 頁數翻頁列：只在該版型的 sample 真的多於 1 頁時顯示，
         // 所以現有單頁題型畫面完全不變。套用主題即時預覽時隱藏
         // （/preview-pdf 一律裁成 1 頁，沒有頁可翻）。
-        showPdfPager: pdfPageCount > 1 && !themePreviewImgSrc,
-        pdfPageLabel: `${pdfPageIdx + 1} / ${pdfPageCount} 頁`,
+        showPdfPager: showPdfPagerFlag,
+        // 兩組翻頁器合併成一列（左＝購買序列的張次，右＝該張學習單的內頁頁次），
+        // 中間的分隔線只有兩組都在時才畫；只剩一組時該組自己佔滿整列。
+        showAnyPager: showPurchasePagerFlag || showPdfPagerFlag,
+        showPagerDivider: showPurchasePagerFlag && showPdfPagerFlag,
+        pdfPageLabel: `頁次 ${pdfPageIdx + 1} / ${pdfPageCount}`,
         pdfPrevColor: pdfPageIdx > 0 ? 'var(--text-brand)' : 'var(--text-muted)',
         pdfNextColor: pdfPageIdx < pdfPageCount - 1 ? 'var(--text-brand)' : 'var(--text-muted)',
         onPrevPdfPage: () => { if (pdfPageIdx > 0) this.homeStepPdfPage(it.id, -1); },
