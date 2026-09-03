@@ -868,24 +868,10 @@
                 </div>
               </sc-if>
               <sc-if value="{{ detailItem.showAnyPager }}" hint-placeholder-val="{{ true }}">
-              <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;gap:12px;">
-                <sc-if value="{{ detailItem.showPurchasePager }}" hint-placeholder-val="{{ true }}">
-                  <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                    <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一張</span>
-                    <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
-                    <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一張 ›</span>
-                  </div>
-                </sc-if>
-                <sc-if value="{{ detailItem.showPagerDivider }}" hint-placeholder-val="{{ false }}">
-                  <div style="width:1px;align-self:stretch;background:var(--border-subtle);"></div>
-                </sc-if>
-                <sc-if value="{{ detailItem.showPdfPager }}" hint-placeholder-val="{{ false }}">
-                  <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                    <span style="font-size:var(--text-xs);color:{{ detailItem.pdfPrevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPdfPage }}">‹ 上一頁</span>
-                    <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.pdfPageLabel }}</span>
-                    <span style="font-size:var(--text-xs);color:{{ detailItem.pdfNextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPdfPage }}">下一頁 ›</span>
-                  </div>
-                </sc-if>
+              <div style="padding:10px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一頁</span>
+                <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
+                <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一頁 ›</span>
               </div>
               </sc-if>
               </div>
@@ -2683,12 +2669,12 @@ const PRICE_FIELD_BY_TYPE = {
   // （見 backend/gen_tuiwei4sub.py 的 _price_candidates），所以改回顯示價格區間。
   'sub2noreg-app': 'none', 'liangbushu': 'none', 'tuiwei4sub': 'range',
 };
-// 「上一張／下一張」購買序列翻頁器與「版型預覽」pill 是兩套各自獨立的預覽切換方式，
-// 翻頁器點擊會清除 pill 選取的 previewOverride、跳回購買序列，兩者並存容易讓使用者混淆
-// （尤其是不使用圖片主題的多版型題型：每個版型內容固定、預設常只買 1 份，翻頁器實質上
-// 跟 pill 做同一件事）。此類題型（sub1、tuiwei3sub、tuiwei4sub、fenfen、zonghe-3a、
-// coinvalue 系列…）一律隱藏翻頁器、只保留 pill 切換；有圖片主題的多版型題型（sanbushu、
-// chenghe 等）翻頁器仍有「瀏覽實際購買序列」的價值，維持原樣不動。
+// 預覽翻頁器與「版型預覽」pill 是兩套各自獨立的切換方式，翻頁一律清除 pill 選取的
+// previewOverride、跳回購買序列（見 homeSetPreviewPos）。翻頁器現在是**單一連續頁次**：
+// 把購買序列每一張學習單的內頁串成一本連續的書（3 張 × 2 頁 = 頁次 1–6），詳見
+// 詳情頁 vals 內的 seqMode / seqCounts / seqPosOf。
+// 不使用圖片主題的多版型題型（sub1 等）例外：那類本來就只用 pill 切版型、翻頁器不介入
+// 版型，所以只翻目前這一份的頁（seqMode = false）。
 function galleryPriceLabel(typeId, item) {
   const mode = PRICE_FIELD_BY_TYPE[typeId] || 'range';
   if (mode === 'none') return null;
@@ -3978,6 +3964,17 @@ class Component extends DCLogic {
     }, () => this.homeSyncThemePreview(itemId));
   }
 
+  // 連續頁次翻頁：直接指定「購買序列的第幾張 + 該張的第幾頁」。
+  // 翻頁一律清掉「版型預覽」pill 的 override（同 homeStepPreview 的既有行為），
+  // 並在版型改變後重新生成主題即時預覽（見 homeSyncThemePreview）。
+  homeSetPreviewPos(itemId, sheetIdx, pageIdx) {
+    this.setState(s => ({ home: { ...s.home,
+      previewIndex: sheetIdx,
+      previewPdfPage: pageIdx,
+      previewOverride: { ...s.home.previewOverride, [itemId]: null } } }),
+      () => this.homeSyncThemePreview(itemId));
+  }
+
   homeStepPdfPage(itemId, delta) {
     this.setState(s => {
       const next = Math.max(0, s.home.previewPdfPage + delta);
@@ -4566,10 +4563,53 @@ class Component extends DCLogic {
       const totalPages = flat.length;
       const totalPrice = flat.reduce((sum, p) => sum + p.price, 0);
 
-      // 兩組翻頁器：張次＝購買序列裡的第幾張學習單，頁次＝該張學習單的第幾頁內頁。
-      // 兩者併在同一列顯示（見 showAnyPager / showPagerDivider），先在這裡算好旗標。
-      const showPurchasePagerFlag = totalPages > 1 && !(hasMultipleVariants && !supportsTheme);
-      const showPdfPagerFlag = pdfPageCount > 1 && !themePreviewImgSrc;
+      // ── 連續頁次翻頁器 ────────────────────────────────────────────
+      // 預覽把「購買序列的每一張學習單」串成一本連續的書：3 張 × 每張 2 頁 = 6 頁，
+      // 一路按「下一頁」就從頭看到尾，不必再分心現在是第幾張（先前是「張次」「頁次」
+      // 兩組並排，使用者反映分不清差別）。
+      //
+      // 兩種例外會退回「只翻目前這一份的頁」：
+      //   1. 點了「版型預覽」pill（overrideKey）——此時看的是指定版型，不在購買序列上；
+      //   2. 多版型但不使用圖片主題的題型（sub1 等）——這類本來就只用 pill 切版型，
+      //      翻頁器不介入版型（沿用先前 showPurchasePager 的判斷條件）。
+      const sampleUrlOf = (key) => {
+        const sp = sampleFor(it, key);
+        return sp && sp.pdf ? (ASSETS_BASE_URL + '/' + sp.pdf) : null;
+      };
+      // 要算總頁數就得知道序列裡每一張的頁數，所以每一張的 sample 都要載入
+      // （只載入目前顯示的那張的話，總頁數會一直是估的）。
+      flat.forEach(pg2 => {
+        const u = sampleUrlOf(pg2.key);
+        if (u && !_pdfPagesCache[u] && !_pdfPagesInflight[u]) {
+          _loadPdfAllPages(u).then(() => this.forceUpdate());
+        }
+      });
+      const pageCountOf = (key) => {
+        const u = sampleUrlOf(key);
+        const arr = u ? _pdfPagesCache[u] : null;
+        return (Array.isArray(arr) && arr.length) ? arr.length : 1;   // 還沒載完先當 1 頁
+      };
+      // 套用主題即時預覽時 /preview-pdf 只回第 1 頁，每張一律當 1 頁。
+      const seqMode = !overrideKey && !(hasMultipleVariants && !supportsTheme);
+      const seqCounts = seqMode
+        ? (themePreviewImgSrc ? flat.map(() => 1) : flat.map(pg2 => pageCountOf(pg2.key)))
+        : [];
+      const seqTotal = seqCounts.reduce((a, b) => a + b, 0);
+      const seqBefore = seqCounts.slice(0, idx).reduce((a, b) => a + b, 0);
+      const seqLocal = Math.min(pdfPageIdx, Math.max(0, (seqCounts[idx] || 1) - 1));
+      const seqPos = seqBefore + seqLocal;
+      // 全域頁碼 → (第幾張, 該張第幾頁)
+      const seqPosOf = (g) => {
+        let i = 0, rest = Math.max(0, Math.min(g, seqTotal - 1));
+        while (i < seqCounts.length - 1 && rest >= seqCounts[i]) { rest -= seqCounts[i]; i += 1; }
+        return [i, Math.min(rest, Math.max(0, (seqCounts[i] || 1) - 1))];
+      };
+
+      const pagerTotal = seqMode ? seqTotal : pdfPageCount;
+      const pagerPos = seqMode ? seqPos : pdfPageIdx;
+      const showAnyPagerFlag = pagerTotal > 1;
+      const pagerPrevOk = pagerPos > 0;
+      const pagerNextOk = pagerPos < pagerTotal - 1;
 
       // 自由選配下主題可複選，各主題各自設定張數（比照版型清單的勾選＋數量設計），
       // 加總必須等於目前的總張數（totalPages）才能「確認套用」。
@@ -4639,9 +4679,11 @@ class Component extends DCLogic {
         onSetPreset: () => this.homeSetPurchaseMode(it.id, 'preset'),
         onSetCustom: () => this.homeSetPurchaseMode(it.id, 'custom'),
         variants,
-        // 兩組翻頁器併在同一列，光看「3 / 3」分不出是第幾張學習單還是第幾頁內頁，
-        // 所以標籤各自帶上「張次」「頁次」。
-        previewLabel: overrideKey ? '版型預覽' : (totalPages > 0 ? `張次 ${idx + 1} / ${totalPages}` : '張次 0 / 0'),
+        // 單一連續頁次：seqMode 下是整個購買序列的第幾頁；退回單份模式時
+        // （版型預覽 pill／不使用圖片主題的多版型題型）標明是版型預覽的頁次。
+        previewLabel: seqMode
+          ? `頁次 ${pagerPos + 1} / ${pagerTotal}`
+          : `版型預覽・頁次 ${pagerPos + 1} / ${pagerTotal}`,
         previewVariantLabel: activeVariant ? activeVariant.label : '',
         previewImgSrc,
         finalPreviewImgSrc: themePreviewImgSrc || previewImgSrc,
@@ -4656,28 +4698,27 @@ class Component extends DCLogic {
         themePreviewErrorMsg: themePreviewErrorMsgVal,
         onPreviewTheme: () => this.homePreviewTheme(it.id),
         onClearThemePreview: () => this.homeClearThemePreview(it.id),
-        prevColor: idx > 0 ? 'var(--text-brand)' : 'var(--text-muted)',
-        nextColor: idx < totalPages - 1 ? 'var(--text-brand)' : 'var(--text-muted)',
-        onPrevPage: () => this.homeStepPreview(it.id, -1),
-        onNextPage: () => this.homeStepPreview(it.id, 1),
+        prevColor: pagerPrevOk ? 'var(--text-brand)' : 'var(--text-muted)',
+        nextColor: pagerNextOk ? 'var(--text-brand)' : 'var(--text-muted)',
+        onPrevPage: () => {
+          if (!pagerPrevOk) return;
+          if (!seqMode) { this.homeStepPdfPage(it.id, -1); return; }
+          const [sheetIdx, pageIdx] = seqPosOf(pagerPos - 1);
+          this.homeSetPreviewPos(it.id, sheetIdx, pageIdx);
+        },
+        onNextPage: () => {
+          if (!pagerNextOk) return;
+          if (!seqMode) { this.homeStepPdfPage(it.id, 1); return; }
+          const [sheetIdx, pageIdx] = seqPosOf(pagerPos + 1);
+          this.homeSetPreviewPos(it.id, sheetIdx, pageIdx);
+        },
         // 購買序列翻頁列：只有真的多於一張可翻時才顯示。
         // 單一版型題型（如 N208 最多能買幾個）在系統預設下 flat.length===1，
         // 舊版仍會渲染一條「1 / 1 張」的死翻頁列（兩側箭頭皆不可點），與下方
         // 的 PDF 頁數翻頁列疊在一起造成誤解，故加上 totalPages > 1 條件。
-        showPurchasePager: showPurchasePagerFlag,
-        // PDF 頁數翻頁列：只在該版型的 sample 真的多於 1 頁時顯示，
-        // 所以現有單頁題型畫面完全不變。套用主題即時預覽時隱藏
-        // （/preview-pdf 一律裁成 1 頁，沒有頁可翻）。
-        showPdfPager: showPdfPagerFlag,
-        // 兩組翻頁器合併成一列（左＝購買序列的張次，右＝該張學習單的內頁頁次），
-        // 中間的分隔線只有兩組都在時才畫；只剩一組時該組自己佔滿整列。
-        showAnyPager: showPurchasePagerFlag || showPdfPagerFlag,
-        showPagerDivider: showPurchasePagerFlag && showPdfPagerFlag,
-        pdfPageLabel: `頁次 ${pdfPageIdx + 1} / ${pdfPageCount}`,
-        pdfPrevColor: pdfPageIdx > 0 ? 'var(--text-brand)' : 'var(--text-muted)',
-        pdfNextColor: pdfPageIdx < pdfPageCount - 1 ? 'var(--text-brand)' : 'var(--text-muted)',
-        onPrevPdfPage: () => { if (pdfPageIdx > 0) this.homeStepPdfPage(it.id, -1); },
-        onNextPdfPage: () => { if (pdfPageIdx < pdfPageCount - 1) this.homeStepPdfPage(it.id, 1); },
+        // 單一連續頁次翻頁器（見上方 seqMode / seqCounts）：把購買序列的每一張
+        // 學習單串成一本連續的書，只有總頁數 > 1 時才顯示。
+        showAnyPager: showAnyPagerFlag,
         favFill: st.favorites[it.id] ? 'var(--color-error-500)' : 'none',
         // 自由選配需先按過「確認套用」才能加入購物車，避免主題／張數選好卻忘了套用就結帳。
         cartDisabled: isCustom && !customConfirmed,
