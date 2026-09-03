@@ -3797,7 +3797,7 @@ class Component extends DCLogic {
       }
       next.previewPdfPage = 0;
       return { home: { ...s.home, ...next } };
-    });
+    }, () => this.homeSyncThemePreview(itemId));
   }
 
   // 自由選配下，主題／張數任何一項變動都視為「設定已變更」，需重新按「確認套用」才能加入購物車。
@@ -3848,7 +3848,7 @@ class Component extends DCLogic {
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
         previewPdfPage: 0,
         itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
-    });
+    }, () => this.homeSyncThemePreview(itemId));
   }
 
   // 版型清單的勾選：有圖片主題的題型是單選（radio，點擊即切換成只選這個版型，
@@ -3872,7 +3872,7 @@ class Component extends DCLogic {
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
         previewPdfPage: 0,
         itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
-    });
+    }, () => this.homeSyncThemePreview(itemId));
   }
 
   homeSelectVariantPage(itemId, key) {
@@ -3882,7 +3882,7 @@ class Component extends DCLogic {
       const flat = buildFlatPages(item, vq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const idx = flat.findIndex(p => p.key === key);
       return { home: { ...s.home, previewIndex: idx >= 0 ? idx : 0 } };
-    });
+    }, () => this.homeSyncThemePreview(itemId));
   }
 
   homePreviewTheme(itemId) {
@@ -3945,8 +3945,18 @@ class Component extends DCLogic {
     }, () => this.homePreviewTheme(itemId));
   }
 
+  // 版型／購買方式改變後，若畫面上正顯示主題即時預覽，必須重新向 /preview-pdf
+  // 取一張「新版型 × 目前主題」的預覽圖。themePreview 的快取鍵是
+  // 「routeKey::themeKey」，換了版型就查不到既有快取，畫面會靜默退回該版型的
+  // 靜態 sample PDF（主題是製作範本當下隨機挑的，與使用者選的主題不一致）。
+  homeSyncThemePreview(itemId) {
+    if (!this.state.home.themePreviewShown[itemId]) return;
+    this.homePreviewTheme(itemId);
+  }
+
   homePreviewVariant(itemId, key) {
-    this.setState(s => ({ home: { ...s.home, previewPdfPage: 0, previewOverride: { ...s.home.previewOverride, [itemId]: key } } }));
+    this.setState(s => ({ home: { ...s.home, previewPdfPage: 0, previewOverride: { ...s.home.previewOverride, [itemId]: key } } }),
+      () => this.homeSyncThemePreview(itemId));
   }
 
   homeStepPreview(itemId, delta) {
@@ -3956,7 +3966,7 @@ class Component extends DCLogic {
       const flat = buildFlatPages(item, vq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const next = Math.max(0, Math.min(flat.length - 1, s.home.previewIndex + delta));
       return { home: { ...s.home, previewIndex: next, previewPdfPage: 0, previewOverride: { ...s.home.previewOverride, [itemId]: null } } };
-    });
+    }, () => this.homeSyncThemePreview(itemId));
   }
 
   homeStepPdfPage(itemId, delta) {
