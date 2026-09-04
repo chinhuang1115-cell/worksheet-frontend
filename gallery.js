@@ -7,42 +7,42 @@ window.WORKSHEET_GALLERY = {
       {
         "file": "飲料店/珍奶_原味.png",
         "name": "原味奶茶",
-        "defaultPrice": 35,
+        "defaultPrice": 45,
         "priceMin": 45,
         "priceMax": 70
       },
       {
         "file": "飲料店/珍奶_黑糖.png",
         "name": "黑糖珍奶",
-        "defaultPrice": 45,
+        "defaultPrice": 55,
         "priceMin": 55,
         "priceMax": 80
       },
       {
         "file": "飲料店/珍奶_芋頭.png",
         "name": "芋頭珍奶",
-        "defaultPrice": 50,
+        "defaultPrice": 60,
         "priceMin": 60,
         "priceMax": 85
       },
       {
         "file": "飲料店/珍奶_百香果.png",
         "name": "百香果茶",
-        "defaultPrice": 30,
+        "defaultPrice": 40,
         "priceMin": 40,
         "priceMax": 65
       },
       {
         "file": "飲料店/珍奶_抹茶.png",
         "name": "抹茶珍奶",
-        "defaultPrice": 55,
+        "defaultPrice": 60,
         "priceMin": 60,
         "priceMax": 85
       },
       {
         "file": "飲料店/珍奶_奶茶.png",
         "name": "奶茶",
-        "defaultPrice": 40,
+        "defaultPrice": 45,
         "priceMin": 45,
         "priceMax": 70
       }
@@ -183,7 +183,7 @@ window.WORKSHEET_GALLERY = {
       {
         "file": "甜點店/棉花糖.png",
         "name": "棉花糖",
-        "defaultPrice": 20,
+        "defaultPrice": 25,
         "priceMin": 25,
         "priceMax": 50
       },
@@ -385,49 +385,49 @@ window.WORKSHEET_GALLERY = {
     ]
   },
   "kidswear": {
-    "tier": "d4",
+    "tier": "d3",
     "items": [
       {
         "file": "童裝店/包屁衣.png",
         "name": "包屁衣",
         "defaultPrice": null,
-        "priceMin": 1000,
-        "priceMax": 2500
+        "priceMin": 200,
+        "priceMax": 480
       },
       {
         "file": "童裝店/洋裝.png",
         "name": "洋裝",
         "defaultPrice": null,
-        "priceMin": 1500,
-        "priceMax": 3500
+        "priceMin": 250,
+        "priceMax": 490
       },
       {
         "file": "童裝店/帽子.png",
         "name": "帽子",
         "defaultPrice": null,
-        "priceMin": 1000,
-        "priceMax": 1800
+        "priceMin": 150,
+        "priceMax": 400
       },
       {
         "file": "童裝店/童鞋.png",
         "name": "童鞋",
         "defaultPrice": null,
-        "priceMin": 1200,
-        "priceMax": 3000
+        "priceMin": 250,
+        "priceMax": 490
       },
       {
         "file": "童裝店/短褲.png",
         "name": "短褲",
         "defaultPrice": null,
-        "priceMin": 1000,
-        "priceMax": 1500
+        "priceMin": 180,
+        "priceMax": 450
       },
       {
         "file": "童裝店/毛衣.png",
         "name": "毛衣",
         "defaultPrice": null,
-        "priceMin": 1200,
-        "priceMax": 2800
+        "priceMin": 250,
+        "priceMax": 490
       }
     ]
   },
@@ -437,44 +437,44 @@ window.WORKSHEET_GALLERY = {
       {
         "file": "體育用品店/籃球.png",
         "name": "籃球",
-        "defaultPrice": 1800,
-        "priceMin": 1200,
-        "priceMax": 2800
+        "defaultPrice": 1400,
+        "priceMin": 1000,
+        "priceMax": 2200
       },
       {
         "file": "體育用品店/拳擊手套.png",
         "name": "拳擊手套",
-        "defaultPrice": 2000,
-        "priceMin": 1500,
-        "priceMax": 3000
+        "defaultPrice": 1500,
+        "priceMin": 1000,
+        "priceMax": 2500
       },
       {
         "file": "體育用品店/運動鞋.png",
         "name": "運動鞋",
-        "defaultPrice": 2500,
+        "defaultPrice": 2000,
         "priceMin": 1500,
-        "priceMax": 3000
+        "priceMax": 3200
       },
       {
         "file": "體育用品店/網球拍.png",
         "name": "網球拍",
-        "defaultPrice": 2000,
-        "priceMin": 1200,
-        "priceMax": 2800
+        "defaultPrice": 2200,
+        "priceMin": 1500,
+        "priceMax": 4000
       },
       {
         "file": "體育用品店/瑜伽墊.png",
         "name": "瑜伽墊",
-        "defaultPrice": 1500,
+        "defaultPrice": 1400,
         "priceMin": 1000,
-        "priceMax": 2500
+        "priceMax": 2200
       },
       {
         "file": "體育用品店/啞鈴.png",
         "name": "啞鈴",
         "defaultPrice": 1800,
         "priceMin": 1000,
-        "priceMax": 2800
+        "priceMax": 3000
       },
       {
         "file": "體育用品店/美式足球.png",
@@ -486,37 +486,30 @@ window.WORKSHEET_GALLERY = {
       {
         "file": "體育用品店/排球.png",
         "name": "排球",
-        "defaultPrice": 1500,
-        "priceMin": 1000,
-        "priceMax": 2200
+        "defaultPrice": 1600,
+        "priceMin": 1200,
+        "priceMax": 2600
       },
       {
         "file": "體育用品店/足球.png",
         "name": "足球",
         "defaultPrice": 1600,
-        "priceMin": 1000,
-        "priceMax": 2500
+        "priceMin": 1200,
+        "priceMax": 2800
       },
       {
         "file": "體育用品店/棒球棒.png",
         "name": "棒球棒",
         "defaultPrice": 1800,
-        "priceMin": 1000,
-        "priceMax": 2800
-      },
-      {
-        "file": "體育用品店/躲避球.png",
-        "name": "躲避球",
-        "defaultPrice": 1200,
-        "priceMin": 1000,
-        "priceMax": 2000
+        "priceMin": 1200,
+        "priceMax": 3000
       },
       {
         "file": "體育用品店/球拍組.png",
         "name": "球拍組",
-        "defaultPrice": 2200,
-        "priceMin": 1500,
-        "priceMax": 3000
+        "defaultPrice": 1600,
+        "priceMin": 1200,
+        "priceMax": 2800
       }
     ]
   },
@@ -524,46 +517,53 @@ window.WORKSHEET_GALLERY = {
     "tier": "d4",
     "items": [
       {
-        "file": "3C產品店/手機.png",
-        "name": "手機",
-        "defaultPrice": 2800,
-        "priceMin": 1800,
-        "priceMax": 3500
-      },
-      {
-        "file": "3C產品店/平板.png",
-        "name": "平板",
-        "defaultPrice": 2500,
-        "priceMin": 1500,
-        "priceMax": 3200
-      },
-      {
-        "file": "3C產品店/筆電.png",
-        "name": "筆電",
-        "defaultPrice": 3000,
-        "priceMin": 2000,
-        "priceMax": 3500
-      },
-      {
         "file": "3C產品店/智慧手錶.png",
         "name": "智慧手錶",
-        "defaultPrice": 2000,
-        "priceMin": 1200,
-        "priceMax": 3000
-      },
-      {
-        "file": "3C產品店/安卓手機.png",
-        "name": "安卓手機",
-        "defaultPrice": 2500,
+        "defaultPrice": 3500,
         "priceMin": 1500,
-        "priceMax": 3200
+        "priceMax": 8000
       },
       {
         "file": "3C產品店/智慧眼鏡.png",
         "name": "智慧眼鏡",
-        "defaultPrice": 2800,
-        "priceMin": 1800,
-        "priceMax": 3500
+        "defaultPrice": 8000,
+        "priceMin": 6000,
+        "priceMax": 9999
+      },
+      {
+        "file": "3C產品店/電競滑鼠.png",
+        "name": "電競滑鼠",
+        "defaultPrice": 2500,
+        "priceMin": 1500,
+        "priceMax": 4000
+      },
+      {
+        "file": "3C產品店/機械式鍵盤.png",
+        "name": "機械式鍵盤",
+        "defaultPrice": 3500,
+        "priceMin": 2000,
+        "priceMax": 6000
+      },
+      {
+        "file": "3C產品店/藍牙喇叭.png",
+        "name": "藍牙喇叭",
+        "defaultPrice": 3000,
+        "priceMin": 1500,
+        "priceMax": 5000
+      },
+      {
+        "file": "3C產品店/行動電源.png",
+        "name": "行動電源",
+        "defaultPrice": 2200,
+        "priceMin": 1500,
+        "priceMax": 3000
+      },
+      {
+        "file": "3C產品店/降噪耳罩式耳機.png",
+        "name": "降噪耳罩式耳機",
+        "defaultPrice": 5000,
+        "priceMin": 3000,
+        "priceMax": 8000
       }
     ]
   },
