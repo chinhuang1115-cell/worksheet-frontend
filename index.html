@@ -2655,8 +2655,11 @@ const DEFAULT_THEME = 'random';
 // 每個主題只屬於一層，題型只會看到與自己設計位數相符的主題。
 const THEME_SET_KEYS = {
   d2: ['drink', 'stationery', 'dessert'],
-  d3: ['stationery_adv', 'toy', 'bento', 'toycar', 'retro'],
-  d4: ['shoes', 'kidswear', 'sports', 'electronics'],
+  // 童裝店（kidswear）2026-09-04 起由 d4 改列 d3（真實市價 150–490 元），
+  // 必須與 backend/library.json 的 tier 一致，否則 d4 題型（liangbushu／
+  // tuiwei4sub）會誤offer 童裝店而下載失敗或靜默配到三位數商品。
+  d3: ['stationery_adv', 'toy', 'bento', 'toycar', 'retro', 'kidswear'],
+  d4: ['shoes', 'sports', 'electronics'],
 };
 // 各題型實際讀取的價格欄位，決定主題預覽縮圖要顯示什麼：
 //   'default' → 讀 default_price（經 auto_config），顯示單一價
