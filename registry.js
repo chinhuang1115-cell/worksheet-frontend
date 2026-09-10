@@ -1062,25 +1062,19 @@ window.WORKSHEET_REGISTRY = [
       "撲滿",
       "找錢"
     ],
-    "desc": "兩位數不退位減法應用題，含撲滿版（12 題共用 X）、找幾個 10 元版、找 10 元+1 元版，每次數字隨機。",
+    "desc": "兩位數不退位減法應用題，含找幾個 10 元版與找 10 元+1 元版，每次數字隨機。（撲滿版已獨立為 N202E）",
     "sortKey": [
       2,
       2,
       2
     ],
     "home": {
-      "icon": "🐷",
+      "icon": "💵",
       "label": "兩位數不退位應用題",
-      "sub": "撲滿 / 找零版"
+      "sub": "找零應用題"
     },
     "diffInfo": null,
     "sample": [
-      {
-        "pdf": "assets/sub2noreg-app_pman_sample.pdf",
-        "name": "兩位數不退位減法應用題（撲滿版）.pdf",
-        "label": "撲滿版",
-        "key": "sub2noreg-app-pman"
-      },
       {
         "pdf": "assets/sub2noreg-app_a_sample.pdf",
         "name": "兩位數不退位減法應用題（找幾個10元）.pdf",
@@ -1096,16 +1090,57 @@ window.WORKSHEET_REGISTRY = [
     ],
     "layout": {
       "panel": "sub2noregAppPanel",
-      "themeSet": "d2",
-      "showTheme": true,
+      "themeSet": null,
+      "showTheme": false,
       "prices": false,
       "interactive": false
     },
     "variants": [
-      { "key": "sub2noreg-app-pman", "label": "撲滿版" },
       { "key": "sub2noreg-app-a",    "label": "找幾個10元" },
       { "key": "sub2noreg-app-b",    "label": "找零版" }
     ]
+  },
+  {
+    "id": "sub2noreg-app-pman",
+    "code": "N202E",
+    "name": "兩位數不退位減法＿撲滿應用題",
+    "grade": 2,
+    "ops": [
+      "sub"
+    ],
+    "keywords": [
+      "兩位數",
+      "不退位",
+      "減法",
+      "應用題",
+      "撲滿",
+      "找錢",
+      "購物",
+      "主題"
+    ],
+    "desc": "兩位數不退位減法撲滿應用題，6 題各配一個撲滿與購物主題商品圖，每次數字與主題隨機。",
+    "sortKey": [
+      2,
+      2,
+      2
+    ],
+    "home": {
+      "icon": "🐷",
+      "label": "撲滿應用題",
+      "sub": "購物主題找零"
+    },
+    "diffInfo": null,
+    "sample": {
+      "pdf": "assets/sub2noreg-app_pman_sample.pdf",
+      "name": "兩位數不退位減法應用題（撲滿版）.pdf"
+    },
+    "layout": {
+      "panel": null,
+      "themeSet": "d2",
+      "showTheme": true,
+      "prices": false,
+      "interactive": false
+    }
   },
   {
     "id": "sub2borrow",
