@@ -2818,9 +2818,13 @@ function lessonsRangeOf(it, lessonMap) {
   const lessons = it.variants.map(v => variantLessonsOf(it, v, lessonMap));
   return { min: Math.min(...lessons), max: Math.max(...lessons) };
 }
-function themeOf(it, themeMap) {
+function themeOf(it, themeMap, variantKey) {
   const key = (themeMap && themeMap[it.id]) || readJSON(LS_THEME)[it.id] || DEFAULT_THEME;
-  const allowed = allowedThemesOf(it);
+  // variantKey 有給時，允許清單要收斂到該版型自己的層級（見 allowedThemesOf/tiersOf）——
+  // 否則像 sub3noreg-app 這種跨層題型，儲存的主題可能對「另一個版型」合法、對目前版型不合法，
+  // 卻因為沒收斂而被當成合法值直接送給後端，導致後端依設計正確拒絕（見 CLAUDE.md
+  // 「有 layout.variantThemeSet 的題型，主題選單必須跟著目前選中的版型即時過濾」）。
+  const allowed = allowedThemesOf(it, variantKey);
   // 儲存的主題若不在此題型目前允許的清單中（例如舊資料、或該題型本就不支援主題），
   // 回退到允許清單的第一項，避免顯示出「不屬於這個題型」的主題圖庫/名稱。
   return allowed.find(t => t.key === key) || allowed[0] || HOME_THEMES.find(t => t.key === DEFAULT_THEME);
@@ -3406,20 +3410,30 @@ class Component extends DCLogic {
     const key = getAdminKey() || ensureAdminKey();
     if (!key) return;
     const st = this.state.home;
-    const theme = (it.supportsTheme === false) ? null : themeOf(it, st.itemTheme);
-    const themeKey = theme ? theme.key : null;
-    const themeSuffix = (theme && theme.key !== 'random') ? ('_' + theme.label) : '';
+    // 主題必須依各版型自己的層級各自收斂（見 themeOf 的 variantKey 參數）——
+    // sub3noreg-app 這類跨層題型，std 用 d3 主題、2digit 用 d2 主題，同一個主題
+    // 不可能兩者都合法，不能用單一 theme 套用到所有版型。
+    const themeForVariant = (variantKey) =>
+      (it.supportsTheme === false) ? null : themeOf(it, st.itemTheme, variantKey);
 
     let items;
     if (scope === 'all') {
-      items = it.variants.map(v => ({
-        type_id: v.key,
-        body: this._docxThemeBody(themeKey),
-        filename: `${it.name}_${v.label}${themeSuffix}.docx`,
-      }));
+      items = it.variants.map(v => {
+        const theme = themeForVariant(v.key);
+        const themeKey = theme ? theme.key : null;
+        const themeSuffix = (theme && theme.key !== 'random') ? ('_' + theme.label) : '';
+        return {
+          type_id: v.key,
+          body: this._docxThemeBody(themeKey),
+          filename: `${it.name}_${v.label}${themeSuffix}.docx`,
+        };
+      });
     } else {
       const activeKey = activeRouteKeyOf(it, st) || it.variants[0].key;
       const v = it.variants.find(x => x.key === activeKey) || it.variants[0];
+      const theme = themeForVariant(activeKey);
+      const themeKey = theme ? theme.key : null;
+      const themeSuffix = (theme && theme.key !== 'random') ? ('_' + theme.label) : '';
       items = [{
         type_id: v.key,
         body: this._docxThemeBody(themeKey),
@@ -3468,20 +3482,28 @@ class Component extends DCLogic {
     const key = getAdminKey() || ensureAdminKey();
     if (!key) return;
     const st = this.state.home;
-    const theme = (it.supportsTheme === false) ? null : themeOf(it, st.itemTheme);
-    const themeKey = theme ? theme.key : null;
-    const themeSuffix = (theme && theme.key !== 'random') ? ('_' + theme.label) : '';
+    // 見 downloadAdminDocx 的同一段說明：主題必須依各版型自己的層級各自收斂。
+    const themeForVariant = (variantKey) =>
+      (it.supportsTheme === false) ? null : themeOf(it, st.itemTheme, variantKey);
 
     let items;
     if (scope === 'all') {
-      items = it.variants.map(v => ({
-        type_id: v.key,
-        body: this._docxThemeBody(themeKey),
-        filename: `${it.name}_${v.label}${themeSuffix}.pdf`,
-      }));
+      items = it.variants.map(v => {
+        const theme = themeForVariant(v.key);
+        const themeKey = theme ? theme.key : null;
+        const themeSuffix = (theme && theme.key !== 'random') ? ('_' + theme.label) : '';
+        return {
+          type_id: v.key,
+          body: this._docxThemeBody(themeKey),
+          filename: `${it.name}_${v.label}${themeSuffix}.pdf`,
+        };
+      });
     } else {
       const activeKey = activeRouteKeyOf(it, st) || it.variants[0].key;
       const v = it.variants.find(x => x.key === activeKey) || it.variants[0];
+      const theme = themeForVariant(activeKey);
+      const themeKey = theme ? theme.key : null;
+      const themeSuffix = (theme && theme.key !== 'random') ? ('_' + theme.label) : '';
       items = [{
         type_id: v.key,
         body: this._docxThemeBody(themeKey),
@@ -3889,7 +3911,9 @@ class Component extends DCLogic {
     if (!it) return;
     const routeKey = activeRouteKeyOf(it, st);
     if (!routeKey) return;
-    const theme = themeOf(it, st.itemTheme);
+    // routeKey 就是目前作用中的版型 key，一併傳給 themeOf 讓主題收斂到該版型自己的層級
+    // （跨層題型如 sub3noreg-app，儲存的主題可能對別的版型合法、對目前版型不合法）。
+    const theme = themeOf(it, st.itemTheme, routeKey);
     const cacheKey = routeKey + '::' + theme.key;
     const existing = (st.themePreview[itemId] || {})[cacheKey];
 
@@ -4026,11 +4050,14 @@ class Component extends DCLogic {
           .filter(k => (themeQtyMap[k] || 0) > 0)
           .map(k => ({ key: k, label: (HOME_THEMES.find(t => t.key === k) || {}).label || k, qty: themeQtyMap[k] }))
       : null;
+    // 有主題的題型，自由選配一次只能選一個版型（見 homeToggleVariantChecked 的單選限制），
+    // selected[0] 即目前作用中的版型；主題 fallback 用它收斂層級，避免帶到別版型才合法的主題。
+    const activeVariantKey = selected[0] && selected[0].key;
     const theme = presetMode
-      ? (HOME_THEMES.find(th => th.key === DEFAULT_THEME) || themeOf(item, st.itemTheme))
+      ? (HOME_THEMES.find(th => th.key === DEFAULT_THEME) || themeOf(item, st.itemTheme, activeVariantKey))
       : (themeSelections && themeSelections.length
-          ? (HOME_THEMES.find(th => th.key === themeSelections[0].key) || themeOf(item, st.itemTheme))
-          : themeOf(item, st.itemTheme));
+          ? (HOME_THEMES.find(th => th.key === themeSelections[0].key) || themeOf(item, st.itemTheme, activeVariantKey))
+          : themeOf(item, st.itemTheme, activeVariantKey));
     const themeNote = (themeSelections && themeSelections.length > 1)
       ? `主題：${themeSelections.map(t => `${t.label}×${t.qty}`).join('、')}`
       : `主題：${theme.label}`;
@@ -4158,8 +4185,10 @@ class Component extends DCLogic {
         entry.themeSelections.forEach(t => { for (let i = 0; i < t.qty; i++) themeSeq.push(t.key); });
       }
       let themeSeqIdx = 0;
-      const singleThemeBody = (it && it.supportsTheme !== false && !themeSeq)
-        ? themeBodyForKey(entry.themeKey || (entry.presetMode ? DEFAULT_THEME : ((themeOf(it, st.itemTheme) || {}).key)))
+      // entry.themeKey 缺失時（舊版購物車資料）才會落到 themeOf() fallback——此時每個 sel 各自
+      // 收斂到自己的版型層級，避免（理論上罕見的）跨版型項目用同一個對別版型才合法的主題。
+      const singleThemeBodyFor = (variantKey) => (it && it.supportsTheme !== false && !themeSeq)
+        ? themeBodyForKey(entry.themeKey || (entry.presetMode ? DEFAULT_THEME : ((themeOf(it, st.itemTheme, variantKey) || {}).key)))
         : {};
       sels.forEach(sel => {
         const selLicense = !isFree ? getLicenseForType(sel.key) : null;
@@ -4167,7 +4196,7 @@ class Component extends DCLogic {
         for (let k = 1; k <= sel.qty; k++) {
           const baseName = sels.length === 1 ? ((it && it.name) || sel.label) : sel.label;
           const filename = baseName + (sel.qty > 1 ? `_${k}` : '') + '.pdf';
-          const body = themeSeq ? themeBodyForKey(themeSeq[themeSeqIdx++ % themeSeq.length]) : { ...singleThemeBody };
+          const body = themeSeq ? themeBodyForKey(themeSeq[themeSeqIdx++ % themeSeq.length]) : singleThemeBodyFor(sel.key);
           const batchItem = { type_id: sel.key, body, filename };
           if (selLicense) {
             batchItem.license_code = selLicense.code;
@@ -4518,7 +4547,9 @@ class Component extends DCLogic {
       const lr = lessonsRangeOf(it, st.itemVariantLessons);
       // 主題選單兩種購買方式下都可挑選／預覽；系統預設實際出貨仍固定隨機
       // （見 homeCommitAddToCart），這裡的選擇只用來讓使用者預覽套用效果。
-      const theme = themeOf(it, st.itemTheme);
+      // activeKey 收斂主題層級，與 homePreviewTheme() 送出的主題（也用 routeKey/activeKey）保持一致，
+      // 否則這裡顯示的「目前主題」與實際送去 /preview-pdf 的主題會不同步。
+      const theme = themeOf(it, st.itemTheme, activeKey);
       const supportsTheme = it.supportsTheme !== false;
       const customConfirmed = !!st.itemThemeConfirmed[it.id];
       const hasCustomSelection = it.variants.some(v => (vq[v.key] || 0) > 0);
