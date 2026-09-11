@@ -2818,11 +2818,12 @@ function lessonsRangeOf(it, lessonMap) {
   const lessons = it.variants.map(v => variantLessonsOf(it, v, lessonMap));
   return { min: Math.min(...lessons), max: Math.max(...lessons) };
 }
-function themeOf(it, themeMap) {
+function themeOf(it, themeMap, variantKey) {
   const key = (themeMap && themeMap[it.id]) || readJSON(LS_THEME)[it.id] || DEFAULT_THEME;
-  const allowed = allowedThemesOf(it);
-  // 儲存的主題若不在此題型目前允許的清單中（例如舊資料、或該題型本就不支援主題），
-  // 回退到允許清單的第一項，避免顯示出「不屬於這個題型」的主題圖庫/名稱。
+  const allowed = allowedThemesOf(it, variantKey);
+  // 儲存的主題若不在此題型目前允許的清單中（例如舊資料、或該題型本就不支援主題，
+  // 或帶了 variantKey 時是目前這個版型的專屬清單），回退到允許清單的第一項，避免
+  // 顯示出「不屬於這個題型／這個版型」的主題圖庫/名稱。
   return allowed.find(t => t.key === key) || allowed[0] || HOME_THEMES.find(t => t.key === DEFAULT_THEME);
 }
 function themeChosen(it, themeMap) {
@@ -3013,7 +3014,13 @@ class Component extends DCLogic {
       // Wrinkle: 從不同題型進入 config 時，wizard 的 step/選擇狀態要重置，
       // 避免例如剛看完 P-03 的 step 3 後，換開 P-05 卻還停在 step 3。
       const configCodeChanged = screen === 'config' && params.code !== this.state.params.code;
-      const afterCommit = () => { if (screen === 'gallery') this._galleryOnEnter(); };
+      const afterCommit = () => {
+        if (screen === 'gallery') this._galleryOnEnter();
+        // 深連結／瀏覽器上一頁下一頁直接切進某題型詳情頁時，itemTheme 可能是舊版型
+        // 留下的值（例如上次在 2digit 版選了甜點店），先收斂成目前版型合法值，避免
+        // 使用者一進來就點「預覽套用效果」時仍帶著舊版型的主題送給後端。
+        if (screen === 'home' && params.item) this.homeEnsureValidTheme(params.item);
+      };
       if (configCodeChanged) {
         this.setState({
           screen, params,
@@ -3024,9 +3031,11 @@ class Component extends DCLogic {
       }
     };
     window.addEventListener('hashchange', this._onHash);
-    // 直接帶網址載入（如 #screen=gallery）不會觸發 hashchange，state.screen 已由建構時的
-    // parseHash() 設好，這裡在掛載後（DOM 已存在）立即補跑一次同樣的進場邏輯。
+    // 直接帶網址載入（如 #screen=gallery 或 #screen=home&item=xxx）不會觸發 hashchange，
+    // state.screen/params 已由建構時的 parseHash() 設好，這裡在掛載後（DOM 已存在）
+    // 立即補跑一次同樣的進場邏輯。
     if (this.state.screen === 'gallery') this._galleryOnEnter();
+    if (this.state.screen === 'home' && this.state.params.item) this.homeEnsureValidTheme(this.state.params.item);
     this._onStorage = () => this.forceUpdate();
     window.addEventListener('storage', this._onStorage);
     this.loadBackend();
@@ -3795,7 +3804,7 @@ class Component extends DCLogic {
       }
       next.previewPdfPage = 0;
       return { home: { ...s.home, ...next } };
-    }, () => this.homeSyncThemePreview(itemId));
+    }, () => { this.homeEnsureValidTheme(itemId); this.homeSyncThemePreview(itemId); });
   }
 
   // 自由選配下，主題／張數任何一項變動都視為「設定已變更」，需重新按「確認套用」才能加入購物車。
@@ -3846,7 +3855,7 @@ class Component extends DCLogic {
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
         previewPdfPage: 0,
         itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
-    }, () => this.homeSyncThemePreview(itemId));
+    }, () => { this.homeEnsureValidTheme(itemId); this.homeSyncThemePreview(itemId); });
   }
 
   // 版型清單的勾選：有圖片主題的題型是單選（radio，點擊即切換成只選這個版型，
@@ -3870,7 +3879,7 @@ class Component extends DCLogic {
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
         previewPdfPage: 0,
         itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
-    }, () => this.homeSyncThemePreview(itemId));
+    }, () => { this.homeEnsureValidTheme(itemId); this.homeSyncThemePreview(itemId); });
   }
 
   homeSelectVariantPage(itemId, key) {
@@ -3880,7 +3889,7 @@ class Component extends DCLogic {
       const flat = buildFlatPages(item, vq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const idx = flat.findIndex(p => p.key === key);
       return { home: { ...s.home, previewIndex: idx >= 0 ? idx : 0 } };
-    }, () => this.homeSyncThemePreview(itemId));
+    }, () => { this.homeEnsureValidTheme(itemId); this.homeSyncThemePreview(itemId); });
   }
 
   homePreviewTheme(itemId) {
@@ -3889,7 +3898,7 @@ class Component extends DCLogic {
     if (!it) return;
     const routeKey = activeRouteKeyOf(it, st);
     if (!routeKey) return;
-    const theme = themeOf(it, st.itemTheme);
+    const theme = themeOf(it, st.itemTheme, routeKey);
     const cacheKey = routeKey + '::' + theme.key;
     const existing = (st.themePreview[itemId] || {})[cacheKey];
 
@@ -3943,6 +3952,30 @@ class Component extends DCLogic {
     }, () => this.homePreviewTheme(itemId));
   }
 
+  // 版型改變後，目前選中的主題可能不再適用於新版型（例如 sub3noreg-app 標準版／混合版
+  // 只吃三位數主題，被減數兩位版只吃兩位數主題），此時要把 itemTheme 收斂回新版型仍合法的
+  // 值，否則背景即時預覽或加入購物車會拿舊主題送給後端，後端依版型嚴格驗證後直接拒絕
+  // （見 backend/gen_sub3noreg_app.py 的 generate_std()/generate_2digit()/generate_mixed()）。
+  // 沒有明確選過主題（themeChosen 為否）時不動它，交給 themeOf() 既有的預設邏輯處理。
+  // 呼叫時機：所有會改變 activeRouteKeyOf() 結果的 handler，都要在呼叫 homeSyncThemePreview
+  // 之前先呼叫這裡，讓即時預覽／加入購物車讀到的 itemTheme 已經是合法值。
+  homeEnsureValidTheme(itemId) {
+    const item = ITEMS.find(x => x.id === itemId);
+    if (!item || item.supportsTheme === false) return;
+    const variantKey = activeRouteKeyOf(item, this.state.home);
+    this.setState(s => {
+      const currentKey = s.home.itemTheme[itemId];
+      if (!currentKey) return {};
+      const allowedKeys = allowedThemesOf(item, variantKey).map(t => t.key);
+      if (allowedKeys.includes(currentKey)) return {};
+      // 沿用 themeOf() 既有慣例：儲存的主題不在允許清單中時，回退到允許清單第一項。
+      const fallback = allowedKeys[0];
+      if (!fallback) return {};
+      writeJSON(LS_THEME, { ...readJSON(LS_THEME), [itemId]: fallback });
+      return { home: { ...s.home, itemTheme: { ...s.home.itemTheme, [itemId]: fallback } } };
+    });
+  }
+
   // 版型／購買方式改變後，若畫面上正顯示主題即時預覽，必須重新向 /preview-pdf
   // 取一張「新版型 × 目前主題」的預覽圖。themePreview 的快取鍵是
   // 「routeKey::themeKey」，換了版型就查不到既有快取，畫面會靜默退回該版型的
@@ -3954,7 +3987,7 @@ class Component extends DCLogic {
 
   homePreviewVariant(itemId, key) {
     this.setState(s => ({ home: { ...s.home, previewPdfPage: 0, previewOverride: { ...s.home.previewOverride, [itemId]: key } } }),
-      () => this.homeSyncThemePreview(itemId));
+      () => { this.homeEnsureValidTheme(itemId); this.homeSyncThemePreview(itemId); });
   }
 
   homeStepPreview(itemId, delta) {
@@ -3964,7 +3997,7 @@ class Component extends DCLogic {
       const flat = buildFlatPages(item, vq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const next = Math.max(0, Math.min(flat.length - 1, s.home.previewIndex + delta));
       return { home: { ...s.home, previewIndex: next, previewPdfPage: 0, previewOverride: { ...s.home.previewOverride, [itemId]: null } } };
-    }, () => this.homeSyncThemePreview(itemId));
+    }, () => { this.homeEnsureValidTheme(itemId); this.homeSyncThemePreview(itemId); });
   }
 
   // 連續頁次翻頁：直接指定「購買序列的第幾張 + 該張的第幾頁」。
@@ -3975,7 +4008,7 @@ class Component extends DCLogic {
       previewIndex: sheetIdx,
       previewPdfPage: pageIdx,
       previewOverride: { ...s.home.previewOverride, [itemId]: null } } }),
-      () => this.homeSyncThemePreview(itemId));
+      () => { this.homeEnsureValidTheme(itemId); this.homeSyncThemePreview(itemId); });
   }
 
   homeStepPdfPage(itemId, delta) {
@@ -4518,7 +4551,7 @@ class Component extends DCLogic {
       const lr = lessonsRangeOf(it, st.itemVariantLessons);
       // 主題選單兩種購買方式下都可挑選／預覽；系統預設實際出貨仍固定隨機
       // （見 homeCommitAddToCart），這裡的選擇只用來讓使用者預覽套用效果。
-      const theme = themeOf(it, st.itemTheme);
+      const theme = themeOf(it, st.itemTheme, activeKey);
       const supportsTheme = it.supportsTheme !== false;
       const customConfirmed = !!st.itemThemeConfirmed[it.id];
       const hasCustomSelection = it.variants.some(v => (vq[v.key] || 0) > 0);
