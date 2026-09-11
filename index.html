@@ -2818,11 +2818,12 @@ function lessonsRangeOf(it, lessonMap) {
   const lessons = it.variants.map(v => variantLessonsOf(it, v, lessonMap));
   return { min: Math.min(...lessons), max: Math.max(...lessons) };
 }
-function themeOf(it, themeMap) {
+function themeOf(it, themeMap, variantKey) {
   const key = (themeMap && themeMap[it.id]) || readJSON(LS_THEME)[it.id] || DEFAULT_THEME;
-  const allowed = allowedThemesOf(it);
-  // 儲存的主題若不在此題型目前允許的清單中（例如舊資料、或該題型本就不支援主題），
-  // 回退到允許清單的第一項，避免顯示出「不屬於這個題型」的主題圖庫/名稱。
+  const allowed = allowedThemesOf(it, variantKey);
+  // 儲存的主題若不在此題型目前允許的清單中（例如舊資料、或該題型本就不支援主題，
+  // 或帶了 variantKey 時是目前這個版型的專屬清單），回退到允許清單的第一項，避免
+  // 顯示出「不屬於這個題型／這個版型」的主題圖庫/名稱。
   return allowed.find(t => t.key === key) || allowed[0] || HOME_THEMES.find(t => t.key === DEFAULT_THEME);
 }
 function themeChosen(it, themeMap) {
@@ -3013,7 +3014,13 @@ class Component extends DCLogic {
       // Wrinkle: 從不同題型進入 config 時，wizard 的 step/選擇狀態要重置，
       // 避免例如剛看完 P-03 的 step 3 後，換開 P-05 卻還停在 step 3。
       const configCodeChanged = screen === 'config' && params.code !== this.state.params.code;
-      const afterCommit = () => { if (screen === 'gallery') this._galleryOnEnter(); };
+      const afterCommit = () => {
+        if (screen === 'gallery') this._galleryOnEnter();
+        // 深連結／瀏覽器上一頁下一頁直接切進某題型詳情頁時，itemTheme 可能是舊版型
+        // 留下的值（例如上次在 2digit 版選了甜點店），先收斂成目前版型合法值，避免
+        // 使用者一進來就點「預覽套用效果」時仍帶著舊版型的主題送給後端。
+        if (screen === 'home' && params.item) this.homeEnsureValidTheme(params.item);
+      };
       if (configCodeChanged) {
         this.setState({
           screen, params,
@@ -3024,9 +3031,11 @@ class Component extends DCLogic {
       }
     };
     window.addEventListener('hashchange', this._onHash);
-    // 直接帶網址載入（如 #screen=gallery）不會觸發 hashchange，state.screen 已由建構時的
-    // parseHash() 設好，這裡在掛載後（DOM 已存在）立即補跑一次同樣的進場邏輯。
+    // 直接帶網址載入（如 #screen=gallery 或 #screen=home&item=xxx）不會觸發 hashchange，
+    // state.screen/params 已由建構時的 parseHash() 設好，這裡在掛載後（DOM 已存在）
+    // 立即補跑一次同樣的進場邏輯。
     if (this.state.screen === 'gallery') this._galleryOnEnter();
+    if (this.state.screen === 'home' && this.state.params.item) this.homeEnsureValidTheme(this.state.params.item);
     this._onStorage = () => this.forceUpdate();
     window.addEventListener('storage', this._onStorage);
     this.loadBackend();
@@ -3889,7 +3898,7 @@ class Component extends DCLogic {
     if (!it) return;
     const routeKey = activeRouteKeyOf(it, st);
     if (!routeKey) return;
-    const theme = themeOf(it, st.itemTheme);
+    const theme = themeOf(it, st.itemTheme, routeKey);
     const cacheKey = routeKey + '::' + theme.key;
     const existing = (st.themePreview[itemId] || {})[cacheKey];
 
@@ -4542,7 +4551,7 @@ class Component extends DCLogic {
       const lr = lessonsRangeOf(it, st.itemVariantLessons);
       // 主題選單兩種購買方式下都可挑選／預覽；系統預設實際出貨仍固定隨機
       // （見 homeCommitAddToCart），這裡的選擇只用來讓使用者預覽套用效果。
-      const theme = themeOf(it, st.itemTheme);
+      const theme = themeOf(it, st.itemTheme, activeKey);
       const supportsTheme = it.supportsTheme !== false;
       const customConfirmed = !!st.itemThemeConfirmed[it.id];
       const hasCustomSelection = it.variants.some(v => (vq[v.key] || 0) > 0);
