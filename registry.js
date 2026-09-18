@@ -1667,16 +1667,18 @@ window.WORKSHEET_REGISTRY = [
   {
     "id": "l6_01",
     "code": "N101B",
-    "name": "數到200＿餅乾計數",
+    "name": "數到200＿圖像計數",
     "grade": 1,
     "ops": [],
     "keywords": [
       "數到200",
       "計數",
       "一百多",
-      "餅乾"
+      "餅乾",
+      "香蕉",
+      "混合"
     ],
-    "desc": "認識 151–200：用餅乾圖像計數，每格一包（10 個）或一個，固定版型。",
+    "desc": "認識 151–200：用餅乾／香蕉／混合圖像計數，每包（串）十個或一個，三種版型固定版面。",
     "sortKey": [
       1,
       2,
@@ -1685,9 +1687,9 @@ window.WORKSHEET_REGISTRY = [
     "home": {
       "icon": "🍪",
       "sub": "認識 151–200",
-      "desc": "用餅乾圖像認識 151–200，固定版型，一鍵下載。",
+      "desc": "用餅乾、香蕉或混合圖像認識 151–200，三種版型，一鍵下載。",
       "features": [
-        "固定版型",
+        "三種版型",
         "圖像計數",
         "一年級"
       ]
@@ -1697,104 +1699,25 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N101B",
-      "desc": "用具象圖像（餅乾）計數，認識 151–200 的位值結構。"
+      "desc": "用具象圖像（餅乾／香蕉／兩者混合）計數，認識 151–200 的位值結構。"
     },
-    "sample": "assets/l6_01_sample.pdf",
+    "sample": [
+      { "key": "l6_01", "pdf": "assets/l6_01_sample.pdf", "name": "數到200_餅乾計數.pdf", "label": "餅乾版" },
+      { "key": "l6_02", "pdf": "assets/l6_02_sample.pdf", "name": "數到200_香蕉計數.pdf", "label": "香蕉版" },
+      { "key": "l6_03", "pdf": "assets/l6_03_sample.pdf", "name": "數到200_混合計數.pdf", "label": "混合版" }
+    ],
     "layout": {
       "panel": "l6_01Panel",
       "themeSet": null,
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
-  },
-  {
-    "id": "l6_02",
-    "code": "N101C",
-    "name": "數到200＿香蕉計數",
-    "grade": 1,
-    "ops": [],
-    "keywords": [
-      "數到200",
-      "計數",
-      "一百多",
-      "香蕉"
-    ],
-    "desc": "認識 151–200：用香蕉圖像計數，每串十根或一根，固定版型。",
-    "sortKey": [
-      1,
-      2,
-      1
-    ],
-    "home": {
-      "icon": "🍌",
-      "sub": "認識 151–200",
-      "desc": "用香蕉圖像認識 151–200，固定版型，一鍵下載。",
-      "features": [
-        "固定版型",
-        "圖像計數",
-        "一年級"
-      ]
     },
-    "diffInfo": {
-      "grade": "一年級",
-      "level": "基礎",
-      "levelColor": "#22c55e",
-      "code": "N101C",
-      "desc": "用具象圖像（香蕉）計數，認識 151–200 的位值結構。"
-    },
-    "sample": "assets/l6_02_sample.pdf",
-    "layout": {
-      "panel": "l6_02Panel",
-      "themeSet": null,
-      "showTheme": false,
-      "prices": false,
-      "interactive": false
-    }
-  },
-  {
-    "id": "l6_03",
-    "code": "N101D",
-    "name": "數到200＿混合計數",
-    "grade": 1,
-    "ops": [],
-    "keywords": [
-      "數到200",
-      "計數",
-      "一百多",
-      "混合"
-    ],
-    "desc": "認識 151–200：餅乾＋香蕉混合計數，固定版型。",
-    "sortKey": [
-      1,
-      2,
-      1
-    ],
-    "home": {
-      "icon": "🔢",
-      "sub": "混合計數 151–200",
-      "desc": "餅乾＋香蕉混合計數，認識 151–200，固定版型。",
-      "features": [
-        "固定版型",
-        "混合圖像",
-        "一年級"
-      ]
-    },
-    "diffInfo": {
-      "grade": "一年級",
-      "level": "基礎",
-      "levelColor": "#22c55e",
-      "code": "N101D",
-      "desc": "用餅乾和香蕉兩種圖像混合計數，認識 151–200。"
-    },
-    "sample": "assets/l6_03_sample.pdf",
-    "layout": {
-      "panel": "l6_03Panel",
-      "themeSet": null,
-      "showTheme": false,
-      "prices": false,
-      "interactive": false
-    }
+    "variants": [
+      { "key": "l6_01", "label": "餅乾版" },
+      { "key": "l6_02", "label": "香蕉版" },
+      { "key": "l6_03", "label": "混合版" }
+    ]
   },
   {
     "id": "l6_04",
