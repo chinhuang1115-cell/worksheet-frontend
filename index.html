@@ -2441,6 +2441,21 @@ const _CHILD_VARIANT_IDS = new Set();
 ITEMS.forEach(it => { if (it.variants.length > 1) it.variants.forEach(v => { if (v.key !== it.id) _CHILD_VARIANT_IDS.add(v.key); }); });
 const TOP_ITEMS = ITEMS.filter(it => !_CHILD_VARIANT_IDS.has(it.id));
 
+// 題型合併／下架後，localStorage 的 QA 紀錄會留下讀不到的孤兒鍵（例：2026-09-18 起
+// l6_02／l6_03 併入 l6_01 成為版型）。開機時依 registry 現有 id 一次清掉，不必逐次
+// 維護淘汰清單；三份 QA 資料（狀態／備註／檢核表）都是以 registry id 為鍵。
+function _pruneOrphanQaState() {
+  const valid = new Set(ITEMS.map(it => it.id));
+  [LS_QA, LS_QA_NOTE, LS_CHECKLIST].forEach(key => {
+    const cur = readJSON(key);
+    const orphans = Object.keys(cur).filter(k => !valid.has(k));
+    if (!orphans.length) return;
+    const next = { ...cur };
+    orphans.forEach(k => { delete next[k]; });
+    writeJSON(key, next);
+  });
+}
+
 // 鍵為 registry id（lookup 鍵）；沿用 P-01~P-08 對應關係，其餘題型未列出者 fallback 為 'unreviewed'
 const DEFAULT_QA = { 'n2-change':'pass','maxbuy':'pass','sanbushu':'warn','fenfen':'pass','pingfen':'unreviewed','liangbushu':'pass','huachu4add':'unreviewed','tuiwei4sub':'fail' };
 
@@ -3011,6 +3026,7 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    _pruneOrphanQaState();  // 清掉已合併／下架題型留在 localStorage 的 QA 孤兒紀錄
     window._ysApp = this;   // task 4：圖庫管理畫面的 window._gallery* handler 透過此參照呼叫 this.patch()/this.forceUpdate()
     this._onHash = () => {
       const { screen, params } = parseHash();
