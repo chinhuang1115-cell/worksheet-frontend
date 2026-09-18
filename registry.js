@@ -1722,7 +1722,7 @@ window.WORKSHEET_REGISTRY = [
   {
     "id": "l6_04",
     "code": "N101E",
-    "name": "數到200＿積木十位個位",
+    "name": "數到200＿積木位值",
     "grade": 1,
     "ops": [],
     "keywords": [
@@ -1730,9 +1730,10 @@ window.WORKSHEET_REGISTRY = [
       "積木",
       "十位",
       "個位",
+      "百位",
       "位值"
     ],
-    "desc": "認識 151–200：用積木圖示表示十位與個位，理解位值結構，固定版型。",
+    "desc": "認識 151–200：用積木圖示表示位值，兩種版型（十位＋個位／百位），固定版面。",
     "sortKey": [
       1,
       2,
@@ -1740,10 +1741,10 @@ window.WORKSHEET_REGISTRY = [
     ],
     "home": {
       "icon": "🧱",
-      "sub": "積木十位個位",
-      "desc": "積木圖示表示十位＋個位，理解 151–200 位值結構。",
+      "sub": "積木位值",
+      "desc": "積木圖示表示位值，理解 151–200 的位值結構，兩種版型。",
       "features": [
-        "固定版型",
+        "兩種版型",
         "積木位值",
         "一年級"
       ]
@@ -1753,60 +1754,23 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N101E",
-      "desc": "用積木圖示（長條十位＋方塊個位）表示 151–200。"
+      "desc": "用積木圖示（長條十位＋方塊個位／大方塊百位）表示 151–200 的位值結構。"
     },
-    "sample": "assets/l6_04_sample.pdf",
+    "sample": [
+      { "key": "l6_04", "pdf": "assets/l6_04_sample.pdf", "name": "數到200_積木十位個位.pdf", "label": "十位個位版" },
+      { "key": "l6_05", "pdf": "assets/l6_05_sample.pdf", "name": "數到200_積木百位.pdf", "label": "百位版" }
+    ],
     "layout": {
       "panel": "l6_04Panel",
       "themeSet": null,
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
-  },
-  {
-    "id": "l6_05",
-    "code": "N101F",
-    "name": "數到200＿積木百位",
-    "grade": 1,
-    "ops": [],
-    "keywords": [
-      "數到200",
-      "積木",
-      "百位",
-      "位值"
-    ],
-    "desc": "認識 151–200：用積木圖示表示百位，理解三位數位值結構，固定版型。",
-    "sortKey": [
-      1,
-      2,
-      3
-    ],
-    "home": {
-      "icon": "🧊",
-      "sub": "積木百位",
-      "desc": "積木圖示表示百位，理解三位數位值，固定版型。",
-      "features": [
-        "固定版型",
-        "積木百位",
-        "一年級"
-      ]
     },
-    "diffInfo": {
-      "grade": "一年級",
-      "level": "基礎",
-      "levelColor": "#22c55e",
-      "code": "N101F",
-      "desc": "用大積木方塊表示百位，認識 151–200 三位數結構。"
-    },
-    "sample": "assets/l6_05_sample.pdf",
-    "layout": {
-      "panel": "l6_05Panel",
-      "themeSet": null,
-      "showTheme": false,
-      "prices": false,
-      "interactive": false
-    }
+    "variants": [
+      { "key": "l6_04", "label": "十位個位版" },
+      { "key": "l6_05", "label": "百位版" }
+    ]
   },
   {
     "id": "l6_06",
