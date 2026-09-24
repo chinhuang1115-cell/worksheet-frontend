@@ -2093,7 +2093,11 @@ window.WORKSHEET_REGISTRY = [
     "layout": {
       "panel": null,
       "themeSet": null,
-      "showTheme": false,
+      "showTheme": true,
+      "variantThemeSet": {
+        "addsub-mixed-coupon-toy": "d3",
+        "addsub-mixed-coupon-food": "d2"
+      },
       "prices": null,
       "interactive": false
     },
