@@ -372,6 +372,90 @@ window.WORKSHEET_REGISTRY = [
     }
   },
   {
+    "id": "mul-concept",
+    "code": "N209A",
+    "grade": "2",
+    "name": "倍數與乘法＿連加到乘法（一位數）",
+    "ops": ["mul"],
+    "keywords": ["倍數", "連加", "乘法概念", "九九乘法"],
+    "desc": "看圖數盤數／包數，理解「幾個幾」的倍數概念，並列出連加算式與乘法列式，銜接一位數乘法。",
+    "sortKey": [3, 1, 1],
+    "home": {
+      "icon": "🍽️",
+      "sub": "幾個幾＝倍數",
+      "desc": "看圖數盤數，理解乘法的「倍數」概念，練習連加到乘法列式。",
+      "features": ["看圖數倍數", "連加算式", "乘法列式"]
+    },
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N209A",
+      "desc": "建立乘法前的倍數概念，看圖數出「每份數量」與「份數」，練習連加與乘法列式的對應。"
+    },
+    "sample": [
+      { "pdf": "assets/mul_concept_times_sample.pdf", "name": "倍數與乘法_倍數概念.pdf", "label": "倍數概念", "key": "mul-concept-times" },
+      { "pdf": "assets/mul_concept_food_sample.pdf", "name": "倍數與乘法_連加到乘法_食物.pdf", "label": "連加到乘法（食物）", "key": "mul-concept-food" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "mul-concept-times", "label": "倍數概念" },
+      { "key": "mul-concept-food", "label": "連加到乘法（食物）" }
+    ]
+  },
+  {
+    "id": "mul2x1",
+    "code": "N209B",
+    "grade": "2",
+    "name": "乘法直式＿兩位數乘一位數",
+    "ops": ["mul"],
+    "keywords": ["乘法直式", "兩位數乘一位數", "九九乘法", "扭蛋機", "價目表"],
+    "desc": "兩位數乘以一位數的直式計算練習，扭蛋機情境練習連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢。",
+    "sortKey": [3, 1, 2],
+    "home": {
+      "icon": "✖️",
+      "sub": "兩位數 × 一位數",
+      "desc": "兩位數乘以一位數的直式計算，扭蛋機與價目表情境應用。",
+      "features": ["連加到列式", "乘法直式", "價目表應用"]
+    },
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N209B",
+      "desc": "兩位數乘以一位數的直式計算練習，扭蛋機情境從連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢。"
+    },
+    "sample": [
+      { "pdf": "assets/mul2x1_gacha_add_sample.pdf", "name": "乘法直式_扭蛋機_連加.pdf", "label": "扭蛋機（連加）", "key": "mul2x1-gacha-add" },
+      { "pdf": "assets/mul2x1_gacha_eq_sample.pdf", "name": "乘法直式_扭蛋機_列式.pdf", "label": "扭蛋機（列式）", "key": "mul2x1-gacha-eq" },
+      { "pdf": "assets/mul2x1_price_stationery_sample.pdf", "name": "乘法直式_價目表_文具.pdf", "label": "價目表（文具）", "key": "mul2x1-price-stationery" },
+      { "pdf": "assets/mul2x1_price_grocery_sample.pdf", "name": "乘法直式_價目表_雜貨.pdf", "label": "價目表（雜貨）", "key": "mul2x1-price-grocery" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": true,
+      "variantThemeSet": {
+        "mul2x1-price-stationery": "d2",
+        "mul2x1-price-grocery": "d2"
+      },
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "mul2x1-gacha-add", "label": "扭蛋機（連加）" },
+      { "key": "mul2x1-gacha-eq", "label": "扭蛋機（列式）" },
+      { "key": "mul2x1-price-stationery", "label": "價目表（文具）" },
+      { "key": "mul2x1-price-grocery", "label": "價目表（雜貨）" }
+    ]
+  },
+  {
     "id": "haochashao",
     "code": "N204B",
     "grade": "2",
