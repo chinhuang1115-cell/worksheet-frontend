@@ -415,23 +415,26 @@ window.WORKSHEET_REGISTRY = [
     "grade": "2",
     "name": "乘法直式＿兩位數乘一位數",
     "ops": ["mul"],
-    "keywords": ["乘法直式", "兩位數乘一位數", "九九乘法", "扭蛋機", "價目表"],
-    "desc": "兩位數乘以一位數的直式計算練習，扭蛋機情境練習連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢。",
+    "keywords": ["乘法直式", "兩位數乘一位數", "九九乘法", "扭蛋機", "價目表", "基本計算", "連加與乘法"],
+    "desc": "兩位數乘以一位數的直式計算練習：基本計算系列從連加直式帶到乘法直式（示範引導／計算格／無輔助格三種鷹架），扭蛋機情境練習連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢。",
     "sortKey": [3, 1, 2],
     "home": {
       "icon": "✖️",
       "sub": "兩位數 × 一位數",
-      "desc": "兩位數乘以一位數的直式計算，扭蛋機與價目表情境應用。",
-      "features": ["連加到列式", "乘法直式", "價目表應用"]
+      "desc": "兩位數乘以一位數的直式計算，基本連加直式練習、扭蛋機與價目表情境應用。",
+      "features": ["連加到列式", "乘法直式", "基本計算直式練習", "價目表應用"]
     },
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N209B",
-      "desc": "兩位數乘以一位數的直式計算練習，扭蛋機情境從連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢。"
+      "desc": "兩位數乘以一位數的直式計算練習：基本計算系列從連加直式帶到乘法直式，扭蛋機情境從連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢。"
     },
     "sample": [
+      { "pdf": "assets/mul2x1_basic_demo_sample.pdf", "name": "乘法直式_基本計算_示範引導.pdf", "label": "基本計算（示範引導）", "key": "mul2x1-basic-demo" },
+      { "pdf": "assets/mul2x1_basic_grid_sample.pdf", "name": "乘法直式_基本計算_計算格.pdf", "label": "基本計算（計算格）", "key": "mul2x1-basic-grid" },
+      { "pdf": "assets/mul2x1_basic_free_sample.pdf", "name": "乘法直式_基本計算_無輔助格.pdf", "label": "基本計算（無輔助格）", "key": "mul2x1-basic-free" },
       { "pdf": "assets/mul2x1_gacha_add_sample.pdf", "name": "乘法直式_扭蛋機_連加.pdf", "label": "扭蛋機（連加）", "key": "mul2x1-gacha-add" },
       { "pdf": "assets/mul2x1_gacha_eq_sample.pdf", "name": "乘法直式_扭蛋機_列式.pdf", "label": "扭蛋機（列式）", "key": "mul2x1-gacha-eq" },
       { "pdf": "assets/mul2x1_price_stationery_sample.pdf", "name": "乘法直式_價目表_文具.pdf", "label": "價目表（文具）", "key": "mul2x1-price-stationery" },
@@ -449,6 +452,9 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     },
     "variants": [
+      { "key": "mul2x1-basic-demo", "label": "基本計算（示範引導）" },
+      { "key": "mul2x1-basic-grid", "label": "基本計算（計算格）" },
+      { "key": "mul2x1-basic-free", "label": "基本計算（無輔助格）" },
       { "key": "mul2x1-gacha-add", "label": "扭蛋機（連加）" },
       { "key": "mul2x1-gacha-eq", "label": "扭蛋機（列式）" },
       { "key": "mul2x1-price-stationery", "label": "價目表（文具）" },
