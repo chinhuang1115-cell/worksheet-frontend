@@ -468,24 +468,26 @@ window.WORKSHEET_REGISTRY = [
     "name": "九九乘法＿查表練習（一位數）",
     "ops": ["mul"],
     "keywords": ["九九乘法", "查表", "乘法圓盤", "九九乘法表"],
-    "desc": "每頁上半是 6 個乘法圓盤（2 列 × 3 欄）：中心是乘數、中圈是被乘數、外圈是乘積，每個扇形只印一個數字，查九九乘法表填出另一個；下半是 8 題橫式填空（求積／求被乘數各 4 題），換一種作答格式再練一次查表。單一段每頁固定一個乘數（8 頁），綜合每頁混合三個乘數（2 頁）。",
+    "desc": "每頁上半是 6 個乘法圓盤（2 列 × 3 欄）：中心是乘數、中圈是被乘數、外圈是乘積，每個扇形只印一個數字，查九九乘法表填出另一個；下半是 8 題橫式填空（求積／求被乘數各 4 題），換一種作答格式再練一次查表。可選每頁一種、兩種、三種或六種乘法。",
     "sortKey": [3, 1, 3],
     "home": {
       "icon": "🎯",
       "sub": "查表 × 圓盤",
-      "desc": "乘法圓盤查表練習，中心乘數 × 中圈被乘數 ＝ 外圈乘積，查九九乘法表把圓盤填完整；下方再配 8 題橫式填空，鞏固查表能力。",
-      "features": ["乘法圓盤查表", "橫式填空（求積／求被乘數）", "單一段與綜合版"]
+      "desc": "乘法圓盤查表練習，中心乘數 × 中圈被乘數 ＝ 外圈乘積，查九九乘法表把圓盤填完整；下方再配 8 題橫式填空，鞏固查表能力。可選每頁一種、兩種、三種或六種乘法。",
+      "features": ["乘法圓盤查表", "橫式填空（求積／求被乘數）", "可選每頁一種、兩種、三種或六種乘法"]
     },
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N209C",
-      "desc": "熟練九九乘法表的查表練習：上半 6 個乘法圓盤（中心乘數、中圈被乘數、外圈乘積，留白一個數字查表填寫），下半 8 題橫式填空（c×m＝？ 或 c×？＝p），兩種格式交叉練習查表。"
+      "desc": "熟練九九乘法表的查表練習：上半 6 個乘法圓盤（中心乘數、中圈被乘數、外圈乘積，留白一個數字查表填寫），下半 8 題橫式填空（c×m＝？ 或 c×？＝p），兩種格式交叉練習查表。可選每頁一種、兩種、三種或六種乘法。"
     },
     "sample": [
-      { "pdf": "assets/mul_chabiao_single_sample.pdf", "name": "九九乘法_查表練習_單一段.pdf", "label": "單一段（2～9）", "key": "mul-chabiao-single" },
-      { "pdf": "assets/mul_chabiao_mixed_sample.pdf", "name": "九九乘法_查表練習_綜合.pdf", "label": "綜合", "key": "mul-chabiao-mixed" }
+      { "pdf": "assets/mul_chabiao_single_sample.pdf", "name": "九九乘法_查表練習_每頁一種.pdf", "label": "每頁一種（2～9）", "key": "mul-chabiao-single" },
+      { "pdf": "assets/mul_chabiao_two_sample.pdf", "name": "九九乘法_查表練習_每頁兩種.pdf", "label": "每頁兩種", "key": "mul-chabiao-two" },
+      { "pdf": "assets/mul_chabiao_mixed_sample.pdf", "name": "九九乘法_查表練習_每頁三種.pdf", "label": "每頁三種", "key": "mul-chabiao-mixed" },
+      { "pdf": "assets/mul_chabiao_six_sample.pdf", "name": "九九乘法_查表練習_每頁六種.pdf", "label": "每頁六種", "key": "mul-chabiao-six" }
     ],
     "layout": {
       "panel": null,
@@ -495,8 +497,10 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     },
     "variants": [
-      { "key": "mul-chabiao-single", "label": "單一段（2～9）" },
-      { "key": "mul-chabiao-mixed", "label": "綜合" }
+      { "key": "mul-chabiao-single", "label": "每頁一種（2～9）" },
+      { "key": "mul-chabiao-two", "label": "每頁兩種" },
+      { "key": "mul-chabiao-mixed", "label": "每頁三種" },
+      { "key": "mul-chabiao-six", "label": "每頁六種" }
     ]
   },
   {
