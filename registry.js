@@ -456,6 +456,44 @@ window.WORKSHEET_REGISTRY = [
     ]
   },
   {
+    "id": "mul-chabiao",
+    "code": "N209C",
+    "grade": "2",
+    "name": "九九乘法＿查表練習（一位數）",
+    "ops": ["mul"],
+    "keywords": ["九九乘法", "查表", "乘法圓盤", "九九乘法表"],
+    "desc": "乘法圓盤三層同心圈：中心是乘數、中圈是被乘數、外圈是乘積，每個扇形只印一個數字，查九九乘法表填出另一個；單一段每頁固定一個乘數（8 頁），綜合每頁混合三個乘數（2 頁）。",
+    "sortKey": [3, 1, 3],
+    "home": {
+      "icon": "🎯",
+      "sub": "查表 × 圓盤",
+      "desc": "乘法圓盤查表練習，中心乘數 × 中圈被乘數 ＝ 外圈乘積，查九九乘法表把圓盤填完整。",
+      "features": ["乘法圓盤", "查九九乘法表", "單一段／綜合"]
+    },
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N209C",
+      "desc": "熟練九九乘法表的查表練習：圓盤中心是乘數、中圈是被乘數、外圈是乘積，每個扇形留白一個數字，查表求出另一個。"
+    },
+    "sample": [
+      { "pdf": "assets/mul_chabiao_single_sample.pdf", "name": "九九乘法_查表練習_單一段.pdf", "label": "單一段（2～9）", "key": "mul-chabiao-single" },
+      { "pdf": "assets/mul_chabiao_mixed_sample.pdf", "name": "九九乘法_查表練習_綜合.pdf", "label": "綜合", "key": "mul-chabiao-mixed" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "mul-chabiao-single", "label": "單一段（2～9）" },
+      { "key": "mul-chabiao-mixed", "label": "綜合" }
+    ]
+  },
+  {
     "id": "haochashao",
     "code": "N204B",
     "grade": "2",
