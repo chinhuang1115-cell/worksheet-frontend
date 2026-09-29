@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>輔助計算格視覺模擬</title>
+<style>
+  :root {
+    --u: 44px;                 /* 一個數字格的寬＝全部尺寸的基準，等比例縮放只改這一個值 */
+    --line: #cfcfcf;           /* 格線：淺灰 */
+    --ink: #111;
+    --carry: #c2410c;          /* 進位／借位數字：橘褐，與範本一致 */
+    --shade: #f1f1f1;          /* 位值淡底 */
+    --rule: #111;              /* 結果橫線 */
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; color: var(--ink); background: #fafafa; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 28px 0 8px; border-left: 4px solid #444; padding-left: 8px; }
+  p.note { margin: 4px 0 12px; color: #555; font-size: 13px; line-height: 1.6; }
+  .ctl { margin: 12px 0 4px; font-size: 14px; }
+  .ctl input { vertical-align: middle; width: 220px; }
+  .sheet { background: #fff; border: 1px solid #ddd; padding: 16px; margin-bottom: 8px; overflow-x: auto; }
+  .row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .card { border: 1px solid #999; padding: 10px 12px 14px; min-width: 0; }
+  .card .cap { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .card .cap span { font-weight: 400; color: #666; }
+  .eq { font-size: calc(var(--u) * .42); margin-bottom: calc(var(--u) * .2); }
+  .eq b { color: #d00; }
+
+  /* ── 計算格 ── */
+  .g { display: grid; font-size: var(--u); line-height: 1; margin: 0 auto; width: max-content; }
+  .c { width: var(--u); height: calc(var(--u) * 1.05); border: max(1px, calc(var(--u) * .018)) solid var(--line);
+       margin: 0 calc(max(1px, calc(var(--u) * .018)) * -1) calc(max(1px, calc(var(--u) * .018)) * -1) 0;
+       display: flex; align-items: center; justify-content: center; font-size: calc(var(--u) * .62); position: relative; }
+  .c.sign { width: calc(var(--u) * .6); border-color: transparent; font-size: calc(var(--u) * .5); }
+  .c.up   { height: calc(var(--u) * .62); font-size: calc(var(--u) * .34); color: var(--carry); border-style: dashed; background: #fffaf3; }
+  .c.up.sign { background: none; }
+  .c.ans  { color: #111; }
+  .c.hint { background: var(--shade); }
+  .c.strike::after { content: ""; position: absolute; left: 14%; right: 14%; top: 50%; border-top: calc(var(--u) * .04) solid #d33; transform: rotate(-32deg); }
+  .c.small-r { align-items: flex-end; justify-content: flex-end; font-size: calc(var(--u) * .3); color: var(--carry); padding: 0 3px 2px 0; }
+  .rule { grid-column: 1 / -1; height: calc(var(--u) * .06); background: var(--rule); margin: calc(var(--u) * .03) 0; }
+
+  /* 無輔助格：不畫格線，只留符號＋粗橫線，數字仍按位值對齊 */
+  .g.free .c { border-color: transparent; background: none; }
+  .g.free .c.up { display: none; }
+
+  /* 位值標示（僅示範版顯示） */
+  .ph { font-size: calc(var(--u) * .26); color: #888; height: calc(var(--u) * .34); }
+  .ph.sign { visibility: hidden; }
+
+  .legend { font-size: 13px; line-height: 1.8; }
+  .legend li { margin-left: 18px; }
+  .todo { background: #fff8e1; border: 1px solid #f0d78c; padding: 10px 14px; font-size: 13px; line-height: 1.7; margin-top: 12px; }
+  @media (max-width: 760px) { .row3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<h1>輔助計算格視覺模擬（草稿）</h1>
+<p class="note">依「乘法直式（基本計算／價目表）」「退位減法」已通過範本的樣式推整：符號欄＋數字欄、頂端進位／借位列、粗橫線、答案列。<br>
+所有尺寸都以「一格寬 <code>--u</code>」為基準等比例換算，拖曳下方滑桿即可看放大縮小時比例是否一致。</p>
+
+<div class="ctl">格子大小（--u）：<input id="u" type="range" min="28" max="64" value="44"> <span id="uv">44</span> px</div>
+
+<h2>① 三種運算 × 三種鷹架（同一套格線）</h2>
+<p class="note">左＝示範引導（含過程與位值）　中＝計算格（空格＋進位／借位列）　右＝無輔助格（純直式，只留符號與橫線）。</p>
+<div id="matrix"></div>
+
+<h2>② 格子數隨「位數」改變（加法為例，空格版）</h2>
+<p class="note">規則：數字欄數 ＝ 算式（含答案）中最大的位數；再加最左邊 1 欄符號欄。頂端進位列的格數與數字欄相同。</p>
+<div class="sheet"><div class="row3" id="digits"></div></div>
+
+<div class="legend">
+  <b>圖例</b>
+  <ul>
+    <li>淺灰實線＝數字格；淺橘虛線＋淡底＝進位／借位列（比數字格矮，約 0.6 倍）。</li>
+    <li>粗黑橫線＝算式與答案的分隔線（寬度＝符號欄＋全部數字欄）。</li>
+    <li>紅色斜線＝被借位劃掉的原數字，上方橘褐色數字＝新的值。</li>
+  </ul>
+</div>
+
+<div class="todo">
+  <b>請你檢視並告訴我：</b><br>
+  1. 進位／借位列放在<b>最上方</b>，比數字格矮，這個位置和高度是否與通過的範本一致？<br>
+  2. 乘法的進位是否只需要標在「十位」欄上方（如圖）？<br>
+  3. 減法示範版採「劃掉原數字＋上方寫新值」，是否符合你教學時的做法（範本中是用弧線箭頭＋圈 10）？<br>
+  4. 「無輔助格」是否連符號欄與橫線都保留（如圖），或完全空白？<br>
+  5. 加法進位是否需要連「答案列」也預留最左側進位後多出的一欄？
+</div>
+
+<script>
+/* 產生一組計算格。cfg:
+   n      數字欄數
+   rows   [{sign, digits:[…]}, …]   算式列（由上而下）
+   up     頂端進位／借位列內容（長度 n，可 null）
+   ans    答案（長度 n，可 null＝空白）
+   strike 需要劃掉的算式列 index → 欄 index 陣列
+   ph     是否顯示位值標示
+*/
+function grid(cfg, level) {
+  const n = cfg.n, g = document.createElement('div');
+  g.className = 'g' + (level === 'free' ? ' free' : '');
+  g.style.gridTemplateColumns = `calc(var(--u)*.6) repeat(${n}, var(--u))`;
+  const cell = (cls, txt) => { const d = document.createElement('div'); d.className = 'c ' + cls; if (txt != null) d.textContent = txt; return d; };
+  if (level === 'demo' && cfg.ph) {
+    const names = ['個','十','百','千'];
+    const s = document.createElement('div'); s.className = 'ph sign'; g.appendChild(s);
+    for (let i = 0; i < n; i++) { const d = document.createElement('div'); d.className = 'ph'; d.style.textAlign = 'center'; d.textContent = names[n-1-i] + '位'; g.appendChild(d); }
+  }
+  // 進位／借位列（無輔助格不畫）
+  g.appendChild(cell('up sign'));
+  for (let i = 0; i < n; i++) g.appendChild(cell('up', level === 'demo' && cfg.up ? (cfg.up[i] ?? '') : ''));
+  // 算式列
+  cfg.rows.forEach((r, ri) => {
+    g.appendChild(cell('sign', r.sign || ''));
+    for (let i = 0; i < n; i++) {
+      // 示範層級才填數字；計算格／無輔助格的格子留空，題目寫在格子上方讓學生抄
+      const v = level === 'demo' ? (r.digits[i] ?? '') : '';
+      const st = level === 'demo' && cfg.strike && (cfg.strike[ri] || []).includes(i);
+      g.appendChild(cell(st ? 'strike' : '', v));
+    }
+  });
+  const rule = document.createElement('div'); rule.className = 'rule'; g.appendChild(rule);
+  // 答案列
+  g.appendChild(cell('sign'));
+  for (let i = 0; i < n; i++) g.appendChild(cell('ans', level === 'demo' && cfg.ans ? (cfg.ans[i] ?? '') : ''));
+  return g;
+}
+
+const CASES = [
+  { op: '加法（進位）', eq: '<b>78</b> + <b>56</b> = ( )',
+    cfg: { n: 3, ph: true,
+      rows: [ { digits: ['', 7, 8] }, { sign: '+', digits: ['', 5, 6] } ],
+      up: ['1', '1', ''], ans: [1, 3, 4] },
+    note: '個位 8+6=14，寫 4 進 1；十位 7+5+1=13，寫 3 進 1' },
+  { op: '減法（雙重借位）', eq: '<b>402</b> − <b>178</b> = ( )',
+    cfg: { n: 3, ph: true,
+      rows: [ { digits: [4, 0, 2] }, { sign: '−', digits: [1, 7, 8] } ],
+      up: ['3', '9', '12'], strike: { 0: [0, 1, 2] }, ans: [2, 2, 4] },
+    note: '個位不夠減→向十位借，十位是 0 再向百位借' },
+  { op: '乘法（2位×1位）', eq: '<b>36</b> × <b>4</b> = ( )',
+    cfg: { n: 3, ph: true,
+      rows: [ { digits: ['', 3, 6] }, { sign: '×', digits: ['', '', 4] } ],
+      up: ['', '2', ''], ans: [1, 4, 4] },
+    note: '6×4=24，寫 4 進 2；3×4=12＋2=14' }
+];
+
+const matrix = document.getElementById('matrix');
+CASES.forEach(cs => {
+  const sheet = document.createElement('div'); sheet.className = 'sheet';
+  const t = document.createElement('div'); t.className = 'cap'; t.style.cssText = 'font-weight:700;margin-bottom:6px';
+  t.innerHTML = `${cs.op} <span style="font-weight:400;color:#666">— ${cs.note}</span>`;
+  sheet.appendChild(t);
+  const row = document.createElement('div'); row.className = 'row3';
+  [['demo','示範引導','含過程與位值'],['grid','計算格','空格＋進位／借位列'],['free','無輔助格','純直式']].forEach(([lv, name, sub]) => {
+    const card = document.createElement('div'); card.className = 'card';
+    card.innerHTML = `<div class="cap">${name} <span>${sub}</span></div><div class="eq">${cs.eq}</div>`;
+    card.appendChild(grid(cs.cfg, lv));
+    row.appendChild(card);
+  });
+  sheet.appendChild(row);
+  matrix.appendChild(sheet);
+});
+
+// ② 位數變化
+const dg = document.getElementById('digits');
+[[2,'47 + 38'],[3,'478 + 356'],[4,'4785 + 3567']].forEach(([n, eq]) => {
+  const rows = [ { digits: Array(n).fill('') }, { sign: '+', digits: Array(n).fill('') } ];
+  const card = document.createElement('div'); card.className = 'card';
+  card.innerHTML = `<div class="cap">${n} 位數 <span>${n} 欄 + 符號欄</span></div><div class="eq">${eq} = ( )</div>`;
+  card.appendChild(grid({ n, rows }, 'grid'));
+  dg.appendChild(card);
+});
+
+// 滑桿：只改 --u，所有元件等比例縮放
+const u = document.getElementById('u'), uv = document.getElementById('uv');
+u.addEventListener('input', () => { document.documentElement.style.setProperty('--u', u.value + 'px'); uv.textContent = u.value; });
+</script>
+</body>
+</html>
