@@ -46,6 +46,7 @@
   .g.free .c.up { display: none; }
 
   /* 位值標示（僅示範版顯示） */
+  .circ { display:inline-flex; align-items:center; justify-content:center; width:calc(var(--u)*.5); height:calc(var(--u)*.5); border:max(1px,calc(var(--u)*.035)) solid var(--carry); border-radius:50%; font-size:calc(var(--u)*.26); font-weight:700; line-height:1; }
   .ph { font-size: calc(var(--u) * .26); color: #888; height: calc(var(--u) * .34); }
   .ph.sign { visibility: hidden; }
 
@@ -75,7 +76,7 @@
   <ul>
     <li>淺灰實線＝數字格；符號與數字格同寬同高、佔用最左欄（減法例外，另佔一欄）；淺橘虛線＋淡底＝進位／借位列（比數字格矮，約 0.6 倍）。</li>
     <li>粗黑橫線＝算式與答案的分隔線（涵蓋全部欄，左右各超出表格約 0.2 格）。</li>
-    <li>紅色斜線＝被借位劃掉的原數字，上方橘褐色數字＝新的值。</li>
+    <li>紅色斜線＝被借位劃掉的原數字，上方橘褐色數字＝新的值；圈圈 10＝借來的 10，放在個位上方（不把被減數改寫成 12 這類合併數字）。</li>
   </ul>
 </div>
 
@@ -83,7 +84,7 @@
   <b>請你檢視並告訴我：</b><br>
   1. 進位／借位列放在<b>最上方</b>，比數字格矮，這個位置和高度是否與通過的範本一致？<br>
   2. 乘法的進位是否只需要標在「十位」欄上方（如圖）？<br>
-  3. 減法示範版採「劃掉原數字＋上方寫新值」，是否符合你教學時的做法（範本中是用弧線箭頭＋圈 10）？<br>
+  3. 減法示範版：劃線＋上方寫新值＋個位上方圈圈 10（不合併成 12）。範本中還有一條弧線箭頭從十位指向個位，要不要畫？<br>
   4. 「無輔助格」是否連符號欄與橫線都保留（如圖），或完全空白？<br>
   5. 加法進位是否需要連「答案列」也預留最左側進位後多出的一欄？
 </div>
@@ -110,7 +111,12 @@ function grid(cfg, level) {
   }
   // 進位／借位列（無輔助格不畫）
   if (sc) g.appendChild(cell('up sign'));
-  for (let i = 0; i < n; i++) g.appendChild(cell('up', level === 'demo' && cfg.up ? (cfg.up[i] ?? '') : ''));
+  for (let i = 0; i < n; i++) {
+    const v = level === 'demo' && cfg.up ? (cfg.up[i] ?? '') : '';
+    const c = cell('up', v === '⑩' ? null : v);
+    if (v === '⑩') c.innerHTML = '<span class="circ">10</span>';   // 圈圈 10：借來的 10，寫在個位上方，不與原數字合併
+    g.appendChild(c);
+  }
   // 算式列
   cfg.rows.forEach((r, ri) => {
     if (sc) g.appendChild(cell('sign', r.sign || ''));
@@ -138,8 +144,8 @@ const CASES = [
   { op: '減法（雙重借位）', eq: '<b>402</b> − <b>178</b> = ( )',
     cfg: { n: 3, ph: true, signCol: true,
       rows: [ { digits: [4, 0, 2] }, { sign: '−', digits: [1, 7, 8] } ],
-      up: ['3', '9', '12'], strike: { 0: [0, 1, 2] }, ans: [2, 2, 4] },
-    note: '個位不夠減→向十位借，十位是 0 再向百位借' },
+      up: ['3', '9', '⑩'], strike: { 0: [0, 1, 2] }, ans: [2, 2, 4] },
+    note: '個位不夠減→向十位借，十位是 0 再向百位借：百位 4→3，十位 0→9，個位加上圈圈 10' },
   { op: '乘法（2位×1位）', eq: '<b>36</b> × <b>4</b> = ( )',
     cfg: { n: 3, ph: true,
       rows: [ { digits: ['', 3, 6] }, { sign: '×', digits: ['', '', 4] } ],
