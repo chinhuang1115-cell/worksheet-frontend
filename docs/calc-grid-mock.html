@@ -30,7 +30,7 @@
 
   /* ── 計算格 ── */
   .g { display: grid; font-size: var(--u); line-height: 1; margin: 0 auto; width: max-content; }
-  .c { width: var(--u); height: calc(var(--u) * 1.05); border: max(1px, calc(var(--u) * .018)) solid var(--line);
+  .c { width: auto; min-width: 0; height: calc(var(--u) * 1.05); border: max(1px, calc(var(--u) * .018)) solid var(--line);
        margin: 0 calc(max(1px, calc(var(--u) * .018)) * -1) calc(max(1px, calc(var(--u) * .018)) * -1) 0;
        display: flex; align-items: center; justify-content: center; font-size: calc(var(--u) * .62); position: relative; }
   .c.sign { font-size: calc(var(--u) * .5); }   /* 符號也是一欄：與數字格同寬同高、同樣有格線 */
@@ -62,7 +62,7 @@
 </head>
 <body>
 <h1>輔助計算格視覺模擬（定案）</h1>
-<p class="note">依「乘法直式（基本計算／價目表）」「退位減法」已通過範本的樣式推整：符號佔最左欄（與數字格等大）、頂端進位／借位列、粗橫線、答案列。<br>
+<p class="note">依「乘法直式（基本計算／價目表）」「退位減法」已通過範本的樣式推整：符號佔最左欄（較窄，約 0.65 格）、頂端進位／借位列、粗橫線、答案列。<br>
 所有尺寸都以「一格寬 <code>--u</code>」為基準等比例換算，拖曳下方滑桿即可看放大縮小時比例是否一致。</p>
 
 <div class="ctl">格子大小（--u）：<input id="u" type="range" min="28" max="64" value="44"> <span id="uv">44</span> px</div>
@@ -78,7 +78,7 @@
 <div class="legend">
   <b>圖例</b>
   <ul>
-    <li>淺灰實線＝數字格；符號與數字格同寬同高、佔用最左欄（減法例外，另佔一欄）；淺橘虛線＋淡底＝進位／借位列（比數字格矮，約 0.6 倍）。</li>
+    <li>淺灰實線＝數字格；符號佔用最左欄（減法例外，另佔一欄），最左欄較窄（約 0.65 格）、與數字格同高；淺橘虛線＋淡底＝進位／借位列（比數字格矮，約 0.6 倍）。</li>
     <li>粗黑橫線＝算式與答案的分隔線（涵蓋全部欄，左右各超出表格約 0.2 格）。</li>
     <li>紅色斜線＝被借位劃掉的原數字（個位被減數不劃）；上方橘褐色數字＝新的值；圈圈 10＝借來的 10（不把被減數改寫成 12 這類合併數字）；雙重借位時進退位格需 2 列：靠近數字的那列放「收到的圈圈 10」和百位的新值，十位借出後的 9 寫在首列（最上列）。圈圈 10 借出後要畫線。學生自己填數字的版本（計算格、無輔助格），<b>個位</b>上方加「對齊箭頭」（向下箭頭＋底線，⤓ 的意象），提醒從個位對齊、由右往左寫。加法／乘法最後一個進位不必再計算，直接寫在答案列，不記入進位格。</li>
   </ul>
@@ -100,7 +100,7 @@ function grid(cfg, level) {
   const n = cfg.n, g = document.createElement('div');
   g.className = 'g' + (level === 'free' ? ' free' : '');
   const sc = !!cfg.signCol;   // 減法：符號另佔一欄；加、乘：符號放進最左邊本來就空著的那一欄
-  g.style.gridTemplateColumns = `repeat(${n + (sc ? 1 : 0)}, var(--u))`;
+  g.style.gridTemplateColumns = `calc(var(--u)*.65) repeat(${n + (sc ? 1 : 0) - 1}, var(--u))`;   // 最左欄（符號欄）較窄：約 0.65 格
   const cell = (cls, txt) => { const d = document.createElement('div'); d.className = 'c ' + cls; if (txt != null) d.textContent = txt; return d; };
   if (level === 'demo' && cfg.ph) {
     const names = ['','十','百','千'];   // 位值名稱簡化為「百、十」，個位不標
