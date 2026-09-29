@@ -67,7 +67,7 @@
 
 <div class="ctl">格子大小（--u）：<input id="u" type="range" min="28" max="64" value="44"> <span id="uv">44</span> px</div>
 
-<h2>① 三種運算 × 三種鷹架（同一套格線）</h2>
+<h2>① 三種運算 × 三種鷹架（一位數、兩位數、三位數，同一套格線）</h2>
 <p class="note">左＝示範引導（含過程與位值）　中＝計算格（空格＋進位／借位列）　右＝無輔助格（純直式，只留符號與橫線）。</p>
 <div id="matrix"></div>
 
@@ -149,6 +149,21 @@ function grid(cfg, level) {
 }
 
 const CASES = [
+  { op: '加法（一位數＋一位數）', eq: '<b>7</b> + <b>8</b> = ( )',
+    cfg: { n: 2, ph: true,
+      rows: [ { digits: ['', 7] }, { sign: '+', digits: ['', 8] } ],
+      up: ['', ''], ans: [1, 5] },
+    note: '2 欄：最左欄放 +。7+8=15，寫 5，進位的 1 不必再計算，直接寫在答案列最左欄（進位格留空）' },
+  { op: '減法（一位數−一位數）', eq: '<b>8</b> − <b>3</b> = ( )',
+    cfg: { n: 1, ph: true, signCol: true,
+      rows: [ { digits: [8] }, { sign: '−', digits: [3] } ],
+      up: [''], ans: [5] },
+    note: '2 欄：符號另佔一欄（1 個數字欄＋符號欄），不需借位，進退位格留空' },
+  { op: '乘法（一位數×一位數）', eq: '<b>6</b> × <b>7</b> = ( )',
+    cfg: { n: 2, ph: true,
+      rows: [ { digits: ['', 6] }, { sign: '×', digits: ['', 7] } ],
+      up: ['', ''], ans: [4, 2] },
+    note: '2 欄：最左欄放 ×。6×7=42，寫 2，進位的 4 不必再計算，直接寫在答案列最左欄（進位格留空）' },
   { op: '加法（進位）', eq: '<b>78</b> + <b>56</b> = ( )',
     cfg: { n: 3, ph: true,
       rows: [ { digits: ['', 7, 8] }, { sign: '+', digits: ['', 5, 6] } ],
