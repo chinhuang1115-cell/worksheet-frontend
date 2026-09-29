@@ -57,7 +57,7 @@
 </head>
 <body>
 <h1>輔助計算格視覺模擬（草稿）</h1>
-<p class="note">依「乘法直式（基本計算／價目表）」「退位減法」已通過範本的樣式推整：符號也算一欄（與數字格等大）＋數字欄、頂端進位／借位列、粗橫線、答案列。<br>
+<p class="note">依「乘法直式（基本計算／價目表）」「退位減法」已通過範本的樣式推整：符號佔最左欄（與數字格等大）、頂端進位／借位列、粗橫線、答案列。<br>
 所有尺寸都以「一格寬 <code>--u</code>」為基準等比例換算，拖曳下方滑桿即可看放大縮小時比例是否一致。</p>
 
 <div class="ctl">格子大小（--u）：<input id="u" type="range" min="28" max="64" value="44"> <span id="uv">44</span> px</div>
@@ -67,14 +67,14 @@
 <div id="matrix"></div>
 
 <h2>② 格子數隨「位數」改變（加法為例，空格版）</h2>
-<p class="note">規則：總欄數 ＝ 算式（含答案）中最大的位數 ＋ 1（最左邊的符號也算一欄，與數字格同寬）。頂端進位列的格數同總欄數。</p>
+<p class="note">規則：加、乘法的總欄數 ＝ 算式（含答案）中最大位數，符號放進最左邊本來就空著的那一欄，<b>不另外多空一欄</b>（兩位數加法＝最高位再多 1 欄進位用＝3 欄）；減法沒有空欄可放，符號才另佔一欄。</p>
 <div class="sheet"><div class="row3" id="digits"></div></div>
 
 <div class="legend">
   <b>圖例</b>
   <ul>
-    <li>淺灰實線＝數字格與符號格（同寬同高）；淺橘虛線＋淡底＝進位／借位列（比數字格矮，約 0.6 倍）。</li>
-    <li>粗黑橫線＝算式與答案的分隔線（涵蓋全部欄含符號欄，左右各超出表格約 0.2 格）。</li>
+    <li>淺灰實線＝數字格；符號與數字格同寬同高、佔用最左欄（減法例外，另佔一欄）；淺橘虛線＋淡底＝進位／借位列（比數字格矮，約 0.6 倍）。</li>
+    <li>粗黑橫線＝算式與答案的分隔線（涵蓋全部欄，左右各超出表格約 0.2 格）。</li>
     <li>紅色斜線＝被借位劃掉的原數字，上方橘褐色數字＝新的值。</li>
   </ul>
 </div>
@@ -100,29 +100,31 @@
 function grid(cfg, level) {
   const n = cfg.n, g = document.createElement('div');
   g.className = 'g' + (level === 'free' ? ' free' : '');
-  g.style.gridTemplateColumns = `repeat(${n + 1}, var(--u))`;
+  const sc = !!cfg.signCol;   // 減法：符號另佔一欄；加、乘：符號放進最左邊本來就空著的那一欄
+  g.style.gridTemplateColumns = `repeat(${n + (sc ? 1 : 0)}, var(--u))`;
   const cell = (cls, txt) => { const d = document.createElement('div'); d.className = 'c ' + cls; if (txt != null) d.textContent = txt; return d; };
   if (level === 'demo' && cfg.ph) {
     const names = ['個','十','百','千'];
-    const s = document.createElement('div'); s.className = 'ph sign'; g.appendChild(s);
+    if (sc) { const s = document.createElement('div'); s.className = 'ph sign'; g.appendChild(s); }
     for (let i = 0; i < n; i++) { const d = document.createElement('div'); d.className = 'ph'; d.style.textAlign = 'center'; d.textContent = names[n-1-i] + '位'; g.appendChild(d); }
   }
   // 進位／借位列（無輔助格不畫）
-  g.appendChild(cell('up sign'));
+  if (sc) g.appendChild(cell('up sign'));
   for (let i = 0; i < n; i++) g.appendChild(cell('up', level === 'demo' && cfg.up ? (cfg.up[i] ?? '') : ''));
   // 算式列
   cfg.rows.forEach((r, ri) => {
-    g.appendChild(cell('sign', r.sign || ''));
+    if (sc) g.appendChild(cell('sign', r.sign || ''));
     for (let i = 0; i < n; i++) {
       // 示範層級才填數字；計算格／無輔助格的格子留空，題目寫在格子上方讓學生抄
       const v = level === 'demo' ? (r.digits[i] ?? '') : '';
       const st = level === 'demo' && cfg.strike && (cfg.strike[ri] || []).includes(i);
+      if (!sc && i === 0 && r.sign) { g.appendChild(cell('sign', r.sign)); continue; }   // 符號佔最左欄
       g.appendChild(cell(st ? 'strike' : '', v));
     }
   });
   const rule = document.createElement('div'); rule.className = 'rule'; g.appendChild(rule);
   // 答案列
-  g.appendChild(cell('sign'));
+  if (sc) g.appendChild(cell('sign'));
   for (let i = 0; i < n; i++) g.appendChild(cell('ans', level === 'demo' && cfg.ans ? (cfg.ans[i] ?? '') : ''));
   return g;
 }
@@ -134,7 +136,7 @@ const CASES = [
       up: ['1', '1', ''], ans: [1, 3, 4] },
     note: '個位 8+6=14，寫 4 進 1；十位 7+5+1=13，寫 3 進 1' },
   { op: '減法（雙重借位）', eq: '<b>402</b> − <b>178</b> = ( )',
-    cfg: { n: 3, ph: true,
+    cfg: { n: 3, ph: true, signCol: true,
       rows: [ { digits: [4, 0, 2] }, { sign: '−', digits: [1, 7, 8] } ],
       up: ['3', '9', '12'], strike: { 0: [0, 1, 2] }, ans: [2, 2, 4] },
     note: '個位不夠減→向十位借，十位是 0 再向百位借' },
@@ -165,10 +167,11 @@ CASES.forEach(cs => {
 // ② 位數變化
 const dg = document.getElementById('digits');
 [[2,'47 + 38'],[3,'478 + 356'],[4,'4785 + 3567']].forEach(([n, eq]) => {
-  const rows = [ { digits: Array(n).fill('') }, { sign: '+', digits: Array(n).fill('') } ];
+  const cols = n + 1;   // 最高位再多 1 欄（進位用），符號就放在這一欄
+  const rows = [ { digits: Array(cols).fill('') }, { sign: '+', digits: Array(cols).fill('') } ];
   const card = document.createElement('div'); card.className = 'card';
-  card.innerHTML = `<div class="cap">${n} 位數 <span>${n} 位數 + 符號 ＝ ${n+1} 欄</span></div><div class="eq">${eq} = ( )</div>`;
-  card.appendChild(grid({ n, rows }, 'grid'));
+  card.innerHTML = `<div class="cap">${n} 位數 <span>${cols} 欄（符號放在最左欄）</span></div><div class="eq">${eq} = ( )</div>`;
+  card.appendChild(grid({ n: cols, rows }, 'grid'));
   dg.appendChild(card);
 });
 
