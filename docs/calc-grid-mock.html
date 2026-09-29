@@ -33,10 +33,9 @@
   .c { width: var(--u); height: calc(var(--u) * 1.05); border: max(1px, calc(var(--u) * .018)) solid var(--line);
        margin: 0 calc(max(1px, calc(var(--u) * .018)) * -1) calc(max(1px, calc(var(--u) * .018)) * -1) 0;
        display: flex; align-items: center; justify-content: center; font-size: calc(var(--u) * .62); position: relative; }
-  .c.sign { width: calc(var(--u) * .6); border-color: transparent; font-size: calc(var(--u) * .5); }
+  .c.sign { font-size: calc(var(--u) * .5); }   /* 符號也是一欄：與數字格同寬同高、同樣有格線 */
   .c.up   { height: calc(var(--u) * .62); font-size: calc(var(--u) * .34); color: var(--carry); border-style: dashed; background: #fffaf3; }
-  .c.up.sign { background: none; }
-  .c.ans  { color: #111; }
+    .c.ans  { color: #111; }
   .c.hint { background: var(--shade); }
   .c.strike::after { content: ""; position: absolute; left: 14%; right: 14%; top: 50%; border-top: calc(var(--u) * .04) solid #d33; transform: rotate(-32deg); }
   .c.small-r { align-items: flex-end; justify-content: flex-end; font-size: calc(var(--u) * .3); color: var(--carry); padding: 0 3px 2px 0; }
@@ -58,7 +57,7 @@
 </head>
 <body>
 <h1>輔助計算格視覺模擬（草稿）</h1>
-<p class="note">依「乘法直式（基本計算／價目表）」「退位減法」已通過範本的樣式推整：符號欄＋數字欄、頂端進位／借位列、粗橫線、答案列。<br>
+<p class="note">依「乘法直式（基本計算／價目表）」「退位減法」已通過範本的樣式推整：符號也算一欄（與數字格等大）＋數字欄、頂端進位／借位列、粗橫線、答案列。<br>
 所有尺寸都以「一格寬 <code>--u</code>」為基準等比例換算，拖曳下方滑桿即可看放大縮小時比例是否一致。</p>
 
 <div class="ctl">格子大小（--u）：<input id="u" type="range" min="28" max="64" value="44"> <span id="uv">44</span> px</div>
@@ -68,14 +67,14 @@
 <div id="matrix"></div>
 
 <h2>② 格子數隨「位數」改變（加法為例，空格版）</h2>
-<p class="note">規則：數字欄數 ＝ 算式（含答案）中最大的位數；再加最左邊 1 欄符號欄。頂端進位列的格數與數字欄相同。</p>
+<p class="note">規則：總欄數 ＝ 算式（含答案）中最大的位數 ＋ 1（最左邊的符號也算一欄，與數字格同寬）。頂端進位列的格數同總欄數。</p>
 <div class="sheet"><div class="row3" id="digits"></div></div>
 
 <div class="legend">
   <b>圖例</b>
   <ul>
-    <li>淺灰實線＝數字格；淺橘虛線＋淡底＝進位／借位列（比數字格矮，約 0.6 倍）。</li>
-    <li>粗黑橫線＝算式與答案的分隔線（寬度＝符號欄＋全部數字欄）。</li>
+    <li>淺灰實線＝數字格與符號格（同寬同高）；淺橘虛線＋淡底＝進位／借位列（比數字格矮，約 0.6 倍）。</li>
+    <li>粗黑橫線＝算式與答案的分隔線（寬度＝全部欄，含符號欄）。</li>
     <li>紅色斜線＝被借位劃掉的原數字，上方橘褐色數字＝新的值。</li>
   </ul>
 </div>
@@ -101,7 +100,7 @@
 function grid(cfg, level) {
   const n = cfg.n, g = document.createElement('div');
   g.className = 'g' + (level === 'free' ? ' free' : '');
-  g.style.gridTemplateColumns = `calc(var(--u)*.6) repeat(${n}, var(--u))`;
+  g.style.gridTemplateColumns = `repeat(${n + 1}, var(--u))`;
   const cell = (cls, txt) => { const d = document.createElement('div'); d.className = 'c ' + cls; if (txt != null) d.textContent = txt; return d; };
   if (level === 'demo' && cfg.ph) {
     const names = ['個','十','百','千'];
@@ -168,7 +167,7 @@ const dg = document.getElementById('digits');
 [[2,'47 + 38'],[3,'478 + 356'],[4,'4785 + 3567']].forEach(([n, eq]) => {
   const rows = [ { digits: Array(n).fill('') }, { sign: '+', digits: Array(n).fill('') } ];
   const card = document.createElement('div'); card.className = 'card';
-  card.innerHTML = `<div class="cap">${n} 位數 <span>${n} 欄 + 符號欄</span></div><div class="eq">${eq} = ( )</div>`;
+  card.innerHTML = `<div class="cap">${n} 位數 <span>${n} 位數 + 符號 ＝ ${n+1} 欄</span></div><div class="eq">${eq} = ( )</div>`;
   card.appendChild(grid({ n, rows }, 'grid'));
   dg.appendChild(card);
 });
