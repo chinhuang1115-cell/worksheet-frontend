@@ -109,9 +109,9 @@ function grid(cfg, level) {
   g.style.gridTemplateColumns = `repeat(${n + (sc ? 1 : 0)}, var(--u))`;
   const cell = (cls, txt) => { const d = document.createElement('div'); d.className = 'c ' + cls; if (txt != null) d.textContent = txt; return d; };
   if (level === 'demo' && cfg.ph) {
-    const names = ['個','十','百','千'];
+    const names = ['','十','百','千'];   // 位值名稱簡化為「百、十」，個位不標
     if (sc) { const s = document.createElement('div'); s.className = 'ph sign'; g.appendChild(s); }
-    for (let i = 0; i < n; i++) { const d = document.createElement('div'); d.className = 'ph'; d.style.textAlign = 'center'; d.textContent = names[n-1-i] + '位'; g.appendChild(d); }
+    for (let i = 0; i < n; i++) { const d = document.createElement('div'); d.className = 'ph'; d.style.textAlign = 'center'; d.textContent = names[n-1-i]; g.appendChild(d); }
   }
   // 學生自己填數字的版本（計算格／無輔助格）：各位數上方放手指箭頭，提醒數字要上下對齊
   if (level !== 'demo') {
