@@ -538,6 +538,115 @@ window.WORKSHEET_REGISTRY = [
     ]
   },
   {
+    "id": "mul-price",
+    "code": "N209E",
+    "grade": "2",
+    "name": "算價錢＿乘法應用（兩步驟）",
+    "ops": ["mul", "add", "sub"],
+    "keywords": ["九九乘法", "算價錢", "價目表", "連加", "找零", "兩步驟"],
+    "desc": "看價目表算買 N 個要多少元：先用連加帶到乘法，再算付款後剩下（找）多少元。三種版型：買一樣、買兩樣（附連加輔助格）、買兩樣去掉連加；可套用圖庫主題。",
+    "sortKey": [3, 1, 5],
+    "home": {
+      "icon": "🛒",
+      "sub": "價目表 × 找零",
+      "desc": "價目表購物情境，連加帶到乘法，再算付款後找多少元；可選圖庫主題。",
+      "features": ["買一樣／買兩樣", "連加到乘法", "付款找零", "可選圖庫主題"]
+    },
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "進階",
+      "levelColor": "#f59e0b",
+      "code": "N209E",
+      "desc": "價目表購物應用題：買一樣（2 題，付款算剩下）、買兩樣（先算一共再算找零，附連加輔助格）、買兩樣去掉連加（只留空白格）。價目表商品與價格每次隨機，可套用圖庫主題（兩位數價格）。"
+    },
+    "sample": [
+      { "pdf": "assets/mul_price_one_sample.pdf", "name": "算價錢_買一樣.pdf", "label": "買一樣", "key": "mul-price-one" },
+      { "pdf": "assets/mul_price_two_sample.pdf", "name": "算價錢_買兩樣.pdf", "label": "買兩樣", "key": "mul-price-two" },
+      { "pdf": "assets/mul_price_nocumul_sample.pdf", "name": "算價錢_買兩樣去連加.pdf", "label": "買兩樣（去掉連加）", "key": "mul-price-nocumul" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": "d2",
+      "showTheme": true,
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "mul-price-one", "label": "買一樣" },
+      { "key": "mul-price-two", "label": "買兩樣" },
+      { "key": "mul-price-nocumul", "label": "買兩樣（去掉連加）" }
+    ]
+  },
+  {
+    "id": "mul-score",
+    "code": "N209F",
+    "grade": "2",
+    "name": "九九乘法＿算得分（標靶九宮格）",
+    "ops": ["mul", "add"],
+    "keywords": ["九九乘法", "算得分", "標靶", "計分表", "乘法應用"],
+    "desc": "兩位玩家各有一張 1～9 標靶九宮格，數一數紅、灰標記落在哪個數字、各有幾個，填計分表，用「分數 × 個數」算出兩次得分再相加，比較這一局誰贏了。",
+    "sortKey": [3, 1, 6],
+    "home": {
+      "icon": "🎯",
+      "sub": "標靶計分 × 乘法",
+      "desc": "數標靶上的標記，填計分表，用乘法算得分並比較誰贏了。",
+      "features": ["計分表", "分數×個數", "比較輸贏"]
+    },
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N209F",
+      "desc": "標靶九宮格計分遊戲：每位玩家兩個數字、各 1～4 個標記，填計分表後用乘法算兩次得分再相加，兩人得分必不相同，最後比較誰贏。"
+    },
+    "sample": { "pdf": "assets/mul_score_sample.pdf", "name": "九九乘法_算得分.pdf" },
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": null,
+      "interactive": false
+    }
+  },
+  {
+    "id": "mul-count",
+    "code": "N209G",
+    "grade": "2",
+    "name": "九九乘法＿算數量（連加到乘法練習本）",
+    "ops": ["mul", "add"],
+    "keywords": ["九九乘法", "算數量", "連加", "幾個幾", "連連看"],
+    "desc": "多頁練習本：每頁一組「算算看，一共有多少？」看圖（圖片篇）或看圓圈裡的數字（數字篇）數出每份數量，寫連加、說出「幾個」與「幾的幾倍」、改寫成乘法，再用連連看把連加和乘法配對。",
+    "sortKey": [3, 1, 7],
+    "home": {
+      "icon": "🍪",
+      "sub": "連加 × 幾的幾倍",
+      "desc": "看圖或看數字數一數，連加帶到乘法，並用連連看配對。",
+      "features": ["圖片篇 9 頁", "數字篇 6 頁", "連連看"]
+    },
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N209G",
+      "desc": "連加到乘法的多頁練習本，圖片篇（9 頁）以圖示、數字篇（6 頁）以圓圈數字呈現每份數量；版面固定，不隨機。"
+    },
+    "sample": [
+      { "pdf": "assets/mul_count_pic_sample.pdf", "name": "九九乘法_算數量_圖片篇.pdf", "label": "圖片篇", "key": "mul-count-pic" },
+      { "pdf": "assets/mul_count_num_sample.pdf", "name": "九九乘法_算數量_數字篇.pdf", "label": "數字篇", "key": "mul-count-num" }
+    ],
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": null,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "mul-count-pic", "label": "圖片篇" },
+      { "key": "mul-count-num", "label": "數字篇" }
+    ]
+  },
+  {
     "id": "haochashao",
     "code": "N204B",
     "grade": "2",
