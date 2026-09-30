@@ -11,7 +11,7 @@
 | 直式加減乘的**計算格設計規範**（尺寸、欄數、進退位、鷹架層級）| [`docs/輔助計算格規範.md`](docs/輔助計算格規範.md)；視覺依據 `docs/calc-grid-mock.html`／`.png` |
 | 計算格的**後端實作**、版面驗收、踩坑、各題型產生器 | 後端 repo：`CLAUDE.md`（核心規則）與 `docs/guide/`（詳細筆記） |
 | 題型清單、圖片處理等**技術開發規範** | 後端 repo：`toolkit/RULES.md`（題型清單在第 9 節） |
-| 設計系統（顏色、字型、間距 token） | `_ds/design-system-*/`（`readme.md`、`tokens/`） |
+| 網站介面的設計系統（顏色、字型、間距 token 與元件樣式） | `_ds/design-system-*/`：`tokens/`、`styles.css`、`_ds_bundle.js` 由 `index.html` **實際載入，不可刪**。⚠️ 其 `readme.md` 的產品與對象描述（國中生 App、教師儀表板、影片平台等）是產生設計系統時的推測，與本專案（資源班學習單的產生與銷售網站）不符，**只參考 tokens 與元件樣式，不要當作專案定位** |
 
 **規範與實作的分工**：教材長什麼樣子、為什麼這樣設計，以本 repo `docs/` 的設計規範為準；怎麼畫出來、怎麼在 Word／LibreOffice 兩邊都正確，以後端 repo 為準。
 
