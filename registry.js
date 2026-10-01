@@ -628,7 +628,7 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N209G",
-      "desc": "連加到乘法的多頁練習本，圖片篇（9 頁）以圖示、數字篇（6 頁）以圓圈數字呈現每份數量；版面固定，不隨機。"
+      "desc": "連加到乘法的多頁練習本，圖片篇（9 頁）以圖示、數字篇（6 頁）以圓圈數字呈現每份數量；圖片篇版面固定，數字篇第 5、6 頁魚貨盤子上的數字（2～9）每次隨機，同數字同色盤。"
     },
     "sample": [
       { "pdf": "assets/mul_count_pic_sample.pdf", "name": "九九乘法_算數量_圖片篇.pdf", "label": "圖片篇", "key": "mul-count-pic" },
