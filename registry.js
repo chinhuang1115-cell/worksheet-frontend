@@ -607,16 +607,25 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N209F",
-      "desc": "標靶九宮格計分遊戲：每位玩家兩個數字、各 1～4 個標記，填計分表後用乘法算兩次得分再相加，兩人得分必不相同，最後比較誰贏。"
+      "desc": "標靶九宮格計分遊戲：每位玩家兩個數字、各 1～4 個標記，填計分表後用乘法算兩次得分再相加，兩人得分必不相同，最後比較誰贏。另有自由列式兩種（無提示＝算式只留作答底線與括號、無輔助計算格；淡化提示＝提示與計算格刷淡），學生自行列式。"
     },
-    "sample": { "pdf": "assets/mul_score_sample.pdf", "name": "九九乘法_算得分.pdf" },
+    "sample": [
+      { "pdf": "assets/mul_score_sample.pdf", "name": "九九乘法_算得分.pdf", "label": "完整提示", "key": "mul-score" },
+      { "pdf": "assets/mul_score_free_sample.pdf", "name": "九九乘法_算得分_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "mul-score-free" },
+      { "pdf": "assets/mul_score_faded_sample.pdf", "name": "九九乘法_算得分_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "mul-score-faded" }
+    ],
     "layout": {
       "panel": null,
       "themeSet": null,
       "showTheme": false,
       "prices": null,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "mul-score", "label": "完整提示" },
+      { "key": "mul-score-free", "label": "自由列式：無提示" },
+      { "key": "mul-score-faded", "label": "自由列式：淡化提示" }
+    ]
   },
   {
     "id": "mul-count",
