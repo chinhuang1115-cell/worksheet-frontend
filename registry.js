@@ -416,7 +416,7 @@ window.WORKSHEET_REGISTRY = [
     "name": "概念建立＿從橫式到直式 3",
     "ops": ["mul"],
     "keywords": ["乘法直式", "兩位數乘一位數", "九九乘法", "扭蛋機", "價目表", "連加與乘法"],
-    "desc": "兩位數乘以一位數的直式計算練習：扭蛋機情境練習連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢。",
+    "desc": "兩位數乘以一位數的直式計算練習：扭蛋機情境練習連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢；文具價目表另有自由列式兩種（無提示、淡化提示），逐步撤掉列式與計算格提示。",
     "sortKey": [3, 1, 2],
     "home": {
       "icon": "✖️",
@@ -434,7 +434,9 @@ window.WORKSHEET_REGISTRY = [
     "sample": [
       { "pdf": "assets/mul2x1_gacha_add_sample.pdf", "name": "乘法直式_扭蛋機_連加.pdf", "label": "扭蛋機（連加）", "key": "mul2x1-gacha-add" },
       { "pdf": "assets/mul2x1_gacha_eq_sample.pdf", "name": "乘法直式_扭蛋機_列式.pdf", "label": "扭蛋機（列式）", "key": "mul2x1-gacha-eq" },
-      { "pdf": "assets/mul2x1_price_stationery_sample.pdf", "name": "乘法直式_價目表_文具.pdf", "label": "價目表（文具）", "key": "mul2x1-price-stationery" },
+      { "pdf": "assets/mul2x1_price_stationery_sample.pdf", "name": "乘法直式_價目表_文具.pdf", "label": "價目表（文具：完整提示）", "key": "mul2x1-price-stationery" },
+      { "pdf": "assets/mul2x1_price_stationery_free_sample.pdf", "name": "乘法直式_價目表_文具自由列式_無提示.pdf", "label": "價目表（文具：自由列式・無提示）", "key": "mul2x1-price-stationery-free" },
+      { "pdf": "assets/mul2x1_price_stationery_faded_sample.pdf", "name": "乘法直式_價目表_文具自由列式_淡化提示.pdf", "label": "價目表（文具：自由列式・淡化提示）", "key": "mul2x1-price-stationery-faded" },
       { "pdf": "assets/mul2x1_price_grocery_sample.pdf", "name": "乘法直式_價目表_雜貨.pdf", "label": "價目表（雜貨）", "key": "mul2x1-price-grocery" }
     ],
     "layout": {
@@ -443,6 +445,8 @@ window.WORKSHEET_REGISTRY = [
       "showTheme": true,
       "variantThemeSet": {
         "mul2x1-price-stationery": "d2",
+        "mul2x1-price-stationery-free": "d2",
+        "mul2x1-price-stationery-faded": "d2",
         "mul2x1-price-grocery": "d2"
       },
       "prices": null,
@@ -451,7 +455,9 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       { "key": "mul2x1-gacha-add", "label": "扭蛋機（連加）" },
       { "key": "mul2x1-gacha-eq", "label": "扭蛋機（列式）" },
-      { "key": "mul2x1-price-stationery", "label": "價目表（文具）" },
+      { "key": "mul2x1-price-stationery", "label": "價目表（文具：完整提示）" },
+      { "key": "mul2x1-price-stationery-free", "label": "價目表（文具：自由列式・無提示）" },
+      { "key": "mul2x1-price-stationery-faded", "label": "價目表（文具：自由列式・淡化提示）" },
       { "key": "mul2x1-price-grocery", "label": "價目表（雜貨）" }
     ]
   },
