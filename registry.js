@@ -544,7 +544,7 @@ window.WORKSHEET_REGISTRY = [
     "name": "乘法應用＿算價錢",
     "ops": ["mul", "add", "sub"],
     "keywords": ["九九乘法", "算價錢", "價目表", "連加", "找零", "兩步驟"],
-    "desc": "看價目表算買 N 個要多少元：先用連加帶到乘法，再算付款後剩下（找）多少元。四種版型：買單樣、買兩樣（附連加輔助格）、買兩樣去掉連加、買兩樣自由列式（全空白）；可套用圖庫主題。",
+    "desc": "看價目表算買 N 個要多少元：先用連加帶到乘法，再算付款後剩下（找）多少元。五種版型：買單樣、買兩樣（附連加輔助格）、買兩樣去掉連加、買兩樣自由列式（無提示：連輔助計算格都拿掉）、買兩樣自由列式（淡化提示：提示刷淡到隱約可見）；可套用圖庫主題。",
     "sortKey": [3, 1, 5],
     "home": {
       "icon": "🛒",
@@ -557,13 +557,14 @@ window.WORKSHEET_REGISTRY = [
       "level": "進階",
       "levelColor": "#f59e0b",
       "code": "N209E",
-      "desc": "價目表購物應用題：買單樣（2 題，付款算剩下）、買兩樣（先算一共再算找零，附連加輔助格）、買兩樣去掉連加（只留空白格）、買兩樣自由列式（步驟格全空白，學生自行列式）。價目表商品與價格每次隨機，可套用圖庫主題（兩位數價格）。"
+      "desc": "價目表購物應用題：買單樣（2 題，付款算剩下）、買兩樣（先算一共再算找零，附連加輔助格）、買兩樣去掉連加（只留空白格）、買兩樣自由列式兩種（無提示＝步驟格全空白且無輔助計算格；淡化提示＝提示與計算格刷淡），學生自行列式。價目表商品與價格每次隨機，可套用圖庫主題（兩位數價格）。"
     },
     "sample": [
       { "pdf": "assets/mul_price_one_sample.pdf", "name": "算價錢_買單樣.pdf", "label": "買單樣", "key": "mul-price-one" },
       { "pdf": "assets/mul_price_two_sample.pdf", "name": "算價錢_買兩樣.pdf", "label": "買兩樣", "key": "mul-price-two" },
       { "pdf": "assets/mul_price_nocumul_sample.pdf", "name": "算價錢_買兩樣去連加.pdf", "label": "買兩樣（去掉連加）", "key": "mul-price-nocumul" },
-      { "pdf": "assets/mul_price_free_sample.pdf", "name": "算價錢_買兩樣自由列式.pdf", "label": "買兩樣（自由列式）", "key": "mul-price-free" }
+      { "pdf": "assets/mul_price_free_sample.pdf", "name": "算價錢_買兩樣自由列式_無提示.pdf", "label": "買兩樣（自由列式：無提示）", "key": "mul-price-free" },
+      { "pdf": "assets/mul_price_faded_sample.pdf", "name": "算價錢_買兩樣自由列式_淡化提示.pdf", "label": "買兩樣（自由列式：淡化提示）", "key": "mul-price-faded" }
     ],
     "layout": {
       "panel": null,
@@ -576,7 +577,8 @@ window.WORKSHEET_REGISTRY = [
       { "key": "mul-price-one", "label": "買單樣" },
       { "key": "mul-price-two", "label": "買兩樣" },
       { "key": "mul-price-nocumul", "label": "買兩樣（去掉連加）" },
-      { "key": "mul-price-free", "label": "買兩樣（自由列式）" }
+      { "key": "mul-price-free", "label": "買兩樣（自由列式：無提示）" },
+      { "key": "mul-price-faded", "label": "買兩樣（自由列式：淡化提示）" }
     ]
   },
   {
