@@ -1802,6 +1802,8 @@
             <option value="mul">乘法</option>
             <option value="div">除法</option>
             <option value="coin">錢幣情境</option>
+            <option value="count">數與計數</option>
+            <option value="geo">面積</option>
             <option value="zonghe">綜合練習</option>
           </select>
           <span style="font-size:var(--text-xs);color:var(--text-secondary);margin-left:10px;">排序方式</span>
@@ -2373,6 +2375,8 @@ function _categoryOf(t) {
   // 跨單元綜合複習卷：ops 含 add+sub 會被誤判成加法，需在 ops 判斷之前攔截。
   // 用關鍵字判斷而非 id 前綴，比照下方 coin 分類的既有慣例。
   if (kw.includes('綜合練習')) return 'zonghe';
+  // 面積單元（N303–N305）ops 為空，不可落到 count（數與計數）；用關鍵字攔截，比照 coin 慣例。
+  if (kw.includes('面積')) return 'geo';
   if (kw.includes('coinvalue') || kw.includes('coincarry')) return 'coin';
   const o = (t && t.ops) || [];
   if (o.includes('div')) return 'div';
@@ -2474,6 +2478,8 @@ const LIBRARY_CATS = [
   { key:'div', label:'🌼 分與除法' },
   { key:'add', label:'➕ 加減法' },
   { key:'coin', label:'🪙 錢幣情境' },
+  { key:'count', label:'🔢 數與計數' },
+  { key:'geo', label:'📐 面積' },
   { key:'zonghe', label:'📚 綜合練習' },
 ];
 // 這 5 個題型的生成器在 bundle slot 固定送 config:{} 時會出錯：
@@ -2765,6 +2771,7 @@ const CATS = [
   { key:'div', label:'➗ 除法' },
   { key:'coin', label:'🪙 錢幣情境' },
   { key:'count', label:'🔢 數與計數' },
+  { key:'geo', label:'📐 面積' },
   { key:'zonghe', label:'📚 綜合練習' },
 ];
 const GRADES = [
