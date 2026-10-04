@@ -187,7 +187,8 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/fenfen_rem_sample.pdf", "name": "分分看_有餘數_範例.pdf", "label": "有餘數", "key": "fenfen-rem" },
       { "pdf": "assets/fenfen_heap_sample.pdf", "name": "分分看_分堆畫圈_範例.pdf", "label": "分堆畫圈", "key": "fenfen-heap" },
       { "pdf": "assets/fenfen_pan_sample.pdf", "name": "分分看_分盤畫圈_範例.pdf", "label": "分盤畫圈", "key": "fenfen-pan" },
-      { "pdf": "assets/fenfen_pangrid_sample.pdf", "name": "分分看_分盤格線_範例.pdf", "label": "分盤格線", "key": "fenfen-pangrid" }
+      { "pdf": "assets/fenfen_pangrid_sample.pdf", "name": "分分看_分盤格線_範例.pdf", "label": "分盤格線", "key": "fenfen-pangrid" },
+      { "pdf": "assets/fenfen_s1_sample.pdf", "name": "分分看_階段一_畫一畫_範例.pdf", "label": "階段一 畫一畫", "key": "fenfen-s1" }
     ],
     "layout": {
       "panel": "fenfenPanel",
@@ -216,6 +217,10 @@ window.WORKSHEET_REGISTRY = [
       {
         "key": "fenfen-pangrid",
         "label": "分盤格線"
+      },
+      {
+        "key": "fenfen-s1",
+        "label": "階段一 畫一畫"
       }
     ]
   },
@@ -1290,6 +1295,47 @@ window.WORKSHEET_REGISTRY = [
     "sample": {
       "pdf": "assets/fenfen_pangrid_sample.pdf",
       "name": "分分看_分盤格線_兩位數_範本.pdf"
+    },
+    "layout": {
+      "panel": "fenfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
+    "id": "fenfen-s1",
+    "code": "N203G",
+    "grade": "2",
+    "name": "分分看＿階段一 畫一畫（兩位數）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "分分看",
+      "畫一畫",
+      "畫圓圈",
+      "等分",
+      "平分"
+    ],
+    "desc": "把 N 個物品平分給 X 個人，學生在虛線圓圈（代表每個人）中畫出物品，從動手分的過程建立等分除法概念，8 題，數字每次隨機。",
+    "sortKey": [
+      4,
+      2,
+      1
+    ],
+    "home": null,
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N203G",
+      "desc": "概念建立的第一步：先動手畫、一個一個分，不寫算式，只回答「一個人有幾個」。"
+    },
+    "sample": {
+      "pdf": "assets/fenfen_s1_sample.pdf",
+      "name": "分分看_階段一_畫一畫_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
