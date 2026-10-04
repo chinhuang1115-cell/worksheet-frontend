@@ -188,7 +188,12 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/fenfen_heap_sample.pdf", "name": "分分看_分堆畫圈_範例.pdf", "label": "分堆畫圈", "key": "fenfen-heap" },
       { "pdf": "assets/fenfen_pan_sample.pdf", "name": "分分看_分盤畫圈_範例.pdf", "label": "分盤畫圈", "key": "fenfen-pan" },
       { "pdf": "assets/fenfen_pangrid_sample.pdf", "name": "分分看_分盤格線_範例.pdf", "label": "分盤格線", "key": "fenfen-pangrid" },
-      { "pdf": "assets/fenfen_s1_sample.pdf", "name": "分分看_階段一_畫一畫_範例.pdf", "label": "階段一 畫一畫", "key": "fenfen-s1" }
+      { "pdf": "assets/fenfen_s1_sample.pdf", "name": "分分看_階段一_畫一畫_範例.pdf", "label": "階段一 畫一畫", "key": "fenfen-s1" },
+      { "pdf": "assets/fenfen_s2_sample.pdf", "name": "分分看_階段二_分到盤子_範例.pdf", "label": "階段二 分到盤子", "key": "fenfen-s2" },
+      { "pdf": "assets/fenfen_s3_sample.pdf", "name": "分分看_階段三_數字尺_範例.pdf", "label": "階段三 數字尺", "key": "fenfen-s3" },
+      { "pdf": "assets/fenfen_s4_sample.pdf", "name": "分分看_階段四_移除輔助圖_除數2至5_範例.pdf", "label": "階段四 移除輔助圖（除數2–5）", "key": "fenfen-s4" },
+      { "pdf": "assets/fenfen_s5_sample.pdf", "name": "分分看_階段五_移除輔助圖_除數5至9_範例.pdf", "label": "階段五 移除輔助圖（除數5–9）", "key": "fenfen-s5" },
+      { "pdf": "assets/fenfen_s6_sample.pdf", "name": "分分看_階段六_用九九乘法_範例.pdf", "label": "階段六 用九九乘法", "key": "fenfen-s6" }
     ],
     "layout": {
       "panel": "fenfenPanel",
@@ -221,6 +226,26 @@ window.WORKSHEET_REGISTRY = [
       {
         "key": "fenfen-s1",
         "label": "階段一 畫一畫"
+      },
+      {
+        "key": "fenfen-s2",
+        "label": "階段二 分到盤子"
+      },
+      {
+        "key": "fenfen-s3",
+        "label": "階段三 數字尺"
+      },
+      {
+        "key": "fenfen-s4",
+        "label": "階段四 移除輔助圖（除數2–5）"
+      },
+      {
+        "key": "fenfen-s5",
+        "label": "階段五 移除輔助圖（除數5–9）"
+      },
+      {
+        "key": "fenfen-s6",
+        "label": "階段六 用九九乘法"
       }
     ]
   },
@@ -1336,6 +1361,206 @@ window.WORKSHEET_REGISTRY = [
     "sample": {
       "pdf": "assets/fenfen_s1_sample.pdf",
       "name": "分分看_階段一_畫一畫_範例.pdf"
+    },
+    "layout": {
+      "panel": "fenfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
+    "id": "fenfen-s2",
+    "code": "N203H",
+    "grade": "2",
+    "name": "分分看＿階段二 分到盤子（兩位數）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "分分看",
+      "等分",
+      "平分",
+      "除法概念"
+    ],
+    "desc": "把 N 個物品分到盤子（每個盤子代表一個人），再用提示氣泡把「分的結果」連到加法與乘法算式，4 題，數字每次隨機。",
+    "sortKey": [
+      4,
+      2,
+      1
+    ],
+    "home": null,
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N203H",
+      "desc": "概念建立的第二步：先動手分到盤子，再看提示把結果寫成 □＋□ 與 □×X，連結平分與加法、乘法。"
+    },
+    "sample": {
+      "pdf": "assets/fenfen_s2_sample.pdf",
+      "name": "分分看_階段二_分到盤子_範例.pdf"
+    },
+    "layout": {
+      "panel": "fenfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
+    "id": "fenfen-s3",
+    "code": "N203I",
+    "grade": "2",
+    "name": "分分看＿階段三 數字尺（兩位數）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "分分看",
+      "等分",
+      "平分",
+      "除法概念"
+    ],
+    "desc": "把 N 個物品分到盤子，左側附 1～9 數字尺協助找出每份個數，再用提示氣泡把結果連到加法與乘法算式，4 題，數字每次隨機。",
+    "sortKey": [
+      4,
+      2,
+      1
+    ],
+    "home": null,
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N203I",
+      "desc": "概念建立的第三步：加上 1～9 數字尺，讓學生從數字中找出「每份幾個」，再寫成 □＋□ 與 □×X。"
+    },
+    "sample": {
+      "pdf": "assets/fenfen_s3_sample.pdf",
+      "name": "分分看_階段三_數字尺_範例.pdf"
+    },
+    "layout": {
+      "panel": "fenfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
+    "id": "fenfen-s4",
+    "code": "N203J",
+    "grade": "2",
+    "name": "分分看＿階段四 移除輔助圖（除數2–5）（兩位數）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "分分看",
+      "等分",
+      "平分",
+      "除法概念"
+    ],
+    "desc": "拿掉盤子等輔助圖，只留樹狀分解圖與 ①②算式提示（□＋□…、□×X），學生自己想「每份幾個」，6 題，數字每次隨機。",
+    "sortKey": [
+      4,
+      2,
+      1
+    ],
+    "home": null,
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N203J",
+      "desc": "概念建立的第四步：移除輔助圖，用分解圖與算式提示完成平分（除數 2～5）。"
+    },
+    "sample": {
+      "pdf": "assets/fenfen_s4_sample.pdf",
+      "name": "分分看_階段四_移除輔助圖_除數2至5_範例.pdf"
+    },
+    "layout": {
+      "panel": "fenfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
+    "id": "fenfen-s5",
+    "code": "N203K",
+    "grade": "2",
+    "name": "分分看＿階段五 移除輔助圖（除數5–9）（兩位數）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "分分看",
+      "等分",
+      "平分",
+      "除法概念"
+    ],
+    "desc": "除數加大到 5～9，不附分解圖，只留 ①②算式提示，前兩題每人分到 1 個，其餘 2～4 個，6 題，數字每次隨機。",
+    "sortKey": [
+      4,
+      2,
+      1
+    ],
+    "home": null,
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N203K",
+      "desc": "概念建立的第五步：除數加大到 5～9，從「分給幾個人就是幾份」理解較大除數的平分。"
+    },
+    "sample": {
+      "pdf": "assets/fenfen_s5_sample.pdf",
+      "name": "分分看_階段五_移除輔助圖_除數5至9_範例.pdf"
+    },
+    "layout": {
+      "panel": "fenfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
+    "id": "fenfen-s6",
+    "code": "N203L",
+    "grade": "2",
+    "name": "分分看＿階段六 用九九乘法（兩位數）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "分分看",
+      "等分",
+      "平分",
+      "除法概念"
+    ],
+    "desc": "版面同階段四，標題「用九九乘法做做看」：先寫加法算式，再用九九乘法求出一個人分到幾個，6 題，數字每次隨機。",
+    "sortKey": [
+      4,
+      2,
+      1
+    ],
+    "home": null,
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N203L",
+      "desc": "概念建立的最後一步：把平分連到九九乘法，用「□×人數＝總數」找出每人分到的個數。"
+    },
+    "sample": {
+      "pdf": "assets/fenfen_s6_sample.pdf",
+      "name": "分分看_階段六_用九九乘法_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
