@@ -2484,9 +2484,9 @@ const LIBRARY_CATS = [
 ];
 // 這 5 個題型的生成器在 bundle slot 固定送 config:{} 時會出錯：
 // n2-change/maxbuy/sanbushu 缺必要參數（KeyError/ValueError），
-// tuiwei3sub/sub1 是多版型父 id、本身不在後端 ROUTE_MAP 裡（404）。
+// tuiwei3sub/sub1/chufa 是多版型父 id、本身不在後端 ROUTE_MAP 裡（404）。
 // 全專案（含 Task 3 的生成流程）統一用這份清單判斷，不得各自維護副本。
-const BUNDLE_UNSUPPORTED = ['n2-change', 'maxbuy', 'sanbushu', 'tuiwei3sub', 'sub1'];
+const BUNDLE_UNSUPPORTED = ['n2-change', 'maxbuy', 'sanbushu', 'tuiwei3sub', 'sub1', 'chufa'];
 
 // 回傳 order（題型 id 陣列）中屬於 BUNDLE_UNSUPPORTED 的項目之顯示名稱；空陣列代表全部可安全生成。
 function _bundleUnsupportedNames(order) {
