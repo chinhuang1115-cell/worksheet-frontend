@@ -15,7 +15,7 @@ window.WORKSHEET_REGISTRY = [
       "付款",
       "兩步驟乘減"
     ],
-    "desc": "價目表 4 件商品，3 道找零題：買1件A＋1件B找零、買3件A找零、買5件A找零（乘法＋減法兩步驟）。",
+    "desc": "價目表 4 件商品，3 道找零題：買1件A＋1件B找零、買3件A找零、買5件A找零（乘法＋減法兩步驟）。另有自由列式兩種（無提示＝方框改長作答底線、計算格不畫；淡化提示＝方框與計算格格線調淡、答案線不變）。",
     "sortKey": [
       3,
       2,
@@ -32,17 +32,23 @@ window.WORKSHEET_REGISTRY = [
       ]
     },
     "diffInfo": null,
-    "sample": {
-      "pdf": "assets/n2change_sample.pdf",
-      "name": "購物找零_兩步驟乘減_兩位數_範本.pdf"
-    },
+    "sample": [
+      {"pdf": "assets/n2change_sample.pdf", "name": "購物找零_兩步驟乘減_兩位數_範本.pdf", "label": "完整提示", "key": "n2-change"},
+      {"pdf": "assets/n2change_free_sample.pdf", "name": "購物找零_兩步驟乘減_兩位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "n2-change-free"},
+      {"pdf": "assets/n2change_faded_sample.pdf", "name": "購物找零_兩步驟乘減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "n2-change-faded"}
+    ],
     "layout": {
       "panel": null,
       "themeSet": "d2",
       "showTheme": true,
       "prices": false,
       "interactive": true
-    }
+    },
+    "variants": [
+      {"key": "n2-change", "label": "完整提示"},
+      {"key": "n2-change-free", "label": "自由列式：無提示"},
+      {"key": "n2-change-faded", "label": "自由列式：淡化提示"}
+    ]
   },
   {
     "id": "maxbuy",
@@ -106,7 +112,7 @@ window.WORKSHEET_REGISTRY = [
       "買兩種",
       "合計找零"
     ],
-    "desc": "1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。題目全自動產生，只需選主題。",
+    "desc": "1頁：5個Menu商品＋2道題（各買兩種商品求合計後找零）。題目全自動產生，只需選主題。另有自由列式兩種（無提示＝方框改長作答底線、計算格不畫；淡化提示＝方框與計算格格線調淡、答案線不變）。",
     "sortKey": [
       3,
       2,
@@ -127,19 +133,25 @@ window.WORKSHEET_REGISTRY = [
       "level": "中等",
       "levelColor": "#f59e0b",
       "code": "N207B",
-      "desc": "三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。"
+      "desc": "三步驟乘加減混合，需有乘法基礎；出題含 Menu 閱讀與多步計算。另有自由列式兩種（無提示＝方框改長作答底線、計算格不畫；淡化提示＝方框與計算格格線調淡、答案線不變）。"
     },
-    "sample": {
-      "pdf": "assets/sanbushu_sample.pdf",
-      "name": "購物找零_三步驟乘加減_兩位數_範本.pdf"
-    },
+    "sample": [
+      {"pdf": "assets/sanbushu_sample.pdf", "name": "購物找零_三步驟乘加減_兩位數_範本.pdf", "label": "完整提示", "key": "sanbushu"},
+      {"pdf": "assets/sanbushu_free_sample.pdf", "name": "購物找零_三步驟乘加減_兩位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "sanbushu-free"},
+      {"pdf": "assets/sanbushu_faded_sample.pdf", "name": "購物找零_三步驟乘加減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "sanbushu-faded"}
+    ],
     "layout": {
       "panel": "sanbushuPanel",
       "themeSet": "d2",
       "showTheme": true,
       "prices": true,
       "interactive": false
-    }
+    },
+    "variants": [
+      {"key": "sanbushu", "label": "完整提示"},
+      {"key": "sanbushu-free", "label": "自由列式：無提示"},
+      {"key": "sanbushu-faded", "label": "自由列式：淡化提示"}
+    ]
   },
   {
     "id": "fenfen",
@@ -719,7 +731,7 @@ window.WORKSHEET_REGISTRY = [
       "存款",
       "減法"
     ],
-    "desc": "甜點店 4 件商品，學生存了一些錢還不夠買，計算還差幾元。共 6 道題，數字每次隨機產生。",
+    "desc": "甜點店 4 件商品，學生存了一些錢還不夠買，計算還差幾元。共 6 道題，數字每次隨機產生。另有自由列式兩種（無提示＝方框改長作答底線、計算格不畫；淡化提示＝方框與計算格格線調淡、答案線不變）。",
     "sortKey": [
       2,
       2,
@@ -740,19 +752,25 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N204B",
-      "desc": "甜點店 4 件商品，學生手邊有一些錢但不夠，計算還差幾元。一步驟減法，適合剛學減法的學生。"
+      "desc": "甜點店 4 件商品，學生手邊有一些錢但不夠，計算還差幾元。一步驟減法，適合剛學減法的學生。另有自由列式兩種（無提示＝方框改長作答底線、計算格不畫；淡化提示＝方框與計算格格線調淡、答案線不變）。"
     },
-    "sample": {
-      "pdf": "assets/haochashao_sample.pdf",
-      "name": "還差多少_一步驟減法_兩位數_範本.pdf"
-    },
+    "sample": [
+      {"pdf": "assets/haochashao_sample.pdf", "name": "還差多少_一步驟減法_兩位數_範本.pdf", "label": "完整提示", "key": "haochashao"},
+      {"pdf": "assets/haochashao_free_sample.pdf", "name": "還差多少_一步驟減法_兩位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "haochashao-free"},
+      {"pdf": "assets/haochashao_faded_sample.pdf", "name": "還差多少_一步驟減法_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "haochashao-faded"}
+    ],
     "layout": {
       "panel": "haochashaoPanel",
       "themeSet": "d2",
       "showTheme": true,
       "prices": true,
       "interactive": false
-    }
+    },
+    "variants": [
+      {"key": "haochashao", "label": "完整提示"},
+      {"key": "haochashao-free", "label": "自由列式：無提示"},
+      {"key": "haochashao-faded", "label": "自由列式：淡化提示"}
+    ]
   },
   {
     "id": "huachu4add",
@@ -1673,7 +1691,7 @@ window.WORKSHEET_REGISTRY = [
       "減法",
       "直式"
     ],
-    "desc": "兩位數不退位減法直式計算，3 題示範（固定）+ 9 題練習（隨機），每次數字隨機。",
+    "desc": "兩位數不退位減法直式計算，3 題示範（固定）+ 9 題練習（隨機），每次數字隨機。另有自由列式兩種（練習題的計算格拿掉或調淡，3 題示範不變）。",
     "sortKey": [
       2,
       2,
@@ -1689,16 +1707,25 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N202A",
-      "desc": "兩位數不退位減法，3 題示範（題目與錢幣圖固定）＋ 9 題隨機練習，每次數字不同。"
+      "desc": "兩位數不退位減法，3 題示範（題目與錢幣圖固定）＋ 9 題隨機練習，每次數字不同。另有自由列式兩種（練習題的計算格拿掉或調淡，3 題示範不變）。"
     },
-    "sample": "assets/sub2noreg_sample.pdf",
+    "sample": [
+      {"pdf": "assets/sub2noreg_sample.pdf", "name": "兩位數不退位減法_直式計算_範本.pdf", "label": "完整提示", "key": "sub2noreg"},
+      {"pdf": "assets/sub2noreg_free_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "sub2noreg-free"},
+      {"pdf": "assets/sub2noreg_faded_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "sub2noreg-faded"}
+    ],
     "layout": {
       "panel": "sub2noregPanel",
       "themeSet": null,
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      {"key": "sub2noreg", "label": "完整提示"},
+      {"key": "sub2noreg-free", "label": "自由列式：無提示"},
+      {"key": "sub2noreg-faded", "label": "自由列式：淡化提示"}
+    ]
   },
   {
     "id": "sub2noreg-app",
@@ -2642,7 +2669,7 @@ window.WORKSHEET_REGISTRY = [
     "name": "加減關係＿十以上的數",
     "ops": ["add", "sub"],
     "keywords": ["addsub"],
-    "desc": "十以上的數（11-19），拆成「1個十＋N個一」，同時寫出加法和減法算式。",
+    "desc": "十以上的數（11-19），拆成「1個十＋N個一」，同時寫出加法和減法算式。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡）。",
     "sortKey": [5, 1, 2],
     "home": {
       "icon": "🔄",
@@ -2655,12 +2682,18 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N103B",
-      "desc": "加減互逆關係，十以上的數（11-19），十位分解。"
+      "desc": "加減互逆關係，十以上的數（11-19），十位分解。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡）。"
     },
     "sample": [
-      { "pdf": "assets/addsub_v2_coindraw_sample.pdf", "name": "加減關係_十以上_硬幣簡圖.pdf", "label": "硬幣簡圖", "key": "addsub-v2-coindraw" },
-      { "pdf": "assets/addsub_v2_coinphoto_sample.pdf", "name": "加減關係_十以上_硬幣照片.pdf", "label": "硬幣照片", "key": "addsub-v2-coinphoto" },
-      { "pdf": "assets/addsub_v2_food_sample.pdf", "name": "加減關係_十以上_食物.pdf", "label": "食物", "key": "addsub-v2-food" }
+      {"pdf": "assets/addsub_v2_coindraw_sample.pdf", "name": "加減關係_十以上_硬幣簡圖.pdf", "label": "硬幣簡圖", "key": "addsub-v2-coindraw"},
+      {"pdf": "assets/addsub_v2_coinphoto_sample.pdf", "name": "加減關係_十以上_硬幣照片.pdf", "label": "硬幣照片", "key": "addsub-v2-coinphoto"},
+      {"pdf": "assets/addsub_v2_food_sample.pdf", "name": "加減關係_十以上_食物.pdf", "label": "食物", "key": "addsub-v2-food"},
+      {"pdf": "assets/addsub_v2_coindraw_free_sample.pdf", "name": "加減關係_十以上_硬幣簡圖_自由列式_無提示.pdf", "label": "硬幣簡圖．自由列式：無提示", "key": "addsub-v2-coindraw-free"},
+      {"pdf": "assets/addsub_v2_coindraw_faded_sample.pdf", "name": "加減關係_十以上_硬幣簡圖_自由列式_淡化提示.pdf", "label": "硬幣簡圖．自由列式：淡化提示", "key": "addsub-v2-coindraw-faded"},
+      {"pdf": "assets/addsub_v2_coinphoto_free_sample.pdf", "name": "加減關係_十以上_硬幣照片_自由列式_無提示.pdf", "label": "硬幣照片．自由列式：無提示", "key": "addsub-v2-coinphoto-free"},
+      {"pdf": "assets/addsub_v2_coinphoto_faded_sample.pdf", "name": "加減關係_十以上_硬幣照片_自由列式_淡化提示.pdf", "label": "硬幣照片．自由列式：淡化提示", "key": "addsub-v2-coinphoto-faded"},
+      {"pdf": "assets/addsub_v2_food_free_sample.pdf", "name": "加減關係_十以上_食物_自由列式_無提示.pdf", "label": "食物．自由列式：無提示", "key": "addsub-v2-food-free"},
+      {"pdf": "assets/addsub_v2_food_faded_sample.pdf", "name": "加減關係_十以上_食物_自由列式_淡化提示.pdf", "label": "食物．自由列式：淡化提示", "key": "addsub-v2-food-faded"}
     ],
     "layout": {
       "panel": null,
@@ -2670,9 +2703,15 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     },
     "variants": [
-      { "key": "addsub-v2-coindraw", "label": "硬幣簡圖" },
-      { "key": "addsub-v2-coinphoto", "label": "硬幣照片" },
-      { "key": "addsub-v2-food", "label": "食物" }
+      {"key": "addsub-v2-coindraw", "label": "硬幣簡圖"},
+      {"key": "addsub-v2-coinphoto", "label": "硬幣照片"},
+      {"key": "addsub-v2-food", "label": "食物"},
+      {"key": "addsub-v2-coindraw-free", "label": "硬幣簡圖．自由列式：無提示"},
+      {"key": "addsub-v2-coindraw-faded", "label": "硬幣簡圖．自由列式：淡化提示"},
+      {"key": "addsub-v2-coinphoto-free", "label": "硬幣照片．自由列式：無提示"},
+      {"key": "addsub-v2-coinphoto-faded", "label": "硬幣照片．自由列式：淡化提示"},
+      {"key": "addsub-v2-food-free", "label": "食物．自由列式：無提示"},
+      {"key": "addsub-v2-food-faded", "label": "食物．自由列式：淡化提示"}
     ]
   },
   {
@@ -2682,7 +2721,7 @@ window.WORKSHEET_REGISTRY = [
     "name": "加減關係＿十以上的分和",
     "ops": ["add", "sub"],
     "keywords": ["addsub"],
-    "desc": "二位數分和（20-60），用十位條和個位塊表示數量，同時寫出加法和減法算式。",
+    "desc": "二位數分和（20-60），用十位條和個位塊表示數量，同時寫出加法和減法算式。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡）。",
     "sortKey": [5, 1, 3],
     "home": {
       "icon": "🔄",
@@ -2695,11 +2734,15 @@ window.WORKSHEET_REGISTRY = [
       "level": "進階",
       "levelColor": "#f59e0b",
       "code": "N103C",
-      "desc": "加減互逆關係，二位數分和（20-60），十位條＋個位塊表示。"
+      "desc": "加減互逆關係，二位數分和（20-60），十位條＋個位塊表示。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡）。"
     },
     "sample": [
-      { "pdf": "assets/addsub_v3_blocks_sample.pdf", "name": "加減關係_分和_積木.pdf", "label": "積木", "key": "addsub-v3-blocks" },
-      { "pdf": "assets/addsub_v3_candy_sample.pdf", "name": "加減關係_分和_糖果.pdf", "label": "糖果", "key": "addsub-v3-candy" }
+      {"pdf": "assets/addsub_v3_blocks_sample.pdf", "name": "加減關係_分和_積木.pdf", "label": "積木", "key": "addsub-v3-blocks"},
+      {"pdf": "assets/addsub_v3_candy_sample.pdf", "name": "加減關係_分和_糖果.pdf", "label": "糖果", "key": "addsub-v3-candy"},
+      {"pdf": "assets/addsub_v3_blocks_free_sample.pdf", "name": "加減關係_分和_積木_自由列式_無提示.pdf", "label": "積木．自由列式：無提示", "key": "addsub-v3-blocks-free"},
+      {"pdf": "assets/addsub_v3_blocks_faded_sample.pdf", "name": "加減關係_分和_積木_自由列式_淡化提示.pdf", "label": "積木．自由列式：淡化提示", "key": "addsub-v3-blocks-faded"},
+      {"pdf": "assets/addsub_v3_candy_free_sample.pdf", "name": "加減關係_分和_糖果_自由列式_無提示.pdf", "label": "糖果．自由列式：無提示", "key": "addsub-v3-candy-free"},
+      {"pdf": "assets/addsub_v3_candy_faded_sample.pdf", "name": "加減關係_分和_糖果_自由列式_淡化提示.pdf", "label": "糖果．自由列式：淡化提示", "key": "addsub-v3-candy-faded"}
     ],
     "layout": {
       "panel": null,
@@ -2709,8 +2752,12 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     },
     "variants": [
-      { "key": "addsub-v3-blocks", "label": "積木" },
-      { "key": "addsub-v3-candy", "label": "糖果" }
+      {"key": "addsub-v3-blocks", "label": "積木"},
+      {"key": "addsub-v3-candy", "label": "糖果"},
+      {"key": "addsub-v3-blocks-free", "label": "積木．自由列式：無提示"},
+      {"key": "addsub-v3-blocks-faded", "label": "積木．自由列式：淡化提示"},
+      {"key": "addsub-v3-candy-free", "label": "糖果．自由列式：無提示"},
+      {"key": "addsub-v3-candy-faded", "label": "糖果．自由列式：淡化提示"}
     ]
   },
   {
@@ -2910,8 +2957,7 @@ window.WORKSHEET_REGISTRY = [
       "features": [
         "跨單元混合題型",
         "題目交錯不連續",
-        "兩種難度配置",
-        "另有輔助計算格留白版"
+        "兩種難度配置"
       ]
     },
     "diffInfo": {
@@ -2933,18 +2979,6 @@ window.WORKSHEET_REGISTRY = [
         "name": "綜合練習_四位數加減_B_範本.pdf",
         "label": "綜合練習 B（加強退位）",
         "key": "zonghe-3a-r02"
-      },
-      {
-        "pdf": "assets/zonghe-3a-r01-blank_sample.pdf",
-        "name": "綜合練習_四位數加減_A_計算格空白_範本.pdf",
-        "label": "綜合練習 A（計算格空白）",
-        "key": "zonghe-3a-r01-blank"
-      },
-      {
-        "pdf": "assets/zonghe-3a-r02-blank_sample.pdf",
-        "name": "綜合練習_四位數加減_B_計算格空白_範本.pdf",
-        "label": "綜合練習 B（加強退位・計算格空白）",
-        "key": "zonghe-3a-r02-blank"
       }
     ],
     "layout": {
@@ -2956,9 +2990,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "variants": [
       { "key": "zonghe-3a-r01", "label": "綜合練習 A" },
-      { "key": "zonghe-3a-r02", "label": "綜合練習 B（加強退位）" },
-      { "key": "zonghe-3a-r01-blank", "label": "綜合練習 A（計算格空白）" },
-      { "key": "zonghe-3a-r02-blank", "label": "綜合練習 B（加強退位・計算格空白）" }
+      { "key": "zonghe-3a-r02", "label": "綜合練習 B（加強退位）" }
     ]
   }
 ];
