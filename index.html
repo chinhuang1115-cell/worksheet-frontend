@@ -1964,6 +1964,8 @@
 const API_URL = window.WORKSHEET_API_URL || 'https://web-production-0542f.up.railway.app';
 
 const ASSETS_BASE_URL = window.WORKSHEET_ASSETS_URL || '.';
+// sample PDF 的快取版本號：重繪／更換 sample 後改這個值，瀏覽器才會抓新檔（2026-10-05）
+const SAMPLE_VER = '20261005a';
 
 // 付費結帳開關：Railway ECPay 環境變數確認可用前，暫時關閉購買入口。
 const CHECKOUT_ENABLED = false;
@@ -4455,7 +4457,7 @@ class Component extends DCLogic {
       let cardImgSrc = null;
       if (st.viewMode === 'image') {
         const cardSample = cardVariant ? sampleFor(it, cardVariant.key) : it.sample;
-        const cardPdfUrl = cardSample && cardSample.pdf ? (ASSETS_BASE_URL + '/' + cardSample.pdf) : null;
+        const cardPdfUrl = cardSample && cardSample.pdf ? (ASSETS_BASE_URL + '/' + cardSample.pdf + '?v=' + SAMPLE_VER) : null;
         if (cardPdfUrl && !_pdfPage1Cache[cardPdfUrl] && !_pdfPage1Inflight[cardPdfUrl]) {
           _loadPdfPage1(cardPdfUrl).then(() => this.forceUpdate());
         }
@@ -4578,7 +4580,7 @@ class Component extends DCLogic {
       const activeKey = activeRouteKeyOf(it, st);
       const activeVariant = activeKey ? it.variants.find(v => v.key === activeKey) : null;
       const previewSample = activeKey ? sampleFor(it, activeKey) : null;
-      const previewPdfUrl = previewSample && previewSample.pdf ? (ASSETS_BASE_URL + '/' + previewSample.pdf) : null;
+      const previewPdfUrl = previewSample && previewSample.pdf ? (ASSETS_BASE_URL + '/' + previewSample.pdf + '?v=' + SAMPLE_VER) : null;
       if (previewPdfUrl && !_pdfPagesCache[previewPdfUrl] && !_pdfPagesInflight[previewPdfUrl]) {
         _loadPdfAllPages(previewPdfUrl).then(() => this.forceUpdate());
       }
@@ -4656,7 +4658,7 @@ class Component extends DCLogic {
       //      翻頁器不介入版型（沿用先前 showPurchasePager 的判斷條件）。
       const sampleUrlOf = (key) => {
         const sp = sampleFor(it, key);
-        return sp && sp.pdf ? (ASSETS_BASE_URL + '/' + sp.pdf) : null;
+        return sp && sp.pdf ? (ASSETS_BASE_URL + '/' + sp.pdf + '?v=' + SAMPLE_VER) : null;
       };
       // 要算總頁數就得知道序列裡每一張的頁數，所以每一張的 sample 都要載入
       // （只載入目前顯示的那張的話，總頁數會一直是估的）。
@@ -5023,7 +5025,7 @@ class Component extends DCLogic {
 
     const primaryVariantForPreview = itemMeta ? itemMeta.variants[0] : null;
     const previewSample = primaryVariantForPreview ? sampleFor(itemMeta, primaryVariantForPreview.key) : null;
-    const previewPdfUrl = previewSample && previewSample.pdf ? (ASSETS_BASE_URL + '/' + previewSample.pdf) : null;
+    const previewPdfUrl = previewSample && previewSample.pdf ? (ASSETS_BASE_URL + '/' + previewSample.pdf + '?v=' + SAMPLE_VER) : null;
     if (previewPdfUrl && !_pdfPage1Cache[previewPdfUrl] && !_pdfPage1Inflight[previewPdfUrl]) {
       _loadPdfPage1(previewPdfUrl).then(() => this.forceUpdate());
     }
@@ -5657,7 +5659,7 @@ class Component extends DCLogic {
       const li = pg.code ? ITEMS.find(x => x.id === pg.code) : null;
       const primaryVariant = li ? li.variants[0] : null;
       const sample = primaryVariant ? sampleFor(li, primaryVariant.key) : null;
-      const pdfUrl = sample && sample.pdf ? (ASSETS_BASE_URL + '/' + sample.pdf) : null;
+      const pdfUrl = sample && sample.pdf ? (ASSETS_BASE_URL + '/' + sample.pdf + '?v=' + SAMPLE_VER) : null;
       if (pdfUrl && !_pdfPage1Cache[pdfUrl] && !_pdfPage1Inflight[pdfUrl]) {
         _loadPdfPage1(pdfUrl).then(() => this.forceUpdate());
       }
