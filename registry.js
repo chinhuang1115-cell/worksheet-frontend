@@ -357,19 +357,25 @@ window.WORKSHEET_REGISTRY = [
       "level": "進階",
       "levelColor": "#f97316",
       "code": "N207C",
-      "desc": "九九乘法兩步驟：先乘法求合計，再付款找零，每頁 3 道題，適合乘法已熟練的學生。"
+      "desc": "九九乘法兩步驟：先乘法求合計，再付款找零，每頁 3 道題，適合乘法已熟練的學生。另有自由列式兩種（無提示＝不畫輔助計算格；淡化提示＝計算格格線與進退位列調淡、答案線不變）。"
     },
-    "sample": {
-      "pdf": "assets/chenghe_sample.pdf",
-      "name": "倍數購物_兩步驟乘減_兩位數_範本.pdf"
-    },
+    "sample": [
+      { "pdf": "assets/chenghe_sample.pdf", "name": "倍數購物_兩步驟乘減_兩位數_範本.pdf", "label": "完整提示", "key": "chenghe" },
+      { "pdf": "assets/chenghe_free_sample.pdf", "name": "倍數購物_兩步驟乘減_兩位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "chenghe-free" },
+      { "pdf": "assets/chenghe_faded_sample.pdf", "name": "倍數購物_兩步驟乘減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "chenghe-faded" }
+    ],
     "layout": {
       "panel": "chenghePanel",
       "themeSet": "d2",
       "showTheme": true,
       "prices": true,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "chenghe", "label": "完整提示" },
+      { "key": "chenghe-free", "label": "自由列式：無提示" },
+      { "key": "chenghe-faded", "label": "自由列式：淡化提示" }
+    ]
   },
   {
     "id": "mul-concept",
@@ -415,23 +421,25 @@ window.WORKSHEET_REGISTRY = [
     "grade": "2",
     "name": "概念建立＿從橫式到直式 3",
     "ops": ["mul"],
-    "keywords": ["乘法直式", "兩位數乘一位數", "九九乘法", "價目表", "連加與乘法"],
-    "desc": "價目表情境練習買 N 件商品要多少錢的兩位數乘以一位數直式計算；文具價目表另有自由列式兩種（無提示、淡化提示），逐步撤掉列式與計算格提示。",
+    "keywords": ["乘法直式", "兩位數乘一位數", "九九乘法", "扭蛋機", "價目表", "連加與乘法"],
+    "desc": "兩位數乘以一位數的直式計算練習：扭蛋機情境練習連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢；文具價目表另有自由列式兩種（無提示、淡化提示），逐步撤掉列式與計算格提示。",
     "sortKey": [3, 1, 2],
     "home": {
       "icon": "✖️",
       "sub": "兩位數 × 一位數",
-      "desc": "價目表情境，練習買 N 件商品的兩位數乘以一位數直式計算。",
-      "features": ["乘法直式", "價目表應用"]
+      "desc": "兩位數乘以一位數的直式計算，扭蛋機與價目表情境應用。",
+      "features": ["連加到列式", "乘法直式", "價目表應用"]
     },
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N209B",
-      "desc": "價目表情境練習買 N 件商品要多少錢的兩位數乘以一位數直式計算。"
+      "desc": "兩位數乘以一位數的直式計算練習：扭蛋機情境從連加或列式帶入直式，價目表情境練習買 N 件商品要多少錢。"
     },
     "sample": [
+      { "pdf": "assets/mul2x1_gacha_add_sample.pdf", "name": "乘法直式_扭蛋機_連加.pdf", "label": "扭蛋機（連加）", "key": "mul2x1-gacha-add" },
+      { "pdf": "assets/mul2x1_gacha_eq_sample.pdf", "name": "乘法直式_扭蛋機_列式.pdf", "label": "扭蛋機（列式）", "key": "mul2x1-gacha-eq" },
       { "pdf": "assets/mul2x1_price_stationery_sample.pdf", "name": "乘法直式_價目表_文具.pdf", "label": "價目表（文具：完整提示）", "key": "mul2x1-price-stationery" },
       { "pdf": "assets/mul2x1_price_stationery_free_sample.pdf", "name": "乘法直式_價目表_文具自由列式_無提示.pdf", "label": "價目表（文具：自由列式・無提示）", "key": "mul2x1-price-stationery-free" },
       { "pdf": "assets/mul2x1_price_stationery_faded_sample.pdf", "name": "乘法直式_價目表_文具自由列式_淡化提示.pdf", "label": "價目表（文具：自由列式・淡化提示）", "key": "mul2x1-price-stationery-faded" },
@@ -451,48 +459,12 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     },
     "variants": [
+      { "key": "mul2x1-gacha-add", "label": "扭蛋機（連加）" },
+      { "key": "mul2x1-gacha-eq", "label": "扭蛋機（列式）" },
       { "key": "mul2x1-price-stationery", "label": "價目表（文具：完整提示）" },
       { "key": "mul2x1-price-stationery-free", "label": "價目表（文具：自由列式・無提示）" },
       { "key": "mul2x1-price-stationery-faded", "label": "價目表（文具：自由列式・淡化提示）" },
       { "key": "mul2x1-price-grocery", "label": "價目表（雜貨）" }
-    ]
-  },
-  {
-    "id": "mul2x1-gacha",
-    "code": "N209H",
-    "grade": "2",
-    "name": "概念建立＿從橫式到直式 3（扭蛋機）",
-    "ops": ["mul"],
-    "keywords": ["乘法直式", "兩位數乘一位數", "扭蛋機", "連加與乘法", "列式"],
-    "desc": "以扭蛋機情境練習兩位數乘以一位數：從連加到幾倍、或直接列式帶入直式計算。",
-    "sortKey": [3, 1, 8],
-    "home": {
-      "icon": "✖️",
-      "sub": "兩位數 × 一位數",
-      "desc": "扭蛋機情境，從連加或列式帶入兩位數乘以一位數的直式計算。",
-      "features": ["連加到列式", "乘法直式", "扭蛋機情境"]
-    },
-    "diffInfo": {
-      "grade": "二年級",
-      "level": "基礎",
-      "levelColor": "#22c55e",
-      "code": "N209H",
-      "desc": "以扭蛋機情境練習兩位數乘以一位數，從連加或列式帶入直式。"
-    },
-    "sample": [
-      { "pdf": "assets/mul2x1_gacha_add_sample.pdf", "name": "乘法直式_扭蛋機_連加.pdf", "label": "扭蛋機（連加）", "key": "mul2x1-gacha-add" },
-      { "pdf": "assets/mul2x1_gacha_eq_sample.pdf", "name": "乘法直式_扭蛋機_列式.pdf", "label": "扭蛋機（列式）", "key": "mul2x1-gacha-eq" }
-    ],
-    "layout": {
-      "panel": null,
-      "themeSet": null,
-      "showTheme": false,
-      "prices": null,
-      "interactive": false
-    },
-    "variants": [
-      { "key": "mul2x1-gacha-add", "label": "扭蛋機（連加）" },
-      { "key": "mul2x1-gacha-eq", "label": "扭蛋機（列式）" }
     ]
   },
   {
