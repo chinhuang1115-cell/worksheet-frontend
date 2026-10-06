@@ -1678,6 +1678,46 @@ window.WORKSHEET_REGISTRY = [
     }
   },
   {
+    "id": "decdiv",
+    "code": "N601",
+    "grade": "6",
+    "name": "計算練習＿小數的除法（直式）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "小數",
+      "除法",
+      "直式",
+      "計算練習"
+    ],
+    "desc": "小數除法直式計算練習，6 題（整數、小數÷小數、小數÷整數），每題附除號框與計算空間，全部整除，數字每次隨機。",
+    "sortKey": [
+      6,
+      1,
+      1
+    ],
+    "home": null,
+    "diffInfo": {
+      "grade": "六年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N601",
+      "desc": "小數的除法直式計算，被除數與除數含小數，商皆可整除（至多兩位小數）。"
+    },
+    "sample": {
+      "pdf": "assets/decdiv_sample.pdf",
+      "name": "計算練習_小數的除法_範例.pdf"
+    },
+    "layout": {
+      "panel": "pingfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
     "id": "sub2noreg",
     "code": "N202A",
     "name": "兩位數不退位減法＿直式計算",
@@ -2957,7 +2997,8 @@ window.WORKSHEET_REGISTRY = [
       "features": [
         "跨單元混合題型",
         "題目交錯不連續",
-        "兩種難度配置"
+        "兩種難度配置",
+        "另有輔助計算格留白版"
       ]
     },
     "diffInfo": {
@@ -2979,6 +3020,18 @@ window.WORKSHEET_REGISTRY = [
         "name": "綜合練習_四位數加減_B_範本.pdf",
         "label": "綜合練習 B（加強退位）",
         "key": "zonghe-3a-r02"
+      },
+      {
+        "pdf": "assets/zonghe-3a-r01-blank_sample.pdf",
+        "name": "綜合練習_四位數加減_A_計算格空白_範本.pdf",
+        "label": "綜合練習 A（計算格空白）",
+        "key": "zonghe-3a-r01-blank"
+      },
+      {
+        "pdf": "assets/zonghe-3a-r02-blank_sample.pdf",
+        "name": "綜合練習_四位數加減_B_計算格空白_範本.pdf",
+        "label": "綜合練習 B（加強退位・計算格空白）",
+        "key": "zonghe-3a-r02-blank"
       }
     ],
     "layout": {
@@ -2990,7 +3043,9 @@ window.WORKSHEET_REGISTRY = [
     },
     "variants": [
       { "key": "zonghe-3a-r01", "label": "綜合練習 A" },
-      { "key": "zonghe-3a-r02", "label": "綜合練習 B（加強退位）" }
+      { "key": "zonghe-3a-r02", "label": "綜合練習 B（加強退位）" },
+      { "key": "zonghe-3a-r01-blank", "label": "綜合練習 A（計算格空白）" },
+      { "key": "zonghe-3a-r02-blank", "label": "綜合練習 B（加強退位・計算格空白）" }
     ]
   }
 ];
