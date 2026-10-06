@@ -1727,6 +1727,56 @@ window.WORKSHEET_REGISTRY = [
     }
   },
   {
+    "id": "decdivapp",
+    "code": "N602",
+    "grade": "6",
+    "name": "計算練習＿小數除法應用題",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "小數",
+      "除法",
+      "應用題",
+      "直式",
+      "計算練習"
+    ],
+    "desc": "小數除法應用題 6 題（幾倍、分裝、面積求邊長、單價），句子精簡，附計算格與答案括號，全部整除，題目每次隨機。",
+    "sortKey": [
+      6,
+      1,
+      2
+    ],
+    "home": {
+      "icon": "🧃",
+      "sub": "小數除法應用題",
+      "desc": "用生活情境練習小數除法：幾倍、分裝成幾瓶、面積求邊長、每公斤幾元，句子簡短好讀。",
+      "features": [
+        "6 題生活應用題，句子精簡",
+        "附直式計算格與答案括號",
+        "全部整除，每次產生新題"
+      ]
+    },
+    "diffInfo": {
+      "grade": "六年級",
+      "level": "進階",
+      "levelColor": "#f97316",
+      "code": "N602",
+      "desc": "把小數除法用在生活情境：幾倍、平均分裝、面積求邊長、單價，題目精簡，商皆可整除。"
+    },
+    "sample": {
+      "pdf": "assets/decdivapp_sample.pdf",
+      "name": "計算練習_小數除法應用題_範例.pdf"
+    },
+    "layout": {
+      "panel": "pingfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
     "id": "sub2noreg",
     "code": "N202A",
     "name": "兩位數不退位減法＿直式計算",
