@@ -4882,9 +4882,7 @@ class Component extends DCLogic {
         variantListHeaderLabel: variantRadio ? '版型（單選）' : '版型（可複選）',
         variantRadio,
         themeHint: !isCustom
-          ? (themePreviewShownFlag
-            ? '點選主題可預覽套用效果；系統預設出貨仍固定隨機主題。'
-            : '目前顯示的是範例圖，金額與圖案位置僅供參考；點選主題即可產生正確的預覽。系統預設出貨仍固定隨機主題。')
+          ? '點選主題可預覽套用效果；系統預設出貨仍固定隨機主題。'
           : (themeQtyMismatchMsg || (hasCustomSelection && !customConfirmed ? '選好主題並在下方「自由選配」卡片分配張數後，點擊「確認套用」。' : '')),
         customThemeRows,
         themeQtyMismatchMsg,
