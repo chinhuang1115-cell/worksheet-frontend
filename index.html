@@ -2844,7 +2844,11 @@ const GRADES = [
   { key:1, label:'一年級' },
   { key:2, label:'二年級' },
   { key:3, label:'三年級' },
+  { key:4, label:'四年級' },
+  { key:5, label:'五年級' },
+  { key:6, label:'六年級' },
 ];
+const GRADE_LABELS = { 1:'一年級', 2:'二年級', 3:'三年級', 4:'四年級', 5:'五年級', 6:'六年級' };
 const LS_VLESSONS = 'ys_variant_lessons';
 const LS_THEME = 'ys_item_theme';
 const LS_HOME_VIEW = 'ys_home_view_mode';   // 'text' | 'image' — 首頁卡片格瀏覽模式，全域切換，持久化
@@ -4478,7 +4482,8 @@ class Component extends DCLogic {
     const viewModeStyle = (active) => `padding:5px 12px;border-radius:var(--radius-full);cursor:pointer;font-size:var(--text-xs);border:1.5px solid ${active ? 'var(--color-brand-500)' : 'var(--border-default)'};${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:700;' : 'color:var(--text-secondary);'}`;
 
     const categories = CATS.map(c => ({ label: c.label, style: catStyle(st.category === c.key), onClick: () => this.patch('home', { category: c.key, page: 1 }) }));
-    const grades = GRADES.map(g => ({ label: g.label, style: gradeStyle(st.grade === g.key), onClick: () => this.patch('home', { grade: g.key, page: 1 }) }));
+    const gradesPresent = new Set(ITEMS.filter(it => it.hasHome).map(it => it.grade));   // 只列出目前有題型的年級，避免點進空清單
+    const grades = GRADES.filter(g => g.key === 'all' || gradesPresent.has(g.key)).map(g => ({ label: g.label, style: gradeStyle(st.grade === g.key), onClick: () => this.patch('home', { grade: g.key, page: 1 }) }));
     const sorts = SORTS.map(s => ({ label: s.label, style: sortStyle(st.sort === s.key), onClick: () => this.patch('home', { sort: st.sort === s.key ? 'difficulty' : s.key, page: 1 }) }));
     const viewModes = [
       { key: 'text', label: '📝 文字' },
@@ -4502,7 +4507,7 @@ class Component extends DCLogic {
       filtered = [...filtered].sort((a, b) => _ID_ORDER.get(b.id) - _ID_ORDER.get(a.id));
     }
 
-    const gradeLabelOf = (g) => g === 1 ? '一年級' : g === 2 ? '二年級' : g === 3 ? '三年級' : '';
+    const gradeLabelOf = (g) => GRADE_LABELS[g] || '';
     const isMulti = (it) => it.variants.length > 1;
 
     // 題型卡片格分頁：每頁 6 筆（3 欄 × 2 列），篩選/排序/搜尋/分類/年級變更時 page 已於各 onClick/onSearch 重置為 1
