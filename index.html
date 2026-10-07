@@ -37,6 +37,9 @@
     *{box-sizing:border-box;}
     .ys-card-arrow{opacity:0;transition:opacity .15s;}
     .ys-card-thumb-wrap:hover .ys-card-arrow{opacity:1;}
+    @keyframes ysSpin { to { transform: rotate(360deg); } }
+    .ys-spinner { width:22px;height:22px;border-radius:50%;border:3px solid var(--color-brand-100,#e5e7eb);border-top-color:var(--color-brand-500,#4f46e5);animation:ysSpin .8s linear infinite;flex-shrink:0; }
+    .ys-spinner-sm { width:16px;height:16px;border-width:2px; }
     @keyframes ysIndeterminate {
       0%   { left: -40%; }
       100% { left: 100%; }
@@ -79,6 +82,14 @@
           </div>
         </sc-if>
       </div>
+    </div>
+  </sc-if>
+
+  <!-- 全域忙碌提示：下載／打包／生成檔案時浮在畫面下方，避免使用者以為當機 -->
+  <sc-if value="{{ busyMessage }}" hint-placeholder-val="{{ false }}">
+    <div role="status" aria-live="polite" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);padding:14px 22px;border-radius:999px;background:#1f2937;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.28);font-size:15px;line-height:1.5;">
+      <div class="ys-spinner" style="border-color:rgba(255,255,255,.3);border-top-color:#fff;"></div>
+      <span>{{ busyMessage }}</span>
     </div>
   </sc-if>
 
@@ -217,6 +228,9 @@
                     <div class="ys-card-thumb-wrap" style="position:relative;width:100%;height:300px;background:var(--bg-subtle);border-radius:var(--radius-md);display:flex;align-items:flex-start;align-items:safe center;justify-content:center;overflow:hidden;">
                       <sc-if value="{{ item.cardImgSrc }}" hint-placeholder-val="{{ false }}">
                         <img src="{{ item.cardImgSrc }}" title="{{ item.cardVariantLabel }}" style="width:100%;height:auto;flex-shrink:0;display:block;" />
+                      </sc-if>
+                      <sc-if value="{{ item.cardLoading }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:absolute;left:50%;top:50%;margin:-11px 0 0 -11px;z-index:2;"><div class="ys-spinner"></div></div>
                       </sc-if>
                       <sc-if value="{{ !item.cardImgSrc }}" hint-placeholder-val="{{ true }}">
                         <div style="width:70%;background:#fff;border:1px solid var(--border-subtle);padding:10px;">
@@ -868,14 +882,26 @@
                     <div style="font-size:var(--text-2xs);font-weight:700;color:var(--text-brand);margin-bottom:8px;">{{ detailItem.themePreviewBadgeLabel }}</div>
                   </sc-if>
                   <!-- 白框不寫死直式 A4 比例：改由圖片本身決定高度，橫式學習單（分分看／sqcm／sanbushu 等）才不會只佔一半、下半留白 -->
-                  <div style="width:100%;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:flex;align-items:flex-start;justify-content:center;overflow:hidden;box-sizing:border-box;">
+                  <div style="position:relative;width:100%;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:flex;align-items:flex-start;justify-content:center;overflow:hidden;box-sizing:border-box;">
                     <img src="{{ detailItem.finalPreviewImgSrc }}" style="width:100%;height:auto;display:block;" />
+                    <sc-if value="{{ detailItem.themePreviewBusy }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;inset:0;background:rgba(255,255,255,.72);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+                        <div class="ys-spinner"></div>
+                        <div style="font-size:var(--text-sm,14px);font-weight:600;color:var(--text-brand);">正在生成預覽，請稍候…</div>
+                      </div>
+                    </sc-if>
                   </div>
                 </div>
               </sc-if>
               <sc-if value="{{ !detailItem.finalPreviewImgSrc }}" hint-placeholder-val="{{ true }}">
                 <div style="padding:20px;display:flex;align-items:flex-start;justify-content:center;background:var(--bg-subtle);">
-                  <div style="width:100%;aspect-ratio:210/297;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;box-sizing:border-box;">
+                  <div style="position:relative;width:100%;aspect-ratio:210/297;background:#fff;border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);overflow:hidden;box-sizing:border-box;">
+                    <sc-if value="{{ detailItem.previewStatusText }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;inset:0;background:rgba(255,255,255,.7);z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+                        <sc-if value="{{ detailItem.previewWaiting }}" hint-placeholder-val="{{ false }}"><div class="ys-spinner"></div></sc-if>
+                        <div style="font-size:var(--text-sm,14px);font-weight:600;color:var(--text-brand);text-align:center;padding:0 16px;">{{ detailItem.previewStatusText }}</div>
+                      </div>
+                    </sc-if>
                     <div style="padding:26px;">
                       <div style="height:8px;width:60%;background:var(--border-subtle);margin-bottom:10px;border-radius:2px;"></div>
                       <div style="height:6px;width:90%;background:var(--border-subtle);margin-bottom:6px;"></div>
@@ -4496,7 +4522,14 @@ class Component extends DCLogic {
     const adminMenuOpen = showAdminMenu && this.state.adminMenuOpen;
     const closeMenuThen = (fn) => () => { this.setState({ adminMenuOpen: false }); fn(); };
     const menuItemStyle = (name) => `display:block;padding:9px 16px;font-size:var(--text-sm);font-weight:${w(name)};color:var(--text-primary);white-space:nowrap;cursor:pointer;`;
+    const hs = this.state.home || {};
+    const anyBusy = (o) => !!o && Object.keys(o).some(k => o[k]);
+    const busyMessage = hs.downloading ? '正在打包生成學習單，請稍候…（可能需要數十秒，請不要關閉頁面）'
+      : (anyBusy(hs.docxDownloading) || anyBusy(hs.pdfDownloading)) ? '正在生成檔案，請稍候…（可能需要數十秒，請不要關閉頁面）'
+      : (this.state.publish && this.state.publish.generating) ? '正在生成套裝 PDF，請稍候…（可能需要 1–3 分鐘，請不要關閉頁面）'
+      : '';
     return {
+      busyMessage,
       isScreenHome: screen === 'home',
       isScreenConfig: screen === 'config',
       isScreenLock: screen === 'lock',
@@ -4598,6 +4631,7 @@ class Component extends DCLogic {
       const cardVariant = it.variants[cardIdx] || it.variants[0];
       const cardHasMultiVariant = it.variants.length > 1;
       let cardImgSrc = null;
+      let cardLoading = false;
       if (st.viewMode === 'image') {
         const cardSample = cardVariant ? sampleFor(it, cardVariant.key) : it.sample;
         const cardPdfUrl = cardSample && cardSample.pdf ? (ASSETS_BASE_URL + '/' + cardSample.pdf + '?v=' + SAMPLE_VER) : null;
@@ -4606,6 +4640,7 @@ class Component extends DCLogic {
         }
         cardImgSrc = cardPdfUrl && _pdfPage1Cache[cardPdfUrl] && _pdfPage1Cache[cardPdfUrl] !== 'ERROR'
           ? _pdfPage1Cache[cardPdfUrl] : null;
+        cardLoading = !!cardPdfUrl && !cardImgSrc && _pdfPage1Cache[cardPdfUrl] !== 'ERROR';
       }
       const cardDots = it.variants.map((v, i) => ({
         active: i === cardIdx,
@@ -4654,6 +4689,7 @@ class Component extends DCLogic {
         contentFilterStyle: (locked && !isAdmin) ? 'filter:blur(1.5px);opacity:0.5;' : '',
         cardHeight: st.viewMode === 'image' ? 'auto' : '262px',
         cardImgSrc,
+        cardLoading,
         cardHasMultiVariant,
         cardVariantLabel: cardVariant ? cardVariant.label : '',
         cardDots,
@@ -4913,6 +4949,10 @@ class Component extends DCLogic {
           : `版型預覽・頁次 ${pagerPos + 1} / ${pagerTotal}`,
         previewVariantLabel: activeVariant ? activeVariant.label : '',
         previewImgSrc,
+        // 預覽區狀態：尚無圖時，載入中顯示轉圈圈，載入失敗顯示說明（避免使用者只看到空白骨架以為當機）
+        previewWaiting: !themePreviewImgSrc && !previewImgSrc && !!previewPdfUrl && _pdfPagesCache[previewPdfUrl] !== 'ERROR',
+        previewStatusText: (themePreviewImgSrc || previewImgSrc || !previewPdfUrl) ? ''
+          : (_pdfPagesCache[previewPdfUrl] === 'ERROR' ? '預覽載入失敗，請重新整理頁面再試' : '預覽載入中，請稍候…'),
         finalPreviewImgSrc: themePreviewImgSrc || previewImgSrc,
         themePreviewBadgeLabel: themePreviewImgSrc ? ('已套用「' + theme.label + '」預覽') : '',
         themePreviewBtnLabel: themePreviewLoading ? '生成中…' : (themePreviewImgSrc ? '重新預覽套用效果' : '預覽套用效果'),
