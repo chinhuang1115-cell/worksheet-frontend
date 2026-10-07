@@ -2028,12 +2028,45 @@ function _pdfPump() {
 }
 (window.requestIdleCallback || ((f) => setTimeout(f, 800)))(() => { _getPdfjsLib().catch(() => {}); });
 
+// 預算圖（2026-10-07）：toolkit/make_sample_images.py 把每份 sample PDF 預先算繪成 assets/img/<stem>_p<N>.webp
+// （解析度與下面 pdf.js scale 1.5 相同），並寫 img/manifest.json。有條目就直接載圖（省下下載整份 PDF 與
+// 瀏覽器算繪），沒有或載入失敗就退回 pdf.js，所以缺圖不會壞。
+const _sampleManifests = {};   // 目錄 -> Promise<manifest|null>
+function _sampleImageInfo(pdfUrl) {
+  const clean = pdfUrl.split('?')[0];
+  const cut = clean.lastIndexOf('/');
+  const dir = clean.slice(0, cut), stem = clean.slice(cut + 1).replace(/\.pdf$/i, '');
+  if (!_sampleManifests[dir]) {
+    _sampleManifests[dir] = fetch(dir + '/img/manifest.json?v=' + SAMPLE_VER)
+      .then(r => r.ok ? r.json() : null).catch(() => null);
+  }
+  return _sampleManifests[dir].then(m => {
+    const e = m && m[stem];
+    if (!e) return null;
+    const urls = [];
+    for (let n = 1; n <= e.pages; n++) urls.push(dir + '/img/' + stem + '_p' + n + '.webp?v=' + e.h);
+    return urls;
+  });
+}
+function _preloadImg(url) {
+  return new Promise((res, rej) => { const im = new Image(); im.onload = () => res(); im.onerror = rej; im.src = url; });
+}
+
 const _pdfPage1Cache = {};    // pdfUrl -> dataURL string | 'ERROR'
 const _pdfPage1Inflight = {}; // pdfUrl -> true（防止重複觸發載入）
 
 async function _loadPdfPage1(pdfUrl) {
   if (_pdfPage1Cache[pdfUrl] || _pdfPage1Inflight[pdfUrl]) return;
   _pdfPage1Inflight[pdfUrl] = true;
+  try {
+    const urls = await _sampleImageInfo(pdfUrl);
+    if (urls && urls.length) {
+      await _preloadImg(urls[0]);
+      _pdfPage1Cache[pdfUrl] = urls[0];
+      delete _pdfPage1Inflight[pdfUrl];
+      return;
+    }
+  } catch (e) { /* 圖載入失敗 → 退回 pdf.js */ }
   await _pdfEnqueue(async () => {
   try {
     const pdf = await _getPdfDoc(pdfUrl);
@@ -2059,6 +2092,18 @@ const _pdfPagesInflight = {}; // pdfUrl -> true（防止重複觸發載入）
 async function _loadPdfAllPages(pdfUrl, onProgress) {
   if (_pdfPagesCache[pdfUrl] || _pdfPagesInflight[pdfUrl]) return;
   _pdfPagesInflight[pdfUrl] = true;
+  try {
+    const urls = await _sampleImageInfo(pdfUrl);
+    if (urls && urls.length) {
+      await _preloadImg(urls[0]);   // 第 1 頁確認可載，才採用預算圖；其餘頁交給 <img> 自己載
+      const arr = urls.slice();
+      arr.total = urls.length;
+      _pdfPagesCache[pdfUrl] = arr;
+      delete _pdfPagesInflight[pdfUrl];
+      urls.slice(1).forEach(u => { const im = new Image(); im.src = u; });   // 預先抓後面幾頁進快取
+      return;
+    }
+  } catch (e) { /* 圖載入失敗 → 退回 pdf.js */ }
   const out = [];
   _pdfPagesCache[pdfUrl] = out;
   await _pdfEnqueue(async () => {

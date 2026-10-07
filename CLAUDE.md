@@ -45,3 +45,7 @@
 ### 3. 主動把經驗寫進文件
 
 一次修正涉及多份學習單，或根因會在其他份重複出現時，完成後主動把經驗寫進文件，不必等使用者開口：優先寫成通則（根因、判斷訊號、修法），並記下「試過但無效的做法」。教材設計規範寫在本 repo `docs/`；版面實作的坑寫在後端 repo `docs/guide/`。
+
+## sample PDF 預算圖（2026-10-07）
+
+`assets/img/` 是由後端 repo `toolkit/make_sample_images.py` 產生的每頁 WebP 與 `manifest.json`，前端優先載圖、沒有才用 pdf.js。**換 `assets/*.pdf` 時必須一併更新 `assets/img/` 並 bump `SAMPLE_VER`**（`python <後端>/toolkit/make_sample_images.py assets`）。
