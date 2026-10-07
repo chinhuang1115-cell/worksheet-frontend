@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="modulepreload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -2002,15 +2004,39 @@ function _getPdfjsLib() {
   return _pdfjsLibPromise;
 }
 
+// 效能（2026-10-07）：① 同一份 PDF 只解析一次（page1 與全頁共用 document）；
+// ② 渲染排隊、同時最多 2 份，避免詳情頁一次把購買序列的每個版型全部同時算繪而互相拖慢；
+// ③ 全頁載入每畫完一頁就通知畫面，第 1 頁不必等整份完成；④ 頁面一閒下來就先載入 pdf.js。
+const _pdfDocCache = {};      // pdfUrl -> Promise<PDFDocumentProxy>
+function _getPdfDoc(pdfUrl) {
+  if (!_pdfDocCache[pdfUrl]) {
+    _pdfDocCache[pdfUrl] = _getPdfjsLib().then(lib => lib.getDocument(pdfUrl).promise);
+    _pdfDocCache[pdfUrl].catch(() => { delete _pdfDocCache[pdfUrl]; });
+  }
+  return _pdfDocCache[pdfUrl];
+}
+let _pdfRenderActive = 0;
+const _pdfRenderQueue = [];
+function _pdfEnqueue(job) {
+  return new Promise((resolve) => {
+    _pdfRenderQueue.push(() => job().finally(() => { _pdfRenderActive--; _pdfPump(); resolve(); }));
+    _pdfPump();
+  });
+}
+function _pdfPump() {
+  while (_pdfRenderActive < 2 && _pdfRenderQueue.length) { _pdfRenderActive++; _pdfRenderQueue.shift()(); }
+}
+(window.requestIdleCallback || ((f) => setTimeout(f, 800)))(() => { _getPdfjsLib().catch(() => {}); });
+
 const _pdfPage1Cache = {};    // pdfUrl -> dataURL string | 'ERROR'
 const _pdfPage1Inflight = {}; // pdfUrl -> true（防止重複觸發載入）
 
 async function _loadPdfPage1(pdfUrl) {
   if (_pdfPage1Cache[pdfUrl] || _pdfPage1Inflight[pdfUrl]) return;
   _pdfPage1Inflight[pdfUrl] = true;
+  await _pdfEnqueue(async () => {
   try {
-    const pdfjsLib = await _getPdfjsLib();
-    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+    const pdf = await _getPdfDoc(pdfUrl);
     const page = await pdf.getPage(1);
     const vp = page.getViewport({ scale: 1.5 });
     const canvas = document.createElement('canvas');
@@ -2022,6 +2048,7 @@ async function _loadPdfPage1(pdfUrl) {
   } finally {
     delete _pdfPage1Inflight[pdfUrl];
   }
+  });
 }
 
 // 詳情頁預覽專用：渲染 PDF 全部頁面。刻意與 _pdfPage1Cache 分開兩套快取，
@@ -2029,28 +2056,31 @@ async function _loadPdfPage1(pdfUrl) {
 const _pdfPagesCache = {};    // pdfUrl -> [dataURL, ...] | 'ERROR'
 const _pdfPagesInflight = {}; // pdfUrl -> true（防止重複觸發載入）
 
-async function _loadPdfAllPages(pdfUrl) {
+async function _loadPdfAllPages(pdfUrl, onProgress) {
   if (_pdfPagesCache[pdfUrl] || _pdfPagesInflight[pdfUrl]) return;
   _pdfPagesInflight[pdfUrl] = true;
   const out = [];
   _pdfPagesCache[pdfUrl] = out;
-  try {
-    const pdfjsLib = await _getPdfjsLib();
-    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-    for (let n = 1; n <= pdf.numPages; n++) {
-      const page = await pdf.getPage(n);
-      const vp = page.getViewport({ scale: 1.5 });
-      const canvas = document.createElement('canvas');
-      canvas.width = vp.width; canvas.height = vp.height;
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-      out.push(canvas.toDataURL('image/jpeg', 0.9));
+  await _pdfEnqueue(async () => {
+    try {
+      const pdf = await _getPdfDoc(pdfUrl);
+      out.total = pdf.numPages;   // 畫面用 total 顯示總頁數，載入中也不會跳動
+      for (let n = 1; n <= pdf.numPages; n++) {
+        const page = await pdf.getPage(n);
+        const vp = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        canvas.width = vp.width; canvas.height = vp.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+        out.push(canvas.toDataURL('image/jpeg', 0.9));
+        if (onProgress && n < pdf.numPages) onProgress();   // 每畫完一頁就更新畫面（最後一頁由呼叫端 then 更新）
+      }
+    } catch (e) {
+      if (out.length === 0) _pdfPagesCache[pdfUrl] = 'ERROR';
+      // else: keep whatever pages succeeded before the failure — partial is better than nothing
+    } finally {
+      delete _pdfPagesInflight[pdfUrl];
     }
-  } catch (e) {
-    if (out.length === 0) _pdfPagesCache[pdfUrl] = 'ERROR';
-    // else: keep whatever pages succeeded before the failure — partial is better than nothing
-  } finally {
-    delete _pdfPagesInflight[pdfUrl];
-  }
+  });
 }
 
 async function _renderPdfBlobFirstPage(blob) {
@@ -4650,11 +4680,11 @@ class Component extends DCLogic {
       const previewSample = activeKey ? sampleFor(it, activeKey) : null;
       const previewPdfUrl = previewSample && previewSample.pdf ? (ASSETS_BASE_URL + '/' + previewSample.pdf + '?v=' + SAMPLE_VER) : null;
       if (previewPdfUrl && !_pdfPagesCache[previewPdfUrl] && !_pdfPagesInflight[previewPdfUrl]) {
-        _loadPdfAllPages(previewPdfUrl).then(() => this.forceUpdate());
+        _loadPdfAllPages(previewPdfUrl, () => this.forceUpdate()).then(() => this.forceUpdate());
       }
       const _pdfPages = previewPdfUrl && Array.isArray(_pdfPagesCache[previewPdfUrl])
         ? _pdfPagesCache[previewPdfUrl] : null;
-      const pdfPageCount = _pdfPages ? _pdfPages.length : 0;
+      const pdfPageCount = _pdfPages ? (_pdfPages.total || _pdfPages.length) : 0;
       const pdfPageIdx = Math.min(st.previewPdfPage || 0, Math.max(0, pdfPageCount - 1));
       const previewImgSrc = _pdfPages ? _pdfPages[pdfPageIdx] : null;
       const lr = lessonsRangeOf(it, st.itemVariantLessons);
@@ -4733,13 +4763,13 @@ class Component extends DCLogic {
       flat.forEach(pg2 => {
         const u = sampleUrlOf(pg2.key);
         if (u && !_pdfPagesCache[u] && !_pdfPagesInflight[u]) {
-          _loadPdfAllPages(u).then(() => this.forceUpdate());
+          _loadPdfAllPages(u, () => this.forceUpdate()).then(() => this.forceUpdate());
         }
       });
       const pageCountOf = (key) => {
         const u = sampleUrlOf(key);
         const arr = u ? _pdfPagesCache[u] : null;
-        return (Array.isArray(arr) && arr.length) ? arr.length : 1;   // 還沒載完先當 1 頁
+        return (Array.isArray(arr) && arr.length) ? (arr.total || arr.length) : 1;   // 還沒載完先當 1 頁
       };
       // 套用主題即時預覽時 /preview-pdf 只回第 1 頁，每張一律當 1 頁。
       const seqMode = !overrideKey && !(hasMultipleVariants && !supportsTheme);
