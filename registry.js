@@ -384,7 +384,8 @@ window.WORKSHEET_REGISTRY = [
     "sample": [
       { "pdf": "assets/chenghe_sample.pdf", "name": "倍數購物_兩步驟乘減_兩位數_範本.pdf", "label": "完整提示", "key": "chenghe" },
       { "pdf": "assets/chenghe_free_sample.pdf", "name": "倍數購物_兩步驟乘減_兩位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "chenghe-free" },
-      { "pdf": "assets/chenghe_faded_sample.pdf", "name": "倍數購物_兩步驟乘減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "chenghe-faded" }
+      { "pdf": "assets/chenghe_faded_sample.pdf", "name": "倍數購物_兩步驟乘減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "chenghe-faded" },
+      { "pdf": "assets/chenghe_graded_sample.pdf", "name": "倍數購物_兩步驟乘減_兩位數_自由列式_漸退淡化.pdf", "label": "自由列式：漸退淡化", "key": "chenghe-graded" }
     ],
     "layout": {
       "panel": "chenghePanel",
@@ -396,7 +397,8 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       { "key": "chenghe", "label": "完整提示" },
       { "key": "chenghe-free", "label": "自由列式：無提示" },
-      { "key": "chenghe-faded", "label": "自由列式：淡化提示" }
+      { "key": "chenghe-faded", "label": "自由列式：淡化提示" },
+      { "key": "chenghe-graded", "label": "自由列式：漸退淡化" }
     ]
   },
   {
