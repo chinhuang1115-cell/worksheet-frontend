@@ -2439,6 +2439,18 @@ window.WORKSHEET_REGISTRY = [
         "name": "認識錢幣_進位至千位_L2_範本.pdf",
         "label": "L2",
         "key": "coincarry1000-l2"
+      },
+      {
+        "pdf": "assets/coincarry1000_L2_semi_sample.pdf",
+        "name": "認識錢幣_進位至千位_L2_半自由排列_範本.pdf",
+        "label": "L2 半自由排列",
+        "key": "coincarry1000-l2-semi"
+      },
+      {
+        "pdf": "assets/coincarry1000_L2_free_sample.pdf",
+        "name": "認識錢幣_進位至千位_L2_完全自由排列_範本.pdf",
+        "label": "L2 完全自由排列",
+        "key": "coincarry1000-l2-free"
       }
     ],
     "layout": {
@@ -2450,7 +2462,9 @@ window.WORKSHEET_REGISTRY = [
     },
     "variants": [
       { "key": "coincarry1000-l1", "label": "L1 100元進千位" },
-      { "key": "coincarry1000-l2", "label": "L2 加入500元" }
+      { "key": "coincarry1000-l2", "label": "L2 加入500元" },
+      { "key": "coincarry1000-l2-semi", "label": "L2 加入500元（半自由排列）", "arrange": "semi", "base": "coincarry1000-l2" },
+      { "key": "coincarry1000-l2-free", "label": "L2 加入500元（完全自由排列）", "arrange": "free", "base": "coincarry1000-l2" }
     ]
   },
   {
@@ -3113,7 +3127,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "zonghe-3a",
     "code": "Z301",
     "grade": "3",
-    "name": "綜合練習＿四位數加減（三上）",
+    "name": "綜合練習＿四位數加減",
     "ops": [
       "add",
       "sub"
