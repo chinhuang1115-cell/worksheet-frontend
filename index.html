@@ -2629,7 +2629,8 @@ function buildHintGrid(variants, activeKey, onPick) {
   const rows = [...rowsMap.values()].map(r => ({
     cells: r.cells.map(list => ({ pills: list.map(pill), isEmpty: list.length === 0 })),
   }));
-  return { headers: ['強提示', '弱提示', '無提示'], rows };
+  // 只有一列且沒有底名（按鈕本身就叫強／弱／無提示）→ 不再另列欄標題，只留按鈕
+  return { headers: rowsMap.size === 1 && rowsMap.has('') ? [] : ['強提示', '弱提示', '無提示'], rows };
 }
 const TOP_ITEMS = ITEMS.filter(it => !_CHILD_VARIANT_IDS.has(it.id));
 
