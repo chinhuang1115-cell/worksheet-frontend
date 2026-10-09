@@ -2120,7 +2120,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "coinvalue",
-    "code": "coinvalue",
+    "code": "N201A",
     "name": "認識錢幣＿至百位",
     "grade": 2,
     "ops": [
@@ -2198,7 +2198,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "coinvalue1000",
-    "code": "coinvalue1000",
+    "code": "N306A",
     "name": "認識錢幣＿至千位",
     "grade": 3,
     "ops": [
@@ -2277,7 +2277,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "coincarry",
-    "code": "coincarry",
+    "code": "N201C",
     "name": "認識錢幣＿進位（至百位）",
     "grade": 2,
     "ops": [
@@ -2336,7 +2336,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "coincarry10",
-    "code": "coincarry10",
+    "code": "N201B",
     "name": "認識錢幣＿進位（至十位）",
     "grade": 2,
     "ops": [
@@ -2395,7 +2395,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "coincarry1000",
-    "code": "coincarry1000",
+    "code": "N306B",
     "name": "認識錢幣＿進位（至千位）",
     "grade": 3,
     "ops": [
@@ -2455,7 +2455,7 @@ window.WORKSHEET_REGISTRY = [
   },
   {
     "id": "coincarrymix",
-    "code": "coincarrymix",
+    "code": "N306C",
     "name": "認識錢幣＿進位（混合位值，至千位）",
     "grade": 3,
     "ops": [
