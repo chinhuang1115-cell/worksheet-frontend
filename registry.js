@@ -320,17 +320,23 @@ window.WORKSHEET_REGISTRY = [
       "code": "N204A",
       "desc": "四位數兩步驟加減（先加求合計，再減求找零），適合熟悉進退位的學生。"
     },
-    "sample": {
-      "pdf": "assets/liangbushu_sample.pdf",
-      "name": "購物找零_兩步驟加減_四位數_範本.pdf"
-    },
+    "sample": [
+      {"pdf": "assets/liangbushu_sample.pdf", "name": "購物找零_兩步驟加減_四位數_範本.pdf", "label": "完整提示", "key": "liangbushu"},
+      {"pdf": "assets/liangbushu_free_sample.pdf", "name": "購物找零_兩步驟加減_四位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "liangbushu-free"},
+      {"pdf": "assets/liangbushu_faded_sample.pdf", "name": "購物找零_兩步驟加減_四位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "liangbushu-faded"}
+    ],
     "layout": {
       "panel": "liangbushuPanel",
       "themeSet": "d4",
       "showTheme": true,
       "prices": true,
       "interactive": false
-    }
+    },
+    "variants": [
+      {"key": "liangbushu", "label": "完整提示"},
+      {"key": "liangbushu-free", "label": "自由列式：無提示"},
+      {"key": "liangbushu-faded", "label": "自由列式：淡化提示"}
+    ]
   },
   {
     "id": "chenghe",
