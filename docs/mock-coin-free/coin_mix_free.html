@@ -12,11 +12,12 @@ body{margin:0;background:#fff;font-family:"Noto Sans CJK TC","Noto Sans TC",sans
 </style>
 <div class="page" id="p"><div class="tag" id="tag"></div>
 <div class="hd">單元：認識錢幣　　　姓名：<u>　　　　　　　　</u></div><div class="ins">數一數，一共多少元？</div><div class="ft">Mr. Huang's Math Class</div></div>
+<script src="coin_geom.js"></script>
 <script>
 // coincarrymix 模擬。?m=semi|free　&l=1..4（L2 加5元、L3 加50元、L4 加500元；特殊幣只出現在對應位值的進位題）　&r=傾斜角　&g=半自由內縮
 const U=new URLSearchParams(location.search),MODE=U.get('m')||'free',L=+(U.get('l')||1);
 const R=parseFloat(U.get('r')||(MODE=='semi'?'4':'10')),G=parseFloat(U.get('g')||'6');
-const S5=MODE=='semi'?1.2:1.3;
+const S5=MODE=='semi'?1.2:1.3;const OVP=parseFloat(U.get('o')||'0');OVG.on=OVP>0;OVG.lim=OVP;
 let seed=+(U.get('seed')||23);const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
 const W=+(U.get('w')||330),H=330,RB=44,P=document.getElementById('p'),D=(U.get('ds')||'71,183,261').split(',').map(Number);const X0=W>330?90:106,X1=W>330?490:526;
 const COLS=[[0,D[0]],[D[0],D[1]],[D[1],D[2]],[D[2],W]];
@@ -25,23 +26,24 @@ const SPEC={1000:[54,23],500:[54,23],100:[54,23],50:[37,37],10:[30,30],5:[2*10*S
 const SP={2:{type:'a',k:5,v:5},3:{type:'b',k:50,v:5},4:{type:'c',k:500,v:5}}[L];
 // 題目：type a 個→十、b 十→百、c 百→千；th,h,t,u＝各位值的「單位數」（含特殊幣折算前）
 const QS=[{type:'a',th:1,h:2,t:2,u:12},{type:'b',th:3,h:3,t:13,u:2},{type:'c',th:1,h:12,t:2,u:4},{type:'a',th:2,h:4,t:3,u:10}];
-document.getElementById('tag').textContent=`進位混合位值 L${L}${['','（基本）','（加入5元）','（加入50元）','（加入500元）'][L]}　${MODE=='semi'?`半自由排列（特殊幣固定在本位區左上）｜區內縮 ${G} px`:'完全自由排列'}｜長方形幣傾斜 ±${R}°`;
+document.getElementById('tag').textContent=`進位混合位值 L${L}${['','（基本）','（加入5元）','（加入50元）','（加入500元）'][L]}　${MODE=='semi'?`半自由排列（特殊幣固定在本位區左上）｜區內縮 ${G} px`:'完全自由排列'}｜${OVP?`允許部分交疊（每對 ≤${OVP*100}%）｜`:''}長方形幣傾斜 ±${R}°`;
 function mk(q){const it=[];const add=(k,n)=>{for(let i=0;i<n;i++)it.push({k})};
   let {th,h,t,u}=q;const sp=SP&&SP.type==q.type;
   if(sp){it.push({k:SP.k,sp:1});if(q.type=='a')u-=SP.v;if(q.type=='b')t-=SP.v;if(q.type=='c')h-=SP.v;}
   add(1000,th);add(100,h);add(10,t);add(1,u);
-  it.forEach(o=>{[o.w,o.h]=SPEC[o.k];if(o.k>=100){o.ang=(rnd()*2-1)*R;const a=Math.abs(o.ang)*Math.PI/180;o.ow=o.w;o.oh=o.h;o.w=o.ow*Math.cos(a)+o.oh*Math.sin(a);o.h=o.ow*Math.sin(a)+o.oh*Math.cos(a);}});return it;}
+  it.forEach(o=>{o.flag=OVG.on&&rnd()<0.6;o.ov=0;if(o.k<100)o.cr={50:18.5,10:15,5:10*S5,1:10}[o.k];[o.w,o.h]=SPEC[o.k];if(o.k>=100){o.ang=(rnd()*2-1)*R;const a=Math.abs(o.ang)*Math.PI/180;o.ow=o.w;o.oh=o.h;o.w=o.ow*Math.cos(a)+o.oh*Math.sin(a);o.h=o.ow*Math.sin(a)+o.oh*Math.cos(a);}});return it;}
 const circ=a=>a.k<100;
 const dist=(a,o)=>{if(circ(a)&&circ(o))return Math.hypot(a.x+a.w/2-o.x-o.w/2,a.y+a.h/2-o.y-o.h/2)-a.w/2-o.w/2;return Math.max(o.x-(a.x+a.w),a.x-(o.x+o.w),o.y-(a.y+a.h),a.y-(o.y+o.h));};
-function place(q){const items=mk(q);items.sort((a,b)=>b.w*b.h-a.w*a.h);
-  for(let t=0;t<500;t++){items.forEach(a=>{a.x=undefined});let good=true;
+window.__ALL=[];function place(q){const items=mk(q);items.sort((a,b)=>b.w*b.h-a.w*a.h);
+  for(let t=0;t<500;t++){items.forEach(a=>{a.x=undefined;a.ov=0;a._p=null});let good=true;
     if(MODE=='semi'){const s=items.find(a=>a.sp);if(s){s.x=COLS[KZ[s.k]][0]+G+4;s.y=10;}}
     for(const a of items){if(a.x!==undefined)continue;
       let x0=6,x1=W-6;if(MODE=='semi'){const c=COLS[KZ[a.k]];x0=c[0]+G;x1=c[1]-G;}
       let ok=false,n=0;
-      while(!ok&&n++<3000){a.x=x0+rnd()*(x1-x0-a.w);a.y=6+rnd()*(H-a.h-12);ok=items.every(o=>o===a||o.x===undefined||dist(a,o)>=5);}
+      while(!ok&&n++<3000){propose(a,items,x0,x1,6,H-6,n,rnd);const ck=checkPos(a,items,dist,5);ok=ck.ok;a._p=ok?ck.partner:null;}
+      if(ok&&a._p){a.ov=1;a._p.ov=1;}
       if(!ok){good=false;break;}}
-    if(good)return items;}
+    if(good){window.__ALL.push(items);return items;}}
   throw 'full '+JSON.stringify(q);}
 const BG={100:'#F9DCDC',500:'#EADBC8',1000:'#E5DDF3'},FG={100:'#8E1B1B',500:'#5B3A17',1000:'#47207F'};
 function coin(a){const cx=a.x+a.w/2,cy=a.y+a.h/2;
@@ -64,4 +66,11 @@ QS.forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.style
   const tot=q.th*1000+q.h*100+q.t*10+q.u;
   d.innerHTML=`<b>${i+1}.</b>`+box(place(q),i==0?q:null)+`<div class="ans">一共是(${i==0?' '+tot+' ':'　　　　　　'})元</div>`;
   P.appendChild(d);});
+// 統計：實際交疊的幣對數與最大交疊比例（供驗證）
+{const ST={q:0,pairs:0,max:0,hid:0,coins:0,bad:0};
+ (window.__ALL||[]).forEach(items=>{ST.q++;ST.coins+=items.length;
+  for(let i=0;i<items.length;i++)for(let j=i+1;j<items.length;j++){const A=_sh(items[i]),B=_sh(items[j]);const f=Math.max(_frac(A,B),_frac(B,A));
+   if(f>0){ST.pairs++;ST.max=Math.max(ST.max,f);if(f>OVG.lim+1e-9)ST.bad++;if(_labelHit(A,B)||_labelHit(B,A))ST.hid++}}});
+ const d=document.createElement('div');d.id='stat';d.style.display='none';d.textContent=JSON.stringify(ST);document.body.appendChild(d);}
+
 </script>
