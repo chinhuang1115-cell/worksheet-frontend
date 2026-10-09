@@ -2310,13 +2310,13 @@ window.WORKSHEET_REGISTRY = [
     "diffInfo": null,
     "sample": [
       {
-        "pdf": "assets/coincarry_L2_simple_sample.pdf",
+        "pdf": "assets/coincarry_L1_simple_sample.pdf",
         "name": "認識錢幣_進位至百位_L1_範本.pdf",
         "label": "L1",
         "key": "coincarry-l1"
       },
       {
-        "pdf": "assets/coincarry_L4_simple_sample.pdf",
+        "pdf": "assets/coincarry_L2_simple_sample.pdf",
         "name": "認識錢幣_進位至百位_L2加入50元_範本.pdf",
         "label": "L2",
         "key": "coincarry-l2"
@@ -2369,13 +2369,13 @@ window.WORKSHEET_REGISTRY = [
     "diffInfo": null,
     "sample": [
       {
-        "pdf": "assets/coincarry_L1_simple_sample.pdf",
+        "pdf": "assets/coincarry10_L1_simple_sample.pdf",
         "name": "認識錢幣_進位至十位_L1_範本.pdf",
         "label": "L1",
         "key": "coincarry10-l1"
       },
       {
-        "pdf": "assets/coincarry_L3_simple_sample.pdf",
+        "pdf": "assets/coincarry10_L2_simple_sample.pdf",
         "name": "認識錢幣_進位至十位_L2加5元_範本.pdf",
         "label": "L2",
         "key": "coincarry10-l2"
