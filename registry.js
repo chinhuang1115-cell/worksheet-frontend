@@ -327,7 +327,8 @@ window.WORKSHEET_REGISTRY = [
     "sample": [
       {"pdf": "assets/liangbushu_sample.pdf", "name": "購物找零_兩步驟加減_四位數_範本.pdf", "label": "完整提示", "key": "liangbushu"},
       {"pdf": "assets/liangbushu_free_sample.pdf", "name": "購物找零_兩步驟加減_四位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "liangbushu-free"},
-      {"pdf": "assets/liangbushu_faded_sample.pdf", "name": "購物找零_兩步驟加減_四位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "liangbushu-faded"}
+      {"pdf": "assets/liangbushu_faded_sample.pdf", "name": "購物找零_兩步驟加減_四位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "liangbushu-faded"},
+      {"pdf": "assets/liangbushu_graded_sample.pdf", "name": "購物找零_兩步驟加減_四位數_自由列式_漸退淡化.pdf", "label": "自由列式：漸退淡化", "key": "liangbushu-graded"}
     ],
     "layout": {
       "panel": "liangbushuPanel",
@@ -339,7 +340,8 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       {"key": "liangbushu", "label": "完整提示"},
       {"key": "liangbushu-free", "label": "自由列式：無提示"},
-      {"key": "liangbushu-faded", "label": "自由列式：淡化提示"}
+      {"key": "liangbushu-faded", "label": "自由列式：淡化提示"},
+      {"key": "liangbushu-graded", "label": "自由列式：漸退淡化"}
     ]
   },
   {
