@@ -822,9 +822,9 @@
                     <div style="padding:12px 14px;">
                     <sc-if value="{{ detailItem.hasHintGrid }}" hint-placeholder-val="{{ false }}">
                       <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:start;">
-                        <div style="text-align:center;font-size:var(--text-xs);font-weight:700;color:var(--text-muted);padding-bottom:2px;">高提示</div>
-                        <div style="text-align:center;font-size:var(--text-xs);font-weight:700;color:var(--text-muted);padding-bottom:2px;">淡化提示</div>
-                        <div style="text-align:center;font-size:var(--text-xs);font-weight:700;color:var(--text-muted);padding-bottom:2px;">無提示</div>
+                        <sc-for list="{{ detailItem.hintGridHeaders }}" as="hh" hint-placeholder-count="3">
+                          <div style="text-align:center;font-size:var(--text-xs);font-weight:700;color:var(--text-muted);padding-bottom:2px;">{{ hh.text }}</div>
+                        </sc-for>
                         <sc-for list="{{ detailItem.hintGridRows }}" as="hr" hint-placeholder-count="2">
                           <sc-for list="{{ hr.cells }}" as="hc" hint-placeholder-count="3">
                             <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
@@ -2553,6 +2553,8 @@ function adaptRegistry(reg) {
     variants: (t.variants || [{ key: t.id, label: '標準版' }]).map(v => ({
       key:         v.key,
       label:       v.label,
+      arrange:     v.arrange || null,
+      base:        v.base || null,
       pricingTier: _backendTierLc(v.key) || 'free',
       lessons:     _backendLessons(v.key) ?? 1,
     })),
@@ -2571,7 +2573,27 @@ ITEMS.forEach(it => { if (it.variants.length > 1) it.variants.forEach(v => { if 
 // 列（row）＝去掉「自由列式：無提示」字樣後剩下的底名，例如「硬幣簡圖・自由列式：淡化提示」→「硬幣簡圖」，
 // 與原版 label「硬幣簡圖」同列；底名為空（label 只有「自由列式：無提示」）者獨立成一列，
 // 且沒有對應自由列式的原版統一放進該列的高提示欄。題型沒有任何無提示／淡化提示版型時回傳 null，維持原本的 pill 排法。
+// 錢幣進位系列（2026-10-09）：版型帶 `arrange`（semi／free）與 `base`（對應的固定排列版型）者，
+// 改成「固定排列／半自由排列／完全自由排列」三欄，列＝base 版型（L1、L2…）。
 function buildHintGrid(variants, activeKey, onPick) {
+  const pillStyle = (active) => `padding:6px 12px;border-radius:16px;font-size:var(--text-sm);font-weight:600;cursor:pointer;text-align:center;line-height:1.35;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`;
+  if ((variants || []).some(v => v.arrange)) {
+    const rowsByBase = new Map();
+    const rowFor = (k) => { if (!rowsByBase.has(k)) rowsByBase.set(k, { cells: [[], [], []] }); return rowsByBase.get(k); };
+    variants.forEach(v => rowFor(v.arrange ? v.base : v.key).cells[v.arrange === 'semi' ? 1 : v.arrange === 'free' ? 2 : 0].push(v));
+    const rows = [...rowsByBase.values()].map(r => ({
+      cells: r.cells.map(list => ({
+        isEmpty: list.length === 0,
+        // 欄標題已標明排列方式，pill 只寫關卡名稱（去掉「（半自由排列）」字樣）
+        pills: list.map(v => ({
+          label: (v.label || '').replace(/[（(](半自由排列|完全自由排列)[）)]/, '').trim(),
+          pillStyle: pillStyle(activeKey === v.key),
+          onClick: () => onPick(v.key),
+        })),
+      })),
+    }));
+    return { headers: ['固定排列', '半自由排列', '完全自由排列'], rows };
+  }
   const LEVEL_RE = /(無提示|淡化提示)/;
   if (!(variants || []).some(v => LEVEL_RE.test(v.label || ''))) return null;
   const levelOf = (label) => { const m = LEVEL_RE.exec(label || ''); return m ? (m[1] === '無提示' ? 2 : 1) : 0; };
@@ -2607,7 +2629,7 @@ function buildHintGrid(variants, activeKey, onPick) {
   const rows = [...rowsMap.values()].map(r => ({
     cells: r.cells.map(list => ({ pills: list.map(pill), isEmpty: list.length === 0 })),
   }));
-  return rows;
+  return { headers: ['高提示', '淡化提示', '無提示'], rows };
 }
 const TOP_ITEMS = ITEMS.filter(it => !_CHILD_VARIANT_IDS.has(it.id));
 
@@ -5047,8 +5069,9 @@ class Component extends DCLogic {
         }),
         // 有提示差異的題型：版型預覽改成「高提示／淡化提示／無提示」三欄（見 buildHintGrid）
         ...(() => {
-          const rows = buildHintGrid(it.variants, activeKey, (key) => this.homePreviewVariant(it.id, key));
-          return { hasHintGrid: !!rows, hintGridRows: rows || [], showPlainVariantPills: hasMultipleVariants && !rows };
+          const grid = buildHintGrid(it.variants, activeKey, (key) => this.homePreviewVariant(it.id, key));
+          const rows = grid && grid.rows;
+          return { hasHintGrid: !!grid, hintGridRows: rows || [], hintGridHeaders: (grid ? grid.headers : []).map(h => ({ text: h })), showPlainVariantPills: hasMultipleVariants && !rows };
         })(),
         themes: allowedThemesOf(it, activeKey).map(th => {
           const active = theme.key === th.key;
