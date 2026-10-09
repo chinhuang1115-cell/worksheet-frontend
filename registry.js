@@ -766,7 +766,8 @@ window.WORKSHEET_REGISTRY = [
     "sample": [
       {"pdf": "assets/haochashao_sample.pdf", "name": "還差多少_一步驟減法_兩位數_範本.pdf", "label": "完整提示", "key": "haochashao"},
       {"pdf": "assets/haochashao_free_sample.pdf", "name": "還差多少_一步驟減法_兩位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "haochashao-free"},
-      {"pdf": "assets/haochashao_faded_sample.pdf", "name": "還差多少_一步驟減法_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "haochashao-faded"}
+      {"pdf": "assets/haochashao_faded_sample.pdf", "name": "還差多少_一步驟減法_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "haochashao-faded"},
+      {"pdf": "assets/haochashao_graded_sample.pdf", "name": "還差多少_一步驟減法_兩位數_自由列式_漸退淡化.pdf", "label": "自由列式：漸退淡化", "key": "haochashao-graded"}
     ],
     "layout": {
       "panel": "haochashaoPanel",
@@ -778,7 +779,8 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       {"key": "haochashao", "label": "完整提示"},
       {"key": "haochashao-free", "label": "自由列式：無提示"},
-      {"key": "haochashao-faded", "label": "自由列式：淡化提示"}
+      {"key": "haochashao-faded", "label": "自由列式：淡化提示"},
+      {"key": "haochashao-graded", "label": "自由列式：漸退淡化"}
     ]
   },
   {
