@@ -2320,6 +2320,30 @@ window.WORKSHEET_REGISTRY = [
         "name": "認識錢幣_進位至百位_L2加入50元_範本.pdf",
         "label": "L2",
         "key": "coincarry-l2"
+      },
+      {
+        "pdf": "assets/coincarry_L1_semi_sample.pdf",
+        "name": "認識錢幣_進位至百位_L1_半自由排列_範本.pdf",
+        "label": "L1 半自由排列",
+        "key": "coincarry-l1-semi"
+      },
+      {
+        "pdf": "assets/coincarry_L1_free_sample.pdf",
+        "name": "認識錢幣_進位至百位_L1_完全自由排列_範本.pdf",
+        "label": "L1 完全自由排列",
+        "key": "coincarry-l1-free"
+      },
+      {
+        "pdf": "assets/coincarry_L2_semi_sample.pdf",
+        "name": "認識錢幣_進位至百位_L2_半自由排列_範本.pdf",
+        "label": "L2 半自由排列",
+        "key": "coincarry-l2-semi"
+      },
+      {
+        "pdf": "assets/coincarry_L2_free_sample.pdf",
+        "name": "認識錢幣_進位至百位_L2_完全自由排列_範本.pdf",
+        "label": "L2 完全自由排列",
+        "key": "coincarry-l2-free"
       }
     ],
     "layout": {
@@ -2331,7 +2355,11 @@ window.WORKSHEET_REGISTRY = [
     },
     "variants": [
       { "key": "coincarry-l1", "label": "L1 10元進百位" },
-      { "key": "coincarry-l2", "label": "L2 加入50元" }
+      { "key": "coincarry-l2", "label": "L2 加入50元" },
+      { "key": "coincarry-l1-semi", "label": "L1 10元進百位（半自由排列）", "arrange": "semi", "base": "coincarry-l1" },
+      { "key": "coincarry-l1-free", "label": "L1 10元進百位（完全自由排列）", "arrange": "free", "base": "coincarry-l1" },
+      { "key": "coincarry-l2-semi", "label": "L2 加入50元（半自由排列）", "arrange": "semi", "base": "coincarry-l2" },
+      { "key": "coincarry-l2-free", "label": "L2 加入50元（完全自由排列）", "arrange": "free", "base": "coincarry-l2" }
     ]
   },
   {
@@ -2379,6 +2407,30 @@ window.WORKSHEET_REGISTRY = [
         "name": "認識錢幣_進位至十位_L2加5元_範本.pdf",
         "label": "L2",
         "key": "coincarry10-l2"
+      },
+      {
+        "pdf": "assets/coincarry10_L1_semi_sample.pdf",
+        "name": "認識錢幣_進位至十位_L1_半自由排列_範本.pdf",
+        "label": "L1 半自由排列",
+        "key": "coincarry10-l1-semi"
+      },
+      {
+        "pdf": "assets/coincarry10_L1_free_sample.pdf",
+        "name": "認識錢幣_進位至十位_L1_完全自由排列_範本.pdf",
+        "label": "L1 完全自由排列",
+        "key": "coincarry10-l1-free"
+      },
+      {
+        "pdf": "assets/coincarry10_L2_semi_sample.pdf",
+        "name": "認識錢幣_進位至十位_L2_半自由排列_範本.pdf",
+        "label": "L2 半自由排列",
+        "key": "coincarry10-l2-semi"
+      },
+      {
+        "pdf": "assets/coincarry10_L2_free_sample.pdf",
+        "name": "認識錢幣_進位至十位_L2_完全自由排列_範本.pdf",
+        "label": "L2 完全自由排列",
+        "key": "coincarry10-l2-free"
       }
     ],
     "layout": {
@@ -2390,7 +2442,11 @@ window.WORKSHEET_REGISTRY = [
     },
     "variants": [
       { "key": "coincarry10-l1", "label": "L1 個位1元進十位" },
-      { "key": "coincarry10-l2", "label": "L2 加入5元" }
+      { "key": "coincarry10-l2", "label": "L2 加入5元" },
+      { "key": "coincarry10-l1-semi", "label": "L1 個位1元進十位（半自由排列）", "arrange": "semi", "base": "coincarry10-l1" },
+      { "key": "coincarry10-l1-free", "label": "L1 個位1元進十位（完全自由排列）", "arrange": "free", "base": "coincarry10-l1" },
+      { "key": "coincarry10-l2-semi", "label": "L2 加入5元（半自由排列）", "arrange": "semi", "base": "coincarry10-l2" },
+      { "key": "coincarry10-l2-free", "label": "L2 加入5元（完全自由排列）", "arrange": "free", "base": "coincarry10-l2" }
     ]
   },
   {
