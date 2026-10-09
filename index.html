@@ -2592,7 +2592,7 @@ function buildHintGrid(variants, activeKey, onPick) {
         })),
       })),
     }));
-    return { headers: ['固定排列', '半自由排列', '全自由排列'], rows };
+    return { headers: ['分欄排列', '半自由排列', '全自由排列'], rows };
   }
   const LEVEL_RE = /(無提示|淡化提示)/;
   if (!(variants || []).some(v => LEVEL_RE.test(v.label || ''))) return null;
