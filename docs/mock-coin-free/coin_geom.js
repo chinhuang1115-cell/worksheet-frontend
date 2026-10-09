@@ -27,7 +27,7 @@ function checkPos(a,items,dist,minGap){let partner=null;
 // 提出候選位置：有 flag 的幣，偶數次嘗試改成「貼近某枚也有 flag 的幣」以產生部分交疊；其餘純隨機
 // 位值由高到低、由左而右的「傾向」（完全自由用）：每種面額依本題出現的面額高低排出目標位置 tf（0=最左、1=最右），
 // x 取以 tf 為中心的常態分布（sd 為框寬比例，隨嘗試次數放寬），小比例 u 純隨機，讓它是「傾向」而不是分欄。
-const BIAS={on:false,sd:0.16,u:0.10};
+const _U=new URLSearchParams(location.search);const BIAS={on:false,sd:parseFloat(_U.get('sd')||'0.16'),u:parseFloat(_U.get('u')||'0.10')};
 function assignTargets(items){const ks=[...new Set(items.map(a=>a.k))].sort((p,q)=>q-p);items.forEach(a=>{a.tf=(ks.indexOf(a.k)+0.5)/ks.length})}
 function _gauss(rnd){return Math.sqrt(-2*Math.log(rnd()+1e-12))*Math.cos(2*Math.PI*rnd())}
 function propose(a,items,x0,x1,y0,y1,n,rnd){
