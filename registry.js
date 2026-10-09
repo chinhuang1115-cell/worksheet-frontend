@@ -2445,6 +2445,81 @@ window.WORKSHEET_REGISTRY = [
     ]
   },
   {
+    "id": "coincarrymix",
+    "code": "coincarrymix",
+    "name": "認識錢幣＿進位（混合位值，至千位）",
+    "grade": 3,
+    "ops": [
+      "coin"
+    ],
+    "keywords": [
+      "coincarry",
+      "coincarrymix",
+      "money",
+      "錢幣",
+      "進位",
+      "混合",
+      "至千位"
+    ],
+    "desc": "每題隨機出現個→十、十→百、百→千的進位，同一份學習單練習不同位值的十進位換算。L1 基本、L2 加5元、L3 加50元、L4 加500元。",
+    "sortKey": [
+      1,
+      3,
+      2
+    ],
+    "home": {
+      "badge": "錢幣進位",
+      "title": "認識錢幣＿進位（混合位值）",
+      "sub": "4 個版型，個十百位隨機進位",
+      "tags": [
+        "加法",
+        "三年級",
+        "錢幣",
+        "進位"
+      ]
+    },
+    "diffInfo": null,
+    "sample": [
+      {
+        "pdf": "assets/coincarrymix_L1_simple_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L1基本_範本.pdf",
+        "label": "L1",
+        "key": "coincarrymix-l1"
+      },
+      {
+        "pdf": "assets/coincarrymix_L2_simple_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L2加5元_範本.pdf",
+        "label": "L2",
+        "key": "coincarrymix-l2"
+      },
+      {
+        "pdf": "assets/coincarrymix_L3_simple_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L3加50元_範本.pdf",
+        "label": "L3",
+        "key": "coincarrymix-l3"
+      },
+      {
+        "pdf": "assets/coincarrymix_L4_simple_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L4加500元_範本.pdf",
+        "label": "L4",
+        "key": "coincarrymix-l4"
+      }
+    ],
+    "layout": {
+      "panel": "coincarrymixPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    },
+    "variants": [
+      { "key": "coincarrymix-l1", "label": "L1 基本（1／10／100元）" },
+      { "key": "coincarrymix-l2", "label": "L2 加入5元" },
+      { "key": "coincarrymix-l3", "label": "L3 加入50元" },
+      { "key": "coincarrymix-l4", "label": "L4 加入500元" }
+    ]
+  },
+  {
     "id": "l6_01",
     "code": "N101B",
     "name": "數到200＿圖像計數",
