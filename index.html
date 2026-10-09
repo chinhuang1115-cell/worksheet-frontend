@@ -2621,7 +2621,7 @@ function buildHintGrid(variants, activeKey, onPick) {
     const active = activeKey === v.key;
     return {
       // 欄標題已標明提示程度，pill 只寫底名（硬幣簡圖／食物…）；沒有底名的自由列式版型就寫提示程度本身
-      label: baseOf(v.label) || ['高提示', '淡提示', '無提示'][levelOf(v.label)],
+      label: baseOf(v.label) || ['強提示', '弱提示', '無提示'][levelOf(v.label)],
       pillStyle: `padding:6px 12px;border-radius:999px;font-size:var(--text-sm);font-weight:600;cursor:pointer;white-space:nowrap;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
       onClick: () => onPick(v.key),
     };
@@ -2629,7 +2629,7 @@ function buildHintGrid(variants, activeKey, onPick) {
   const rows = [...rowsMap.values()].map(r => ({
     cells: r.cells.map(list => ({ pills: list.map(pill), isEmpty: list.length === 0 })),
   }));
-  return { headers: ['高提示', '淡提示', '無提示'], rows };
+  return { headers: ['強提示', '弱提示', '無提示'], rows };
 }
 const TOP_ITEMS = ITEMS.filter(it => !_CHILD_VARIANT_IDS.has(it.id));
 
