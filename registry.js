@@ -2290,7 +2290,7 @@ window.WORKSHEET_REGISTRY = [
       "進位",
       "至百位"
     ],
-    "desc": "位值板上十位欄有 10–14 枚錢幣，練習進位換算至百位。L2 十位10元進百位、L4 加入50元。",
+    "desc": "位值板上十位欄有 10–14 枚錢幣，練習進位換算至百位。L1 十位10元進百位、L2 加入50元。",
     "sortKey": [
       1,
       2,
@@ -2311,15 +2311,15 @@ window.WORKSHEET_REGISTRY = [
     "sample": [
       {
         "pdf": "assets/coincarry_L2_simple_sample.pdf",
-        "name": "認識錢幣_進位至百位_L2_範本.pdf",
-        "label": "L2",
-        "key": "coincarry-l2"
+        "name": "認識錢幣_進位至百位_L1_範本.pdf",
+        "label": "L1",
+        "key": "coincarry-l1"
       },
       {
         "pdf": "assets/coincarry_L4_simple_sample.pdf",
-        "name": "認識錢幣_進位至百位_L4_範本.pdf",
-        "label": "L4",
-        "key": "coincarry-l4"
+        "name": "認識錢幣_進位至百位_L2加入50元_範本.pdf",
+        "label": "L2",
+        "key": "coincarry-l2"
       }
     ],
     "layout": {
@@ -2330,8 +2330,8 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     },
     "variants": [
-      { "key": "coincarry-l2", "label": "L2 10元進百位" },
-      { "key": "coincarry-l4", "label": "L4 加入50元" }
+      { "key": "coincarry-l1", "label": "L1 10元進百位" },
+      { "key": "coincarry-l2", "label": "L2 加入50元" }
     ]
   },
   {
