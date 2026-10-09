@@ -1,0 +1,62 @@
+<!doctype html><meta charset="utf-8">
+<style>
+body{margin:0;background:#fff;font-family:"Noto Sans CJK TC","Noto Sans TC",sans-serif;color:#222}
+.page{width:900px;height:1190px;position:relative}
+.hd{position:absolute;top:62px;right:36px;font-size:20px}
+.ins{position:absolute;left:54px;top:116px;font-size:20px}
+.tag{position:absolute;left:54px;top:14px;background:#fff3cd;border:1px solid #e0c060;padding:4px 10px;font-size:14px;border-radius:4px}
+.ft{position:absolute;right:36px;bottom:52px;font-size:14px}
+.q{position:absolute;width:360px}
+.q b{position:absolute;left:-34px;top:2px;font-size:22px}
+.q .ans{text-align:right;font-size:20px;margin-top:2px}
+</style>
+<div class="page" id="p"><div class="tag" id="tag"></div>
+<div class="hd">單元：認識錢幣　　　姓名：<u>　　　　　　　　</u></div><div class="ins">數一數，一共多少元？</div><div class="ft">Mr. Huang's Math Class</div></div>
+<script>
+// 用法：?t=c（coincarry 至百位 L2，50 元）或 ?t=c10（coincarry10 至十位 L2，5 元）；&s=1.3 設 5 元放大倍率（相對 1 元直徑）
+const U=new URLSearchParams(location.search),T=U.get('t')||'c',S5=parseFloat(U.get('s')||'1.3');
+let seed=+(U.get('seed')||23);const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const W=330,H=196,RB=44,P=document.getElementById('p');
+// 各版型：欄界 D、欄標、題目 [百,十,個]（特殊幣不含在內）
+const CFG={
+ c:{tag:'進位至百位 L2（加入50元）完全自由排列',D:[82,276],lab:[['100',0,'#c0504d'],['10',82,'#3a6fd0'],['1',276,'#666']],sp:50,
+    Q:[[1,6,3],[2,10,4],[1,17,2],[3,12,5],[0,8,7],[2,15,6]]},
+ c10:{tag:`進位至十位 L2（加入5元）完全自由排列（5元＝1元的${S5}倍）`,D:[101,178],lab:[['100',0,'#c0504d'],['10',101,'#3a6fd0'],['1',178,'#666']],sp:5,
+    Q:[[1,3,6],[2,4,8],[1,2,5],[3,1,9],[2,5,7],[1,6,9]]}
+}[T];
+document.getElementById('tag').textContent=CFG.tag;
+const SPEC={100:{w:54,h:23},10:{w:30,h:30},1:{w:22,h:22},50:{w:37,h:37},5:{w:2*10*S5+2,h:2*10*S5+2}};
+function mk(h,t,u){const it=[];
+  it.push({k:CFG.sp});
+  for(let i=0;i<h;i++)it.push({k:100});
+  for(let i=0;i<t;i++)it.push({k:10});
+  for(let i=0;i<u;i++)it.push({k:1});
+  it.forEach(o=>{o.w=SPEC[o.k].w;o.h=SPEC[o.k].h});return it;}
+const hit=(a,o,g)=>!(a.x+a.w+g<o.x||o.x+o.w+g<a.x||a.y+a.h+g<o.y||o.y+o.h+g<a.y);
+function place(...q){const items=mk(...q);items.sort((a,b)=>b.w*b.h-a.w*a.h);
+  for(let t=0;t<500;t++){items.forEach(a=>{a.x=undefined});let good=true;
+    for(const a of items){let ok=false,n=0;
+      while(!ok&&n++<3000){a.x=6+rnd()*(W-a.w-12);a.y=6+rnd()*(H-a.h-12);ok=items.every(o=>o===a||o.x===undefined||!hit(a,o,5));}
+      if(!ok){good=false;break;}}
+    if(good)return items;}
+  throw 'full';}
+function coin(a){const cx=a.x+a.w/2,cy=a.y+a.h/2;
+  if(a.k==100)return `<rect x="${a.x}" y="${a.y}" width="${a.w}" height="${a.h}" fill="#F9DCDC" stroke="#222" stroke-width="1.8"/><rect x="${a.x+3}" y="${a.y+3}" width="${a.w-6}" height="${a.h-6}" fill="none" stroke="#BDBDBD" stroke-width="1"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="1" fill="#8E1B1B">100</text>`;
+  const R={50:18.5,10:15,5:10*S5,1:10}[a.k],sw={50:2.2,10:1.8,5:2,1:1.4}[a.k],fs={50:19,10:15,5:14,1:13}[a.k];
+  return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="#fff" stroke="#222" stroke-width="${sw}"/>${a.k==1?'':`<circle cx="${cx}" cy="${cy}" r="${R-3.7}" fill="none" stroke="#BDBDBD" stroke-width="1"/>`}<text x="${cx}" y="${cy+fs*0.36}" text-anchor="middle" font-size="${fs}">${a.k}</text>`;}
+function box(items,demo){const D=CFG.D;
+  let s=`<svg width="${W}" height="${H+RB}" style="display:block;overflow:visible"><rect x="0" y="0" width="${W}" height="${H+RB}" fill="none" stroke="#888" stroke-width="1.5"/><line x1="0" y1="${H}" x2="${W}" y2="${H}" stroke="#888" stroke-width="1.5"/>`;
+  D.forEach(x=>s+=`<line x1="${x}" y1="${H}" x2="${x}" y2="${H+RB}" stroke="#888" stroke-dasharray="6 4"/>`);
+  CFG.lab.forEach(l=>s+=`<text x="${l[1]+6}" y="${H+14}" font-size="11" fill="${l[2]}">${l[0]}</text>`);
+  if(demo){const c=[D[0]/2,(D[0]+D[1])/2,(D[1]+W)/2],[hh,tt,uu]=demo.q;
+    let a,b,cc;
+    if(T=='c'){const tens=5+tt;a=`<tspan text-decoration="line-through">${hh}</tspan> <tspan fill="#c97a2b">${hh+1}</tspan>`;b=`<tspan text-decoration="line-through">${tens}</tspan> <tspan fill="#c97a2b">${tens%10}</tspan>`;cc=`${uu}`;}
+    else{const ones=5+uu;a=`${hh}`;b=`<tspan text-decoration="line-through">${tt}</tspan> <tspan fill="#c97a2b">${tt+1}</tspan>`;cc=`<tspan text-decoration="line-through">${ones}</tspan> <tspan fill="#c97a2b">${ones%10}</tspan>`;}
+    [a,b,cc].forEach((t,i)=>s+=`<text x="${c[i]}" y="${H+33}" text-anchor="middle" font-size="20">${t}</text>`);}
+  return s+items.map(coin).join('')+'</svg>';}
+CFG.Q.forEach((q,i)=>{const d=document.createElement('div');d.className='q';
+  d.style.left=(i%2?526:106)+'px';d.style.top=(150+Math.floor(i/2)*320)+'px';
+  const tot=q[0]*100+q[1]*10+q[2]+CFG.sp;
+  d.innerHTML=`<b>${i+1}.</b>`+box(place(...q),i==0?{q}:null)+`<div class="ans">一共是(${i==0?' '+tot+' ':'　　　　　　'})元</div>`;
+  P.appendChild(d);});
+</script>
