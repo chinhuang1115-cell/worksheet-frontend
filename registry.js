@@ -1830,7 +1830,8 @@ window.WORKSHEET_REGISTRY = [
     "sample": [
       {"pdf": "assets/sub2noreg_sample.pdf", "name": "兩位數不退位減法_直式計算_範本.pdf", "label": "完整提示", "key": "sub2noreg"},
       {"pdf": "assets/sub2noreg_free_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "sub2noreg-free"},
-      {"pdf": "assets/sub2noreg_faded_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "sub2noreg-faded"}
+      {"pdf": "assets/sub2noreg_faded_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "sub2noreg-faded"},
+      {"pdf": "assets/sub2noreg_graded_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_漸退淡化.pdf", "label": "自由列式：漸退淡化", "key": "sub2noreg-graded"}
     ],
     "layout": {
       "panel": "sub2noregPanel",
@@ -1842,7 +1843,8 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       {"key": "sub2noreg", "label": "完整提示"},
       {"key": "sub2noreg-free", "label": "自由列式：無提示"},
-      {"key": "sub2noreg-faded", "label": "自由列式：淡化提示"}
+      {"key": "sub2noreg-faded", "label": "自由列式：淡化提示"},
+      {"key": "sub2noreg-graded", "label": "自由列式：漸退淡化"}
     ]
   },
   {
