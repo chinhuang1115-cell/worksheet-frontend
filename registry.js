@@ -3113,7 +3113,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "zonghe-3a",
     "code": "Z301",
     "grade": "3",
-    "name": "綜合練習＿四位數加減（三上）",
+    "name": "綜合練習＿四位數加減",
     "ops": [
       "add",
       "sub"
