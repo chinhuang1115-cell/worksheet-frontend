@@ -2984,7 +2984,7 @@ window.WORKSHEET_REGISTRY = [
     "name": "加減關係＿十以上的數",
     "ops": ["add", "sub"],
     "keywords": ["addsub"],
-    "desc": "十以上的數（11-19），拆成「1個十＋N個一」，同時寫出加法和減法算式。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡）。",
+    "desc": "十以上的數（11-19），拆成「1個十＋N個一」，同時寫出加法和減法算式。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡；漸退淡化＝逐題淡化，計算格先退、算式列後退，最後一題兩者皆無）。",
     "sortKey": [5, 1, 2],
     "home": {
       "icon": "🔄",
@@ -2997,7 +2997,7 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N103B",
-      "desc": "加減互逆關係，十以上的數（11-19），十位分解。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡）。"
+      "desc": "加減互逆關係，十以上的數（11-19），十位分解。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡；漸退淡化＝逐題淡化，計算格先退、算式列後退，最後一題兩者皆無）。"
     },
     "sample": [
       {"pdf": "assets/addsub_v2_coindraw_sample.pdf", "name": "加減關係_十以上_硬幣簡圖.pdf", "label": "硬幣簡圖", "key": "addsub-v2-coindraw"},
@@ -3005,10 +3005,13 @@ window.WORKSHEET_REGISTRY = [
       {"pdf": "assets/addsub_v2_food_sample.pdf", "name": "加減關係_十以上_食物.pdf", "label": "食物", "key": "addsub-v2-food"},
       {"pdf": "assets/addsub_v2_coindraw_free_sample.pdf", "name": "加減關係_十以上_硬幣簡圖_自由列式_無提示.pdf", "label": "硬幣簡圖．自由列式：無提示", "key": "addsub-v2-coindraw-free"},
       {"pdf": "assets/addsub_v2_coindraw_faded_sample.pdf", "name": "加減關係_十以上_硬幣簡圖_自由列式_淡化提示.pdf", "label": "硬幣簡圖．自由列式：淡化提示", "key": "addsub-v2-coindraw-faded"},
+      {"pdf": "assets/addsub_v2_coindraw_graded_sample.pdf", "name": "加減關係_十以上_硬幣簡圖_自由列式_漸退淡化.pdf", "label": "硬幣簡圖．自由列式：漸退淡化", "key": "addsub-v2-coindraw-graded"},
       {"pdf": "assets/addsub_v2_coinphoto_free_sample.pdf", "name": "加減關係_十以上_硬幣照片_自由列式_無提示.pdf", "label": "硬幣照片．自由列式：無提示", "key": "addsub-v2-coinphoto-free"},
       {"pdf": "assets/addsub_v2_coinphoto_faded_sample.pdf", "name": "加減關係_十以上_硬幣照片_自由列式_淡化提示.pdf", "label": "硬幣照片．自由列式：淡化提示", "key": "addsub-v2-coinphoto-faded"},
+      {"pdf": "assets/addsub_v2_coinphoto_graded_sample.pdf", "name": "加減關係_十以上_硬幣照片_自由列式_漸退淡化.pdf", "label": "硬幣照片．自由列式：漸退淡化", "key": "addsub-v2-coinphoto-graded"},
       {"pdf": "assets/addsub_v2_food_free_sample.pdf", "name": "加減關係_十以上_食物_自由列式_無提示.pdf", "label": "食物．自由列式：無提示", "key": "addsub-v2-food-free"},
-      {"pdf": "assets/addsub_v2_food_faded_sample.pdf", "name": "加減關係_十以上_食物_自由列式_淡化提示.pdf", "label": "食物．自由列式：淡化提示", "key": "addsub-v2-food-faded"}
+      {"pdf": "assets/addsub_v2_food_faded_sample.pdf", "name": "加減關係_十以上_食物_自由列式_淡化提示.pdf", "label": "食物．自由列式：淡化提示", "key": "addsub-v2-food-faded"},
+      {"pdf": "assets/addsub_v2_food_graded_sample.pdf", "name": "加減關係_十以上_食物_自由列式_漸退淡化.pdf", "label": "食物．自由列式：漸退淡化", "key": "addsub-v2-food-graded"}
     ],
     "layout": {
       "panel": null,
@@ -3023,10 +3026,13 @@ window.WORKSHEET_REGISTRY = [
       {"key": "addsub-v2-food", "label": "食物"},
       {"key": "addsub-v2-coindraw-free", "label": "硬幣簡圖．自由列式：無提示"},
       {"key": "addsub-v2-coindraw-faded", "label": "硬幣簡圖．自由列式：淡化提示"},
+      {"key": "addsub-v2-coindraw-graded", "label": "硬幣簡圖．自由列式：漸退淡化"},
       {"key": "addsub-v2-coinphoto-free", "label": "硬幣照片．自由列式：無提示"},
       {"key": "addsub-v2-coinphoto-faded", "label": "硬幣照片．自由列式：淡化提示"},
+      {"key": "addsub-v2-coinphoto-graded", "label": "硬幣照片．自由列式：漸退淡化"},
       {"key": "addsub-v2-food-free", "label": "食物．自由列式：無提示"},
-      {"key": "addsub-v2-food-faded", "label": "食物．自由列式：淡化提示"}
+      {"key": "addsub-v2-food-faded", "label": "食物．自由列式：淡化提示"},
+      {"key": "addsub-v2-food-graded", "label": "食物．自由列式：漸退淡化"}
     ]
   },
   {
@@ -3036,7 +3042,7 @@ window.WORKSHEET_REGISTRY = [
     "name": "加減關係＿十以上的分和",
     "ops": ["add", "sub"],
     "keywords": ["addsub"],
-    "desc": "二位數分和（20-60），用十位條和個位塊表示數量，同時寫出加法和減法算式。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡）。",
+    "desc": "二位數分和（20-60），用十位條和個位塊表示數量，同時寫出加法和減法算式。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡；漸退淡化＝逐題淡化，計算格先退、算式列後退，最後一題兩者皆無）。",
     "sortKey": [5, 1, 3],
     "home": {
       "icon": "🔄",
@@ -3049,15 +3055,17 @@ window.WORKSHEET_REGISTRY = [
       "level": "進階",
       "levelColor": "#f59e0b",
       "code": "N103C",
-      "desc": "加減互逆關係，二位數分和（20-60），十位條＋個位塊表示。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡）。"
+      "desc": "加減互逆關係，二位數分和（20-60），十位條＋個位塊表示。另有自由列式兩種（無提示＝兩欄算式合併成一條長作答線、不畫計算格；淡化提示＝兩欄算式與計算格刷淡；漸退淡化＝逐題淡化，計算格先退、算式列後退，最後一題兩者皆無）。"
     },
     "sample": [
       {"pdf": "assets/addsub_v3_blocks_sample.pdf", "name": "加減關係_分和_積木.pdf", "label": "積木", "key": "addsub-v3-blocks"},
       {"pdf": "assets/addsub_v3_candy_sample.pdf", "name": "加減關係_分和_糖果.pdf", "label": "糖果", "key": "addsub-v3-candy"},
       {"pdf": "assets/addsub_v3_blocks_free_sample.pdf", "name": "加減關係_分和_積木_自由列式_無提示.pdf", "label": "積木．自由列式：無提示", "key": "addsub-v3-blocks-free"},
       {"pdf": "assets/addsub_v3_blocks_faded_sample.pdf", "name": "加減關係_分和_積木_自由列式_淡化提示.pdf", "label": "積木．自由列式：淡化提示", "key": "addsub-v3-blocks-faded"},
+      {"pdf": "assets/addsub_v3_blocks_graded_sample.pdf", "name": "加減關係_分和_積木_自由列式_漸退淡化.pdf", "label": "積木．自由列式：漸退淡化", "key": "addsub-v3-blocks-graded"},
       {"pdf": "assets/addsub_v3_candy_free_sample.pdf", "name": "加減關係_分和_糖果_自由列式_無提示.pdf", "label": "糖果．自由列式：無提示", "key": "addsub-v3-candy-free"},
-      {"pdf": "assets/addsub_v3_candy_faded_sample.pdf", "name": "加減關係_分和_糖果_自由列式_淡化提示.pdf", "label": "糖果．自由列式：淡化提示", "key": "addsub-v3-candy-faded"}
+      {"pdf": "assets/addsub_v3_candy_faded_sample.pdf", "name": "加減關係_分和_糖果_自由列式_淡化提示.pdf", "label": "糖果．自由列式：淡化提示", "key": "addsub-v3-candy-faded"},
+      {"pdf": "assets/addsub_v3_candy_graded_sample.pdf", "name": "加減關係_分和_糖果_自由列式_漸退淡化.pdf", "label": "糖果．自由列式：漸退淡化", "key": "addsub-v3-candy-graded"}
     ],
     "layout": {
       "panel": null,
@@ -3071,8 +3079,10 @@ window.WORKSHEET_REGISTRY = [
       {"key": "addsub-v3-candy", "label": "糖果"},
       {"key": "addsub-v3-blocks-free", "label": "積木．自由列式：無提示"},
       {"key": "addsub-v3-blocks-faded", "label": "積木．自由列式：淡化提示"},
+      {"key": "addsub-v3-blocks-graded", "label": "積木．自由列式：漸退淡化"},
       {"key": "addsub-v3-candy-free", "label": "糖果．自由列式：無提示"},
-      {"key": "addsub-v3-candy-faded", "label": "糖果．自由列式：淡化提示"}
+      {"key": "addsub-v3-candy-faded", "label": "糖果．自由列式：淡化提示"},
+      {"key": "addsub-v3-candy-graded", "label": "糖果．自由列式：漸退淡化"}
     ]
   },
   {
