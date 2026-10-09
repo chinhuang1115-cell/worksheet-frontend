@@ -33,7 +33,7 @@ function mk(h,t,u){const it=[];
   for(let i=0;i<h;i++)it.push({k:100});
   for(let i=0;i<t;i++)it.push({k:10});
   for(let i=0;i<u;i++)it.push({k:1});
-  it.forEach(o=>{o.flag=OVG.on&&rnd()<0.6;o.ov=0;if(o.k!=100)o.cr={50:18.5,10:15,5:10*S5,1:10}[o.k];o.w=SPEC[o.k].w;o.h=SPEC[o.k].h;if(o.k==100){o.ang=(rnd()*2-1)*R;const t=Math.abs(o.ang)*Math.PI/180;o.ow=o.w;o.oh=o.h;o.w=o.ow*Math.cos(t)+o.oh*Math.sin(t);o.h=o.ow*Math.sin(t)+o.oh*Math.cos(t);}});return it;}
+  it.forEach(o=>{o.sp=(o.k==CFG.sp)?1:0;o.flag=OVG.on&&rnd()<0.6&&!(MODE=='semi'&&o.sp);o.ov=0;if(o.k!=100)o.cr={50:18.5,10:15,5:10*S5,1:10}[o.k];o.w=SPEC[o.k].w;o.h=SPEC[o.k].h;if(o.k==100){o.ang=(rnd()*2-1)*R;const t=Math.abs(o.ang)*Math.PI/180;o.ow=o.w;o.oh=o.h;o.w=o.ow*Math.cos(t)+o.oh*Math.sin(t);o.h=o.ow*Math.sin(t)+o.oh*Math.cos(t);}});return it;}
 const circ=a=>a.k!=100;
 const dist=(a,o)=>{if(circ(a)&&circ(o))return Math.hypot(a.x+a.w/2-o.x-o.w/2,a.y+a.h/2-o.y-o.h/2)-a.w/2-o.w/2;return Math.max(o.x-(a.x+a.w),a.x-(o.x+o.w),o.y-(a.y+a.h),a.y-(o.y+o.h));};
 const KZ=T=='c'?{100:0,50:1,10:1,1:2}:{100:0,10:1,1:2,5:2};
@@ -72,7 +72,7 @@ CFG.Q.forEach((q,i)=>{const d=document.createElement('div');d.className='q';
 {const ST={q:0,pairs:0,max:0,hid:0,coins:0,bad:0};
  ST.rho=0;(window.__ALL||[]).forEach(items=>{ST.q++;ST.rho+=spearman(items);ST.coins+=items.length;
   for(let i=0;i<items.length;i++)for(let j=i+1;j<items.length;j++){const A=_sh(items[i]),B=_sh(items[j]);const f=Math.max(_frac(A,B),_frac(B,A));
-   if(f>0){ST.pairs++;ST.max=Math.max(ST.max,f);if(f>OVG.lim+1e-9)ST.bad++;if(_labelHit(A,B)||_labelHit(B,A))ST.hid++}}});
+   if(f>0){ST.pairs++;if(items[i].sp||items[j].sp)ST.spov=(ST.spov||0)+1;ST.max=Math.max(ST.max,f);if(f>OVG.lim+1e-9)ST.bad++;if(_labelHit(A,B)||_labelHit(B,A))ST.hid++}}});
  ST.rho=+(ST.rho/Math.max(ST.q,1)).toFixed(2);const d=document.createElement('div');d.id='stat';d.style.display='none';d.textContent=JSON.stringify(ST);document.body.appendChild(d);}
 
 </script>
