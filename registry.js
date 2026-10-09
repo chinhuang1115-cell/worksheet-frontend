@@ -2316,11 +2316,6 @@ window.WORKSHEET_REGISTRY = [
         "key": "coincarry-l2"
       },
       {
-        "pdf": "assets/coincarry_L3_simple_sample.pdf",
-        "name": "認識錢幣_進位至百位_L3_範本.pdf",
-        "label": "L3"
-      },
-      {
         "pdf": "assets/coincarry_L4_simple_sample.pdf",
         "name": "認識錢幣_進位至百位_L4_範本.pdf",
         "label": "L4",
@@ -2372,17 +2367,31 @@ window.WORKSHEET_REGISTRY = [
       ]
     },
     "diffInfo": null,
-    "sample": {
-      "pdf": "assets/coincarry_L1_simple_sample.pdf",
-      "name": "認識錢幣_進位至十位_範本.pdf"
-    },
+    "sample": [
+      {
+        "pdf": "assets/coincarry_L1_simple_sample.pdf",
+        "name": "認識錢幣_進位至十位_L1_範本.pdf",
+        "label": "L1",
+        "key": "coincarry10-l1"
+      },
+      {
+        "pdf": "assets/coincarry_L3_simple_sample.pdf",
+        "name": "認識錢幣_進位至十位_L3加5元_範本.pdf",
+        "label": "L3",
+        "key": "coincarry10-l3"
+      }
+    ],
     "layout": {
       "panel": "coincarry10Panel",
       "themeSet": null,
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "coincarry10-l1", "label": "L1 個位1元進十位" },
+      { "key": "coincarry10-l3", "label": "L3 加入5元" }
+    ]
   },
   {
     "id": "coincarry1000",
