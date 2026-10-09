@@ -2582,6 +2582,54 @@ window.WORKSHEET_REGISTRY = [
         "name": "認識錢幣_進位混合位值_L4加500元_範本.pdf",
         "label": "L4",
         "key": "coincarrymix-l4"
+      },
+      {
+        "pdf": "assets/coincarrymix_L1_semi_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L1基本_半自由排列_範本.pdf",
+        "label": "L1 半自由排列",
+        "key": "coincarrymix-l1-semi"
+      },
+      {
+        "pdf": "assets/coincarrymix_L1_free_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L1基本_完全自由排列_範本.pdf",
+        "label": "L1 完全自由排列",
+        "key": "coincarrymix-l1-free"
+      },
+      {
+        "pdf": "assets/coincarrymix_L2_semi_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L2加5元_半自由排列_範本.pdf",
+        "label": "L2 半自由排列",
+        "key": "coincarrymix-l2-semi"
+      },
+      {
+        "pdf": "assets/coincarrymix_L2_free_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L2加5元_完全自由排列_範本.pdf",
+        "label": "L2 完全自由排列",
+        "key": "coincarrymix-l2-free"
+      },
+      {
+        "pdf": "assets/coincarrymix_L3_semi_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L3加50元_半自由排列_範本.pdf",
+        "label": "L3 半自由排列",
+        "key": "coincarrymix-l3-semi"
+      },
+      {
+        "pdf": "assets/coincarrymix_L3_free_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L3加50元_完全自由排列_範本.pdf",
+        "label": "L3 完全自由排列",
+        "key": "coincarrymix-l3-free"
+      },
+      {
+        "pdf": "assets/coincarrymix_L4_semi_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L4加500元_半自由排列_範本.pdf",
+        "label": "L4 半自由排列",
+        "key": "coincarrymix-l4-semi"
+      },
+      {
+        "pdf": "assets/coincarrymix_L4_free_sample.pdf",
+        "name": "認識錢幣_進位混合位值_L4加500元_完全自由排列_範本.pdf",
+        "label": "L4 完全自由排列",
+        "key": "coincarrymix-l4-free"
       }
     ],
     "layout": {
@@ -2595,7 +2643,15 @@ window.WORKSHEET_REGISTRY = [
       { "key": "coincarrymix-l1", "label": "L1 基本（1／10／100元）" },
       { "key": "coincarrymix-l2", "label": "L2 加入5元" },
       { "key": "coincarrymix-l3", "label": "L3 加入50元" },
-      { "key": "coincarrymix-l4", "label": "L4 加入500元" }
+      { "key": "coincarrymix-l4", "label": "L4 加入500元" },
+      { "key": "coincarrymix-l1-semi", "label": "L1 基本（1／10／100元）（半自由排列）", "arrange": "semi", "base": "coincarrymix-l1" },
+      { "key": "coincarrymix-l1-free", "label": "L1 基本（1／10／100元）（完全自由排列）", "arrange": "free", "base": "coincarrymix-l1" },
+      { "key": "coincarrymix-l2-semi", "label": "L2 加入5元（半自由排列）", "arrange": "semi", "base": "coincarrymix-l2" },
+      { "key": "coincarrymix-l2-free", "label": "L2 加入5元（完全自由排列）", "arrange": "free", "base": "coincarrymix-l2" },
+      { "key": "coincarrymix-l3-semi", "label": "L3 加入50元（半自由排列）", "arrange": "semi", "base": "coincarrymix-l3" },
+      { "key": "coincarrymix-l3-free", "label": "L3 加入50元（完全自由排列）", "arrange": "free", "base": "coincarrymix-l3" },
+      { "key": "coincarrymix-l4-semi", "label": "L4 加入500元（半自由排列）", "arrange": "semi", "base": "coincarrymix-l4" },
+      { "key": "coincarrymix-l4-free", "label": "L4 加入500元（完全自由排列）", "arrange": "free", "base": "coincarrymix-l4" }
     ]
   },
   {
