@@ -2349,7 +2349,7 @@ window.WORKSHEET_REGISTRY = [
       "進位",
       "至十位"
     ],
-    "desc": "位值板上個位欄有 10–14 枚錢幣，練習進位換算至十位。L1 個位1元進十位、L3 加入5元。",
+    "desc": "位值板上個位欄有 10–14 枚錢幣，練習進位換算至十位。L1 個位1元進十位、L2 加入5元。",
     "sortKey": [
       1,
       1,
@@ -2376,9 +2376,9 @@ window.WORKSHEET_REGISTRY = [
       },
       {
         "pdf": "assets/coincarry_L3_simple_sample.pdf",
-        "name": "認識錢幣_進位至十位_L3加5元_範本.pdf",
-        "label": "L3",
-        "key": "coincarry10-l3"
+        "name": "認識錢幣_進位至十位_L2加5元_範本.pdf",
+        "label": "L2",
+        "key": "coincarry10-l2"
       }
     ],
     "layout": {
@@ -2390,7 +2390,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "variants": [
       { "key": "coincarry10-l1", "label": "L1 個位1元進十位" },
-      { "key": "coincarry10-l3", "label": "L3 加入5元" }
+      { "key": "coincarry10-l2", "label": "L2 加入5元" }
     ]
   },
   {
@@ -3113,7 +3113,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "zonghe-3a",
     "code": "Z301",
     "grade": "3",
-    "name": "綜合練習＿四位數加減",
+    "name": "綜合練習＿四位數加減（三上）",
     "ops": [
       "add",
       "sub"
