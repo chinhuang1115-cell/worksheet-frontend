@@ -1,0 +1,65 @@
+<!doctype html><meta charset="utf-8">
+<style>
+body{margin:0;background:#fff;font-family:"Noto Sans CJK TC","Noto Sans TC",sans-serif;color:#222}
+.page{width:900px;height:1190px;position:relative}
+.hd{position:absolute;top:62px;right:36px;font-size:20px}
+.ins{position:absolute;left:54px;top:116px;font-size:20px}
+.tag{position:absolute;left:54px;top:14px;background:#fff3cd;border:1px solid #e0c060;padding:4px 10px;font-size:14px;border-radius:4px}
+.ft{position:absolute;right:36px;bottom:52px;font-size:14px}
+.q{position:absolute;width:360px}
+.q b{position:absolute;left:-34px;top:2px;font-size:22px}
+.q .ans{text-align:right;font-size:20px;margin-top:2px}
+</style>
+<div class="page" id="p"><div class="tag">進位至千位 L2（加入500元）完全自由排列＋淡灰內圈線</div>
+<div class="hd">單元：認識錢幣　　　姓名：<u>　　　　　　　　</u></div><div class="ins">數一數，一共多少元？</div><div class="ft">Mr. Huang's Math Class</div></div>
+<script>
+const MODE="free";
+const Q=[[1,5,2,4],[3,6,3,3],[3,10,3,3],[2,8,1,2]]; // 千,百(不含500),十,個
+let seed=23;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const W=330,H=330,RB=44,P=document.getElementById('p');
+const D=[83,226,280];
+function mk(a,b,c,d){const it=[];
+  for(let i=0;i<a;i++)it.push({k:1000,w:54,h:23});
+  it.push({k:500,w:54,h:23});
+  for(let i=0;i<b;i++)it.push({k:100,w:54,h:23});
+  for(let i=0;i<c;i++)it.push({k:10,w:30,h:30});
+  for(let i=0;i<d;i++)it.push({k:1,w:22,h:22});return it;}
+const Z={1000:[4,6,76,H-12],500:[88,6,134,H-12],100:[88,6,134,H-12],10:[230,6,48,H-12],1:[284,6,42,H-12]};
+const hit=(it,o,g)=>!(it.x+it.w+g<o.x||o.x+o.w+g<it.x||it.y+it.h+g<o.y||o.y+o.h+g<it.y);
+function place(...q){
+  const items=mk(...q);
+  if(MODE==='free'){items.sort((a,b)=>b.w*b.h-a.w*a.h);
+    for(let t=0;t<500;t++){items.forEach(it=>{it.x=undefined});let good=true;
+      for(const it of items){let ok=false,n=0;
+        while(!ok&&n++<3000){it.x=6+rnd()*(W-it.w-12);it.y=6+rnd()*(H-it.h-12);ok=items.every(o=>o===it||o.x===undefined||!hit(it,o,6));}
+        if(!ok){good=false;break;}}
+      if(good)return items;}
+    throw 'full';}
+  for(let t=0;t<500;t++){items.forEach(it=>{it.x=undefined});let good=true;
+    for(const it of items){const z=Z[it.k];
+      if(it.k===500){it.x=z[0]+4;it.y=z[1]+4;continue;}
+      let ok=false,n=0;
+      while(!ok&&n++<3000){it.x=z[0]+rnd()*(z[2]-it.w);it.y=z[1]+rnd()*(z[3]-it.h);ok=items.every(o=>o===it||o.x===undefined||!hit(it,o,6));}
+      if(!ok){good=false;break;}}
+    if(good)return items;}
+  throw 'full';}
+function coins(items){let s='';
+  for(const it of items){const cx=it.x+it.w/2,cy=it.y+it.h/2;
+    if(it.k>=100)s+=`<rect x="${it.x}" y="${it.y}" width="${it.w}" height="${it.h}" fill="${it.k==100?'#F9DCDC':it.k==500?'#EADBC8':'#E5DDF3'}" stroke="#222" stroke-width="1.8"/><rect x="${it.x+3}" y="${it.y+3}" width="${it.w-6}" height="${it.h-6}" fill="none" stroke="#BDBDBD" stroke-width="1"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="1" fill="${it.k==100?'#8E1B1B':it.k==500?'#5B3A17':'#47207F'}">${it.k}</text>`;
+    else if(it.k==10)s+=`<circle cx="${cx}" cy="${cy}" r="15" fill="#fff" stroke="#222" stroke-width="1.8"/><circle cx="${cx}" cy="${cy}" r="11.5" fill="none" stroke="#BDBDBD" stroke-width="1"/><text x="${cx}" y="${cy+5.5}" text-anchor="middle" font-size="15">10</text>`;
+    else s+=`<circle cx="${cx}" cy="${cy}" r="10" fill="#fff" stroke="#222" stroke-width="1.4"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="13">1</text>`;}
+  return s;}
+function box(items,demo){
+  let s=`<svg width="${W}" height="${H+RB}" style="display:block;overflow:visible"><rect x="0" y="0" width="${W}" height="${H+RB}" fill="none" stroke="#888" stroke-width="1.5"/><line x1="0" y1="${H}" x2="${W}" y2="${H}" stroke="#888" stroke-width="1.5"/>`;
+  D.forEach(x=>s+=`<line x1="${x}" y1="${H}" x2="${x}" y2="${H+RB}" stroke="#888" stroke-dasharray="6 4"/>`);
+  const lab=[['1000',0,'#7a5fb0'],['100',D[0],'#c0504d'],['10',D[1],'#3a6fd0'],['1',D[2],'#666']];
+  lab.forEach(l=>s+=`<text x="${l[1]+6}" y="${H+14}" font-size="11" fill="${l[2]}">${l[0]}</text>`);
+  if(demo){const c=[D[0]/2,(D[0]+D[1])/2,(D[1]+D[2])/2,(D[2]+W)/2];
+    s+=`<text x="${c[0]}" y="${H+33}" text-anchor="middle" font-size="20"><tspan text-decoration="line-through">1</tspan> <tspan fill="#c97a2b">2</tspan></text><text x="${c[1]}" y="${H+33}" text-anchor="middle" font-size="20"><tspan text-decoration="line-through">10</tspan> <tspan fill="#c97a2b">0</tspan></text><text x="${c[2]}" y="${H+33}" text-anchor="middle" font-size="20">2</text><text x="${c[3]}" y="${H+33}" text-anchor="middle" font-size="20">4</text>`;}
+  return s+coins(items)+'</svg>';}
+Q.forEach((q,i)=>{const d=document.createElement('div');d.className='q';
+  d.style.left=(i%2?526:106)+'px';d.style.top=(150+Math.floor(i/2)*470)+'px';
+  const tot=q[0]*1000+500+q[1]*100+q[2]*10+q[3];
+  d.innerHTML=`<b>${i+1}.</b>`+box(place(...q),i==0)+`<div class="ans">一共是(${i==0?' '+tot+' ':'　　　　　　'})元</div>`;
+  P.appendChild(d);});
+</script>

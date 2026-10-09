@@ -1,0 +1,9 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0;background:#fff;font-family:'Noto Sans CJK TC',sans-serif">
+<svg width="900" height="170" id="s"></svg><script>
+const C=[1,5,10,50,100,500,1000];let x=30,s='<text x="20" y="28" font-size="18">所有面額（淡灰內圈線）</text>';
+const bg={100:'#F9DCDC',500:'#EADBC8',1000:'#E5DDF3'},fg={100:'#8E1B1B',500:'#5B3A17',1000:'#47207F'};
+for(const k of C){let w,cy=95,cx;
+ if(k>=100){w=70;cx=x+w/2;s+=`<rect x="${x}" y="${cy-15}" width="${w}" height="30" fill="${bg[k]}" stroke="#222" stroke-width="1.8"/><rect x="${x+4}" y="${cy-11}" width="${w-8}" height="22" fill="none" stroke="#BDBDBD" stroke-width="1"/><text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="18" font-weight="700" letter-spacing="1" fill="${fg[k]}">${k}</text>`;}
+ else{const r=k==50?22:k==10?18:k==5?14:12;w=r*2;cx=x+r;s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="#222" stroke-width="${k==50?2.2:k==5?2:1.8}"/>${k==1?'':`<circle cx="${cx}" cy="${cy}" r="${r-4}" fill="none" stroke="#BDBDBD" stroke-width="1"/>`}<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="${k==50?20:k==10?17:15}">${k}</text>`;}
+ s+=`<text x="${cx}" y="150" text-anchor="middle" font-size="14" fill="#666">${k}元</text>`;x+=w+36;}
+document.getElementById('s').innerHTML=s;</script>
