@@ -459,6 +459,7 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/mul2x1_price_stationery_sample.pdf", "name": "乘法直式_價目表_文具.pdf", "label": "價目表（文具：完整提示）", "key": "mul2x1-price-stationery" },
       { "pdf": "assets/mul2x1_price_stationery_free_sample.pdf", "name": "乘法直式_價目表_文具自由列式_無提示.pdf", "label": "價目表（文具：自由列式・無提示）", "key": "mul2x1-price-stationery-free" },
       { "pdf": "assets/mul2x1_price_stationery_faded_sample.pdf", "name": "乘法直式_價目表_文具自由列式_淡化提示.pdf", "label": "價目表（文具：自由列式・淡化提示）", "key": "mul2x1-price-stationery-faded" },
+      { "pdf": "assets/mul2x1_price_stationery_graded_sample.pdf", "name": "乘法直式_價目表_文具自由列式_漸退淡化.pdf", "label": "價目表（文具：自由列式・漸退淡化）", "key": "mul2x1-price-stationery-graded" },
       { "pdf": "assets/mul2x1_price_grocery_sample.pdf", "name": "乘法直式_價目表_雜貨.pdf", "label": "價目表（雜貨）", "key": "mul2x1-price-grocery" }
     ],
     "layout": {
@@ -469,6 +470,7 @@ window.WORKSHEET_REGISTRY = [
         "mul2x1-price-stationery": "d2",
         "mul2x1-price-stationery-free": "d2",
         "mul2x1-price-stationery-faded": "d2",
+        "mul2x1-price-stationery-graded": "d2",
         "mul2x1-price-grocery": "d2"
       },
       "prices": null,
@@ -478,6 +480,7 @@ window.WORKSHEET_REGISTRY = [
       { "key": "mul2x1-price-stationery", "label": "價目表（文具：完整提示）" },
       { "key": "mul2x1-price-stationery-free", "label": "價目表（文具：自由列式・無提示）" },
       { "key": "mul2x1-price-stationery-faded", "label": "價目表（文具：自由列式・淡化提示）" },
+      { "key": "mul2x1-price-stationery-graded", "label": "價目表（文具：自由列式・漸退淡化）" },
       { "key": "mul2x1-price-grocery", "label": "價目表（雜貨）" }
     ]
   },
