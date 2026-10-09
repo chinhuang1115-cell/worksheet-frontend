@@ -35,7 +35,8 @@ window.WORKSHEET_REGISTRY = [
     "sample": [
       {"pdf": "assets/n2change_sample.pdf", "name": "購物找零_兩步驟乘減_兩位數_範本.pdf", "label": "完整提示", "key": "n2-change"},
       {"pdf": "assets/n2change_free_sample.pdf", "name": "購物找零_兩步驟乘減_兩位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "n2-change-free"},
-      {"pdf": "assets/n2change_faded_sample.pdf", "name": "購物找零_兩步驟乘減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "n2-change-faded"}
+      {"pdf": "assets/n2change_faded_sample.pdf", "name": "購物找零_兩步驟乘減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "n2-change-faded"},
+      {"pdf": "assets/n2change_graded_sample.pdf", "name": "購物找零_兩步驟乘減_兩位數_自由列式_漸退淡化.pdf", "label": "自由列式：漸退淡化", "key": "n2-change-graded"}
     ],
     "layout": {
       "panel": null,
@@ -47,7 +48,8 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       {"key": "n2-change", "label": "完整提示"},
       {"key": "n2-change-free", "label": "自由列式：無提示"},
-      {"key": "n2-change-faded", "label": "自由列式：淡化提示"}
+      {"key": "n2-change-faded", "label": "自由列式：淡化提示"},
+      {"key": "n2-change-graded", "label": "自由列式：漸退淡化"}
     ]
   },
   {
@@ -138,7 +140,8 @@ window.WORKSHEET_REGISTRY = [
     "sample": [
       {"pdf": "assets/sanbushu_sample.pdf", "name": "購物找零_三步驟乘加減_兩位數_範本.pdf", "label": "完整提示", "key": "sanbushu"},
       {"pdf": "assets/sanbushu_free_sample.pdf", "name": "購物找零_三步驟乘加減_兩位數_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "sanbushu-free"},
-      {"pdf": "assets/sanbushu_faded_sample.pdf", "name": "購物找零_三步驟乘加減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "sanbushu-faded"}
+      {"pdf": "assets/sanbushu_faded_sample.pdf", "name": "購物找零_三步驟乘加減_兩位數_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "sanbushu-faded"},
+      {"pdf": "assets/sanbushu_graded_sample.pdf", "name": "購物找零_三步驟乘加減_兩位數_自由列式_漸退淡化.pdf", "label": "自由列式：漸退淡化", "key": "sanbushu-graded"}
     ],
     "layout": {
       "panel": "sanbushuPanel",
@@ -150,7 +153,8 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       {"key": "sanbushu", "label": "完整提示"},
       {"key": "sanbushu-free", "label": "自由列式：無提示"},
-      {"key": "sanbushu-faded", "label": "自由列式：淡化提示"}
+      {"key": "sanbushu-faded", "label": "自由列式：淡化提示"},
+      {"key": "sanbushu-graded", "label": "自由列式：漸退淡化"}
     ]
   },
   {
