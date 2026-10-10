@@ -973,7 +973,7 @@ window.WORKSHEET_REGISTRY = [
       "sub"
     ],
     "keywords": [],
-    "desc": "三位數退位減法計算練習，分單退位、雙退位兩類：概念導入（畫錢幣）、純計算（直式計算格，另有逐題淡化的「淡化輔助」版本）",
+    "desc": "三位數退位減法計算練習，分單退位、雙退位兩類：概念導入（畫錢幣，另有 v2 直式計算版）、純計算（雙退位，直式計算格，另有逐題淡化的「淡化輔助」版本）",
     "sortKey": [
       2,
       3,
@@ -987,6 +987,7 @@ window.WORKSHEET_REGISTRY = [
     "diffInfo": null,
     "sample": [
       { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位概念導入_範例.pdf", "label": "單退位概念導入", "key": "tuiwei3sub-coin" },
+      { "pdf": "assets/sub3borrow_sample.pdf", "name": "退位減法_三位數_單退位概念導入v2_範例.pdf", "label": "單退位概念導入 v2", "key": "sub3borrow" },
       { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位概念導入_範例.pdf", "label": "雙退位概念導入", "key": "tuiwei3sub-dcoin" },
       { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位純計算_範例.pdf", "label": "雙退位純計算", "key": "tuiwei3sub-tally" },
       { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位純計算_淡化輔助_範例.pdf", "label": "雙退位純計算（淡化輔助）", "key": "tuiwei3sub-tally-graded" }
@@ -1004,6 +1005,12 @@ window.WORKSHEET_REGISTRY = [
         "label": "單退位概念導入",
         "group": "單退位",
         "pill": "概念導入"
+      },
+      {
+        "key": "sub3borrow",
+        "label": "單退位概念導入 v2",
+        "group": "單退位",
+        "pill": "概念導入 v2"
       },
       {
         "key": "tuiwei3sub-dcoin",
