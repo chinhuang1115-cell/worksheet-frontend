@@ -3128,7 +3128,7 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/addsub_mixed_gesture_addsub_sample.pdf", "name": "加減混合_手勢_先加再減.pdf", "label": "手勢（先加再減）", "key": "addsub-mixed-gesture-addsub" },
       { "pdf": "assets/addsub_mixed_gesture_subadd_sample.pdf", "name": "加減混合_手勢_先減再加.pdf", "label": "手勢（先減再加）", "key": "addsub-mixed-gesture-subadd" },
       { "pdf": "assets/addsub_mixed_gesture_blank_sample.pdf", "name": "加減混合_手勢_空白練習.pdf", "label": "手勢（空白練習）", "key": "addsub-mixed-gesture-blank" },
-      { "pdf": "assets/addsub_mixed_coupon_toy_sample.pdf", "name": "加減混合_折價券_玩具.pdf", "label": "折價券（玩具）", "key": "addsub-mixed-coupon-toy" },
+      { "pdf": "assets/addsub_mixed_coupon_toy_sample.pdf", "name": "加減混合_折價券_物品.pdf", "label": "折價券（物品）", "key": "addsub-mixed-coupon-toy" },
       { "pdf": "assets/addsub_mixed_coupon_food_sample.pdf", "name": "加減混合_折價券_食物.pdf", "label": "折價券（食物）", "key": "addsub-mixed-coupon-food" }
     ],
     "layout": {
@@ -3150,7 +3150,7 @@ window.WORKSHEET_REGISTRY = [
       { "key": "addsub-mixed-gesture-addsub", "label": "手勢（先加再減）", "group": "手勢" },
       { "key": "addsub-mixed-gesture-subadd", "label": "手勢（先減再加）", "group": "手勢" },
       { "key": "addsub-mixed-gesture-blank", "label": "手勢（空白練習）", "group": "手勢" },
-      { "key": "addsub-mixed-coupon-toy", "label": "折價券（玩具）", "group": "折價券" },
+      { "key": "addsub-mixed-coupon-toy", "label": "折價券（物品）", "group": "折價券" },
       { "key": "addsub-mixed-coupon-food", "label": "折價券（食物）", "group": "折價券" }
     ]
   },
