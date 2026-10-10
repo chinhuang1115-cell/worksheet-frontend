@@ -769,7 +769,7 @@
             </div>
             <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,600px">
               <sc-if value="{{ detailItem.showPreviewSelectors }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border-subtle);">
+                <div style="display:grid;grid-template-columns:{{ detailItem.previewColsTemplate }};border-bottom:1px solid var(--border-subtle);">
                   <div style="border-right:1px solid var(--border-subtle);">
                     <div style="background:var(--color-brand-50);padding:10px 14px;">
                       <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-brand);">🎨 主題</span>
@@ -811,7 +811,7 @@
                       </sc-if>
                     </sc-if>
                     <sc-if value="{{ !detailItem.supportsTheme }}" hint-placeholder-val="{{ true }}">
-                      <div style="font-size:var(--text-xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型不使用圖片主題，內容固定。</div>
+                      <div style="font-size:var(--text-xs);color:var(--text-muted);line-height:var(--leading-tc);">{{ detailItem.noThemeMsg }}</div>
                     </sc-if>
                     </div>
                   </div>
@@ -821,13 +821,16 @@
                     </div>
                     <div style="padding:12px 14px;">
                     <sc-if value="{{ detailItem.hasHintGrid }}" hint-placeholder-val="{{ false }}">
-                      <div style="display:grid;grid-template-columns:repeat({{ detailItem.hintGridCols }},minmax(0,1fr));gap:8px;align-items:start;">
+                      <div style="display:grid;grid-template-columns:{{ detailItem.hintGridTemplate }};gap:8px;align-items:start;">
                         <sc-for list="{{ detailItem.hintGridHeaders }}" as="hh" hint-placeholder-count="3">
                           <div style="text-align:center;font-size:var(--text-xs);font-weight:700;color:var(--text-muted);padding-bottom:2px;">{{ hh.text }}</div>
                         </sc-for>
                         <sc-for list="{{ detailItem.hintGridRows }}" as="hr" hint-placeholder-count="2">
                           <sc-for list="{{ hr.cells }}" as="hc" hint-placeholder-count="3">
-                            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+                            <div style="{{ hc.cellStyle }}">
+                              <sc-if value="{{ hc.rowLabel }}" hint-placeholder-val="{{ false }}">
+                                <div style="font-size:var(--text-sm);font-weight:700;color:var(--text-secondary);">{{ hc.rowLabel }}</div>
+                              </sc-if>
                               <sc-for list="{{ hc.pills }}" as="hp" hint-placeholder-count="1">
                                 <div style="{{ hp.pillStyle }}" onClick="{{ hp.onClick }}">{{ hp.label }}</div>
                               </sc-for>
@@ -2558,6 +2561,7 @@ function adaptRegistry(reg) {
       arrange:     v.arrange || null,
       base:        v.base || null,
       group:       v.group || null,
+      stage:       v.stage || null,
       pill:        v.pill || null,
       pricingTier: _backendTierLc(v.key) || 'free',
       lessons:     _backendLessons(v.key) ?? 1,
@@ -2581,6 +2585,42 @@ ITEMS.forEach(it => { if (it.variants.length > 1) it.variants.forEach(v => { if 
 // 改成「固定排列／半自由排列／完全自由排列」三欄，列＝base 版型（L1、L2…）。
 function buildHintGrid(variants, activeKey, onPick) {
   const pillStyle = (active) => `padding:6px 12px;border-radius:16px;font-size:var(--text-sm);font-weight:600;cursor:pointer;text-align:center;line-height:1.35;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`;
+  // 單元合併（2026-10-10，使用者選定模擬 A）：版型帶 `stage`（概念導入／計算練習／應用解題）時，
+  // 縱軸＝學習階段（左側一欄寫階段名稱），橫軸＝`group`（例 N302A 單退位｜雙退位；沒有 group 就只有一欄、按鈕橫排）。
+  // 只列出該題型實際有的階段；列與列之間以虛線分隔。主題｜版型預覽兩欄改 1:2（wide），版型表格才放得下。
+  if ((variants || []).some(v => v.stage)) {
+    const STAGE_ORDER = ['概念導入', '計算練習', '應用解題'];
+    const stages = [];
+    variants.forEach(v => { const s = v.stage || '其他'; if (!stages.includes(s)) stages.push(s); });
+    stages.sort((a, b) => (STAGE_ORDER.indexOf(a) + 1 || 99) - (STAGE_ORDER.indexOf(b) + 1 || 99));
+    const groups = [];
+    variants.forEach(v => { if (v.group && !groups.includes(v.group)) groups.push(v.group); });
+    const cols = groups.length ? groups : [null];
+    const single = cols.length === 1;
+    const sep = (i) => (i ? 'border-top:1px dashed var(--border-subtle);padding-top:10px;' : '');
+    const rows = stages.map((st, i) => ({
+      cells: [
+        { rowLabel: st, pills: [], isEmpty: false,
+          cellStyle: `display:flex;align-items:center;justify-content:flex-end;padding-right:6px;align-self:stretch;${sep(i)}` },
+        ...cols.map(g => {
+          const list = variants.filter(v => (v.stage || '其他') === st && (g === null || v.group === g));
+          return {
+            rowLabel: '',
+            isEmpty: list.length === 0,
+            cellStyle: (single
+              ? 'display:flex;flex-wrap:wrap;align-items:center;gap:6px;align-self:stretch;'
+              : 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;align-self:stretch;') + sep(i),
+            pills: list.map(v => ({
+              label: v.pill || v.label,
+              pillStyle: pillStyle(activeKey === v.key) + 'white-space:nowrap;',
+              onClick: () => onPick(v.key),
+            })),
+          };
+        }),
+      ],
+    }));
+    return { headers: single ? [] : ['', ...groups], rows, colsTemplate: `84px repeat(${cols.length},minmax(0,1fr))`, wide: true };
+  }
   // 依類別分欄（2026-10-10，N206：劃記／手勢／折價券）：版型帶 `group`，每個類別一欄、pill 只寫括號內的名稱
   if ((variants || []).some(v => v.group)) {
     const names = [];
@@ -2906,6 +2946,8 @@ const PRICE_FIELD_BY_TYPE = {
   // tuiwei4sub 自 2026-09-03 起改由 library.json 的 price_min–price_max 出價
   // （見 backend/gen_tuiwei4sub.py 的 _price_candidates），所以改回顯示價格區間。
   'sub2noreg-app': 'none', 'sub2noreg-app-pman': 'none', 'liangbushu': 'none', 'tuiwei4sub': 'range',
+  // 2026-10-10 撲滿版（N202E）併入 N202A 卡片：價格模式依卡片 id 判斷，維持撲滿版原本不顯示圖庫價格
+  'sub2noreg': 'none',
 };
 // 預覽翻頁器與「版型預覽」pill 是兩套各自獨立的切換方式，翻頁一律清除 pill 選取的
 // previewOverride、跳回購買序列（見 homeSetPreviewPos）。翻頁器現在是**單一連續頁次**：
@@ -5054,6 +5096,15 @@ class Component extends DCLogic {
         supportsTheme,
         variantListHeaderLabel: variantRadio ? '版型（單選）' : '版型（可複選）',
         variantRadio,
+        // 只有部分版型吃主題的題型（例：N302A 只有應用解題）：目前版型不用主題時，告訴使用者哪些版型可以選主題
+        noThemeMsg: (() => {
+          const vts = it.variantThemeSet;
+          if (!vts) return '此題型不使用圖片主題，內容固定。';
+          const themed = it.variants.filter(v => vts[v.key]);
+          const names = [];
+          themed.forEach(v => { const n = v.stage || v.label; if (!names.includes(n)) names.push(n); });
+          return names.length ? `此版型內容固定，不使用圖片主題；選「${names.join('、')}」的版型才能挑主題。` : '此題型不使用圖片主題，內容固定。';
+        })(),
         themeHint: !isCustom
           ? '點選主題可預覽套用效果；系統預設出貨仍固定隨機主題。'
           : (themeQtyMismatchMsg || (hasCustomSelection && !customConfirmed ? '選好主題並在下方「自由選配」卡片分配張數後，點擊「確認套用」。' : '')),
@@ -5102,7 +5153,18 @@ class Component extends DCLogic {
         ...(() => {
           const grid = buildHintGrid(it.variants, activeKey, (key) => this.homePreviewVariant(it.id, key));
           const rows = grid && grid.rows;
-          return { hasHintGrid: !!grid, hintGridRows: rows || [], hintGridCols: grid ? grid.rows[0].cells.length : 3, hintGridHeaders: (grid ? grid.headers : []).map(h => ({ text: h })), showPlainVariantPills: hasMultipleVariants && !rows };
+          const DEFAULT_CELL = 'display:flex;flex-direction:column;align-items:center;gap:6px;';
+          const nCols = grid ? grid.rows[0].cells.length : 3;
+          return {
+            hasHintGrid: !!grid,
+            hintGridRows: (rows || []).map(r => ({ cells: r.cells.map(c => ({ ...c, rowLabel: c.rowLabel || '', cellStyle: c.cellStyle || DEFAULT_CELL })) })),
+            hintGridCols: nCols,
+            hintGridTemplate: (grid && grid.colsTemplate) || `repeat(${nCols},minmax(0,1fr))`,
+            // 依學習階段分列的單元卡片：主題｜版型預覽 1:2（使用者 2026-10-10 指示調整欄寬比例）
+            previewColsTemplate: grid && grid.wide ? 'minmax(0,1fr) minmax(0,2fr)' : '1fr 1fr',
+            hintGridHeaders: (grid ? grid.headers : []).map(h => ({ text: h })),
+            showPlainVariantPills: hasMultipleVariants && !rows,
+          };
         })(),
         themes: allowedThemesOf(it, activeKey).map(th => {
           const active = theme.key === th.key;

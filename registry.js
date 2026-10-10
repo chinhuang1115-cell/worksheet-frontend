@@ -972,8 +972,8 @@ window.WORKSHEET_REGISTRY = [
     "ops": [
       "sub"
     ],
-    "keywords": [],
-    "desc": "三位數退位減法計算練習，分單退位、雙退位兩類：概念導入（畫錢幣，單退位分百位退位、十位退位兩種）、直式計算（單、雙退位皆有，直式計算格，另有逐題淡化的「淡化輔助」版本；單退位的十位退位、百位退位隨機出現）",
+    "keywords": ["應用題", "購物"],
+    "desc": "三位數退位減法單元，依學習階段分三類、再分單退位與雙退位：①概念導入（畫錢幣，單退位分百位退位、十位退位兩種）、②計算練習（直式計算格，另有逐題淡化的「淡化輔助」版本；單退位的十位退位、百位退位隨機出現）、③應用解題（購物情境，每題附商品圖與直式計算格，可選主題，另有淡化輔助版本）",
     "sortKey": [
       2,
       3,
@@ -982,7 +982,7 @@ window.WORKSHEET_REGISTRY = [
     "home": {
       "icon": "🪙",
       "label": "三位數退位減法",
-      "sub": "概念導入 / 直式計算"
+      "sub": "概念導入 / 計算練習 / 應用解題"
     },
     "diffInfo": null,
     "sample": [
@@ -990,6 +990,8 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/sub3borrow_sample.pdf", "name": "退位減法_三位數_單退位概念導入（十位退位）_範例.pdf", "label": "單退位概念導入（十位退位）", "key": "sub3borrow" },
       { "pdf": "assets/tuiwei3sub_tally1_sample.pdf", "name": "退位減法_三位數_單退位直式計算_範例.pdf", "label": "單退位直式計算", "key": "tuiwei3sub-tally1" },
       { "pdf": "assets/tuiwei3sub_tally1-graded_sample.pdf", "name": "退位減法_三位數_單退位直式計算_淡化輔助_範例.pdf", "label": "單退位直式計算（淡化輔助）", "key": "tuiwei3sub-tally1-graded" },
+      { "pdf": "assets/tuiwei3sub-yw_sample.pdf", "name": "退位減法_三位數_應用題購物篇_範例.pdf", "label": "單退位應用解題（購物篇）", "key": "tuiwei3sub-yw" },
+      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_淡化輔助_範例.pdf", "label": "單退位應用解題（購物篇・淡化輔助）", "key": "tuiwei3sub-yw-graded" },
       { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位概念導入_範例.pdf", "label": "雙退位概念導入", "key": "tuiwei3sub-dcoin" },
       { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位直式計算_範例.pdf", "label": "雙退位直式計算", "key": "tuiwei3sub-tally" },
       { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位直式計算_淡化輔助_範例.pdf", "label": "雙退位直式計算（淡化輔助）", "key": "tuiwei3sub-tally-graded" }
@@ -997,55 +999,27 @@ window.WORKSHEET_REGISTRY = [
     "layout": {
       "panel": "tuiwei3subPanel",
       "themeSet": null,
-      "showTheme": false,
+      "showTheme": true,
+      "variantThemeSet": {
+        "tuiwei3sub-yw": "d3",
+        "tuiwei3sub-yw-graded": "d3"
+      },
       "prices": false,
       "interactive": false
     },
     "variants": [
-      {
-        "key": "tuiwei3sub-coin",
-        "label": "單退位概念導入（百位退位）",
-        "group": "單退位",
-        "pill": "概念導入（百位退位）"
-      },
-      {
-        "key": "sub3borrow",
-        "label": "單退位概念導入（十位退位）",
-        "group": "單退位",
-        "pill": "概念導入（十位退位）"
-      },
-      {
-        "key": "tuiwei3sub-tally1",
-        "label": "單退位直式計算",
-        "group": "單退位",
-        "pill": "直式計算"
-      },
-      {
-        "key": "tuiwei3sub-tally1-graded",
-        "label": "單退位直式計算（淡化輔助）",
-        "group": "單退位",
-        "pill": "直式計算（淡化輔助）"
-      },
-      {
-        "key": "tuiwei3sub-dcoin",
-        "label": "雙退位概念導入",
-        "group": "雙退位",
-        "pill": "概念導入"
-      },
-      {
-        "key": "tuiwei3sub-tally",
-        "label": "雙退位直式計算",
-        "group": "雙退位",
-        "pill": "直式計算"
-      },
-      {
-        "key": "tuiwei3sub-tally-graded",
-        "label": "雙退位直式計算（淡化輔助）",
-        "group": "雙退位",
-        "pill": "直式計算（淡化輔助）"
-      }
+      { "key": "tuiwei3sub-coin",          "label": "單退位概念導入（百位退位）",       "group": "單退位", "stage": "概念導入", "pill": "百位退位" },
+      { "key": "sub3borrow",               "label": "單退位概念導入（十位退位）",       "group": "單退位", "stage": "概念導入", "pill": "十位退位" },
+      { "key": "tuiwei3sub-tally1",        "label": "單退位直式計算",                   "group": "單退位", "stage": "計算練習", "pill": "直式計算" },
+      { "key": "tuiwei3sub-tally1-graded", "label": "單退位直式計算（淡化輔助）",       "group": "單退位", "stage": "計算練習", "pill": "直式計算（淡化輔助）" },
+      { "key": "tuiwei3sub-yw",            "label": "單退位應用解題（購物篇）",         "group": "單退位", "stage": "應用解題", "pill": "購物篇" },
+      { "key": "tuiwei3sub-yw-graded",     "label": "單退位應用解題（購物篇・淡化輔助）", "group": "單退位", "stage": "應用解題", "pill": "購物篇（淡化輔助）" },
+      { "key": "tuiwei3sub-dcoin",         "label": "雙退位概念導入",                   "group": "雙退位", "stage": "概念導入", "pill": "畫錢幣" },
+      { "key": "tuiwei3sub-tally",         "label": "雙退位直式計算",                   "group": "雙退位", "stage": "計算練習", "pill": "直式計算" },
+      { "key": "tuiwei3sub-tally-graded",  "label": "雙退位直式計算（淡化輔助）",       "group": "雙退位", "stage": "計算練習", "pill": "直式計算（淡化輔助）" }
     ]
   },
+
   {
     "id": "sub1",
     "code": "N101A",
@@ -1109,49 +1083,7 @@ window.WORKSHEET_REGISTRY = [
       }
     ]
   },
-  {
-    "id": "tuiwei3sub-yw",
-    "code": "N302B",
-    "name": "退位減法（三位數）＿應用題＿購物篇",
-    "grade": 3,
-    "ops": [
-      "sub"
-    ],
-    "keywords": [],
-    "desc": "三位數退位減法情境題，購物情境，每題附商品圖片、右側附直式計算格，個位均為 0；可選三位數價位主題（或隨機）；另有提示逐題淡化的「淡化輔助」版本",
-    "sortKey": [
-      2,
-      3,
-      2
-    ],
-    "home": {
-      "icon": "🛍️",
-      "label": "三位數退位應用題",
-      "sub": "購物篇情境"
-    },
-    "diffInfo": {
-      "grade": "三年級",
-      "level": "基礎",
-      "levelColor": "#22c55e",
-      "code": "N302B",
-      "desc": "三位數退位減法情境題，購物情境，每題附商品圖片與直式計算格，個位均為 0，十位單退位；可選主題，並有逐題淡化提示的版本。"
-    },
-    "sample": [
-      { "pdf": "assets/tuiwei3sub-yw_sample.pdf", "name": "退位減法_三位數_應用題購物篇_範例.pdf", "label": "應用題（購物篇）", "key": "tuiwei3sub-yw" },
-      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_淡化輔助_範例.pdf", "label": "應用題（淡化輔助）", "key": "tuiwei3sub-yw-graded" }
-    ],
-    "layout": {
-      "panel": "tuiwei3subYwPanel",
-      "themeSet": "d3",
-      "showTheme": true,
-      "prices": false,
-      "interactive": false
-    },
-    "variants": [
-      { "key": "tuiwei3sub-yw", "label": "應用題（購物篇）" },
-      { "key": "tuiwei3sub-yw-graded", "label": "應用題（淡化輔助）" }
-    ]
-  },
+
   {
     "id": "huachu4add-en",
     "code": "N301D",
@@ -1733,7 +1665,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "decdiv",
     "code": "N601",
     "grade": "6",
-    "name": "計算練習＿小數的除法（直式）",
+    "name": "小數的除法",
     "ops": [
       "div"
     ],
@@ -1743,7 +1675,7 @@ window.WORKSHEET_REGISTRY = [
       "直式",
       "計算練習"
     ],
-    "desc": "小數除法直式計算練習，6 題固定涵蓋六種題型：整數÷一位小數、兩位小數÷一位小數、兩位小數÷整數、一位小數÷兩位小數、一位小數÷一位小數，每題附除號框與計算格，全部整除，數字每次隨機。",
+    "desc": "小數的除法單元，依學習階段分兩類：②計算練習（直式）6 題固定涵蓋六種題型：整數÷一位小數、兩位小數÷一位小數、兩位小數÷整數、一位小數÷兩位小數、一位小數÷一位小數，每題附除號框與計算格；③應用解題 6 題生活情境（幾倍、分裝、面積求邊長、單價），先列式再用計算格計算。全部整除，數字每次隨機。",
     "sortKey": [
       6,
       1,
@@ -1751,11 +1683,12 @@ window.WORKSHEET_REGISTRY = [
     ],
     "home": {
       "icon": "➗",
-      "sub": "小數 ÷ 小數",
-      "desc": "小數的除法直式計算練習，被除數與除數含小數，附除號框與計算空間，商皆可整除。",
+      "sub": "計算練習 / 應用解題",
+      "desc": "小數的除法：先練直式計算，再用到生活應用題，被除數與除數含小數，商皆可整除。",
       "features": [
         "整數、小數÷小數、小數÷整數",
         "6 題直式除法，全部整除",
+        "直式計算＋生活應用題，同一張卡片選版型",
         "每次產生新的數字"
       ]
     },
@@ -1764,12 +1697,16 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N601",
-      "desc": "小數的除法直式計算，被除數與除數含小數，商皆可整除（至多兩位小數）。"
+      "desc": "小數的除法直式計算與生活應用題，被除數與除數含小數，商皆可整除（至多兩位小數）。"
     },
-    "sample": {
-      "pdf": "assets/decdiv_sample.pdf",
-      "name": "計算練習_小數的除法_範例.pdf"
-    },
+    "sample": [
+      { "pdf": "assets/decdiv_sample.pdf", "name": "計算練習_小數的除法_範例.pdf", "label": "直式計算", "key": "decdiv" },
+      { "pdf": "assets/decdivapp_sample.pdf", "name": "計算練習_小數除法應用題_範例.pdf", "label": "應用題", "key": "decdivapp" }
+    ],
+    "variants": [
+      { "key": "decdiv",    "label": "直式計算", "stage": "計算練習", "pill": "直式計算" },
+      { "key": "decdivapp", "label": "應用題",   "stage": "應用解題", "pill": "生活應用題" }
+    ],
     "layout": {
       "panel": "pingfenPanel",
       "themeSet": null,
@@ -1778,71 +1715,17 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     }
   },
-  {
-    "id": "decdivapp",
-    "code": "N602",
-    "grade": "6",
-    "name": "計算練習＿小數除法應用題",
-    "ops": [
-      "div"
-    ],
-    "keywords": [
-      "小數",
-      "除法",
-      "應用題",
-      "直式",
-      "計算練習"
-    ],
-    "desc": "小數除法應用題 6 題（單價與剪段、面積求邊長、平分、分裝、幾倍、平分），題號對應六種數字題型（含兩位小數÷一位小數），句子精簡，先列式（長底線＝括號）再用計算格計算，全部整除，題目每次隨機。",
-    "sortKey": [
-      6,
-      1,
-      2
-    ],
-    "home": {
-      "icon": "🧃",
-      "sub": "小數除法應用題",
-      "desc": "用生活情境練習小數除法：幾倍、分裝成幾瓶、面積求邊長、每公斤幾元，句子簡短好讀。",
-      "features": [
-        "6 題生活應用題，句子精簡",
-        "先列式（長底線＝括號）、再用直式計算格計算",
-        "全部整除，每次產生新題"
-      ]
-    },
-    "diffInfo": {
-      "grade": "六年級",
-      "level": "進階",
-      "levelColor": "#f97316",
-      "code": "N602",
-      "desc": "把小數除法用在生活情境：幾倍、平均分裝、面積求邊長、單價，題目精簡，商皆可整除。"
-    },
-    "sample": {
-      "pdf": "assets/decdivapp_sample.pdf",
-      "name": "計算練習_小數除法應用題_範例.pdf"
-    },
-    "layout": {
-      "panel": "pingfenPanel",
-      "themeSet": null,
-      "showTheme": false,
-      "prices": false,
-      "interactive": false
-    }
-  },
+
   {
     "id": "sub2noreg",
     "code": "N202A",
-    "name": "兩位數不退位減法＿直式計算",
+    "name": "兩位數不退位減法",
     "grade": 2,
     "ops": [
       "sub"
     ],
-    "keywords": [
-      "兩位數",
-      "不退位",
-      "減法",
-      "直式"
-    ],
-    "desc": "兩位數不退位減法直式計算，3 題示範（固定）+ 9 題練習（隨機），每次數字隨機。另有自由列式兩種（練習題的計算格拿掉或調淡，3 題示範不變）。",
+    "keywords": ["直式計算", "應用題", "找零", "撲滿"],
+    "desc": "兩位數不退位減法單元，依學習階段分兩類：②計算練習（直式計算，3 題示範固定＋9 題隨機練習；另有自由列式三種，練習題的計算格拿掉、調淡或逐題淡化）、③應用解題（找幾個 10 元、找零版、撲滿版；撲滿版可選主題），每次數字隨機。",
     "sortKey": [
       2,
       2,
@@ -1851,131 +1734,47 @@ window.WORKSHEET_REGISTRY = [
     "home": {
       "icon": "➖",
       "label": "兩位數不退位減法",
-      "sub": "直式計算練習"
+      "sub": "計算練習 / 應用解題"
     },
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N202A",
-      "desc": "兩位數不退位減法，3 題示範（題目與錢幣圖固定）＋ 9 題隨機練習，每次數字不同。另有自由列式兩種（練習題的計算格拿掉或調淡，3 題示範不變）。"
+      "desc": "兩位數不退位減法，直式計算（3 題示範＋9 題隨機練習，另有自由列式）與找零、撲滿應用題，每次數字不同。"
     },
     "sample": [
-      {"pdf": "assets/sub2noreg_sample.pdf", "name": "兩位數不退位減法_直式計算_範本.pdf", "label": "完整提示", "key": "sub2noreg"},
-      {"pdf": "assets/sub2noreg_free_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_無提示.pdf", "label": "自由列式：無提示", "key": "sub2noreg-free"},
-      {"pdf": "assets/sub2noreg_faded_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_淡化提示.pdf", "label": "自由列式：淡化提示", "key": "sub2noreg-faded"},
-      {"pdf": "assets/sub2noreg_graded_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_漸退淡化.pdf", "label": "自由列式：漸退淡化", "key": "sub2noreg-graded"}
+      { "pdf": "assets/sub2noreg_sample.pdf", "name": "兩位數不退位減法_直式計算_範本.pdf", "label": "直式計算（完整提示）", "key": "sub2noreg" },
+      { "pdf": "assets/sub2noreg_free_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_無提示.pdf", "label": "直式計算（自由列式：無提示）", "key": "sub2noreg-free" },
+      { "pdf": "assets/sub2noreg_faded_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_淡化提示.pdf", "label": "直式計算（自由列式：淡化提示）", "key": "sub2noreg-faded" },
+      { "pdf": "assets/sub2noreg_graded_sample.pdf", "name": "兩位數不退位減法_直式計算_自由列式_漸退淡化.pdf", "label": "直式計算（自由列式：漸退淡化）", "key": "sub2noreg-graded" },
+      { "pdf": "assets/sub2noreg-app_a_sample.pdf", "name": "兩位數不退位減法應用題（找幾個10元）.pdf", "label": "應用題（找幾個10元）", "key": "sub2noreg-app-a" },
+      { "pdf": "assets/sub2noreg-app_b_sample.pdf", "name": "兩位數不退位減法應用題（找零版）.pdf", "label": "應用題（找零版）", "key": "sub2noreg-app-b" },
+      { "pdf": "assets/sub2noreg-app_pman_sample.pdf", "name": "兩位數不退位減法應用題（撲滿版）.pdf", "label": "應用題（撲滿版）", "key": "sub2noreg-app-pman" }
     ],
     "layout": {
       "panel": "sub2noregPanel",
       "themeSet": null,
-      "showTheme": false,
-      "prices": false,
-      "interactive": false
-    },
-    "variants": [
-      {"key": "sub2noreg", "label": "完整提示"},
-      {"key": "sub2noreg-free", "label": "自由列式：無提示"},
-      {"key": "sub2noreg-faded", "label": "自由列式：淡化提示"},
-      {"key": "sub2noreg-graded", "label": "自由列式：漸退淡化"}
-    ]
-  },
-  {
-    "id": "sub2noreg-app",
-    "code": "N202B",
-    "name": "兩位數不退位減法＿應用題",
-    "grade": 2,
-    "ops": [
-      "sub"
-    ],
-    "keywords": [
-      "兩位數",
-      "不退位",
-      "減法",
-      "應用題",
-      "撲滿",
-      "找錢"
-    ],
-    "desc": "兩位數不退位減法應用題，含找幾個 10 元版與找 10 元+1 元版，每次數字隨機。（撲滿版已獨立為 N202E）",
-    "sortKey": [
-      2,
-      2,
-      2
-    ],
-    "home": {
-      "icon": "💵",
-      "label": "兩位數不退位應用題",
-      "sub": "找零應用題"
-    },
-    "diffInfo": null,
-    "sample": [
-      {
-        "pdf": "assets/sub2noreg-app_a_sample.pdf",
-        "name": "兩位數不退位減法應用題（找幾個10元）.pdf",
-        "label": "找幾個10元",
-        "key": "sub2noreg-app-a"
-      },
-      {
-        "pdf": "assets/sub2noreg-app_b_sample.pdf",
-        "name": "兩位數不退位減法應用題（找零版）.pdf",
-        "label": "找零版",
-        "key": "sub2noreg-app-b"
-      }
-    ],
-    "layout": {
-      "panel": "sub2noregAppPanel",
-      "themeSet": null,
-      "showTheme": false,
-      "prices": false,
-      "interactive": false
-    },
-    "variants": [
-      { "key": "sub2noreg-app-a",    "label": "找幾個10元" },
-      { "key": "sub2noreg-app-b",    "label": "找零版" }
-    ]
-  },
-  {
-    "id": "sub2noreg-app-pman",
-    "code": "N202E",
-    "name": "兩位數不退位減法＿撲滿應用題",
-    "grade": 2,
-    "ops": [
-      "sub"
-    ],
-    "keywords": [
-      "兩位數",
-      "不退位",
-      "減法",
-      "應用題",
-      "撲滿",
-      "找錢",
-      "購物",
-      "主題"
-    ],
-    "desc": "兩位數不退位減法撲滿應用題，6 題各配一個撲滿與購物主題商品圖，每次數字與主題隨機。",
-    "sortKey": [
-      2,
-      2,
-      2
-    ],
-    "home": {
-      "icon": "🐷",
-      "label": "撲滿應用題",
-      "sub": "購物主題找零"
-    },
-    "diffInfo": null,
-    "sample": {
-      "pdf": "assets/sub2noreg-app_pman_sample.pdf",
-      "name": "兩位數不退位減法應用題（撲滿版）.pdf"
-    },
-    "layout": {
-      "panel": null,
-      "themeSet": "d2",
       "showTheme": true,
+      "variantThemeSet": {
+        "sub2noreg-app-pman": "d2"
+      },
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "sub2noreg",          "label": "直式計算（完整提示）",           "stage": "計算練習", "pill": "完整提示" },
+      { "key": "sub2noreg-free",     "label": "直式計算（自由列式：無提示）",   "stage": "計算練習", "pill": "自由列式：無提示" },
+      { "key": "sub2noreg-faded",    "label": "直式計算（自由列式：淡化提示）", "stage": "計算練習", "pill": "自由列式：淡化提示" },
+      { "key": "sub2noreg-graded",   "label": "直式計算（自由列式：漸退淡化）", "stage": "計算練習", "pill": "自由列式：漸退淡化" },
+      { "key": "sub2noreg-app-a",    "label": "應用題（找幾個10元）",           "stage": "應用解題", "pill": "找幾個10元" },
+      { "key": "sub2noreg-app-b",    "label": "應用題（找零版）",               "stage": "應用解題", "pill": "找零版" },
+      { "key": "sub2noreg-app-pman", "label": "應用題（撲滿版）",               "stage": "應用解題", "pill": "撲滿版" }
+    ]
   },
+
+
+
   {
     "id": "sub2borrow",
     "code": "N202C",
