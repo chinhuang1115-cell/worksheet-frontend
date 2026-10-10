@@ -1115,7 +1115,7 @@ window.WORKSHEET_REGISTRY = [
       "sub"
     ],
     "keywords": [],
-    "desc": "三位數退位減法情境題，購物情境，每題附商品圖片，個位均為 0，自動選三位數價位主題",
+    "desc": "三位數退位減法情境題，購物情境，每題附商品圖片、右側附直式計算格，個位均為 0；可選三位數價位主題（或隨機）；另有提示逐題淡化的「淡化輔助」版本",
     "sortKey": [
       2,
       3,
@@ -1131,19 +1131,23 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N302B",
-      "desc": "三位數退位減法情境題，購物情境，每題附商品圖片，個位均為 0，十位單退位。"
+      "desc": "三位數退位減法情境題，購物情境，每題附商品圖片與直式計算格，個位均為 0，十位單退位；可選主題，並有逐題淡化提示的版本。"
     },
-    "sample": {
-      "pdf": "assets/tuiwei3sub-yw_sample.pdf",
-      "name": "退位減法（三位數）＿應用題＿購物篇_範本.pdf"
-    },
+    "sample": [
+      { "pdf": "assets/tuiwei3sub-yw_sample.pdf", "name": "退位減法_三位數_應用題購物篇_範例.pdf", "label": "應用題（購物篇）", "key": "tuiwei3sub-yw" },
+      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_淡化輔助_範例.pdf", "label": "應用題（淡化輔助）", "key": "tuiwei3sub-yw-graded" }
+    ],
     "layout": {
       "panel": "tuiwei3subYwPanel",
       "themeSet": "d3",
       "showTheme": true,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      { "key": "tuiwei3sub-yw", "label": "應用題（購物篇）" },
+      { "key": "tuiwei3sub-yw-graded", "label": "應用題（淡化輔助）" }
+    ]
   },
   {
     "id": "huachu4add-en",
