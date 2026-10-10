@@ -685,7 +685,7 @@
                               <div style="{{ v.subStyle }}">{{ v.text }}</div>
                             </sc-if>
                             <sc-if value="{{ v.isV }}" hint-placeholder-val="{{ true }}">
-                              <div style="display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: var(--radius-md); width: 202px;">
+                              <div style="display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: var(--radius-md); width: 202px; cursor: pointer; background: {{ v.rowBg }};" onClick="{{ v.onPreview }}">
                                 <div style="width:18px;height:18px;flex-shrink:0;">
                                   <sc-if value="{{ detailItem.variantRadio }}" hint-placeholder-val="{{ false }}">
                                     <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid {{ v.radioBorder }};background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;" onClick="{{ v.onToggleCheck }}"><div style="width:9px;height:9px;border-radius:50%;background:{{ v.radioDot }};"></div></div>
@@ -5042,10 +5042,12 @@ class Component extends DCLogic {
             const full = isAid ? '輔助淡化' : (x.label || vm.label);
             // 「自由列式：漸退淡化」這類長名稱：冒號前縮成上方灰色小字，下方只留區分用的部分，免得窄欄裡被截掉或擠成一字一行
             const m = /^(.{2,8}?)[：:](.+)$/.exec(full);
-            rows.push({ ...vm, isTitle: false, isSub: false, isV: true, label: m ? m[2] : full, labelTop: m ? m[1] : '' });
+            rows.push({ ...vm, isTitle: false, isSub: false, isV: true, label: m ? m[2] : full, labelTop: m ? m[1] : '',
+              rowBg: activeKey === vm.key ? 'var(--color-neutral-200)' : 'transparent',
+              onPreview: () => this.homePreviewVariant(it.id, vm.key) });
           });
         });
-        variants.forEach(vm => { if (!used.has(vm.key)) rows.push({ ...vm, isTitle: false, isSub: false, isV: true, labelTop: '' }); });
+        variants.forEach(vm => { if (!used.has(vm.key)) rows.push({ ...vm, isTitle: false, isSub: false, isV: true, labelTop: '', rowBg: activeKey === vm.key ? 'var(--color-neutral-200)' : 'transparent', onPreview: () => this.homePreviewVariant(it.id, vm.key) }); });
         return rows;
       })();
 
