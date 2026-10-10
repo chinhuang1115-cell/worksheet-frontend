@@ -3139,6 +3139,8 @@ window.WORKSHEET_REGISTRY = [
         "addsub-mixed-coupon-toy": "d3",
         "addsub-mixed-coupon-food": "d2"
       },
+      "variantThemeExtra": { "addsub-mixed-coupon-food": ["bento"] },
+      "variantThemeExclude": { "addsub-mixed-coupon-toy": ["bento"] },
       "prices": null,
       "interactive": false
     },

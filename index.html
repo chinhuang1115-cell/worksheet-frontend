@@ -2545,6 +2545,8 @@ function adaptRegistry(reg) {
     themeSet: (t.layout && t.layout.themeSet) || null,
     variantThemeSet: (t.layout && t.layout.variantThemeSet) || null,
     excludeThemes: (t.layout && t.layout.excludeThemes) || null,
+    variantThemeExtra: (t.layout && t.layout.variantThemeExtra) || null,
+    variantThemeExclude: (t.layout && t.layout.variantThemeExclude) || null,
     // 頂層 lessons 給中性預設值 1（節數管理頁等直接讀 it.lessons 的地方用），
     // 正式建議節數由「建議節數管理」頁另行設定（task 4 起 POST /admin/lessons，後端為唯一權威）。
     lessons: 1,
@@ -2950,7 +2952,12 @@ function allowedThemesOf(it, variantKey) {
     (THEME_SET_KEYS[tier] || []).forEach(k => { if (!keys.includes(k)) keys.push(k); });
   });
   const excluded = (it.excludeThemes && it.excludeThemes.length) ? it.excludeThemes : null;
-  const filteredKeys = excluded ? keys.filter(k => !excluded.includes(k)) : keys;
+  // 版型別例外（N206：便當店只給折價券食物版）：Extra 補進該版型層級以外的主題、Exclude 從該版型拿掉
+  if (variantKey) {
+    ((it.variantThemeExtra || {})[variantKey] || []).forEach(k => { if (!keys.includes(k)) keys.push(k); });
+  }
+  const vExcluded = variantKey ? ((it.variantThemeExclude || {})[variantKey] || []) : [];
+  const filteredKeys = (excluded ? keys.filter(k => !excluded.includes(k)) : keys).filter(k => !vExcluded.includes(k));
   const list = filteredKeys.map(k => HOME_THEMES.find(th => th.key === k)).filter(Boolean);
   const randomTheme = HOME_THEMES.find(th => th.key === DEFAULT_THEME);
   return randomTheme ? [...list, randomTheme] : list;
