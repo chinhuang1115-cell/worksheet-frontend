@@ -3247,18 +3247,21 @@ function presetQtyOf(item) {
   return q;
 }
 function defaultCustomQtyOf(item) {
-  // 有圖片主題的多版型題型，自由選配的版型是單選：預設只勾選第一個版型。
-  // 不使用圖片主題的多版型題型（如十以內減法 sub1）維持複選：每個版型都預設勾選。
+  // 自由選配的各版型一律預設未勾選（2026-10-10 使用者指示），由使用者自行勾選。
   const q = {};
-  if (item.supportsTheme === false) {
-    item.variants.forEach(v => { q[v.key] = 4; });
-  } else if (itemAllThemed(item)) {
-    item.variants.forEach((v, i) => { q[v.key] = i === 0 ? 4 : 0; });
-  } else {
-    // 部分版型吃主題（N206）：不吃主題的版型預設勾選、吃主題的版型預設不選（它們需單選）。
-    item.variants.forEach(v => { q[v.key] = variantThemed(item, v.key) ? 0 : 4; });
-  }
+  item.variants.forEach(v => { q[v.key] = 0; });
   return q;
+}
+// 自由選配：版型勾選／張數改變後，若主題只分配給一個（或尚未分配），就讓它自動等於新的總張數，
+// 免得使用者勾了版型還要另外去調主題張數；已拆成多個主題的不動（由使用者自己調整、加總不符會提示）。
+function syncSingleThemeQty(item, home, itemId, nextVq) {
+  if (item.supportsTheme === false) return home.itemThemeQty;
+  const cur = home.itemThemeQty[itemId] || {};
+  const used = Object.keys(cur).filter(k => (cur[k] || 0) > 0);
+  if (used.length > 1) return home.itemThemeQty;
+  const total = buildFlatPages(item, nextVq, home.itemVariantTier, home.itemVariantLessons).length;
+  const key = used[0] || (themeOf(item, home.itemTheme) || {}).key || DEFAULT_THEME;
+  return { ...home.itemThemeQty, [itemId]: { ...cur, [key]: total } };
 }
 function defaultQuickAddQty(item) {
   const q = {};
@@ -4270,6 +4273,7 @@ class Component extends DCLogic {
       const flat = buildFlatPages(item, nextVq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const previewIndex = Math.min(s.home.previewIndex, Math.max(0, flat.length - 1));
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
+        itemThemeQty: syncSingleThemeQty(item, s.home, itemId, nextVq),
         previewPdfPage: 0,
         itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
     }, () => this.homeSyncThemePreview(itemId));
@@ -4295,6 +4299,7 @@ class Component extends DCLogic {
       const flat = buildFlatPages(item, nextVq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const previewIndex = Math.min(s.home.previewIndex, Math.max(0, flat.length - 1));
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
+        itemThemeQty: syncSingleThemeQty(item, s.home, itemId, nextVq),
         previewPdfPage: 0,
         itemThemeConfirmed: { ...s.home.itemThemeConfirmed, [itemId]: false } } };
     }, () => this.homeSyncThemePreview(itemId));
