@@ -843,12 +843,25 @@
                         </sc-if>
                         <sc-if value="{{ ng.open }}" hint-placeholder-val="{{ true }}">
                           <sc-for list="{{ ng.items }}" as="ni" hint-placeholder-count="3">
-                            <div style="{{ ni.rowStyle }}" onClick="{{ ni.onClick }}">
-                              <sc-if value="{{ ni.prefix }}" hint-placeholder-val="{{ false }}">
-                                <span style="flex:none;font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);">{{ ni.prefix }}</span>
-                              </sc-if>
-                              <span>{{ ni.label }}</span>
-                            </div>
+                            <sc-if value="{{ !ni.pair }}" hint-placeholder-val="{{ true }}">
+                              <div style="{{ ni.rowStyle }}" onClick="{{ ni.onClick }}">
+                                <sc-if value="{{ ni.prefix }}" hint-placeholder-val="{{ false }}">
+                                  <span style="flex:none;font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);">{{ ni.prefix }}</span>
+                                </sc-if>
+                                <span>{{ ni.label }}</span>
+                              </div>
+                            </sc-if>
+                            <sc-if value="{{ ni.pair }}" hint-placeholder-val="{{ false }}">
+                              <div style="{{ ni.rowStyle }}align-items:center;cursor:default;">
+                                <sc-if value="{{ ni.prefix }}" hint-placeholder-val="{{ false }}">
+                                  <span style="flex:none;font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);">{{ ni.prefix }}</span>
+                                </sc-if>
+                                <div style="flex:1;min-width:0;display:flex;gap:6px;">
+                                  <span style="{{ ni.leftStyle }}" onClick="{{ ni.onLeft }}">{{ ni.leftLabel }}</span>
+                                  <span style="{{ ni.rightStyle }}" onClick="{{ ni.onRight }}">{{ ni.rightLabel }}</span>
+                                </div>
+                              </div>
+                            </sc-if>
                           </sc-for>
                         </sc-if>
                       </sc-for>
@@ -2706,7 +2719,28 @@ function buildHintGrid(variants, activeKey, onPick) {
 // 攤平成「可收合的群組＋一行一個版型」。依學習階段（stage）分列的題型：群組＝階段（①②③），行首小字＝group（單／雙退位）；
 // 其他有分欄的題型：群組＝欄標題（N206 劃記／手勢／折價券、提示程度、排列方式）；沒有分欄的題型：單一無標題群組。
 const STAGE_MARKS = { '概念導入': '①', '計算練習': '②', '應用解題': '③' };
+// 「X」與「X（淡化輔助）」同一行左右並列（2026-10-10 使用者指示）：右欄縮寫成「輔助淡化」，各自可點、各自標示目前版型。
+const FADED_AID_RE = /[（(](淡化輔助|輔助淡化)[）)]$/;
+function pairFadedAid(items) {
+  const out = [];
+  const used = new Set();
+  items.forEach((x, i) => {
+    if (used.has(i)) return;
+    const j = items.findIndex((y, k) => k !== i && !used.has(k) && y.prefix === x.prefix
+      && FADED_AID_RE.test(y.label) && y.label.replace(FADED_AID_RE, '').trim() === x.label);
+    if (j < 0 || FADED_AID_RE.test(x.label)) { out.push(x); return; }
+    used.add(j);
+    const y = items[j];
+    out.push({ prefix: x.prefix, pair: true, label: x.label, active: x.active || y.active,
+      left: { label: x.label, active: x.active, onClick: x.onClick },
+      right: { label: '輔助淡化', active: y.active, onClick: y.onClick } });
+  });
+  return out;
+}
 function buildVariantNav(variants, activeKey, onPick) {
+  return buildVariantNavGroups(variants, activeKey, onPick).map(g => ({ ...g, items: pairFadedAid(g.items) }));
+}
+function buildVariantNavGroups(variants, activeKey, onPick) {
   const item = (p, prefix) => ({ prefix: prefix || '', label: p.label, active: !!p.active, onClick: p.onClick });
   const grid = buildHintGrid(variants, activeKey, onPick);
   if (!grid) {
@@ -2731,6 +2765,10 @@ function buildVariantNav(variants, activeKey, onPick) {
   // 欄標題都空白（按鈕本身就是提示程度）→ 合成一組
   if (nonEmpty.every(g => !g.title)) return [{ title: '', items: nonEmpty.flatMap(g => g.items) }];
   return nonEmpty;
+}
+// 並列兩格各自的樣式：目前版型的那一格才變色加粗（整行左側橘線沿用 rowStyle，兩格任一為目前版型就顯示）
+function navPairCellStyle(active) {
+  return `flex:1 1 0;min-width:0;padding:2px 6px;border-radius:6px;text-align:center;white-space:nowrap;cursor:pointer;${active ? 'background:#fff;border:1.5px solid var(--color-accent-500);color:var(--color-accent-700);font-weight:700;' : 'background:#fff;border:1px solid var(--border-subtle);color:var(--text-secondary);font-weight:400;'}`;
 }
 const LS_DETAIL_SIDE_RAIL = 'ys_detail_side_rail';   // 詳情頁右側欄是否收成圖示列（'1'），全域、持久化
 function readDetailSideRail() {
@@ -5161,6 +5199,14 @@ class Component extends DCLogic {
             onToggle: () => this.setState(s => ({ home: { ...s.home, navClosed: { ...s.home.navClosed, [navKey]: !s.home.navClosed[navKey] } } })),
             items: g.items.map(x => ({
               ...x,
+              pair: !!x.pair,
+              leftLabel: x.pair ? x.left.label : '',
+              rightLabel: x.pair ? x.right.label : '',
+              onLeft: x.pair ? x.left.onClick : null,
+              onRight: x.pair ? x.right.onClick : null,
+              leftStyle: x.pair ? navPairCellStyle(x.left.active) : '',
+              rightStyle: x.pair ? navPairCellStyle(x.right.active) : '',
+              onClick: x.pair ? null : x.onClick,
               rowStyle: `display:flex;align-items:baseline;gap:8px;padding:7px 14px 7px ${g.title ? 26 : 14}px;font-size:var(--text-sm);cursor:pointer;line-height:1.4;border-left:3px solid ${x.active ? 'var(--color-accent-500)' : 'transparent'};${x.active ? 'background:var(--color-brand-50);color:var(--color-accent-700);font-weight:700;' : 'color:var(--text-secondary);'}`,
             })),
           };
