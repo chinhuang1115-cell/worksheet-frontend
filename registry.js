@@ -986,7 +986,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "diffInfo": null,
     "sample": [
-      { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位概念導入_範例.pdf", "label": "單退位概念導入", "key": "tuiwei3sub-coin" },
+      { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位概念導入v1_範例.pdf", "label": "單退位概念導入 v1", "key": "tuiwei3sub-coin" },
       { "pdf": "assets/sub3borrow_sample.pdf", "name": "退位減法_三位數_單退位概念導入v2_範例.pdf", "label": "單退位概念導入 v2", "key": "sub3borrow" },
       { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位概念導入_範例.pdf", "label": "雙退位概念導入", "key": "tuiwei3sub-dcoin" },
       { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位純計算_範例.pdf", "label": "雙退位純計算", "key": "tuiwei3sub-tally" },
@@ -1002,9 +1002,9 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       {
         "key": "tuiwei3sub-coin",
-        "label": "單退位概念導入",
+        "label": "單退位概念導入 v1",
         "group": "單退位",
-        "pill": "概念導入"
+        "pill": "概念導入 v1"
       },
       {
         "key": "sub3borrow",
