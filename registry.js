@@ -1002,23 +1002,33 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       {
         "key": "tuiwei3sub-coin",
-        "label": "單退位錢幣"
+        "label": "單退位錢幣",
+        "group": "單退位",
+        "pill": "錢幣"
       },
       {
         "key": "tuiwei3sub-dcoin",
-        "label": "雙退位錢幣"
+        "label": "雙退位錢幣",
+        "group": "雙退位",
+        "pill": "錢幣"
       },
       {
         "key": "tuiwei3sub-tally",
-        "label": "雙退位畫記"
+        "label": "雙退位畫記",
+        "group": "雙退位",
+        "pill": "畫記"
       },
       {
         "key": "tuiwei3sub-yw",
-        "label": "應用題（購物篇）"
+        "label": "應用題（購物篇）",
+        "group": "單退位",
+        "pill": "應用題（購物篇）"
       },
       {
         "key": "tuiwei3sub-yw-graded",
-        "label": "應用題（逐題淡化）"
+        "label": "應用題（逐題淡化）",
+        "group": "單退位",
+        "pill": "應用題（逐題淡化）"
       }
     ]
   },

@@ -2558,6 +2558,7 @@ function adaptRegistry(reg) {
       arrange:     v.arrange || null,
       base:        v.base || null,
       group:       v.group || null,
+      pill:        v.pill || null,
       pricingTier: _backendTierLc(v.key) || 'free',
       lessons:     _backendLessons(v.key) ?? 1,
     })),
@@ -2589,7 +2590,7 @@ function buildHintGrid(variants, activeKey, onPick) {
       return {
         isEmpty: list.length === 0,
         pills: list.map(v => ({
-          label: ((v.label || '').replace(/^[^（(]*[（(]([^）)]*)[）)].*$/, '$1')) || v.label,
+          label: v.pill || ((v.label || '').replace(/^[^（(]*[（(]([^）)]*)[）)].*$/, '$1')) || v.label,
           pillStyle: pillStyle(activeKey === v.key),
           onClick: () => onPick(v.key),
         })),
