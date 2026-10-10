@@ -3143,13 +3143,13 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     },
     "variants": [
-      { "key": "addsub-mixed-tally-nocarry", "label": "劃記（不進位）" },
-      { "key": "addsub-mixed-tally-carry", "label": "劃記（進位）" },
-      { "key": "addsub-mixed-gesture-addsub", "label": "手勢（先加再減）" },
-      { "key": "addsub-mixed-gesture-subadd", "label": "手勢（先減再加）" },
-      { "key": "addsub-mixed-gesture-blank", "label": "手勢（空白練習）" },
-      { "key": "addsub-mixed-coupon-toy", "label": "折價券（玩具）" },
-      { "key": "addsub-mixed-coupon-food", "label": "折價券（食物）" }
+      { "key": "addsub-mixed-tally-nocarry", "label": "劃記（不進位）", "group": "劃記" },
+      { "key": "addsub-mixed-tally-carry", "label": "劃記（進位）", "group": "劃記" },
+      { "key": "addsub-mixed-gesture-addsub", "label": "手勢（先加再減）", "group": "手勢" },
+      { "key": "addsub-mixed-gesture-subadd", "label": "手勢（先減再加）", "group": "手勢" },
+      { "key": "addsub-mixed-gesture-blank", "label": "手勢（空白練習）", "group": "手勢" },
+      { "key": "addsub-mixed-coupon-toy", "label": "折價券（玩具）", "group": "折價券" },
+      { "key": "addsub-mixed-coupon-food", "label": "折價券（食物）", "group": "折價券" }
     ]
   },
   {

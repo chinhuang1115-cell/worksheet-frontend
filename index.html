@@ -2555,6 +2555,7 @@ function adaptRegistry(reg) {
       label:       v.label,
       arrange:     v.arrange || null,
       base:        v.base || null,
+      group:       v.group || null,
       pricingTier: _backendTierLc(v.key) || 'free',
       lessons:     _backendLessons(v.key) ?? 1,
     })),
@@ -2577,6 +2578,23 @@ ITEMS.forEach(it => { if (it.variants.length > 1) it.variants.forEach(v => { if 
 // 改成「固定排列／半自由排列／完全自由排列」三欄，列＝base 版型（L1、L2…）。
 function buildHintGrid(variants, activeKey, onPick) {
   const pillStyle = (active) => `padding:6px 12px;border-radius:16px;font-size:var(--text-sm);font-weight:600;cursor:pointer;text-align:center;line-height:1.35;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`;
+  // 依類別分欄（2026-10-10，N206：劃記／手勢／折價券）：版型帶 `group`，每個類別一欄、pill 只寫括號內的名稱
+  if ((variants || []).some(v => v.group)) {
+    const names = [];
+    variants.forEach(v => { const g = v.group || '其他'; if (!names.includes(g)) names.push(g); });
+    const cells = names.map(g => {
+      const list = variants.filter(v => (v.group || '其他') === g);
+      return {
+        isEmpty: list.length === 0,
+        pills: list.map(v => ({
+          label: ((v.label || '').replace(/^[^（(]*[（(]([^）)]*)[）)].*$/, '$1')) || v.label,
+          pillStyle: pillStyle(activeKey === v.key),
+          onClick: () => onPick(v.key),
+        })),
+      };
+    });
+    return { headers: names, rows: [{ cells }] };
+  }
   if ((variants || []).some(v => v.arrange)) {
     const rowsByBase = new Map();
     const rowFor = (k) => { if (!rowsByBase.has(k)) rowsByBase.set(k, { cells: [[], [], []] }); return rowsByBase.get(k); };
