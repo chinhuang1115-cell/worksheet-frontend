@@ -688,7 +688,7 @@
                               <div style="display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: var(--radius-md); width: 202px;">
                                 <div style="width:18px;height:18px;flex-shrink:0;">
                                   <sc-if value="{{ detailItem.variantRadio }}" hint-placeholder-val="{{ false }}">
-                                    <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid {{ v.radioBorder }};background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" onClick="{{ v.onToggleCheck }}"><div style="width:9px;height:9px;border-radius:50%;background:{{ v.radioDot }};"></div></div>
+                                    <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid {{ v.radioBorder }};background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;" onClick="{{ v.onToggleCheck }}"><div style="width:9px;height:9px;border-radius:50%;background:{{ v.radioDot }};"></div></div>
                                   </sc-if>
                                   <sc-if value="{{ !detailItem.variantRadio }}" hint-placeholder-val="{{ true }}">
                                     <div style="width:18px;height:18px;border-radius:4px;border:1.5px solid {{ v.checkBorder }};background:{{ v.checkBg }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;cursor:pointer;" onClick="{{ v.onToggleCheck }}">{{ v.checkMark }}</div>
@@ -5006,7 +5006,7 @@ class Component extends DCLogic {
           radioBorder: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : 'var(--border-default)',
           radioDot: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : 'transparent',
           // 不使用圖片主題的題型：版型維持複選，用方塊 checkbox 呈現（與主題可複選的視覺一致）。
-          checkBg: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : '#fff',
+          checkBg: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : 'transparent',
           checkBorder: (vq[v.key] || 0) > 0 ? 'var(--color-brand-500)' : 'var(--border-default)',
           checkMark: (vq[v.key] || 0) > 0 ? '✓' : '',
           onToggleCheck: () => this.homeToggleVariantChecked(it.id, v.key),
@@ -5110,7 +5110,7 @@ class Component extends DCLogic {
           label: th.label,
           icon: th.icon,
           qty,
-          checkBg: qty > 0 ? 'var(--color-brand-500)' : '#fff',
+          checkBg: qty > 0 ? 'var(--color-brand-500)' : 'transparent',
           checkBorder: qty > 0 ? 'var(--color-brand-500)' : 'var(--border-default)',
           checkMark: qty > 0 ? '✓' : '',
           onToggleCheck: () => this.homeToggleThemeQty(it.id, th.key),
