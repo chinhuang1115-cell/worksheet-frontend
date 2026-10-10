@@ -5034,7 +5034,7 @@ class Component extends DCLogic {
             lastPrefix = x.prefix;
             const isAid = FADED_AID_RE.test(x.label)
               && g.items.some(o => o.prefix === x.prefix && o.label === x.label.replace(FADED_AID_RE, '').trim());
-            const full = isAid ? '└輔助淡化' : (x.label || vm.label);
+            const full = isAid ? '輔助淡化' : (x.label || vm.label);
             // 「自由列式：漸退淡化」這類長名稱：冒號前縮成上方灰色小字，下方只留區分用的部分，免得窄欄裡被截掉或擠成一字一行
             const m = /^(.{2,8}?)[：:](.+)$/.exec(full);
             rows.push({ ...vm, isTitle: false, isSub: false, isV: true, label: m ? m[2] : full, labelTop: m ? m[1] : '' });
