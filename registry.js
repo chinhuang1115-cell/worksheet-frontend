@@ -427,7 +427,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "sample": [
       { "pdf": "assets/mul_concept_times_sample.pdf", "name": "倍數與乘法_倍數概念.pdf", "label": "倍數概念", "key": "mul-concept-times" },
-      { "pdf": "assets/mul_concept_food_sample.pdf", "name": "倍數與乘法_連加到乘法_食物.pdf", "label": "連加到乘法（食物）", "key": "mul-concept-food" }
+      { "pdf": "assets/mul_concept_food_sample.pdf", "name": "倍數與乘法_連加到乘法_食物.pdf", "label": "連加到乘法", "key": "mul-concept-food" }
     ],
     "layout": {
       "panel": null,
@@ -438,7 +438,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "variants": [
       { "key": "mul-concept-times", "label": "倍數概念" },
-      { "key": "mul-concept-food", "label": "連加到乘法（食物）" }
+      { "key": "mul-concept-food", "label": "連加到乘法" }
     ]
   },
   {
