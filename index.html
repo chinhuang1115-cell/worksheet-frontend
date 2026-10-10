@@ -821,7 +821,7 @@
                     </div>
                     <div style="padding:12px 14px;">
                     <sc-if value="{{ detailItem.hasHintGrid }}" hint-placeholder-val="{{ false }}">
-                      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:start;">
+                      <div style="display:grid;grid-template-columns:repeat({{ detailItem.hintGridCols }},minmax(0,1fr));gap:8px;align-items:start;">
                         <sc-for list="{{ detailItem.hintGridHeaders }}" as="hh" hint-placeholder-count="3">
                           <div style="text-align:center;font-size:var(--text-xs);font-weight:700;color:var(--text-muted);padding-bottom:2px;">{{ hh.text }}</div>
                         </sc-for>
@@ -2594,17 +2594,20 @@ function buildHintGrid(variants, activeKey, onPick) {
     }));
     return { headers: ['分欄排列', '半自由排列', '全自由排列'], rows };
   }
-  const LEVEL_RE = /(無提示|淡化提示)/;
+  // 提示程度 0 強／1 弱提示v1（淡化提示）／2 弱提示v2（逐題漸退淡化）／3 無；沒有 v2 版型的題型少一欄、v1 直接叫「弱提示」
+  const LEVEL_RE = /(無提示|淡化提示|漸退淡化)/;
   if (!(variants || []).some(v => LEVEL_RE.test(v.label || ''))) return null;
-  const levelOf = (label) => { const m = LEVEL_RE.exec(label || ''); return m ? (m[1] === '無提示' ? 2 : 1) : 0; };
+  const levelOf = (label) => { const m = LEVEL_RE.exec(label || ''); return m ? ({ '淡化提示': 1, '漸退淡化': 2, '無提示': 3 })[m[1]] : 0; };
+  const hasV2 = variants.some(v => levelOf(v.label) === 2);
+  const LEVEL_NAMES = hasV2 ? ['強提示', '弱提示v1', '弱提示v2', '無提示'] : ['強提示', '弱提示', '', '無提示'];
   const baseOf = (label) => (label || '')
-    .replace(/[・．·:：]?\s*自由列式\s*[・．·:：]?\s*(無提示|淡化提示)/, '')
+    .replace(/[・．·:：]?\s*自由列式\s*[・．·:：]?\s*(無提示|淡化提示|漸退淡化)/, '')
     .replace(/[・．·:：]?\s*(完整提示|高提示)/, '')
     .replace(/[（(]\s*[)）]/, '').replace(/[・．·:：]\s*$/, '')
     .replace(/[（(]([^）)]*)$/, '（$1）').trim();
   const rowsMap = new Map();
   const rowOf = (name) => {
-    if (!rowsMap.has(name)) rowsMap.set(name, { name, cells: [[], [], []] });
+    if (!rowsMap.has(name)) rowsMap.set(name, { name, cells: [[], [], [], []] });
     return rowsMap.get(name);
   };
   // 依版型原本順序建列，列的先後與總覽一致
@@ -2614,23 +2617,24 @@ function buildHintGrid(variants, activeKey, onPick) {
   if (unnamed) {
     [...rowsMap.values()].forEach(r => {
       if (r === unnamed) return;
-      if (r.cells[1].length === 0 && r.cells[2].length === 0) { unnamed.cells[0].push(...r.cells[0]); rowsMap.delete(r.name); }
+      if (r.cells[1].length + r.cells[2].length + r.cells[3].length === 0) { unnamed.cells[0].push(...r.cells[0]); rowsMap.delete(r.name); }
     });
   }
   const pill = (v) => {
     const active = activeKey === v.key;
     return {
       // 欄標題已標明提示程度，pill 只寫底名（硬幣簡圖／食物…）；沒有底名的自由列式版型就寫提示程度本身
-      label: baseOf(v.label) || ['強提示', '弱提示', '無提示'][levelOf(v.label)],
+      label: baseOf(v.label) || LEVEL_NAMES[levelOf(v.label)],
       pillStyle: `padding:6px 12px;border-radius:999px;font-size:var(--text-sm);font-weight:600;cursor:pointer;white-space:nowrap;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
       onClick: () => onPick(v.key),
     };
   };
   const rows = [...rowsMap.values()].map(r => ({
-    cells: r.cells.map(list => ({ pills: list.map(pill), isEmpty: list.length === 0 })),
+    cells: r.cells.filter((_, i) => hasV2 || i !== 2).map(list => ({ pills: list.map(pill), isEmpty: list.length === 0 })),
   }));
+  const names = LEVEL_NAMES.filter(n => n);
   // 只有一列且沒有底名（按鈕本身就叫強／弱／無提示）→ 不再另列欄標題，只留按鈕
-  return { headers: rowsMap.size === 1 && rowsMap.has('') ? [] : ['強提示', '弱提示', '無提示'], rows };
+  return { headers: rowsMap.size === 1 && rowsMap.has('') ? [] : names, rows };
 }
 const TOP_ITEMS = ITEMS.filter(it => !_CHILD_VARIANT_IDS.has(it.id));
 
@@ -5072,7 +5076,7 @@ class Component extends DCLogic {
         ...(() => {
           const grid = buildHintGrid(it.variants, activeKey, (key) => this.homePreviewVariant(it.id, key));
           const rows = grid && grid.rows;
-          return { hasHintGrid: !!grid, hintGridRows: rows || [], hintGridHeaders: (grid ? grid.headers : []).map(h => ({ text: h })), showPlainVariantPills: hasMultipleVariants && !rows };
+          return { hasHintGrid: !!grid, hintGridRows: rows || [], hintGridCols: grid ? grid.rows[0].cells.length : 3, hintGridHeaders: (grid ? grid.headers : []).map(h => ({ text: h })), showPlainVariantPills: hasMultipleVariants && !rows };
         })(),
         themes: allowedThemesOf(it, activeKey).map(th => {
           const active = theme.key === th.key;
