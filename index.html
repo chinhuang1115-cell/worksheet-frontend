@@ -865,7 +865,7 @@
                               </div>
                             </sc-if>
                             <sc-if value="{{ ni.pair }}" hint-placeholder-val="{{ false }}">
-                              <div style="{{ ni.rowStyle }}align-items:center;cursor:default;">
+                              <div style="{{ ni.rowStyle }}align-items:center;cursor:default;padding-top:3px;padding-bottom:3px;">
                                 <sc-if value="{{ ni.prefix }}" hint-placeholder-val="{{ false }}">
                                   <span style="flex:none;font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);">{{ ni.prefix }}</span>
                                 </sc-if>
@@ -2785,7 +2785,7 @@ function buildVariantNavGroups(variants, activeKey, onPick) {
 }
 // 並列兩格各自的樣式：目前版型的那一格才變色加粗（整行左側橘線沿用 rowStyle，兩格任一為目前版型就顯示）
 function navPairCellStyle(active) {
-  return `flex:1 1 0;min-width:0;padding:2px 6px;font-size:var(--text-xs);border-radius:6px;text-align:center;white-space:nowrap;cursor:pointer;${active ? 'background:#fff;border:1.5px solid var(--color-accent-500);color:var(--color-accent-700);font-weight:700;' : 'background:#fff;border:1px solid var(--border-subtle);color:var(--text-primary);font-weight:500;'}`;
+  return `flex:1 1 0;min-width:0;padding:1px 6px;font-size:var(--text-xs);border-radius:6px;text-align:center;white-space:nowrap;cursor:pointer;${active ? 'background:#fff;border:1.5px solid var(--color-accent-500);color:var(--color-accent-700);font-weight:700;' : 'background:#fff;border:1px solid var(--border-subtle);color:var(--text-primary);font-weight:500;'}`;
 }
 const LS_DETAIL_SIDE_RAIL = 'ys_detail_side_rail';   // 詳情頁右側欄是否收成圖示列（'1'），全域、持久化
 function readDetailSideRail() {
