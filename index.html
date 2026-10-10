@@ -633,22 +633,14 @@
           <div class="ys-detail-grid" style="display:grid;grid-template-columns:{{ detailItem.detailGridCols }};gap:20px;align-items:start;">
             <div class="ys-detail-left" style="display:flex;flex-direction:column;gap:14px;position:sticky;top:76px;z-index:10;">
               <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,300px">
-                <div style="display:grid;grid-template-columns:1fr 108px;">
-                  <div style="padding:16px 14px 16px 16px;">
+                <!-- 說明卡片：2026-10-10 移除右欄（價格標示與單價），說明單獨成一欄 -->
+                <div style="padding:16px;">
                     <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
                       <span style="font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-muted);">{{ detailItem.code }}</span>
                       <span style="font-size:var(--text-2xs);font-weight:500;color:var(--text-brand);">{{ detailItem.tag }}</span>
                     </div>
                     <div style="font-size:var(--text-base);font-weight:700;color:var(--text-primary);margin-bottom:8px;">{{ detailItem.name }}</div>
                     <div style="font-size:var(--text-xs);color:var(--text-secondary);line-height:var(--leading-tc);">{{ detailItem.desc }}</div>
-                  </div>
-                  <div style="background:var(--bg-subtle);padding:16px 14px;border-left:1px solid var(--border-subtle);display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;">
-                    <div style="text-align:right;">
-                      <div style="font-family:var(--font-mono);font-size:var(--text-xl);font-weight:700;color:var(--color-error-600);line-height:1.1;">{{ detailItem.price }} 元</div>
-                      <div style="font-size:9.5px;color:var(--text-muted);margin-top:4px;">{{ detailItem.priceUnit }}</div>
-                      <div style="font-size:9.5px;color:var(--text-muted);margin-top:2px;">單價 {{ detailItem.unitPriceLabel }}</div>
-                    </div>
-                  </div>
                 </div>
               </x-import>
 
@@ -5044,7 +5036,11 @@ class Component extends DCLogic {
       }) : [];
 
       const presetTotal = it.variants.reduce((sum, v) => sum + variantPubPriceOf(it, v, st.itemVariantTier), 0);
-      const presetSummary = '每版型 ' + PAGES_PER_PUB + ' 張・共 ' + it.variants.length + ' 份'
+      const unitPrices = it.variants.map(v => variantPriceOf(it, v, st.itemVariantTier));
+      const uMin = Math.min(...unitPrices), uMax = Math.max(...unitPrices);
+      const unitPriceLabel = uMin === uMax ? `${uMin} 元` : `${uMin}–${uMax} 元`;
+      // 說明卡片右欄（價格與單價）已移除（2026-10-10），單價區間併進「系統預設」卡片的小字
+      const presetSummary = '每版型 ' + PAGES_PER_PUB + ' 張・共 ' + it.variants.length + ' 份・單價 ' + unitPriceLabel
         + (supportsTheme ? '，主題隨機出貨' : '');
       const customPerVariant = (v) => {
         const qty = vq[v.key] || 0;
@@ -5056,9 +5052,6 @@ class Component extends DCLogic {
         return _applySaleDiscount(getRawTierPrices()[tier] + (qty - 1) * getGenFee());
       };
       const customTotal = it.variants.reduce((sum, v) => sum + customPerVariant(v), 0);
-      const unitPrices = it.variants.map(v => variantPriceOf(it, v, st.itemVariantTier));
-      const uMin = Math.min(...unitPrices), uMax = Math.max(...unitPrices);
-      const unitPriceLabel = uMin === uMax ? `${uMin} 元` : `${uMin}–${uMax} 元`;
 
       detailItem = {
         ...it,
