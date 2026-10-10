@@ -515,8 +515,8 @@ window.WORKSHEET_REGISTRY = [
       "desc": "以扭蛋機情境練習兩位數乘以一位數，從連加或列式帶入直式。"
     },
     "sample": [
-      { "pdf": "assets/mul2x1_gacha_add_sample.pdf", "name": "乘法直式_扭蛋機_連加.pdf", "label": "扭蛋機（連加）", "key": "mul2x1-gacha-add" },
-      { "pdf": "assets/mul2x1_gacha_eq_sample.pdf", "name": "乘法直式_扭蛋機_列式.pdf", "label": "扭蛋機（列式）", "key": "mul2x1-gacha-eq" }
+      { "pdf": "assets/mul2x1_gacha_add_sample.pdf", "name": "乘法直式_扭蛋機_強提示.pdf", "label": "扭蛋機（強提示）", "key": "mul2x1-gacha-add" },
+      { "pdf": "assets/mul2x1_gacha_eq_sample.pdf", "name": "乘法直式_扭蛋機_弱提示.pdf", "label": "扭蛋機（弱提示）", "key": "mul2x1-gacha-eq" }
     ],
     "layout": {
       "panel": null,
@@ -526,8 +526,8 @@ window.WORKSHEET_REGISTRY = [
       "interactive": false
     },
     "variants": [
-      { "key": "mul2x1-gacha-add", "label": "扭蛋機（連加）" },
-      { "key": "mul2x1-gacha-eq", "label": "扭蛋機（列式）" }
+      { "key": "mul2x1-gacha-add", "label": "扭蛋機（強提示）" },
+      { "key": "mul2x1-gacha-eq", "label": "扭蛋機（弱提示）" }
     ]
   },
   {
