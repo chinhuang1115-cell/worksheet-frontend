@@ -990,7 +990,7 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位錢幣_範例.pdf", "label": "雙退位錢幣", "key": "tuiwei3sub-dcoin" },
       { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位畫記_範例.pdf", "label": "雙退位畫記", "key": "tuiwei3sub-tally" },
       { "pdf": "assets/tuiwei3sub-yw_sample.pdf", "name": "退位減法_三位數_應用題購物篇_範例.pdf", "label": "應用題（購物篇）", "key": "tuiwei3sub-yw" },
-      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_漸退淡化_範例.pdf", "label": "應用題：漸退淡化", "key": "tuiwei3sub-yw-graded" }
+      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_漸退淡化_範例.pdf", "label": "應用題（逐題淡化）", "key": "tuiwei3sub-yw-graded" }
     ],
     "layout": {
       "panel": "tuiwei3subPanel",
@@ -1018,7 +1018,7 @@ window.WORKSHEET_REGISTRY = [
       },
       {
         "key": "tuiwei3sub-yw-graded",
-        "label": "應用題：漸退淡化"
+        "label": "應用題（逐題淡化）"
       }
     ]
   },
