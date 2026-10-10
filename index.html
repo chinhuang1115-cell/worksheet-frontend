@@ -841,17 +841,17 @@
                 </div>
               </sc-if>
               <sc-if value="{{ !detailItem.sideRail }}" hint-placeholder-val="{{ true }}">
-                <div class="ys-detail-side" style="position:sticky;top:76px;max-height:calc(100vh - 96px);overflow-y:auto;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);">
-                  <div style="background:var(--color-brand-50);padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border-subtle);">
-                    <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-brand);">🗂️ 版型預覽</span>
+                <div class="ys-detail-side" style="position:sticky;top:76px;max-height:calc(100vh - 96px);overflow-y:auto;background:transparent;border:2px solid var(--color-accent-500);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);">
+                  <div style="background:transparent;padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px dashed var(--color-brand-200);">
+                    <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">🗂️ 版型預覽</span>
                     <span title="收起側欄" style="margin-left:auto;font-size:var(--text-xs);color:var(--text-muted);cursor:pointer;white-space:nowrap;" onClick="{{ detailItem.onToggleSideRail }}">收起 »</span>
                   </div>
                   <sc-if value="{{ detailItem.hasMultipleVariants }}" hint-placeholder-val="{{ true }}">
                     <div style="padding:4px 0 6px;">
                       <sc-for list="{{ detailItem.variantNav }}" as="ng" hint-placeholder-count="3">
                         <sc-if value="{{ ng.title }}" hint-placeholder-val="{{ true }}">
-                          <div style="display:flex;align-items:center;gap:6px;padding:8px 14px;margin-top:2px;font-size:var(--text-xs);font-weight:700;color:var(--text-primary);background:var(--bg-subtle);border-top:1px solid var(--border-subtle);cursor:pointer;user-select:none;" onClick="{{ ng.onToggle }}">
-                            <span>{{ ng.title }}</span><span style="margin-left:auto;color:var(--text-muted);font-size:12px;">{{ ng.chevron }}</span>
+                          <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;margin:6px 14px 0;font-size:var(--text-xs);font-weight:700;color:#fff;background:var(--color-brand-500);border-radius:var(--radius-md);cursor:pointer;user-select:none;" onClick="{{ ng.onToggle }}">
+                            <span>{{ ng.title }}</span><span style="margin-left:auto;color:#fff;font-size:12px;">{{ ng.chevron }}</span>
                           </div>
                         </sc-if>
                         <sc-if value="{{ ng.open }}" hint-placeholder-val="{{ true }}">
@@ -883,8 +883,8 @@
                   <sc-if value="{{ !detailItem.hasMultipleVariants }}" hint-placeholder-val="{{ false }}">
                     <div style="padding:10px 14px;font-size:var(--text-xs);color:var(--text-muted);line-height:var(--leading-tc);">此題型僅一種版型，無其他版型可選。</div>
                   </sc-if>
-                  <div style="background:var(--color-brand-50);padding:10px 14px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border-subtle);cursor:pointer;user-select:none;" onClick="{{ detailItem.onToggleTheme }}">
-                    <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-brand);">🎨 主題</span>
+                  <div style="background:transparent;padding:10px 14px;display:flex;align-items:center;gap:8px;border-top:1px dashed var(--color-brand-200);cursor:pointer;user-select:none;" onClick="{{ detailItem.onToggleTheme }}">
+                    <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">🎨 主題</span>
                     <span style="margin-left:auto;font-size:var(--text-xs);color:var(--text-muted);white-space:nowrap;">{{ detailItem.themeSummary }} {{ detailItem.themeChevron }}</span>
                   </div>
                   <sc-if value="{{ detailItem.themeOpen }}" hint-placeholder-val="{{ false }}">
@@ -5254,7 +5254,7 @@ class Component extends DCLogic {
               leftStyle: x.pair ? navPairCellStyle(x.left.active) : '',
               rightStyle: x.pair ? navPairCellStyle(x.right.active) : '',
               onClick: x.pair ? null : x.onClick,
-              rowStyle: `display:flex;align-items:baseline;gap:8px;padding:7px 14px 7px ${g.title ? 26 : 14}px;font-size:var(--text-xs);cursor:pointer;line-height:1.4;border-left:3px solid ${x.active ? 'var(--color-accent-500)' : 'transparent'};${x.active ? 'background:var(--color-brand-50);color:var(--color-accent-700);font-weight:700;' : 'color:var(--text-primary);font-weight:500;'}`,
+              rowStyle: `display:flex;align-items:baseline;gap:8px;padding:7px 14px 7px ${g.title ? 26 : 14}px;font-size:var(--text-xs);cursor:pointer;line-height:1.4;border-left:3px solid ${x.active ? 'var(--color-accent-500)' : 'transparent'};${x.active ? 'color:var(--color-accent-700);font-weight:700;' : 'color:var(--text-primary);font-weight:500;'}`,
             })),
           };
         }),
