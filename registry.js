@@ -986,32 +986,36 @@ window.WORKSHEET_REGISTRY = [
     },
     "diffInfo": null,
     "sample": [
-      { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位錢幣_範例.pdf", "label": "單退位錢幣", "key": "tuiwei3sub-coin" },
-      { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位錢幣_範例.pdf", "label": "雙退位錢幣", "key": "tuiwei3sub-dcoin" },
+      { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位錢幣_範例.pdf", "label": "單退位概念導入", "key": "tuiwei3sub-coin" },
+      { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位錢幣_範例.pdf", "label": "雙退位概念導入", "key": "tuiwei3sub-dcoin" },
       { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位畫記_範例.pdf", "label": "雙退位畫記", "key": "tuiwei3sub-tally" },
-      { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位畫記_逐題淡化_範例.pdf", "label": "雙退位畫記（逐題淡化）", "key": "tuiwei3sub-tally-graded" },
+      { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位畫記_逐題淡化_範例.pdf", "label": "雙退位畫記（淡化輔助）", "key": "tuiwei3sub-tally-graded" },
       { "pdf": "assets/tuiwei3sub-yw_sample.pdf", "name": "退位減法_三位數_應用題購物篇_範例.pdf", "label": "應用題（購物篇）", "key": "tuiwei3sub-yw" },
-      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_漸退淡化_範例.pdf", "label": "應用題（逐題淡化）", "key": "tuiwei3sub-yw-graded" }
+      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_漸退淡化_範例.pdf", "label": "應用題（淡化輔助）", "key": "tuiwei3sub-yw-graded" }
     ],
     "layout": {
       "panel": "tuiwei3subPanel",
       "themeSet": null,
-      "showTheme": false,
+      "showTheme": true,
+      "variantThemeSet": {
+        "tuiwei3sub-yw": "d3",
+        "tuiwei3sub-yw-graded": "d3"
+      },
       "prices": false,
       "interactive": false
     },
     "variants": [
       {
         "key": "tuiwei3sub-coin",
-        "label": "單退位錢幣",
+        "label": "單退位概念導入",
         "group": "單退位",
-        "pill": "錢幣"
+        "pill": "概念導入"
       },
       {
         "key": "tuiwei3sub-dcoin",
-        "label": "雙退位錢幣",
+        "label": "雙退位概念導入",
         "group": "雙退位",
-        "pill": "錢幣"
+        "pill": "概念導入"
       },
       {
         "key": "tuiwei3sub-tally",
@@ -1021,9 +1025,9 @@ window.WORKSHEET_REGISTRY = [
       },
       {
         "key": "tuiwei3sub-tally-graded",
-        "label": "雙退位畫記（逐題淡化）",
+        "label": "雙退位畫記（淡化輔助）",
         "group": "雙退位",
-        "pill": "畫記（逐題淡化）"
+        "pill": "畫記（淡化輔助）"
       },
       {
         "key": "tuiwei3sub-yw",
@@ -1033,9 +1037,9 @@ window.WORKSHEET_REGISTRY = [
       },
       {
         "key": "tuiwei3sub-yw-graded",
-        "label": "應用題（逐題淡化）",
+        "label": "應用題（淡化輔助）",
         "group": "單退位",
-        "pill": "應用題（逐題淡化）"
+        "pill": "應用題（淡化輔助）"
       }
     ]
   },
@@ -1135,8 +1139,8 @@ window.WORKSHEET_REGISTRY = [
     },
     "layout": {
       "panel": "tuiwei3subYwPanel",
-      "themeSet": "cheap",
-      "showTheme": false,
+      "themeSet": "d3",
+      "showTheme": true,
       "prices": false,
       "interactive": false
     }
