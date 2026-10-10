@@ -973,7 +973,7 @@ window.WORKSHEET_REGISTRY = [
       "sub"
     ],
     "keywords": [],
-    "desc": "三位數退位減法計算練習，分單退位、雙退位兩類：概念導入（畫錢幣，另有 v2 直式計算版）、純計算（雙退位，直式計算格，另有逐題淡化的「淡化輔助」版本）",
+    "desc": "三位數退位減法計算練習，分單退位、雙退位兩類：概念導入（畫錢幣，單退位分十位、個位兩種）、純計算（雙退位，直式計算格，另有逐題淡化的「淡化輔助」版本）",
     "sortKey": [
       2,
       3,
@@ -986,8 +986,8 @@ window.WORKSHEET_REGISTRY = [
     },
     "diffInfo": null,
     "sample": [
-      { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位概念導入v1_範例.pdf", "label": "單退位概念導入 v1", "key": "tuiwei3sub-coin" },
-      { "pdf": "assets/sub3borrow_sample.pdf", "name": "退位減法_三位數_單退位概念導入v2_範例.pdf", "label": "單退位概念導入 v2", "key": "sub3borrow" },
+      { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位概念導入（十位）_範例.pdf", "label": "單退位概念導入（十位）", "key": "tuiwei3sub-coin" },
+      { "pdf": "assets/sub3borrow_sample.pdf", "name": "退位減法_三位數_單退位概念導入（個位）_範例.pdf", "label": "單退位概念導入（個位）", "key": "sub3borrow" },
       { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位概念導入_範例.pdf", "label": "雙退位概念導入", "key": "tuiwei3sub-dcoin" },
       { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位純計算_範例.pdf", "label": "雙退位純計算", "key": "tuiwei3sub-tally" },
       { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位純計算_淡化輔助_範例.pdf", "label": "雙退位純計算（淡化輔助）", "key": "tuiwei3sub-tally-graded" }
@@ -1002,15 +1002,15 @@ window.WORKSHEET_REGISTRY = [
     "variants": [
       {
         "key": "tuiwei3sub-coin",
-        "label": "單退位概念導入 v1",
+        "label": "單退位概念導入（十位）",
         "group": "單退位",
-        "pill": "概念導入 v1"
+        "pill": "概念導入（十位）"
       },
       {
         "key": "sub3borrow",
-        "label": "單退位概念導入 v2",
+        "label": "單退位概念導入（個位）",
         "group": "單退位",
-        "pill": "概念導入 v2"
+        "pill": "概念導入（個位）"
       },
       {
         "key": "tuiwei3sub-dcoin",
@@ -2116,47 +2116,6 @@ window.WORKSHEET_REGISTRY = [
       { "key": "sub3noreg-app-2digit", "label": "被減數兩位版" },
       { "key": "sub3noreg-app-mixed",  "label": "混合版" }
     ]
-  },
-  {
-    "id": "sub3borrow",
-    "code": "N302D",
-    "name": "三位數退位減法＿直式計算",
-    "grade": 3,
-    "ops": [
-      "sub"
-    ],
-    "keywords": [
-      "三位數",
-      "退位",
-      "減法",
-      "直式"
-    ],
-    "desc": "三位數退位減法直式計算，6 題練習，三種格式混合（整體式、個位拆分式、百十位拆分式），每次數字隨機。",
-    "sortKey": [
-      2,
-      3,
-      4
-    ],
-    "home": {
-      "icon": "🔢",
-      "label": "三位數退位減法",
-      "sub": "直式計算練習"
-    },
-    "diffInfo": {
-      "grade": "三年級",
-      "level": "基礎",
-      "levelColor": "#22c55e",
-      "code": "N302D",
-      "desc": "三位數退位減法，6 題練習，三種呈現方式（整體式、個位拆分、百十位拆分），每次數字隨機。"
-    },
-    "sample": "assets/sub3borrow_sample.pdf",
-    "layout": {
-      "panel": "sub3borrowPanel",
-      "themeSet": null,
-      "showTheme": false,
-      "prices": false,
-      "interactive": false
-    }
   },
   {
     "id": "coinvalue",
