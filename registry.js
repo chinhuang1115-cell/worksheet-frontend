@@ -973,7 +973,7 @@ window.WORKSHEET_REGISTRY = [
       "sub"
     ],
     "keywords": [],
-    "desc": "三位數退位減法計算練習，分單退位、雙退位兩類：概念導入（畫錢幣，單退位分百位退位、十位退位兩種）、純計算（單、雙退位皆有，直式計算格，另有逐題淡化的「淡化輔助」版本；單退位的十位退位、百位退位隨機出現）",
+    "desc": "三位數退位減法計算練習，分單退位、雙退位兩類：概念導入（畫錢幣，單退位分百位退位、十位退位兩種）、直式計算（單、雙退位皆有，直式計算格，另有逐題淡化的「淡化輔助」版本；單退位的十位退位、百位退位隨機出現）",
     "sortKey": [
       2,
       3,
@@ -982,17 +982,17 @@ window.WORKSHEET_REGISTRY = [
     "home": {
       "icon": "🪙",
       "label": "三位數退位減法",
-      "sub": "概念導入 / 純計算"
+      "sub": "概念導入 / 直式計算"
     },
     "diffInfo": null,
     "sample": [
       { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位概念導入（百位退位）_範例.pdf", "label": "單退位概念導入（百位退位）", "key": "tuiwei3sub-coin" },
       { "pdf": "assets/sub3borrow_sample.pdf", "name": "退位減法_三位數_單退位概念導入（十位退位）_範例.pdf", "label": "單退位概念導入（十位退位）", "key": "sub3borrow" },
-      { "pdf": "assets/tuiwei3sub_tally1_sample.pdf", "name": "退位減法_三位數_單退位純計算_範例.pdf", "label": "單退位純計算", "key": "tuiwei3sub-tally1" },
-      { "pdf": "assets/tuiwei3sub_tally1-graded_sample.pdf", "name": "退位減法_三位數_單退位純計算_淡化輔助_範例.pdf", "label": "單退位純計算（淡化輔助）", "key": "tuiwei3sub-tally1-graded" },
+      { "pdf": "assets/tuiwei3sub_tally1_sample.pdf", "name": "退位減法_三位數_單退位直式計算_範例.pdf", "label": "單退位直式計算", "key": "tuiwei3sub-tally1" },
+      { "pdf": "assets/tuiwei3sub_tally1-graded_sample.pdf", "name": "退位減法_三位數_單退位直式計算_淡化輔助_範例.pdf", "label": "單退位直式計算（淡化輔助）", "key": "tuiwei3sub-tally1-graded" },
       { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位概念導入_範例.pdf", "label": "雙退位概念導入", "key": "tuiwei3sub-dcoin" },
-      { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位純計算_範例.pdf", "label": "雙退位純計算", "key": "tuiwei3sub-tally" },
-      { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位純計算_淡化輔助_範例.pdf", "label": "雙退位純計算（淡化輔助）", "key": "tuiwei3sub-tally-graded" }
+      { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位直式計算_範例.pdf", "label": "雙退位直式計算", "key": "tuiwei3sub-tally" },
+      { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位直式計算_淡化輔助_範例.pdf", "label": "雙退位直式計算（淡化輔助）", "key": "tuiwei3sub-tally-graded" }
     ],
     "layout": {
       "panel": "tuiwei3subPanel",
@@ -1016,15 +1016,15 @@ window.WORKSHEET_REGISTRY = [
       },
       {
         "key": "tuiwei3sub-tally1",
-        "label": "單退位純計算",
+        "label": "單退位直式計算",
         "group": "單退位",
-        "pill": "純計算"
+        "pill": "直式計算"
       },
       {
         "key": "tuiwei3sub-tally1-graded",
-        "label": "單退位純計算（淡化輔助）",
+        "label": "單退位直式計算（淡化輔助）",
         "group": "單退位",
-        "pill": "純計算（淡化輔助）"
+        "pill": "直式計算（淡化輔助）"
       },
       {
         "key": "tuiwei3sub-dcoin",
@@ -1034,15 +1034,15 @@ window.WORKSHEET_REGISTRY = [
       },
       {
         "key": "tuiwei3sub-tally",
-        "label": "雙退位純計算",
+        "label": "雙退位直式計算",
         "group": "雙退位",
-        "pill": "純計算"
+        "pill": "直式計算"
       },
       {
         "key": "tuiwei3sub-tally-graded",
-        "label": "雙退位純計算（淡化輔助）",
+        "label": "雙退位直式計算（淡化輔助）",
         "group": "雙退位",
-        "pill": "純計算（淡化輔助）"
+        "pill": "直式計算（淡化輔助）"
       }
     ]
   },
