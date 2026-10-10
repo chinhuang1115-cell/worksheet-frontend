@@ -967,13 +967,13 @@ window.WORKSHEET_REGISTRY = [
   {
     "id": "tuiwei3sub",
     "code": "N302A",
-    "name": "退位減法（三位數）＿畫錢幣／畫記輔助",
+    "name": "退位減法（三位數）",
     "grade": 3,
     "ops": [
       "sub"
     ],
     "keywords": [],
-    "desc": "三位數退位減法計算練習，提供單退位錢幣、雙退位錢幣、雙退位畫記三種版型",
+    "desc": "三位數退位減法計算練習，分單退位、雙退位兩類：概念導入（畫錢幣）、純計算（直式計算格）、應用題（購物情境），並有逐題淡化輔助的版本",
     "sortKey": [
       2,
       3,
@@ -982,16 +982,16 @@ window.WORKSHEET_REGISTRY = [
     "home": {
       "icon": "🪙",
       "label": "三位數退位減法",
-      "sub": "錢幣 / 畫記輔助"
+      "sub": "概念導入 / 純計算 / 應用題"
     },
     "diffInfo": null,
     "sample": [
-      { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位錢幣_範例.pdf", "label": "單退位概念導入", "key": "tuiwei3sub-coin" },
-      { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位錢幣_範例.pdf", "label": "雙退位概念導入", "key": "tuiwei3sub-dcoin" },
-      { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位畫記_範例.pdf", "label": "雙退位純計算", "key": "tuiwei3sub-tally" },
-      { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位畫記_逐題淡化_範例.pdf", "label": "雙退位純計算（淡化輔助）", "key": "tuiwei3sub-tally-graded" },
+      { "pdf": "assets/tuiwei3sub_coin_sample.pdf", "name": "退位減法_三位數_單退位概念導入_範例.pdf", "label": "單退位概念導入", "key": "tuiwei3sub-coin" },
+      { "pdf": "assets/tuiwei3sub_dcoin_sample.pdf", "name": "退位減法_三位數_雙退位概念導入_範例.pdf", "label": "雙退位概念導入", "key": "tuiwei3sub-dcoin" },
+      { "pdf": "assets/tuiwei3sub_tally_sample.pdf", "name": "退位減法_三位數_雙退位純計算_範例.pdf", "label": "雙退位純計算", "key": "tuiwei3sub-tally" },
+      { "pdf": "assets/tuiwei3sub_tally-graded_sample.pdf", "name": "退位減法_三位數_雙退位純計算_淡化輔助_範例.pdf", "label": "雙退位純計算（淡化輔助）", "key": "tuiwei3sub-tally-graded" },
       { "pdf": "assets/tuiwei3sub-yw_sample.pdf", "name": "退位減法_三位數_應用題購物篇_範例.pdf", "label": "應用題（購物篇）", "key": "tuiwei3sub-yw" },
-      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_漸退淡化_範例.pdf", "label": "應用題（淡化輔助）", "key": "tuiwei3sub-yw-graded" }
+      { "pdf": "assets/tuiwei3sub-yw_graded_sample.pdf", "name": "退位減法_三位數_應用題購物篇_淡化輔助_範例.pdf", "label": "應用題（淡化輔助）", "key": "tuiwei3sub-yw-graded" }
     ],
     "layout": {
       "panel": "tuiwei3subPanel",
