@@ -776,7 +776,7 @@
                 <div style="border-radius: var(--radius-md); border: 1.5px solid var(--border-default); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; width: 30px" onClick="{{ detailItem.onToggleFav }}">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="{{ detailItem.favFill }}" stroke="var(--color-error-500)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 </div>
-              </div><div style="font-size: var(--text-2xs); color: var(--text-muted); background: var(--bg-subtle); border-radius: var(--radius-md); padding: 6px 10px; margin-bottom: 8px; line-height: var(--leading-tc); width: 274px; height: 97px">售價計算方式：<br>系統預設＝單價＋(4-1)張 × 生成費用；<br>自由選配＝單價＋(N-1)張 × 生成費用。<br>例如：單價 5元 ＋ 3張 × 生成費用 2 元 = 11 元<br>（系統預設・每份 4 張）。</div>
+              </div>
             </div>
             <div class="ys-detail-mid" style="min-height:0;height:100%;">
             <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,600px">
@@ -956,6 +956,10 @@
                       </div>
                     </sc-if>
                   </sc-if>
+                  <div style="padding:10px 14px;border-top:1px dashed var(--color-brand-200);">
+                    <div style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);margin-bottom:6px;">💰 售價計算方式</div>
+                    <div style="font-size:var(--text-xs);color:var(--text-secondary);line-height:var(--leading-tc);">系統預設＝單價＋(4-1)張 × 生成費用；<br>自由選配＝單價＋(N-1)張 × 生成費用。<br>例如：單價 5 元＋3 張 × 生成費 2 元＝11 元<br>（系統預設・每份 4 張）。</div>
+                  </div>
                 </div>
               </sc-if>
             </sc-if>
