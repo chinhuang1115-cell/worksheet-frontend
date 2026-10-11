@@ -844,6 +844,9 @@
                   <div title="主題" style="width:40px;padding:6px 0;border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;cursor:pointer;" onClick="{{ detailItem.onRailOpenTheme }}">
                     <span style="font-size:18px;line-height:1;">🎨</span><span style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">主題</span>
                   </div>
+                  <div title="售價計算方式（點開側欄查看）" style="width:40px;padding:6px 0;border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;cursor:pointer;" onClick="{{ detailItem.onToggleSideRail }}">
+                    <span style="font-size:18px;line-height:1;">💰</span><span style="font-size:10px;font-weight:700;color:var(--text-muted);margin-top:3px;">計費</span>
+                  </div>
                 </div>
               </sc-if>
               <sc-if value="{{ !detailItem.sideRail }}" hint-placeholder-val="{{ true }}">
