@@ -5319,7 +5319,7 @@ class Component extends DCLogic {
           const active = activeKey === v.key;
           return {
             label: v.label,
-            pillStyle: `padding:7px 16px;border-radius:999px;font-size:var(--text-sm);font-weight:600;cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
+            pillStyle: `padding:6px 12px;border-radius:999px;font-size:var(--text-xs);font-weight:600;cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
             onClick: () => this.homePreviewVariant(it.id, v.key),
           };
         }),
@@ -5350,7 +5350,7 @@ class Component extends DCLogic {
             label: th.label,
             icon: th.icon,
             thumbSrc,
-            pillStyle: `display:inline-flex;align-items:center;gap:7px;padding:7px 16px 7px 10px;border-radius:999px;font-size:var(--text-sm);font-weight:600;cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
+            pillStyle: `display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 8px;border-radius:999px;font-size:var(--text-xs);font-weight:600;cursor:pointer;${active ? 'border:2px solid var(--color-accent-500);color:var(--color-accent-700);background:#fff;' : 'border:1px solid var(--border-default);color:var(--text-secondary);background:#fff;'}`,
             onSelect: () => this.homeSelectTheme(it.id, th.key),
           };
         }),
