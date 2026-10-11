@@ -674,9 +674,10 @@
                       <span style="font-size:var(--text-xs);font-weight:700;color:var(--text-primary);">自由選配</span>
                       <div style="flex:1;"></div>
                       <span style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:700;color:{{ detailItem.customPriceColor }};">{{ detailItem.customPriceLabel }}</span>
+                      <span style="font-size:12px;color:var(--text-muted);">{{ detailItem.customChevron }}</span>
                     </div>
                     <div style="font-size:var(--text-2xs);color:var(--text-secondary);padding-left:24px;margin-top:4px;">自行挑選版型、張數與主題</div>
-                    <sc-if value="{{ detailItem.isCustom }}" hint-placeholder-val="{{ false }}">
+                    <sc-if value="{{ detailItem.customOpen }}" hint-placeholder-val="{{ false }}">
                       <div style="margin-top: 10px; border-top: 1px dashed var(--color-brand-200); padding-top: 8px; width: 207px;" onClick="{{ stop }}">
                         <div style="display: flex; align-items: center; gap: 8px; padding: 0 4px 4px; width: 207px;">
                           <span style="width:18px;flex-shrink:0;"></span>
@@ -3354,6 +3355,7 @@ class Component extends DCLogic {
       cardVariantIdx: {},             // { [itemId]: number } — 首頁卡片格圖像模式目前顯示第幾個版型，不持久化
       descClosed: readDetailDescClosed(), // 詳情頁說明卡片收合，localStorage 持久化
       sideRail: readDetailSideRail(), // 詳情頁右側欄收成圖示列（模擬 C），localStorage 持久化
+      customCollapsed: false,         // 自由選配方案卡本身是否收合（點已選取的自由選配標題），不持久化
       custClosed: {},                 // { [itemId:階段標題]: true } — 左欄自由選配清單收合的階段，不持久化
       navClosed: {},                  // { [itemId:群組標題]: true } — 右側欄版型導覽列收合的群組，不持久化
       themeOpen: {},                  // { [itemId]: true } — 右側欄「主題」段是否展開（預設收合），不持久化
@@ -5219,7 +5221,13 @@ class Component extends DCLogic {
         customRadioBorder: isCustom ? 'var(--color-brand-500)' : 'var(--border-default)',
         customRadioDot: isCustom ? 'var(--color-brand-500)' : 'transparent',
         onSetPreset: () => this.homeSetPurchaseMode(it.id, 'preset'),
-        onSetCustom: () => this.homeSetPurchaseMode(it.id, 'custom'),
+        customOpen: isCustom && !st.customCollapsed,
+        customChevron: isCustom ? (st.customCollapsed ? '▸' : '▾') : '',
+        // 已在自由選配時再點它的標題＝收合／展開；從系統預設切過來則一律展開
+        onSetCustom: () => {
+          if (this.state.home.itemMode[it.id] === 'custom') this.setState(s2 => ({ home: { ...s2.home, customCollapsed: !s2.home.customCollapsed } }));
+          else { this.patch('home', { customCollapsed: false }); this.homeSetPurchaseMode(it.id, 'custom'); }
+        },
         variants,
         // 單一連續頁次：seqMode 下是整個購買序列的第幾頁；退回單份模式時
         // （版型預覽 pill／不使用圖片主題的多版型題型）標明是版型預覽的頁次。
