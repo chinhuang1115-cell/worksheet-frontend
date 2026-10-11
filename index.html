@@ -35,6 +35,11 @@
     }
     body{margin:0;font-family:var(--font-sans);}
     *{box-sizing:border-box;}
+    /* 詳情頁左右欄的內部捲軸：固定顯示（不被系統自動隱藏），細軸＋淺灰色，讓使用者看得出欄內還有內容可捲 */
+    .ys-detail-left,.ys-detail-side{overflow-y:scroll !important;scrollbar-width:thin;scrollbar-color:var(--color-neutral-400,#b8c0cc) transparent;scrollbar-gutter:stable;}
+    .ys-detail-left::-webkit-scrollbar,.ys-detail-side::-webkit-scrollbar{width:8px;}
+    .ys-detail-left::-webkit-scrollbar-thumb,.ys-detail-side::-webkit-scrollbar-thumb{background:var(--color-neutral-400,#b8c0cc);border-radius:8px;}
+    .ys-detail-left::-webkit-scrollbar-track,.ys-detail-side::-webkit-scrollbar-track{background:transparent;}
     .ys-card-arrow{opacity:0;transition:opacity .15s;}
     /* 詳情頁三欄（購買｜預覽｜右側欄）：窄螢幕改成單欄上下排，側欄放到預覽上方 */
     @media (max-width: 900px) { .ys-detail-grid{grid-template-columns:1fr !important;} .ys-detail-side{position:static !important;max-height:none !important;width:auto !important;order:-1;} .ys-detail-left{position:static !important;max-height:none !important;overflow:visible !important;order:-2;} .ys-detail-pager{top:0 !important;} }
