@@ -688,7 +688,13 @@
                                 <sc-if value="{{ v.countLabel }}" hint-placeholder-val="{{ false }}">
                                   <span style="font-size:var(--text-2xs);font-weight:700;color:var(--color-brand-700,#9a3412);background:#fff;border-radius:999px;padding:0 7px;line-height:16px;">{{ v.countLabel }}</span>
                                 </sc-if>
-                                <span style="margin-left:auto;font-size:12px;">{{ v.chevron }}</span>
+                                <sc-if value="{{ v.hasPicked }}" hint-placeholder-val="{{ false }}">
+                                  <span title="取消這個階段已勾選的項目" style="margin-left:auto;font-size:var(--text-2xs);font-weight:600;text-decoration:underline;opacity:.95;" onClick="{{ v.onClear }}">取消勾選</span>
+                                  <span style="font-size:12px;">{{ v.chevron }}</span>
+                                </sc-if>
+                                <sc-if value="{{ !v.hasPicked }}" hint-placeholder-val="{{ true }}">
+                                  <span style="margin-left:auto;font-size:12px;">{{ v.chevron }}</span>
+                                </sc-if>
                               </div>
                             </sc-if>
                             <sc-if value="{{ v.isSub }}" hint-placeholder-val="{{ false }}">
@@ -5048,6 +5054,19 @@ class Component extends DCLogic {
             rows.push({ isTitle: true, isSub: false, isV: false, text: g.title,
               countLabel: picked > 0 ? `已選 ${picked}` : '',
               chevron: closed ? '▸' : '▾',
+              hasPicked: picked > 0,
+              // 取消這個階段已勾選的所有版型（不觸發標題的收合）；張數歸零、主題張數同步、需重新確認套用
+              onClear: (ev) => {
+                if (ev && ev.stopPropagation) ev.stopPropagation();
+                this.setState(s2 => {
+                  const cur = s2.home.variantQty[it.id] || {};
+                  const nextVq = { ...cur };
+                  g.items.forEach(x => { nextVq[x.key] = 0; });
+                  return { home: { ...s2.home, variantQty: { ...s2.home.variantQty, [it.id]: nextVq },
+                    itemThemeQty: syncSingleThemeQty(it, s2.home, it.id, nextVq),
+                    itemThemeConfirmed: { ...s2.home.itemThemeConfirmed, [it.id]: false } } };
+                }, () => this.homeSyncThemePreview(it.id));
+              },
               onToggle: () => this.setState(s2 => ({ home: { ...s2.home, custClosed: { ...s2.home.custClosed, [closedKey]: !s2.home.custClosed[closedKey] } } })) });
           }
           let lastPrefix = '';
