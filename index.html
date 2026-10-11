@@ -697,10 +697,10 @@
                             <sc-if value="{{ v.isV }}" hint-placeholder-val="{{ true }}">
                               <div style="display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: var(--radius-md); width: 202px; cursor: pointer; background: {{ v.rowBg }};" onClick="{{ v.onPreview }}">
                                 <div style="width:18px;height:18px;flex-shrink:0;">
-                                  <sc-if value="{{ detailItem.variantRadio }}" hint-placeholder-val="{{ false }}">
+                                  <sc-if value="{{ v.themedRadio }}" hint-placeholder-val="{{ false }}">
                                     <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid {{ v.radioBorder }};background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;" onClick="{{ v.onToggleCheck }}"><div style="width:9px;height:9px;border-radius:50%;background:{{ v.radioDot }};"></div></div>
                                   </sc-if>
-                                  <sc-if value="{{ !detailItem.variantRadio }}" hint-placeholder-val="{{ true }}">
+                                  <sc-if value="{{ !v.themedRadio }}" hint-placeholder-val="{{ true }}">
                                     <div style="width:18px;height:18px;border-radius:4px;border:1.5px solid {{ v.checkBorder }};background:{{ v.checkBg }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;cursor:pointer;" onClick="{{ v.onToggleCheck }}">{{ v.checkMark }}</div>
                                   </sc-if>
                                 </div>
@@ -720,7 +720,7 @@
                             </sc-if>
                           </sc-for>
                         </div>
-                        <sc-if value="{{ detailItem.supportsTheme }}" hint-placeholder-val="{{ false }}">
+                        <sc-if value="{{ detailItem.customThemeShown }}" hint-placeholder-val="{{ false }}">
                           <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--color-brand-200);width:207px;">
                             <div style="display: flex; align-items: center; gap: 8px; padding: 0 4px 4px; width: 207px;">
                               <span style="width:18px;flex-shrink:0;"></span>
@@ -3129,6 +3129,13 @@ function variantThemed(it, variantKey) {
 function selectionThemed(it, keys) {
   return keys.length > 0 && keys.every(k => variantThemed(it, k));
 }
+// 已勾選版型中是否有吃主題的；以及吃主題的版型合計幾張（主題張數分配只對這些張數）
+function selectionHasThemed(it, keys) {
+  return keys.some(k => variantThemed(it, k));
+}
+function themedPagesOf(it, vq) {
+  return it.variants.reduce((sum, v) => sum + (variantThemed(it, v.key) ? (vq[v.key] || 0) : 0), 0);
+}
 function itemAllThemed(it) {
   return it.supportsTheme !== false && it.variants.every(v => variantThemed(it, v.key));
 }
@@ -3282,7 +3289,7 @@ function syncSingleThemeQty(item, home, itemId, nextVq) {
   const cur = home.itemThemeQty[itemId] || {};
   const used = Object.keys(cur).filter(k => (cur[k] || 0) > 0);
   if (used.length > 1) return home.itemThemeQty;
-  const total = buildFlatPages(item, nextVq, home.itemVariantTier, home.itemVariantLessons).length;
+  const total = themedPagesOf(item, nextVq);
   const key = used[0] || (themeOf(item, home.itemTheme) || {}).key || DEFAULT_THEME;
   return { ...home.itemThemeQty, [itemId]: { ...cur, [key]: total } };
 }
@@ -4282,6 +4289,8 @@ class Component extends DCLogic {
       const current = s.home.variantQty[itemId] || {};
       // 自由選配各版型一律可複選（2026-10-10 使用者指示），不再限制吃主題的版型只能單選。
       const nextVq = { ...current, [key]: Math.max(0, (current[key] || 0) + delta) };
+      // 吃主題的版型同一時間只能選 1 個（免得多份學習單搭不同主題時分不清誰配哪個主題）；不吃主題的版型不受影響
+      if (variantThemed(item, key) && nextVq[key] > 0) item.variants.forEach(v => { if (v.key !== key && variantThemed(item, v.key)) nextVq[v.key] = 0; });
       const flat = buildFlatPages(item, nextVq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const previewIndex = Math.min(s.home.previewIndex, Math.max(0, flat.length - 1));
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
@@ -4297,6 +4306,7 @@ class Component extends DCLogic {
       const item = ITEMS.find(x => x.id === itemId);
       const current = s.home.variantQty[itemId] || {};
       const nextVq = { ...current, [key]: (current[key] || 0) > 0 ? 0 : 1 };
+      if (variantThemed(item, key) && nextVq[key] > 0) item.variants.forEach(v => { if (v.key !== key && variantThemed(item, v.key)) nextVq[v.key] = 0; });
       const flat = buildFlatPages(item, nextVq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const previewIndex = Math.min(s.home.previewIndex, Math.max(0, flat.length - 1));
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
@@ -4425,7 +4435,7 @@ class Component extends DCLogic {
     if (selected.length === 0) return;
     const st = this.state.home;
     // 系統預設一律隨機主題，不需要（也不會）提醒使用者選主題；只有自由選配才要求先選。
-    if (!presetMode && selectionThemed(item, selected.map(v => v.key)) && !themeChosen(item, st.itemTheme)) {
+    if (!presetMode && selectionHasThemed(item, selected.map(v => v.key)) && !themeChosen(item, st.itemTheme)) {
       this.patch('home', { themeReminder: { item, variantQty, presetMode } });
       return;
     }
@@ -4456,14 +4466,14 @@ class Component extends DCLogic {
     const baseUnitPrice = selected.length > 0 ? selected.reduce((sum, v) => sum + (variantTierOf(item, v, st.itemVariantTier) === 'free' ? 0 : variantPriceOf(item, v, st.itemVariantTier)), 0) / selected.length : 0;
     const genFee = price === 0 ? 0 : getGenFee();
     // 自由選配可複選主題（各主題各自設定張數，加總＝pages）；系統預設／未帶入分配時仍是單一主題。
-    const themeSelections = (!presetMode && selectionThemed(item, selected.map(v => v.key)) && themeQtyMap)
+    const themeSelections = (!presetMode && selectionHasThemed(item, selected.map(v => v.key)) && themeQtyMap)
       ? Object.keys(themeQtyMap)
           .filter(k => (themeQtyMap[k] || 0) > 0)
           .map(k => ({ key: k, label: (HOME_THEMES.find(t => t.key === k) || {}).label || k, qty: themeQtyMap[k] }))
       : null;
     // 有主題的題型，自由選配一次只能選一個版型（見 homeToggleVariantChecked 的單選限制），
     // selected[0] 即目前作用中的版型；主題 fallback 用它收斂層級，避免帶到別版型才合法的主題。
-    const activeVariantKey = selected[0] && selected[0].key;
+    const activeVariantKey = ((selected.find(v => variantThemed(item, v.key)) || selected[0]) || {}).key;
     const theme = presetMode
       ? (HOME_THEMES.find(th => th.key === DEFAULT_THEME) || themeOf(item, st.itemTheme, activeVariantKey))
       : (themeSelections && themeSelections.length
@@ -4607,7 +4617,7 @@ class Component extends DCLogic {
         for (let k = 1; k <= sel.qty; k++) {
           const baseName = sels.length === 1 ? ((it && it.name) || sel.label) : sel.label;
           const filename = baseName + (sel.qty > 1 ? `_${k}` : '') + '.pdf';
-          const body = themeSeq ? themeBodyForKey(themeSeq[themeSeqIdx++ % themeSeq.length]) : singleThemeBodyFor(sel.key);
+          const body = (themeSeq && it && variantThemed(it, sel.key)) ? themeBodyForKey(themeSeq[themeSeqIdx++ % themeSeq.length]) : singleThemeBodyFor(sel.key);
           const batchItem = { type_id: sel.key, body, filename };
           if (selLicense) {
             batchItem.license_code = selLicense.code;
@@ -4975,7 +4985,7 @@ class Component extends DCLogic {
       // 版型層級判斷（N206 只有折價券吃主題）：自由選配看已勾選的版型，其他情況看目前預覽的版型。
       const selKeysForTheme = it.variants.filter(v => (vq[v.key] || 0) > 0).map(v => v.key);
       const supportsTheme = (isCustom && selKeysForTheme.length)
-        ? selectionThemed(it, selKeysForTheme)
+        ? selectionHasThemed(it, selKeysForTheme)
         : variantThemed(it, activeKey || (it.variants[0] || {}).key);
       const variantRadio = false;   // 自由選配版型一律可複選（方塊勾選）
       const customConfirmed = !!st.itemThemeConfirmed[it.id];
@@ -4998,6 +5008,7 @@ class Component extends DCLogic {
         const active = currentPage && currentPage.key === v.key;
         return {
           key: v.key,
+          themedRadio: variantThemed(it, v.key),
           label: v.label,
           unitPrice: variantPriceOf(it, v, st.itemVariantTier),
           lessons: variantLessonsOf(it, v, st.itemVariantLessons),
@@ -5114,11 +5125,17 @@ class Component extends DCLogic {
 
       // 自由選配下主題可複選，各主題各自設定張數（比照版型清單的勾選＋數量設計），
       // 加總必須等於目前的總張數（totalPages）才能「確認套用」。
+      // 左欄自由選配的主題區屬於「有吃主題的版型」所在的階段：那些階段全部收合時，主題區跟著收合。
+      const customThemeShown = supportsTheme && (() => {
+        const gs = buildVariantNavGroups(it.variants, activeKey, () => {}).filter(g => g.title && g.items.some(x => variantThemed(it, x.key)));
+        return gs.length === 0 || gs.some(g => !st.custClosed[it.id + ':' + g.title]);
+      })();
       const themeQtyMap = st.itemThemeQty[it.id] || {};
       const themeQtyTotal = Object.values(themeQtyMap).reduce((sum, q) => sum + (q || 0), 0);
-      const themeQtyOk = !supportsTheme || (themeQtyTotal > 0 && themeQtyTotal === totalPages);
-      const themeQtyMismatchMsg = (isCustom && supportsTheme && hasCustomSelection && themeQtyTotal > 0 && themeQtyTotal !== totalPages)
-        ? `目前已選 ${totalPages} 張，主題共分配 ${themeQtyTotal} 張，請調整一致後再確認套用。`
+      const themedPages = isCustom ? themedPagesOf(it, vq) : totalPages;
+      const themeQtyOk = !supportsTheme || (themeQtyTotal > 0 && themeQtyTotal === themedPages);
+      const themeQtyMismatchMsg = (isCustom && supportsTheme && hasCustomSelection && themeQtyTotal > 0 && themeQtyTotal !== themedPages)
+        ? `有主題的版型共 ${themedPages} 張，主題共分配 ${themeQtyTotal} 張，請調整一致後再確認套用。`
         : '';
       const customThemeRows = supportsTheme ? allowedThemesOf(it, activeKey).map(th => {
         const qty = themeQtyMap[th.key] || 0;
@@ -5238,9 +5255,10 @@ class Component extends DCLogic {
         onToggleFav: () => this.homeToggleFav(it.id),
         ...this.homeBuildAdminFields(it),
         supportsTheme,
-        variantListHeaderLabel: variantRadio ? '版型（單選）' : '版型（可複選）',
+        variantListHeaderLabel: it.variants.some(v => variantThemed(it, v.key)) ? (itemAllThemed(it) ? '版型（單選）' : '版型') : '版型（可複選）',
         customVariantRows,
         variantRadio,
+        customThemeShown,
         // ── 右側欄（2026-10-10，模擬 B＋C）：版型導覽列在上、主題在下；整欄可收成 52px 圖示列 ──
         descOpen: !st.descClosed,
         descChevron: st.descClosed ? '▸ 展開說明' : '▾ 收合',
