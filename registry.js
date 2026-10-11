@@ -806,7 +806,7 @@ window.WORKSHEET_REGISTRY = [
       "加法",
       "錢幣"
     ],
-    "desc": "5 道四位數不進位加法題（畫出錢幣並計算），搭配寫一寫練習千位遞增數列。數字每次隨機產生，不進位保證每位數和 ≤ 9。",
+    "desc": "用畫錢幣輔助四位數不進位加法，共 2 種版型：基本版（5 題）與含寫一寫版（5 題＋千位遞增數列練習）。數字每次隨機產生，不進位保證每位數和 ≤ 9。",
     "sortKey": [
       1,
       4,
@@ -814,8 +814,8 @@ window.WORKSHEET_REGISTRY = [
     ],
     "home": {
       "icon": "🪙",
-      "sub": "四位數不進位加法",
-      "desc": "畫出錢幣表示四位數，5 道不進位加法題，搭配寫一寫練習千位遞增，建立四位數加法的數感。",
+      "sub": "四位數不進位加法（2 種版型）",
+      "desc": "畫出錢幣表示四位數，5 道不進位加法題，可選是否搭配寫一寫練習千位遞增，建立四位數加法的數感。",
       "features": [
         "四位數不進位加法",
         "畫出錢幣輔助理解",
@@ -829,17 +829,21 @@ window.WORKSHEET_REGISTRY = [
       "code": "N301A",
       "desc": "四位數加法（不進位），以畫錢幣輔助學生理解位值，適合四位數加法的入門練習。"
     },
-    "sample": {
-      "pdf": "assets/huachu4add_sample.pdf",
-      "name": "不進位的加法_四位數_畫錢幣輔助_範本.pdf"
-    },
+    "sample": [
+      { "pdf": "assets/huachu4add_sample.pdf", "name": "不進位的加法_四位數_畫錢幣輔助_範本.pdf", "label": "基本版", "key": "huachu4add" },
+      { "pdf": "assets/huachu4sub_sample.pdf", "name": "不進位的加法_四位數_畫錢幣輔助_含寫一寫_範本.pdf", "label": "含寫一寫", "key": "huachu4sub" }
+    ],
     "layout": {
       "panel": "huachu4addPanel",
       "themeSet": "expensive",
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      {"key": "huachu4add", "label": "基本版"},
+      {"key": "huachu4sub", "label": "含寫一寫"}
+    ]
   },
   {
     "id": "huachu4sub",
@@ -863,16 +867,7 @@ window.WORKSHEET_REGISTRY = [
       4,
       1
     ],
-    "home": {
-      "icon": "🪙",
-      "sub": "四位數不進位加法（5 題＋寫一寫）",
-      "desc": "畫出錢幣表示四位數，5 道不進位加法題，搭配寫一寫練習千位遞增，建立四位數加法的數感。題數比 N301A 多，並加上寫一寫。",
-      "features": [
-        "四位數不進位加法 5 題",
-        "畫出錢幣輔助理解",
-        "寫一寫千位遞增練習"
-      ]
-    },
+    "home": null,
     "diffInfo": {
       "grade": "三年級",
       "level": "基礎",
