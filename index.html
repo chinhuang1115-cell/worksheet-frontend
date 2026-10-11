@@ -683,7 +683,13 @@
                         <div style="display:flex;flex-direction:column;gap:2px;">
                           <sc-for list="{{ detailItem.customVariantRows }}" as="v" hint-placeholder-count="3">
                             <sc-if value="{{ v.isTitle }}" hint-placeholder-val="{{ false }}">
-                              <div style="font-size:var(--text-xs);font-weight:700;color:#fff;padding:5px 8px;margin-top:6px;width:202px;box-sizing:border-box;background:var(--color-brand-500);border-radius:var(--radius-md);">{{ v.text }}</div>
+                              <div style="display:flex;align-items:center;gap:6px;font-size:var(--text-xs);font-weight:700;color:#fff;padding:5px 8px;margin-top:6px;width:202px;box-sizing:border-box;background:var(--color-brand-500);border-radius:var(--radius-md);cursor:pointer;user-select:none;" onClick="{{ v.onToggle }}">
+                                <span>{{ v.text }}</span>
+                                <sc-if value="{{ v.countLabel }}" hint-placeholder-val="{{ false }}">
+                                  <span style="font-size:var(--text-2xs);font-weight:700;color:var(--color-brand-700,#9a3412);background:#fff;border-radius:999px;padding:0 7px;line-height:16px;">{{ v.countLabel }}</span>
+                                </sc-if>
+                                <span style="margin-left:auto;font-size:12px;">{{ v.chevron }}</span>
+                              </div>
                             </sc-if>
                             <sc-if value="{{ v.isSub }}" hint-placeholder-val="{{ false }}">
                               <div style="{{ v.subStyle }}">{{ v.text }}</div>
@@ -3331,6 +3337,7 @@ class Component extends DCLogic {
       cardVariantIdx: {},             // { [itemId]: number } — 首頁卡片格圖像模式目前顯示第幾個版型，不持久化
       descClosed: readDetailDescClosed(), // 詳情頁說明卡片收合，localStorage 持久化
       sideRail: readDetailSideRail(), // 詳情頁右側欄收成圖示列（模擬 C），localStorage 持久化
+      custClosed: {},                 // { [itemId:階段標題]: true } — 左欄自由選配清單收合的階段，不持久化
       navClosed: {},                  // { [itemId:群組標題]: true } — 右側欄版型導覽列收合的群組，不持久化
       themeOpen: {},                  // { [itemId]: true } — 右側欄「主題」段是否展開（預設收合），不持久化
       favorites: {},
@@ -5047,11 +5054,20 @@ class Component extends DCLogic {
         const rows = [];
         const subStyle = 'align-self:flex-start;font-size:var(--text-2xs);font-weight:700;color:#9a3412;background:#fdeee3;border-radius:5px;padding:1px 7px;margin:4px 0 1px 26px;';
         buildVariantNavGroups(it.variants, activeKey, () => {}).forEach(g => {
-          if (g.title) rows.push({ isTitle: true, isSub: false, isV: false, text: g.title });
+          const closedKey = it.id + ':' + g.title;
+          const closed = !!(g.title && st.custClosed[closedKey]);
+          if (g.title) {
+            const picked = g.items.filter(x => (vq[x.key] || 0) > 0).length;
+            rows.push({ isTitle: true, isSub: false, isV: false, text: g.title,
+              countLabel: picked > 0 ? `已選 ${picked}` : '',
+              chevron: closed ? '▸' : '▾',
+              onToggle: () => this.setState(s2 => ({ home: { ...s2.home, custClosed: { ...s2.home.custClosed, [closedKey]: !s2.home.custClosed[closedKey] } } })) });
+          }
           let lastPrefix = '';
           g.items.forEach(x => {
             const vm = byKey.get(x.key);
             if (!vm || used.has(x.key)) return;
+            if (closed) { used.add(x.key); return; }
             used.add(x.key);
             if (x.prefix && x.prefix !== lastPrefix) rows.push({ isTitle: false, isSub: true, isV: false, text: x.prefix, subStyle });
             lastPrefix = x.prefix;
