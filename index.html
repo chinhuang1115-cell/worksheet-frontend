@@ -936,13 +936,13 @@
                         </sc-if>
                         <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;">
                           <sc-for list="{{ detailItem.themeGalleryImgs }}" as="gi" hint-placeholder-count="6">
-                            <div style="flex-shrink:0;width:64px;display:flex;flex-direction:column;align-items:center;gap:3px;">
-                              <img src="{{ gi.src }}" title="{{ gi.name }}" style="width:64px;height:64px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border-subtle);" onerror="this.style.display='none';" />
+                            <div style="flex-shrink:0;width:58px;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                              <img src="{{ gi.src }}" title="{{ gi.name }}" style="width:44px;height:44px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border-subtle);" onerror="this.style.display='none';" />
                               <sc-if value="{{ gi.hasPrice }}" hint-placeholder-val="{{ true }}">
-                                <div style="font-size:var(--text-2xs);color:var(--text-muted);white-space:nowrap;">{{ gi.price }}</div>
+                                <div style="font-size:9px;color:var(--text-muted);white-space:nowrap;">{{ gi.price }}</div>
                               </sc-if>
                               <sc-if value="{{ !gi.hasPrice }}" hint-placeholder-val="{{ false }}">
-                                <div style="font-size:var(--text-2xs);color:var(--text-muted);white-space:nowrap;">{{ detailItem.galleryPriceNote }}</div>
+                                <div style="font-size:9px;color:var(--text-muted);white-space:nowrap;">{{ detailItem.galleryPriceNote }}</div>
                               </sc-if>
                             </div>
                           </sc-for>
