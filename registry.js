@@ -795,7 +795,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "huachu4add",
     "code": "N301A",
     "grade": "3",
-    "name": "不進位的加法（四位數）＿畫錢幣輔助",
+    "name": "不進位的加法（四位數）＿概念導入",
     "ops": [
       "add"
     ],
