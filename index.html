@@ -4275,26 +4275,13 @@ class Component extends DCLogic {
     });
   }
 
-  // 自由選配的版型改為單選：每次異動都只留下 key 這個版型有張數，其餘版型歸零。
-  // 有圖片主題的多版型題型，版型是單選（見下方 homeToggleVariantChecked）；
-  // 不使用圖片主題的多版型題型（如十以內減法 sub1）維持複選，各版型各自張數互不影響。
+  // 自由選配各版型一律可複選（2026-10-10 使用者指示）：各版型各自張數互不影響。
   homeSetVariantQty(itemId, key, delta) {
     this.setState(s => {
       const item = ITEMS.find(x => x.id === itemId);
       const current = s.home.variantQty[itemId] || {};
-      let nextVq;
-      if (!variantThemed(item, key)) {
-        const qty = Math.max(0, (current[key] || 0) + delta);
-        nextVq = { ...current, [key]: qty };
-        // 吃主題的版型必須單獨選；選了不吃主題的版型就把它們清掉
-        item.variants.forEach(v => { if (variantThemed(item, v.key)) nextVq[v.key] = 0; });
-      } else {
-        const wasSelected = (current[key] || 0) > 0;
-        const qty = wasSelected ? Math.max(1, (current[key] || 0) + delta) : 1;
-        nextVq = {};
-        Object.keys(current).forEach(k => { nextVq[k] = 0; });
-        nextVq[key] = qty;
-      }
+      // 自由選配各版型一律可複選（2026-10-10 使用者指示），不再限制吃主題的版型只能單選。
+      const nextVq = { ...current, [key]: Math.max(0, (current[key] || 0) + delta) };
       const flat = buildFlatPages(item, nextVq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const previewIndex = Math.min(s.home.previewIndex, Math.max(0, flat.length - 1));
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
@@ -4304,23 +4291,12 @@ class Component extends DCLogic {
     }, () => this.homeSyncThemePreview(itemId));
   }
 
-  // 版型清單的勾選：有圖片主題的題型是單選（radio，點擊即切換成只選這個版型，
-  // 再次點擊已選中的版型不做任何事）；不使用圖片主題的題型維持複選（checkbox）。
+  // 版型清單的勾選：一律複選（checkbox），點擊切換該版型選取與否。
   homeToggleVariantChecked(itemId, key) {
     this.setState(s => {
       const item = ITEMS.find(x => x.id === itemId);
       const current = s.home.variantQty[itemId] || {};
-      let nextVq;
-      if (!variantThemed(item, key)) {
-        const qty = (current[key] || 0) > 0 ? 0 : 1;
-        nextVq = { ...current, [key]: qty };
-        item.variants.forEach(v => { if (variantThemed(item, v.key)) nextVq[v.key] = 0; });
-      } else {
-        if ((current[key] || 0) > 0) return {};
-        nextVq = {};
-        Object.keys(current).forEach(k => { nextVq[k] = 0; });
-        nextVq[key] = 1;
-      }
+      const nextVq = { ...current, [key]: (current[key] || 0) > 0 ? 0 : 1 };
       const flat = buildFlatPages(item, nextVq, s.home.itemVariantTier, s.home.itemVariantLessons);
       const previewIndex = Math.min(s.home.previewIndex, Math.max(0, flat.length - 1));
       return { home: { ...s.home, variantQty: { ...s.home.variantQty, [itemId]: nextVq }, previewIndex,
@@ -5001,7 +4977,7 @@ class Component extends DCLogic {
       const supportsTheme = (isCustom && selKeysForTheme.length)
         ? selectionThemed(it, selKeysForTheme)
         : variantThemed(it, activeKey || (it.variants[0] || {}).key);
-      const variantRadio = itemAllThemed(it);
+      const variantRadio = false;   // 自由選配版型一律可複選（方塊勾選）
       const customConfirmed = !!st.itemThemeConfirmed[it.id];
       const hasCustomSelection = it.variants.some(v => (vq[v.key] || 0) > 0);
       const hasMultipleVariants = it.variants.length > 1;
