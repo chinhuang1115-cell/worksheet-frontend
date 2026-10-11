@@ -635,12 +635,15 @@
               <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,300px">
                 <!-- 說明卡片：2026-10-10 移除右欄（價格標示與單價），說明單獨成一欄 -->
                 <div style="padding:16px;">
-                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;cursor:pointer;user-select:none;" onClick="{{ detailItem.onToggleDesc }}">
                       <span style="font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-muted);">{{ detailItem.code }}</span>
                       <span style="font-size:var(--text-2xs);font-weight:500;color:var(--text-brand);">{{ detailItem.tag }}</span>
+                      <span title="{{ detailItem.descToggleTip }}" style="margin-left:auto;font-size:var(--text-xs);color:var(--text-muted);white-space:nowrap;">{{ detailItem.descChevron }}</span>
                     </div>
-                    <div style="font-size:var(--text-base);font-weight:700;color:var(--text-primary);margin-bottom:8px;">{{ detailItem.name }}</div>
-                    <div style="font-size:var(--text-xs);color:var(--text-secondary);line-height:var(--leading-tc);white-space:pre-line;">{{ detailItem.desc }}</div>
+                    <div style="font-size:var(--text-base);font-weight:700;color:var(--text-primary);margin-bottom:{{ detailItem.descTitleGap }};cursor:pointer;" onClick="{{ detailItem.onToggleDesc }}">{{ detailItem.name }}</div>
+                    <sc-if value="{{ detailItem.descOpen }}" hint-placeholder-val="{{ true }}">
+                      <div style="font-size:var(--text-xs);color:var(--text-secondary);line-height:var(--leading-tc);white-space:pre-line;">{{ detailItem.desc }}</div>
+                    </sc-if>
                 </div>
               </x-import>
 
@@ -2787,6 +2790,10 @@ function buildVariantNavGroups(variants, activeKey, onPick) {
 function navPairCellStyle(active) {
   return `flex:0 0 auto;padding:1px 10px;font-size:var(--text-xs);border-radius:6px;text-align:center;white-space:nowrap;cursor:pointer;${active ? 'background:#fff;border:1.5px solid var(--color-accent-500);color:var(--color-accent-700);font-weight:700;' : 'background:#fff;border:1px solid var(--border-subtle);color:var(--text-primary);font-weight:500;'}`;
 }
+const LS_DETAIL_DESC_CLOSED = 'ys_detail_desc_closed';   // 詳情頁說明卡片是否收合（'1'），全域、持久化
+function readDetailDescClosed() {
+  try { return localStorage.getItem(LS_DETAIL_DESC_CLOSED) === '1'; } catch (e) { return false; }
+}
 const LS_DETAIL_SIDE_RAIL = 'ys_detail_side_rail';   // 詳情頁右側欄是否收成圖示列（'1'），全域、持久化
 function readDetailSideRail() {
   try { return localStorage.getItem(LS_DETAIL_SIDE_RAIL) === '1'; } catch (e) { return false; }
@@ -3312,6 +3319,7 @@ class Component extends DCLogic {
       page: 1,                        // 首頁題型卡片格分頁，篩選/排序/搜尋/瀏覽方式變更時重置為 1
       viewMode: readHomeViewMode(),   // 'text' | 'image'，全域切換，localStorage 持久化
       cardVariantIdx: {},             // { [itemId]: number } — 首頁卡片格圖像模式目前顯示第幾個版型，不持久化
+      descClosed: readDetailDescClosed(), // 詳情頁說明卡片收合，localStorage 持久化
       sideRail: readDetailSideRail(), // 詳情頁右側欄收成圖示列（模擬 C），localStorage 持久化
       navClosed: {},                  // { [itemId:群組標題]: true } — 右側欄版型導覽列收合的群組，不持久化
       themeOpen: {},                  // { [itemId]: true } — 右側欄「主題」段是否展開（預設收合），不持久化
@@ -5232,6 +5240,15 @@ class Component extends DCLogic {
         customVariantRows,
         variantRadio,
         // ── 右側欄（2026-10-10，模擬 B＋C）：版型導覽列在上、主題在下；整欄可收成 52px 圖示列 ──
+        descOpen: !st.descClosed,
+        descChevron: st.descClosed ? '▸ 展開說明' : '▾ 收合',
+        descToggleTip: st.descClosed ? '展開說明' : '收合說明',
+        descTitleGap: st.descClosed ? '0' : '8px',
+        onToggleDesc: () => {
+          const next = !this.state.home.descClosed;
+          try { localStorage.setItem(LS_DETAIL_DESC_CLOSED, next ? '1' : '0'); } catch (e) {}
+          this.setState(s => ({ home: { ...s.home, descClosed: next } }));
+        },
         sideRail: !!st.sideRail,
         detailGridCols: st.sideRail ? '280px minmax(0,1fr) 52px' : '280px minmax(0,1fr) 280px',
         onToggleSideRail: () => {
