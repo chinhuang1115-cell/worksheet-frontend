@@ -37,8 +37,7 @@
     *{box-sizing:border-box;}
     .ys-card-arrow{opacity:0;transition:opacity .15s;}
     /* 詳情頁三欄（購買｜預覽｜右側欄）：窄螢幕改成單欄上下排，側欄放到預覽上方 */
-    .ys-detail-mid > .sc-host-x > div{height:100%;display:flex;flex-direction:column;min-height:0;box-sizing:border-box;}
-    @media (max-width: 900px) { .ys-detail-grid{grid-template-columns:1fr !important;height:auto !important;} .ys-detail-left{height:auto !important;overflow:visible !important;} .ys-detail-mid{height:auto !important;} .ys-detail-mid > .sc-host-x > div{height:auto !important;} .ys-detail-side{position:static !important;max-height:none !important;width:auto !important;order:-1;} .ys-detail-left{position:static !important;order:-2;} }
+    @media (max-width: 900px) { .ys-detail-grid{grid-template-columns:1fr !important;} .ys-detail-side{position:static !important;max-height:none !important;width:auto !important;order:-1;} .ys-detail-left{position:static !important;max-height:none !important;overflow:visible !important;order:-2;} .ys-detail-pager{top:0 !important;} }
     .ys-card-thumb-wrap:hover .ys-card-arrow{opacity:1;}
     @keyframes ysSpin { to { transform: rotate(360deg); } }
     .ys-spinner { width:22px;height:22px;border-radius:50%;border:3px solid var(--color-brand-100,#e5e7eb);border-top-color:var(--color-brand-500,#4f46e5);animation:ysSpin .8s linear infinite;flex-shrink:0; }
@@ -631,8 +630,8 @@
           </sc-if>
           <!-- ADMIN-ONLY-END -->
 
-          <div class="ys-detail-grid" style="display:grid;grid-template-columns:{{ detailItem.detailGridCols }};gap:20px;align-items:stretch;height:calc(100vh - 150px);min-height:560px;">
-            <div class="ys-detail-left" style="display:flex;flex-direction:column;gap:14px;height:100%;min-height:0;overflow-y:auto;padding:2px;box-sizing:border-box;">
+          <div class="ys-detail-grid" style="display:grid;grid-template-columns:{{ detailItem.detailGridCols }};gap:20px;align-items:start;">
+            <div class="ys-detail-left" style="display:flex;flex-direction:column;gap:14px;position:sticky;top:76px;max-height:calc(100vh - 96px);overflow-y:auto;padding:2px;box-sizing:border-box;">
               <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,300px">
                 <!-- 說明卡片：2026-10-10 移除右欄（價格標示與單價），說明單獨成一欄 -->
                 <div style="padding:16px;">
@@ -790,20 +789,20 @@
                 </div>
               </div>
             </div>
-            <div class="ys-detail-mid" style="min-height:0;height:100%;">
+            <div class="ys-detail-mid">
             <x-import component-from-global-scope="DesignSystem_223f56.Card" variant="raised" padding="none" hint-size="100%,600px">
               <div style="background:var(--color-brand-50);padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border-subtle);flex:none;">
                 <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-brand);">📄 學習單預覽</span>
                 <span style="margin-left:auto;font-size:var(--text-xs);color:var(--text-muted);text-align:right;">{{ detailItem.activeVariantLabel }}</span>
               </div>
               <sc-if value="{{ detailItem.showAnyPager }}" hint-placeholder-val="{{ true }}">
-              <div style="padding:8px 16px;border-bottom:1px solid var(--border-subtle);background:#fff;flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <div style="padding:8px 16px;border-bottom:1px solid var(--border-subtle);background:#fff;position:sticky;top:76px;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:8px;">
                 <span style="font-size:var(--text-xs);color:{{ detailItem.prevColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onPrevPage }}">‹ 上一頁</span>
                 <span style="font-size:var(--text-xs);color:var(--text-muted);">{{ detailItem.previewLabel }}</span>
                 <span style="font-size:var(--text-xs);color:{{ detailItem.nextColor }};font-weight:600;cursor:pointer;" onClick="{{ detailItem.onNextPage }}">下一頁 ›</span>
               </div>
               </sc-if>
-              <div style="flex:1;min-height:0;overflow-y:auto;">
+              <div>
               <sc-if value="{{ detailItem.finalPreviewImgSrc }}" hint-placeholder-val="{{ false }}">
                 <div style="padding:0;display:flex;flex-direction:column;align-items:stretch;background:#fff;">
                   <sc-if value="{{ detailItem.themePreviewBadgeLabel }}" hint-placeholder-val="{{ false }}">
@@ -862,7 +861,7 @@
                 </div>
               </sc-if>
               <sc-if value="{{ !detailItem.sideRail }}" hint-placeholder-val="{{ true }}">
-                <div class="ys-detail-side" style="height:100%;min-height:0;overflow-y:auto;box-sizing:border-box;background:#fff;border:1px solid var(--border-subtle);border-radius:16px;box-shadow:var(--shadow-sm);">
+                <div class="ys-detail-side" style="position:sticky;top:76px;max-height:calc(100vh - 96px);overflow-y:auto;box-sizing:border-box;background:#fff;border:1px solid var(--border-subtle);border-radius:16px;box-shadow:var(--shadow-sm);">
                   <div style="background:#2f3a4d;margin:10px 14px 0;padding:7px 10px;border-radius:9px;display:flex;align-items:center;gap:8px;">
                     <span style="font-size:var(--text-sm);font-weight:700;color:#fff;">🗂️ 版型預覽</span>
                     <span title="收起側欄" style="margin-left:auto;font-size:var(--text-xs);color:#cbd5e1;cursor:pointer;white-space:nowrap;" onClick="{{ detailItem.onToggleSideRail }}">收起 »</span>
