@@ -1,7 +1,7 @@
 {
  "updated": "2026-10-14",
  "backend": "https://web-production-0542f.up.railway.app",
- "backendCommit": "(hint-profile 分支)",
+ "backendCommit": "d5120d4",
  "kinds": [
   {
    "id": "wordprob",
