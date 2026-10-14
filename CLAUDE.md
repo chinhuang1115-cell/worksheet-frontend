@@ -8,7 +8,7 @@
 |---|---|
 | **題型設計決策**：題型命名與康軒對照、填空留白規則、難度層次、各題型的教學設計意圖、**提示漸退版型**（完整提示→淡化提示→無提示→**逐題漸退淡化提示**：同一份學單提示逐題淡化，計算格先退、算式列後退，最後一題兩者皆無） | [`docs/題型設計決策.md`](docs/題型設計決策.md) |
 | **教材設計規範**：使用對象與設計原則、版面規格、量詞、答案合理範圍、主題與位數對應、時鐘 | [`docs/教材設計規範.md`](docs/教材設計規範.md) |
-| **互動頁測試儀表板**（逐項測試、提示規格表、規格盤點、新頁面套用清單；GitHub Pages 的 `/dashboard/`）。**新增／修改互動頁時，同一個 commit 要更新 `dashboard/catalog.json`／`spec.json`**（`python dashboard/check_catalog.py <後端路徑>` 檢查漏列端點） | [`dashboard/`](dashboard/)；規格說明與盤點結論：[`docs/互動版提示規格.md`](docs/互動版提示規格.md) |
+| **互動頁規格資料**（`dashboard/` 只留資料與腳本，網頁介面已於 2026-10-14 捨棄）：`hint-profile.json`＝強／弱／無提示設定檔（權威）、`spec.json`＝提示規格表資料、`catalog.json`＝互動頁清單（總覽頁用）；`check_catalog.py <後端路徑>` 檢查漏列端點。**新增／修改互動頁時，同一個 commit 更新 catalog／spec** | [`dashboard/`](dashboard/)；規格說明與盤點結論：[`docs/互動版提示規格.md`](docs/互動版提示規格.md) |
 | **互動學習單總覽**（給學生／老師用的入口：題型家族卡牆、縮圖、強／弱／無一鍵開啟、搜尋、測試小燈；GitHub Pages 的 `/interactive/`）。資料與儀表板共用 `dashboard/catalog.json`；**新增／改版互動頁後，除了更新 catalog，還要重產縮圖**：`python dashboard/make_thumbs.py <後端路徑> [id…]` | [`interactive/`](interactive/)、[`dashboard/make_thumbs.py`](dashboard/make_thumbs.py) |
 | 認識錢幣「半自由／完全自由排列」與錢幣外觀改版的**後端交接說明**（要做什麼、演算法、驗收清單）| [`docs/後端交接_錢幣自由排列與外觀.md`](docs/後端交接_錢幣自由排列與外觀.md)；視覺依據 `docs/mock-coin-free/` |
 | 認識錢幣自由排列的**後端實作順序清單**（決策 → 外觀 → 共用模組 → 試水 → 擴充 → 收尾，含每步驗收）| [`docs/後端實作順序清單.md`](docs/後端實作順序清單.md)（規則細節在上一列的交接說明）；可直接貼給後端 session 的簡短提示：[`docs/後端提示_錢幣自由排列.md`](docs/後端提示_錢幣自由排列.md) |

@@ -61,7 +61,7 @@ h3{font-size:13.5px;color:var(--mute);font-weight:600;margin:14px 0 8px}
     <span id="fam"></span>
     <button class="chip" id="view">清單</button>
   </div>
-  <div class="legend"><span>按鈕＝開啟時的提示難度</span><span><i style="background:var(--l3)"></i>強提示（完整提示）</span><span><i style="background:var(--l2)"></i>弱提示（淡化提示）</span><span><i style="background:var(--l1)"></i>無提示（自由列式）</span><span>按鈕下的小燈＝你的測試結果（<i style="background:var(--ok)"></i>通過 <i style="background:var(--bad)"></i>有問題 <i style="background:var(--todo)"></i>未測）</span></div>
+  <div class="legend"><span>按鈕＝開啟時的提示難度</span><span><i style="background:var(--l3)"></i>強提示（完整提示）</span><span><i style="background:var(--l2)"></i>弱提示（淡化提示）</span><span><i style="background:var(--l1)"></i>無提示（自由列式）</span></div>
 </header>
 <main id="main"></main>
 <div class="toast" id="toast"></div>
@@ -72,7 +72,6 @@ const LV=[[3,'強','full'],[2,'弱','faded'],[1,'無','free']];
 let CAT=null, q='', fam=localStorage.getItem('hub_fam')||'', list=localStorage.getItem('hub_view')==='list';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function tests(){try{return JSON.parse(localStorage.getItem('dash_tests_v1')||'{}')}catch(e){return {}}}
 const kindName=id=>(CAT.kinds.find(k=>k.id===id)||{}).name||id;
 const url=(it,lv)=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+(lv?'lv='+lv[0]+'&mode='+lv[2]:'');
 function match(it){
@@ -80,27 +79,26 @@ function match(it){
   const s=q.trim().toLowerCase(); if(!s)return true;
   return (it.title+it.paper+it.steps+it.note+it.endpoint+it.params+kindName(it.kind)+(FAMS.find(f=>f[0]===FAM_OF[it.kind])||[])[1]).toLowerCase().includes(s);
 }
-function card(it,T){
-  const dots=LV.map(l=>`<span class="dot ${(T[it.id+'|'+l[0]]||{}).st||''}"></span>`);
+function card(it){
   return `<div class="card"><a class="th" href="${url(it,LV[0])}" target="_blank" rel="noopener" aria-label="開啟 ${esc(it.title)}">
     <img src="thumbs/${it.id}.webp" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}</a>
    <div class="info"><div class="t">${esc(it.title)}</div><div class="st">${esc(it.steps)}</div>
-   <div class="lv">${LV.map((l,i)=>`<a class="l${l[0]}" href="${url(it,l)}" target="_blank" rel="noopener">${l[1]}提示${dots[i].replace('class="dot','class="dot')}</a>`).join('')}</div>
+   <div class="lv">${LV.map(l=>`<a class="l${l[0]}" href="${url(it,l)}" target="_blank" rel="noopener">${l[1]}提示</a>`).join('')}</div>
    <div class="foot"><button data-copy="${esc(url(it,null))}">🔗 複製連結</button>${it.note?`<span title="${esc(it.note)}">ⓘ ${esc(it.note.slice(0,18))}</span>`:''}</div></div></div>`;
 }
 function render(){
-  const T=tests(), items=CAT.items.filter(match);
+  const items=CAT.items.filter(match);
   $('#view').textContent=list?'縮圖':'清單';
   document.body.classList.toggle('list',list);
   $('#fam').innerHTML=[['','全部',CAT.items.length],...FAMS.map(f=>[f[0],f[2],CAT.items.filter(i=>FAM_OF[i.kind]===f[0]).length])].map(f=>`<button class="chip ${fam===f[0]?'on':''}" data-fam="${f[0]}">${f[1]}<small>${f[2]}</small></button>`).join(' ');
-  $('#meta').innerHTML=`共 ${CAT.items.length} 個頁面・資料更新 ${CAT.updated}・<a href="../dashboard/">測試儀表板 →</a>`;
+  $('#meta').innerHTML=`共 ${CAT.items.length} 個頁面・資料更新 ${CAT.updated}`;
   let h='';
   for(const [fid,name] of FAMS){
     const inF=items.filter(i=>FAM_OF[i.kind]===fid); if(!inF.length)continue;
     h+=`<h2>${name} <span class="sub">${inF.length} 頁</span></h2>`;
     for(const k of CAT.kinds.filter(k=>FAM_OF[k.id]===fid)){
       const g=inF.filter(i=>i.kind===k.id); if(!g.length)continue;
-      h+=(CAT.kinds.filter(x=>FAM_OF[x.id]===fid).length>1?`<h3>${k.name}</h3>`:'')+`<div class="grid">${g.map(i=>card(i,T)).join('')}</div>`;
+      h+=(CAT.kinds.filter(x=>FAM_OF[x.id]===fid).length>1?`<h3>${k.name}</h3>`:'')+`<div class="grid">${g.map(i=>card(i)).join('')}</div>`;
     }
   }
   $('#main').innerHTML=h||'<div class="empty">沒有符合的互動頁</div>';
