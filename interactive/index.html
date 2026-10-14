@@ -34,6 +34,7 @@ h3{font-size:13.5px;color:var(--mute);font-weight:600;margin:14px 0 8px}
 .st{color:var(--mute);font-size:12.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .lv{display:flex;gap:6px;margin-top:auto;padding-top:4px}
 .lv a{flex:1;text-align:center;text-decoration:none;font-size:14px;padding:6px 0;border-radius:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px}
+.lv a.lg{flex:.8;background:transparent;border:1.5px dashed var(--ac);color:var(--ac)}
 .lv a.l3{background:var(--l3);color:var(--l3t)}.lv a.l2{background:var(--l2);color:var(--l2t)}.lv a.l1{background:var(--l1);color:var(--l1t)}
 .lv a:hover{filter:brightness(1.07)}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--todo);border:1.5px solid rgba(255,255,255,.85)}
@@ -61,19 +62,20 @@ h3{font-size:13.5px;color:var(--mute);font-weight:600;margin:14px 0 8px}
     <span id="fam"></span>
     <button class="chip" id="view">清單</button>
   </div>
-  <div class="legend"><span>按鈕＝開啟時的提示難度</span><span><i style="background:var(--l3)"></i>強提示（完整提示）</span><span><i style="background:var(--l2)"></i>弱提示（淡化提示）</span><span><i style="background:var(--l1)"></i>無提示（自由列式）</span></div>
+  <div class="legend"><span>按鈕＝開啟時的提示難度</span><span><i style="background:var(--l3)"></i>強提示（完整提示）</span><span><i style="background:var(--l2)"></i>弱提示（淡化提示）</span><span><i style="background:var(--l1)"></i>無提示（自由列式）</span><span>虛線「漸退」＝同一份練習提示逐題退場（老師用）</span></div>
 </header>
 <main id="main"></main>
 <div class="toast" id="toast"></div>
 <script>
 const FAMS=[['wordprob','加減應用題','加減'],['mul','乘法','乘法'],['coin','錢幣（數與記數）','錢幣']];
 const FAM_OF={wordprob:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',dial:'mul',pv:'coin',cy:'coin'};
-const LV=[[3,'強','full'],[2,'弱','faded'],[1,'無','free']];
+const LV=[[3,'強','full'],[2,'弱','faded'],[1,'無','free']], LVG=['graded','漸退','graded'];
 let CAT=null, q='', fam=localStorage.getItem('hub_fam')||'', list=localStorage.getItem('hub_view')==='list';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const kindName=id=>(CAT.kinds.find(k=>k.id===id)||{}).name||id;
 const url=(it,lv)=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+(lv?'lv='+lv[0]+'&mode='+lv[2]:'');
+const GR=new Set(['pv','cy','wordprob','mul','mulwp','mulv','dial']);      // 漸退（?lv=graded）：引擎層支援，自動測試目前只有錢幣位值
 function match(it){
   if(fam&&FAM_OF[it.kind]!==fam)return false;
   const s=q.trim().toLowerCase(); if(!s)return true;
@@ -83,7 +85,7 @@ function card(it){
   return `<div class="card"><a class="th" href="${url(it,LV[0])}" target="_blank" rel="noopener" aria-label="開啟 ${esc(it.title)}">
     <img src="thumbs/${it.id}.webp" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}</a>
    <div class="info"><div class="t">${esc(it.title)}</div><div class="st">${esc(it.steps)}</div>
-   <div class="lv">${LV.map(l=>`<a class="l${l[0]}" href="${url(it,l)}" target="_blank" rel="noopener">${l[1]}提示</a>`).join('')}</div>
+   <div class="lv">${LV.map(l=>`<a class="l${l[0]}" href="${url(it,l)}" target="_blank" rel="noopener">${l[1]}提示</a>`).join('')}${GR.has(it.kind)?`<a class="lg" href="${url(it,LVG)}" target="_blank" rel="noopener" title="逐題漸退：提示隨題號逐步退場（老師用）">漸退</a>`:''}</div>
    <div class="foot"><button data-copy="${esc(url(it,null))}">🔗 複製連結</button>${it.note?`<span title="${esc(it.note)}">ⓘ ${esc(it.note.slice(0,18))}</span>`:''}</div></div></div>`;
 }
 function render(){

@@ -524,14 +524,17 @@
     "mulwp": "partial",
     "mulv": "partial",
     "dial": "partial",
-    "pv": "partial",
+    "pv": "done",
     "cy": "partial"
    },
    "status": "partial",
    "adopt": "must",
    "source": "wordprob 小節：「hint 欄位保留給之後的逐題漸退，介面目前不使用」",
-   "note": "規格已定（hint-profile.json 的 graded 區），尚未實作：模板還沒讀 graded，也沒有 ?lv=graded 入口與自動測試。",
-   "gap": "實作＋自動測試（先做錢幣位值／錢幣進位）"
+   "note": "已實作（?lv=graded）：模板依題階段取值、隱藏難度切換、成績記錄 graded；錢幣位值有自動測試（n=3／5／10）。其他題型只做過載入、未逐項驗證；選用的『連錯停留』未實作。",
+   "gap": "其他題型補自動測試；連錯停留視需要再做",
+   "autotest": [
+    "pv"
+   ]
   },
   {
    "id": "live-color",
