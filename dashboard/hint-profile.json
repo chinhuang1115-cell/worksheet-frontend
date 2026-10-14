@@ -1,5 +1,5 @@
 {
- "version": "2026-10-14b",
+ "version": "2026-10-14c",
  "note": "互動版提示設定檔：強(3)／弱(2)／無(1)提示各自開哪些功能。權威來源在前端 repo；後端用 toolkit/sync_hint_profile.py 同步成 backend/hint_profile.json，產生頁面時內嵌進 SPEC.hintProfile，模板以 H('功能') 讀取。改行為＝改這個檔，不要在模板裡寫死 level===N。",
  "decisions": {
   "help": "三級都會在連錯後閃出正確位置，門檻不同：強 2 次、弱 3 次、無 4 次（使用者 2026-10-14）",
@@ -85,6 +85,18 @@
    "2": false,
    "1": false,
    "desc": "題目數字上色"
+  },
+  "readTitle": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "步驟一開啟，先朗讀步驟標題（這一步要做的事），後面的提示語音排在它後面"
+  },
+  "readAsk": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "步驟開啟時，標題念完再念這一步要作答的問題；念完才開放作答（朗讀期間罩住作答區）"
   }
  },
  "adopted": [
@@ -107,7 +119,9 @@
    "tipbox",
    "autoRead",
    "wrongDetailAfter",
-   "helpAfter"
+   "helpAfter",
+   "readTitle",
+   "readAsk"
   ],
   "do": [
    "autoDo"

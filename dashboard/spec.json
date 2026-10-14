@@ -733,6 +733,37 @@
    "source": "設計決定",
    "note": "其他題型是否寫入未載明",
    "gap": "決定是否統一寫入並帶 level"
+  },
+  {
+   "id": "read-step",
+   "cat": "語音報讀",
+   "name": "步驟朗讀：先念標題、再念問題、念完才開放作答",
+   "desc": "每個步驟一開啟，先朗讀步驟標題（這一步要做的事），再朗讀這一步要作答的問題，念完才開放作答（朗讀期間罩住作答區）；弱、無提示不念也不遮（使用者 2026-10-14）。",
+   "levels": {
+    "3": "標題→問題，念完才能作答",
+    "2": "不念",
+    "1": "不念"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "partial",
+    "pv": "done",
+    "cy": "partial"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "使用者 2026-10-14",
+   "note": "已實作並有自動測試（pv、加減、乘法；voice）。其他步驟的問題文字（圓盤、直式乘法、錢幣進位各步）已加但只做過載入檢查。",
+   "gap": "其他題型補自動測試",
+   "profile": "readTitle／readAsk",
+   "autotest": [
+    "pv",
+    "wordprob",
+    "mul"
+   ]
   }
  ],
  "hintProfile": "hint-profile.json"
