@@ -1,7 +1,7 @@
 {
  "updated": "2026-10-14",
  "backend": "https://web-production-0542f.up.railway.app",
- "backendCommit": "73399d8",
+ "backendCommit": "b4d8a33",
  "kinds": [
   {
    "id": "wordprob",

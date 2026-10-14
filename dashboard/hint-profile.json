@@ -1,5 +1,5 @@
 {
- "version": "2026-10-14c",
+ "version": "2026-10-14d",
  "note": "互動版提示設定檔：強(3)／弱(2)／無(1)提示各自開哪些功能。權威來源在前端 repo；後端用 toolkit/sync_hint_profile.py 同步成 backend/hint_profile.json，產生頁面時內嵌進 SPEC.hintProfile，模板以 H('功能') 讀取。改行為＝改這個檔，不要在模板裡寫死 level===N。",
  "decisions": {
   "help": "三級都會在連錯後閃出正確位置，門檻不同：強 2 次、弱 3 次、無 4 次（使用者 2026-10-14）",
@@ -101,9 +101,14 @@
  },
  "adopted": [
   "pv",
-  "cy"
+  "cy",
+  "wordprob",
+  "mul",
+  "mulwp",
+  "mulv",
+  "dial"
  ],
- "adoptedNote": "adopted＝已有自動化測試（toolkit/test_hint_profile.py）驗證行為與本檔一致的題型；其他題型共用同一引擎、行為也會跟著設定檔走，但尚未逐項驗證。",
+ "adoptedNote": "adopted＝已有自動測試（toolkit/test_hint_profile.py：pv／cy／graded／voice／tapread／flow／hold）驗證行為與本檔一致的題型。",
  "groups": {
   "see": [
    "flash",
@@ -129,7 +134,7 @@
   "_note": "逐題漸退時，三組提示各自有自己的難度（3 強／2 弱／1 無），再各自去 features 查該難度的值。see＝視覺提示、say＝文字與語音提示、do＝系統代做。"
  },
  "graded": {
-  "status": "已實作（2026-10-14）：模板讀 graded 階段表；選用的 hold 未實作",
+  "status": "已實作（2026-10-14），含選用的連錯停留（hold，預設關閉）",
   "stages": [
    {
     "name": "S1",
@@ -168,7 +173,7 @@
    "hold": {
     "enabled": false,
     "wrongAtLeast": 3,
-    "note": "選用：某一題累計放錯達 wrongAtLeast 次，下一題停在同一階段（不前進一階）。預設關閉＝固定排程，老師好預期。"
+    "note": "已實作：某題累計放錯達 wrongAtLeast 次，後面各題少前進一階；最後一題仍是最後階段；預設關閉＝固定排程。"
    },
    "entry": "網址 ?lv=graded（老師用連結開啟）；漸退模式下隱藏頁面右上角的強／弱／無切換，學生不能自己切；中途換模式＝整份重來。",
    "display": "不對學生顯示階段或等級名稱。",

@@ -106,9 +106,9 @@
    },
    "kinds": {
     "wordprob": "done",
-    "mul": "partial",
-    "mulwp": "partial",
-    "mulv": "partial",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
     "dial": "partial",
     "pv": "done",
     "cy": "done"
@@ -116,9 +116,17 @@
    "status": "partial",
    "adopt": "must",
    "source": "對照表、pv／cy 小節",
-   "note": "乘法三題型文件只記強提示有提示框，未明寫閃動規則",
-   "gap": "補：mul／mulwp／mulv／dial 是否閃、閃哪裡",
-   "profile": "flash"
+   "note": "開場閃動已有自動測試（加減、乘法三題型、錢幣）；圓盤的亮燈另有規則，尚未納入測試。",
+   "gap": "圓盤補測試",
+   "profile": "flash",
+   "autotest": [
+    "wordprob",
+    "mul",
+    "mulwp",
+    "mulv",
+    "pv",
+    "cy"
+   ]
   },
   {
    "id": "spot",
@@ -157,23 +165,28 @@
     "1": "連錯 4 次後閃"
    },
    "kinds": {
-    "wordprob": "partial",
-    "mul": "partial",
-    "mulwp": "partial",
-    "mulv": "partial",
-    "dial": "partial",
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
     "pv": "done",
     "cy": "done"
    },
-   "status": "partial",
+   "status": "done",
    "adopt": "must",
    "source": "設計決定 vs 對照表",
-   "note": "已決定（2026-10-14）並寫入設定檔；錢幣題型已有自動測試，其他題型共用引擎、行為會跟設定檔走但尚未逐項驗證。",
-   "gap": "其他題型補自動測試",
+   "note": "已實作並有自動測試（錢幣位值、錢幣進位、加減、乘法三題型、圓盤；flow／pv／cy）。",
+   "gap": "",
    "profile": "helpAfter",
    "autotest": [
+    "cy",
+    "dial",
+    "mul",
+    "mulv",
+    "mulwp",
     "pv",
-    "cy"
+    "wordprob"
    ]
   },
   {
@@ -345,30 +358,35 @@
     "1": "先「再試一次！」，累計錯 3 次才具體說明"
    },
    "kinds": {
-    "wordprob": "partial",
-    "mul": "partial",
-    "mulwp": "partial",
-    "mulv": "partial",
-    "dial": "partial",
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
     "pv": "done",
     "cy": "done"
    },
-   "status": "partial",
+   "status": "done",
    "adopt": "must",
    "source": "設計決定、pv／cy 小節",
-   "note": "已決定並寫入設定檔；錢幣題型已有自動測試。加減的錯誤回饋走另一套（block 訊息），尚未併入設定檔。",
-   "gap": "加減／乘法併入 wrongMsg，並補自動測試",
+   "note": "通用引擎也改走設定檔（2026-10-14）：強、弱立即具體說明，無提示累計錯 3 次才說明；有自動測試（flow／pv／cy）。",
+   "gap": "",
    "profile": "wrongDetailAfter",
    "autotest": [
+    "cy",
+    "dial",
+    "mul",
+    "mulv",
+    "mulwp",
     "pv",
-    "cy"
+    "wordprob"
    ]
   },
   {
    "id": "hover-read",
    "cat": "語音報讀",
-   "name": "滑過朗讀（滑鼠）",
-   "desc": "滑鼠移到文句／語詞／選項停 180ms 就念；空格不念；功能按鈕不念；觸控不觸發；頂端 🗣 可關",
+   "name": "點一下朗讀",
+   "desc": "點一下文句／語詞／選項／已填的格子就念（取代滑過朗讀，使用者 2026-10-14：平板沒有滑鼠）；滑鼠移過去不念，拖曳不算點一下；空格、功能按鈕、錢幣圖示不念；點選項磚、數字鍵時照舊動作並念出那一個字；頂端 🗣 可關。",
    "levels": {
     "3": "同左",
     "2": "同左",
@@ -377,17 +395,20 @@
    "kinds": {
     "wordprob": "done",
     "mul": "done",
-    "mulwp": "partial",
-    "mulv": "partial",
+    "mulwp": "done",
+    "mulv": "done",
     "dial": "done",
-    "pv": "partial",
-    "cy": "partial"
+    "pv": "done",
+    "cy": "done"
    },
-   "status": "partial",
+   "status": "done",
    "adopt": "must",
    "source": "通則17",
-   "note": "⚠ 三種難度行為完全相同；是否「無提示不念」未定。pv／cy 的錢幣圖示不朗讀",
-   "gap": "決定無提示是否關閉滑過朗讀；平板（觸控）無滑過，需另一種觸發"
+   "note": "三種難度行為相同（尚未區分）；已有自動測試（加減）。",
+   "gap": "無提示要不要關閉點讀：待決定",
+   "autotest": [
+    "wordprob"
+   ]
   },
   {
    "id": "auto-read",
@@ -530,8 +551,8 @@
    "status": "partial",
    "adopt": "must",
    "source": "wordprob 小節：「hint 欄位保留給之後的逐題漸退，介面目前不使用」",
-   "note": "已實作（?lv=graded）：模板依題階段取值、隱藏難度切換、成績記錄 graded；錢幣位值有自動測試（n=3／5／10）。其他題型只做過載入、未逐項驗證；選用的『連錯停留』未實作。",
-   "gap": "其他題型補自動測試；連錯停留視需要再做",
+   "note": "已實作（?lv=graded）：模板依題階段取值、隱藏難度切換、成績記錄；選用的『連錯停留』也已實作（預設關閉，有測試）。自動測試：錢幣位值（n=3／5／10 的階段與逐題行為）。其他題型只做過流程測試的三難度，未做漸退逐題檢查。",
+   "gap": "其他題型補漸退逐題檢查",
    "autotest": [
     "pv"
    ]
