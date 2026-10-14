@@ -76,7 +76,7 @@
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=sub&regroup=yes",
    "smoke": "interactive wordprob sub borrow",
-   "steps": "同上＋退位圈圈 10、分步算式",
+   "steps": "①找關鍵字→②橫式→③直式→④答句；退位圈圈 10、分步算式",
    "note": "",
    "paper": ""
   },
@@ -87,7 +87,7 @@
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=add&regroup=none",
    "smoke": "interactive wordprob add",
-   "steps": "同上",
+   "steps": "①找關鍵字→②橫式→③直式→④答句",
    "note": "",
    "paper": ""
   },
@@ -98,7 +98,7 @@
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=add&regroup=yes",
    "smoke": "interactive wordprob add carry",
-   "steps": "同上＋進位拉出數字 1",
+   "steps": "①找關鍵字→②橫式→③直式→④答句；進位拉出數字 1",
    "note": "",
    "paper": ""
   },
@@ -109,7 +109,7 @@
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=mix&regroup=mix",
    "smoke": "interactive wordprob mix",
-   "steps": "同上",
+   "steps": "①找關鍵字→②橫式→③直式→④答句",
    "note": "",
    "paper": ""
   },
@@ -120,7 +120,7 @@
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=sub&digits=3&regroup=double",
    "smoke": "interactive wordprob 3d sub double",
-   "steps": "由個位做到百位、整欄聚焦",
+   "steps": "①找關鍵字→②橫式→③直式（三位數）→④答句；由個位做到百位、整欄聚焦",
    "note": "",
    "paper": ""
   },
@@ -131,7 +131,7 @@
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=sub&digits=3&regroup=chain",
    "smoke": "interactive wordprob 3d sub chain",
-   "steps": "十位是 0，百位圈圈接力",
+   "steps": "①找關鍵字→②橫式→③直式（三位數）→④答句；十位是 0，百位圈圈接力",
    "note": "",
    "paper": ""
   },
@@ -142,7 +142,7 @@
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=add&digits=3&regroup=double",
    "smoke": null,
-   "steps": "十位和拆兩步、百位和拆兩步",
+   "steps": "①找關鍵字→②橫式→③直式（三位數）→④答句；十位和、百位和各拆兩步",
    "note": "smoke 未涵蓋，建議補測項",
    "paper": ""
   },
@@ -153,7 +153,7 @@
    "endpoint": "/interactive/mul-concept",
    "params": "level=easy",
    "smoke": "interactive mul concept easy",
-   "steps": "分盤→連加→幾個幾→乘法算式（乘法大樓）→答句",
+   "steps": "分盤→連加→幾個幾→乘法算式→答句（每盤 2～3 個、2～3 盤）",
    "note": "",
    "paper": "N209A"
   },
@@ -164,7 +164,7 @@
    "endpoint": "/interactive/mul-concept",
    "params": "level=normal",
    "smoke": "interactive mul concept normal",
-   "steps": "同上",
+   "steps": "分盤→連加→幾個幾→乘法算式→答句（每盤 2～5 個、2～5 盤）",
    "note": "",
    "paper": "N209A"
   },
@@ -175,7 +175,7 @@
    "endpoint": "/interactive/mul-wordprob",
    "params": "level=easy",
    "smoke": "interactive mul wordprob easy",
-   "steps": "關鍵字→連加（強提示）→乘法算式→答句",
+   "steps": "關鍵字→連加→乘法算式→答句（單價、個數 2～5）",
    "note": "",
    "paper": ""
   },
@@ -186,7 +186,7 @@
    "endpoint": "/interactive/mul-wordprob",
    "params": "level=normal",
    "smoke": "interactive mul wordprob normal",
-   "steps": "同上",
+   "steps": "關鍵字→連加→乘法算式→答句（單價、個數 2～9）",
    "note": "",
    "paper": ""
   },
@@ -208,7 +208,7 @@
    "endpoint": "/interactive/mul-vertical",
    "params": "regroup=yes",
    "smoke": "interactive mul vertical carry",
-   "steps": "同上＋進位",
+   "steps": "關鍵字→橫式→直式（每欄查九九乘法表）→答句；進位",
    "note": "",
    "paper": ""
   },
@@ -219,7 +219,7 @@
    "endpoint": "/interactive/mul-vertical",
    "params": "regroup=mix",
    "smoke": "interactive mul vertical mix",
-   "steps": "同上",
+   "steps": "關鍵字→橫式→直式（每欄查九九乘法表）→答句",
    "note": "",
    "paper": ""
   },
@@ -230,7 +230,7 @@
    "endpoint": "/interactive/mul-dial",
    "params": "level=easy",
    "smoke": "interactive mul dial easy",
-   "steps": "單步：填圓盤缺漏格；找房子→放大",
+   "steps": "填圓盤缺漏格；找房子→放大（簡單）",
    "note": "與紙本同構，不寫作答紙",
    "paper": "N209C"
   },
@@ -241,7 +241,7 @@
    "endpoint": "/interactive/mul-dial",
    "params": "level=normal",
    "smoke": "interactive mul dial",
-   "steps": "同上",
+   "steps": "填圓盤缺漏格；找房子→放大（一般）",
    "note": "",
    "paper": "N209C"
   },
@@ -252,7 +252,7 @@
    "endpoint": "/interactive/place-value",
    "params": "level=easy",
    "smoke": "interactive pv easy full",
-   "steps": "①分一分→②數一數→③填寫",
+   "steps": "①分一分→②數一數→③填寫（151～199 元，數量較少）",
    "note": "",
    "paper": "N101G"
   },
@@ -263,7 +263,7 @@
    "endpoint": "/interactive/place-value",
    "params": "level=normal",
    "smoke": "interactive pv graded",
-   "steps": "同上",
+   "steps": "①分一分→②數一數→③填寫（151～199 元）",
    "note": "",
    "paper": "N101G"
   },
@@ -285,7 +285,7 @@
    "endpoint": "/interactive/coin-carry",
    "params": "base=ten&level=normal",
    "smoke": "interactive cy ten graded",
-   "steps": "同上",
+   "steps": "①圈一圈→②換一換→③④填寫",
    "note": "",
    "paper": ""
   },
@@ -296,7 +296,7 @@
    "endpoint": "/interactive/coin-carry",
    "params": "base=hun&level=normal",
    "smoke": "interactive cy hun graded",
-   "steps": "同上",
+   "steps": "①圈一圈→②換一換→③④填寫",
    "note": "",
    "paper": ""
   },
@@ -318,7 +318,7 @@
    "endpoint": "/interactive/coin-carry",
    "params": "base=chain&level=normal",
    "smoke": "interactive cy chain easy free",
-   "steps": "③選「滿了，再換」後 10 個 10 元整組拖去百位",
+   "steps": "①數一數→②換一換→③想一想→④填寫；滿 10 個 10 元，整組拖去百位",
    "note": "十位欄 10 枚直向堆疊，平板上確認高度",
    "paper": ""
   },
@@ -351,7 +351,7 @@
    "endpoint": "/interactive/coin-carry",
    "params": "base=sp10&level=easy",
    "smoke": "interactive cy sp10 easy free",
-   "steps": "同 sp1，單位放大",
+   "steps": "①數一數→②換一換→③填（單位放大）",
    "note": "",
    "paper": ""
   },
@@ -362,7 +362,7 @@
    "endpoint": "/interactive/coin-carry",
    "params": "base=sp100&level=easy",
    "smoke": "interactive cy sp100 graded",
-   "steps": "同 sp1，單位放大",
+   "steps": "①數一數→②換一換→③填（單位放大）",
    "note": "",
    "paper": ""
   }

@@ -71,7 +71,7 @@ pre{background:var(--card);border:1px solid var(--line);border-radius:10px;paddi
 <body>
 <header>
   <h1>互動頁測試儀表板</h1>
-  <div class="sub" id="meta">載入中…</div>
+  <div class="sub" id="meta">載入中…</div><div class="sub"><a href="../interactive/" style="color:var(--accent)">← 互動學習單總覽（給學生／老師使用的入口）</a></div>
   <nav id="tabs"></nav>
 </header>
 <main id="main"></main>
@@ -96,7 +96,7 @@ function expectations(it,lv){
   if(lv==='x')return [];
   return SPEC.features.filter(f=>f.levels&&f.kinds[it.kind]!=='na'&&f.levels[lv]).map(f=>({id:f.id,name:f.name,text:f.levels[lv],st:f.kinds[it.kind],status:f.status}))
 }
-function link(it,lv){const l=lvName(lv);return CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+'mode='+(l?l.mode:'graded')}
+function link(it,lv){const l=lvName(lv);return CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+(l?'lv='+l.id+'&mode='+l.mode:'mode=graded')}
 function stat(rows){const c={pass:0,fail:0,todo:0};rows.forEach(r=>c[get(r.key).st]++);return c}
 function bar(c){const t=c.pass+c.fail+c.todo||1;return `<div class="prog"><i style="width:${c.pass/t*100}%;background:var(--ok)"></i><i style="width:${c.fail/t*100}%;background:var(--bad)"></i></div>`}
 
@@ -126,7 +126,7 @@ function renderTest(){
    <div class="stat"><div class="l">有問題</div><div class="n" style="color:var(--bad)">${c.fail}</div></div>
    <div class="stat"><div class="l">未測</div><div class="n">${c.todo}</div></div></div>
   <div class="grid">${byKind}</div>
-  <div class="hint">每個頁面依「強／弱／無提示」各一列＋裝置檢查。連結的 <code>mode</code> 只決定<b>第一次</b>開啟時的預設難度；若頁面難度與預期不同，請用頁面右上角切換（瀏覽器會記住上次的難度）。勾選與備註存在這個瀏覽器；換裝置請用「匯出／匯入」。</div>
+  <div class="hint">每個頁面依「強／弱／無提示」各一列＋裝置檢查。連結帶 <code>lv</code> 參數，開啟時直接是該難度（需後端 2026-10-14 之後的版本）；之後仍可用頁面右上角切換。勾選與備註存在這個瀏覽器；換裝置請用「匯出／匯入」。</div>
   <div class="bar">
    <input type="search" id="q" placeholder="搜尋題型、端點、參數…" value="${esc(F.q)}">
    <select id="fk"><option value="">全部題型</option>${CAT.kinds.map(k=>`<option value="${k.id}" ${F.kind===k.id?'selected':''}>${k.name}</option>`).join('')}</select>
