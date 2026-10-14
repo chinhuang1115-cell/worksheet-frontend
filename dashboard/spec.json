@@ -1,6 +1,6 @@
 {
  "updated": "2026-10-14",
- "note": "依文件記載盤點（後端 CLAUDE.md 通則 1～21、docs/guide/interactive-web.md、handoff），未逐行比對程式碼；實際行為以『逐項測試』為準。",
+ "note": "依文件記載盤點，並以 hint-profile.json（提示設定檔）為「強／弱／無」行為的權威來源。標 🧪 的功能已有自動測試（toolkit/test_hint_profile.py，錢幣位值＋錢幣進位）；其他仍以『逐項測試』為準。",
  "statusLegend": {
   "done": "已規格化",
   "partial": "部分規格化／有矛盾",
@@ -91,7 +91,8 @@
    "adopt": "must",
    "source": "通則4、對照表",
    "note": "關鍵字步驟存在於 mulwp／mulv，但文件未載明三種難度的亮法",
-   "gap": "補：mulwp／mulv 逐難度行為"
+   "gap": "補：mulwp／mulv 逐難度行為",
+   "profile": "numColor"
   },
   {
    "id": "pulse",
@@ -116,7 +117,8 @@
    "adopt": "must",
    "source": "對照表、pv／cy 小節",
    "note": "乘法三題型文件只記強提示有提示框，未明寫閃動規則",
-   "gap": "補：mul／mulwp／mulv／dial 是否閃、閃哪裡"
+   "gap": "補：mul／mulwp／mulv／dial 是否閃、閃哪裡",
+   "profile": "flash"
   },
   {
    "id": "spot",
@@ -141,32 +143,38 @@
    "adopt": "should",
    "source": "通則8、對照表",
    "note": "直式乘法是否沿用未載明",
-   "gap": "決定 mulv 要不要套用"
+   "gap": "決定 mulv 要不要套用",
+   "profile": "spot"
   },
   {
    "id": "help",
    "cat": "視覺提示",
    "name": "連錯後正確選項閃動（.help）",
-   "desc": "錯幾次後讓正確磚閃動協助",
+   "desc": "錯幾次後讓正確位置閃動協助（三級都有，門檻不同；使用者 2026-10-14）",
    "levels": {
     "3": "連錯 2 次後閃",
-    "2": "不閃（避免示答案）",
-    "1": "不閃"
+    "2": "連錯 3 次後閃",
+    "1": "連錯 4 次後閃"
    },
    "kinds": {
     "wordprob": "partial",
-    "mul": "none",
-    "mulwp": "none",
-    "mulv": "none",
-    "dial": "none",
-    "pv": "none",
-    "cy": "none"
+    "mul": "partial",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "partial",
+    "pv": "done",
+    "cy": "done"
    },
    "status": "partial",
    "adopt": "must",
    "source": "設計決定 vs 對照表",
-   "note": "⚠ 文件兩處矛盾：設計決定寫「連錯 2 次（無提示 3 次）正確磚閃」；對照表寫弱／無不閃。",
-   "gap": "先決定哪一版為準，再同步到所有題型"
+   "note": "已決定（2026-10-14）並寫入設定檔；錢幣題型已有自動測試，其他題型共用引擎、行為會跟設定檔走但尚未逐項驗證。",
+   "gap": "其他題型補自動測試",
+   "profile": "helpAfter",
+   "autotest": [
+    "pv",
+    "cy"
+   ]
   },
   {
    "id": "keypad",
@@ -191,7 +199,8 @@
    "adopt": "must",
    "source": "通則5、對照表",
    "note": "乘法題型是否一致未載明",
-   "gap": "核對 mul／mulwp／mulv"
+   "gap": "核對 mul／mulwp／mulv",
+   "profile": "keypadDim"
   },
   {
    "id": "carry-flash",
@@ -216,7 +225,8 @@
    "adopt": "should",
    "source": "對照表",
    "note": "",
-   "gap": ""
+   "gap": "",
+   "profile": "carryFlash"
   },
   {
    "id": "placelabel",
@@ -241,7 +251,12 @@
    "adopt": "should",
    "source": "設計決定、pv／cy 小節",
    "note": "",
-   "gap": ""
+   "gap": "",
+   "profile": "colIcon",
+   "autotest": [
+    "pv",
+    "cy"
+   ]
   },
   {
    "id": "choices",
@@ -272,26 +287,31 @@
    "id": "tipbox",
    "cat": "文字提示",
    "name": "分段提示文字／懸浮提示框",
-   "desc": "提示文字出現的位置與時機",
+   "desc": "文字提示框：強、弱一律有（弱不閃、不自動朗讀），無提示沒有（使用者 2026-10-14）",
    "levels": {
     "3": "顯示（跟著目前步驟）",
-    "2": "wordprob 無；dial／cy／pv 有（不閃）",
+    "2": "顯示（不閃、不自動念）",
     "1": "無"
    },
    "kinds": {
-    "wordprob": "done",
+    "wordprob": "partial",
     "mul": "partial",
     "mulwp": "partial",
     "mulv": "partial",
-    "dial": "done",
-    "pv": "partial",
+    "dial": "partial",
+    "pv": "done",
     "cy": "done"
    },
    "status": "partial",
    "adopt": "must",
    "source": "設計決定、handoff、pv／cy 小節",
-   "note": "⚠ 弱提示有無提示框各題型不一致（handoff：「其他乘法題型的弱提示仍沒有提示框，使用者未要求」）",
-   "gap": "決定弱提示的通則：一律有／一律無／依題型"
+   "note": "已決定並寫入設定檔；錢幣題型已有自動測試。加減、乘法的弱提示現在會跟著顯示提示文字，尚未逐項驗證。",
+   "gap": "其他題型補自動測試",
+   "profile": "tipbox",
+   "autotest": [
+    "pv",
+    "cy"
+   ]
   },
   {
    "id": "tipstyle",
@@ -318,26 +338,31 @@
    "id": "wrongmsg",
    "cat": "文字提示",
    "name": "放錯回饋文字",
-   "desc": "彈回＋說明為什麼、該放哪",
+   "desc": "放錯的回饋：強、弱立即具體說明；無提示先說「再試一次」，同一步驟累計錯 3 次才具體說明（使用者 2026-10-14）",
    "levels": {
-    "3": "具體原因＋去處",
-    "2": "具體原因",
-    "1": "加減：仍有文字（連錯 3 次才提示）；錢幣進位：只說「再試一次！」"
+    "3": "立即：具體原因＋該放哪",
+    "2": "立即：具體原因＋該放哪",
+    "1": "先「再試一次！」，累計錯 3 次才具體說明"
    },
    "kinds": {
-    "wordprob": "done",
+    "wordprob": "partial",
     "mul": "partial",
     "mulwp": "partial",
     "mulv": "partial",
     "dial": "partial",
-    "pv": "partial",
-    "cy": "partial"
+    "pv": "done",
+    "cy": "done"
    },
    "status": "partial",
    "adopt": "must",
    "source": "設計決定、pv／cy 小節",
-   "note": "⚠ 無提示時的錯誤文字，加減與錢幣進位規則不同",
-   "gap": "統一「無提示」的錯誤回饋標準"
+   "note": "已決定並寫入設定檔；錢幣題型已有自動測試。加減的錯誤回饋走另一套（block 訊息），尚未併入設定檔。",
+   "gap": "加減／乘法併入 wrongMsg，並補自動測試",
+   "profile": "wrongDetailAfter",
+   "autotest": [
+    "pv",
+    "cy"
+   ]
   },
   {
    "id": "hover-read",
@@ -386,8 +411,13 @@
    "status": "done",
    "adopt": "must",
    "source": "通則17、pv／cy 小節",
-   "note": "瀏覽器自動播放限制：第一題在使用者點過頁面前可能不發聲",
-   "gap": ""
+   "note": "錢幣題型已有自動測試；弱提示不再自動朗讀（滑過朗讀不受影響）",
+   "gap": "",
+   "profile": "autoRead",
+   "autotest": [
+    "pv",
+    "cy"
+   ]
   },
   {
    "id": "say-num",
@@ -456,9 +486,9 @@
    "id": "auto-fill",
    "cat": "自動完成度",
    "name": "強提示的自動帶入",
-   "desc": "強提示時，哪些「機械步驟」由系統代做（例：錢幣進位拖完最後一包，剩下的 1 元自動走進個位）；弱／無由學生做",
+   "desc": "強提示的代做：只代做重複性機械步驟（學生完成判斷之後的搬移／換錢動畫、剩下的錢幣走進個位）；圈包、選算式、計算、填寫由學生做（使用者 2026-10-14）",
    "levels": {
-    "3": "系統代做指定機械步驟",
+    "3": "代做機械步驟",
     "2": "學生自己做",
     "1": "學生自己做"
    },
@@ -468,14 +498,19 @@
     "mulwp": "none",
     "mulv": "none",
     "dial": "none",
-    "pv": "none",
+    "pv": "done",
     "cy": "done"
    },
-   "status": "none",
+   "status": "partial",
    "adopt": "must",
    "source": "cy 小節",
-   "note": "⚠ 沒有通則：只有錢幣進位有；加減／乘法／圓盤／位值都沒定義「強提示自動做到哪」",
-   "gap": "定義自動完成度分級（見規格建議）"
+   "note": "錢幣進位已依此實作並有自動測試。其他題型尚無需要代做的機械步驟，也未盤點。",
+   "gap": "新題型設計時逐步判斷哪些算「機械步驟」",
+   "profile": "autoDo",
+   "autotest": [
+    "pv",
+    "cy"
+   ]
   },
   {
    "id": "graded",
@@ -521,7 +556,12 @@
    "adopt": "should",
    "source": "通則6、pv 小節",
    "note": "",
-   "gap": ""
+   "gap": "",
+   "profile": "liveColor",
+   "autotest": [
+    "pv",
+    "cy"
+   ]
   },
   {
    "id": "drag",
@@ -691,5 +731,6 @@
    "note": "其他題型是否寫入未載明",
    "gap": "決定是否統一寫入並帶 level"
   }
- ]
+ ],
+ "hintProfile": "hint-profile.json"
 }

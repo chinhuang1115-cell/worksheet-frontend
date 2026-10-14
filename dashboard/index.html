@@ -193,7 +193,7 @@ function renderSpec(){
   <button class="btn" id="mdexp">複製為 Markdown</button></div>
   ${cats.map(c=>{const fs=SPEC.features.filter(f=>f.cat===c&&(!F.ss||f.status===F.ss)&&(!F.sq||(f.name+f.desc+f.note).includes(F.sq)));if(!fs.length)return '';
   return `<h2>${c}</h2><div class="wrap"><table><thead><tr><th style="min-width:190px">功能</th>${SPEC.levels.map(l=>`<th style="min-width:130px">${l.name}</th>`).join('')}<th class="c">狀態</th>${SPEC.kinds.map(k=>`<th class="c" style="font-size:11.5px">${k.name}</th>`).join('')}</tr></thead><tbody>${fs.map(f=>`<tr>
-   <td><b>${esc(f.name)}</b><div class="note">${esc(f.desc)}</div>${f.note?`<div class="gap">${esc(f.note)}</div>`:''}${f.gap?`<div class="note">→ ${esc(f.gap)}</div>`:''}<div class="note">出處：${esc(f.source)}</div></td>
+   <td><b>${esc(f.name)}</b> ${f.autotest?`<span class="pill ok" title="toolkit/test_hint_profile.py：${f.autotest.join('、')}">🧪 自動測試</span>`:''}${f.profile?`<span class="pill nn" title="hint-profile.json 的鍵">${esc(f.profile)}</span>`:''}<div class="note">${esc(f.desc)}</div>${f.note?`<div class="gap">${esc(f.note)}</div>`:''}${f.gap?`<div class="note">→ ${esc(f.gap)}</div>`:''}<div class="note">出處：${esc(f.source)}</div></td>
    ${f.levels?['3','2','1'].map(l=>`<td class="lvtxt">${esc(f.levels[l])}</td>`).join(''):`<td class="lvtxt note" colspan="3" style="text-align:center">— 不分難度 —</td>`}
    <td class="c"><span class="pill s-${f.status}">${SL[f.status]}</span></td>
    ${SPEC.kinds.map(k=>`<td class="c"><span class="pill s-${f.kinds[k.id]}" title="${SL[f.kinds[k.id]]}">${{done:'●',partial:'◐',none:'○',na:'—'}[f.kinds[k.id]]}</span></td>`).join('')}</tr>`).join('')}</tbody></table></div>`}).join('')}
