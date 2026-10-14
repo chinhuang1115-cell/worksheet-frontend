@@ -1,0 +1,370 @@
+{
+ "updated": "2026-10-14",
+ "backend": "https://web-production-0542f.up.railway.app",
+ "backendCommit": "e8ae25b",
+ "kinds": [
+  {
+   "id": "wordprob",
+   "name": "加減應用題"
+  },
+  {
+   "id": "mul",
+   "name": "乘法概念"
+  },
+  {
+   "id": "mulwp",
+   "name": "乘法應用題"
+  },
+  {
+   "id": "mulv",
+   "name": "直式乘法"
+  },
+  {
+   "id": "dial",
+   "name": "乘法圓盤"
+  },
+  {
+   "id": "pv",
+   "name": "錢幣位值"
+  },
+  {
+   "id": "cy",
+   "name": "錢幣進位"
+  }
+ ],
+ "levels": [
+  {
+   "id": 3,
+   "name": "強提示",
+   "paper": "完整提示",
+   "mode": "full"
+  },
+  {
+   "id": 2,
+   "name": "弱提示",
+   "paper": "淡化提示",
+   "mode": "faded"
+  },
+  {
+   "id": 1,
+   "name": "無提示",
+   "paper": "自由列式（無提示）",
+   "mode": "free"
+  }
+ ],
+ "extraChecks": [
+  "平板觸控拖曳手感",
+  "語音實際聽感",
+  "視窗縮放（1024／820／640）"
+ ],
+ "items": [
+  {
+   "id": "wp-sub-none",
+   "kind": "wordprob",
+   "title": "兩位數減法（不退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=sub&regroup=none",
+   "smoke": "interactive wordprob graded／full／free",
+   "steps": "①找關鍵字→②橫式→③直式→④答句",
+   "note": "試點題型",
+   "paper": "N202"
+  },
+  {
+   "id": "wp-sub-yes",
+   "kind": "wordprob",
+   "title": "兩位數減法（退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=sub&regroup=yes",
+   "smoke": "interactive wordprob sub borrow",
+   "steps": "同上＋退位圈圈 10、分步算式",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wp-add-none",
+   "kind": "wordprob",
+   "title": "兩位數加法（不進位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=add&regroup=none",
+   "smoke": "interactive wordprob add",
+   "steps": "同上",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wp-add-yes",
+   "kind": "wordprob",
+   "title": "兩位數加法（進位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=add&regroup=yes",
+   "smoke": "interactive wordprob add carry",
+   "steps": "同上＋進位拉出數字 1",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wp-mix",
+   "kind": "wordprob",
+   "title": "兩位數加減交錯（含進退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=mix&regroup=mix",
+   "smoke": "interactive wordprob mix",
+   "steps": "同上",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wp-3d-sub-double",
+   "kind": "wordprob",
+   "title": "三位數減法（雙重退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=sub&digits=3&regroup=double",
+   "smoke": "interactive wordprob 3d sub double",
+   "steps": "由個位做到百位、整欄聚焦",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wp-3d-sub-chain",
+   "kind": "wordprob",
+   "title": "三位數減法（連續退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=sub&digits=3&regroup=chain",
+   "smoke": "interactive wordprob 3d sub chain",
+   "steps": "十位是 0，百位圈圈接力",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wp-3d-add-double",
+   "kind": "wordprob",
+   "title": "三位數加法（雙重進位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=add&digits=3&regroup=double",
+   "smoke": null,
+   "steps": "十位和拆兩步、百位和拆兩步",
+   "note": "smoke 未涵蓋，建議補測項",
+   "paper": ""
+  },
+  {
+   "id": "mul-concept-easy",
+   "kind": "mul",
+   "title": "乘法概念：幾個幾（簡單）",
+   "endpoint": "/interactive/mul-concept",
+   "params": "level=easy",
+   "smoke": "interactive mul concept easy",
+   "steps": "分盤→連加→幾個幾→乘法算式（乘法大樓）→答句",
+   "note": "",
+   "paper": "N209A"
+  },
+  {
+   "id": "mul-concept-normal",
+   "kind": "mul",
+   "title": "乘法概念：幾個幾（一般）",
+   "endpoint": "/interactive/mul-concept",
+   "params": "level=normal",
+   "smoke": "interactive mul concept normal",
+   "steps": "同上",
+   "note": "",
+   "paper": "N209A"
+  },
+  {
+   "id": "mulwp-easy",
+   "kind": "mulwp",
+   "title": "乘法應用題：算價錢（簡單）",
+   "endpoint": "/interactive/mul-wordprob",
+   "params": "level=easy",
+   "smoke": "interactive mul wordprob easy",
+   "steps": "關鍵字→連加（強提示）→乘法算式→答句",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulwp-normal",
+   "kind": "mulwp",
+   "title": "乘法應用題：算價錢（一般）",
+   "endpoint": "/interactive/mul-wordprob",
+   "params": "level=normal",
+   "smoke": "interactive mul wordprob normal",
+   "steps": "同上",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulv-none",
+   "kind": "mulv",
+   "title": "直式乘法（不進位）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=none",
+   "smoke": "interactive mul vertical",
+   "steps": "關鍵字→橫式→直式（每欄查九九乘法表）→答句",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulv-yes",
+   "kind": "mulv",
+   "title": "直式乘法（進位）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=yes",
+   "smoke": "interactive mul vertical carry",
+   "steps": "同上＋進位",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulv-mix",
+   "kind": "mulv",
+   "title": "直式乘法（進位／不進位交錯）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=mix",
+   "smoke": "interactive mul vertical mix",
+   "steps": "同上",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "dial-easy",
+   "kind": "dial",
+   "title": "乘法圓盤（簡單）",
+   "endpoint": "/interactive/mul-dial",
+   "params": "level=easy",
+   "smoke": "interactive mul dial easy",
+   "steps": "單步：填圓盤缺漏格；找房子→放大",
+   "note": "與紙本同構，不寫作答紙",
+   "paper": "N209C"
+  },
+  {
+   "id": "dial-normal",
+   "kind": "dial",
+   "title": "乘法圓盤（一般）",
+   "endpoint": "/interactive/mul-dial",
+   "params": "level=normal",
+   "smoke": "interactive mul dial",
+   "steps": "同上",
+   "note": "",
+   "paper": "N209C"
+  },
+  {
+   "id": "pv-easy",
+   "kind": "pv",
+   "title": "錢幣位值（簡單）",
+   "endpoint": "/interactive/place-value",
+   "params": "level=easy",
+   "smoke": "interactive pv easy full",
+   "steps": "①分一分→②數一數→③填寫",
+   "note": "",
+   "paper": "N101G"
+  },
+  {
+   "id": "pv-normal",
+   "kind": "pv",
+   "title": "錢幣位值（一般）",
+   "endpoint": "/interactive/place-value",
+   "params": "level=normal",
+   "smoke": "interactive pv graded",
+   "steps": "同上",
+   "note": "",
+   "paper": "N101G"
+  },
+  {
+   "id": "cy-one",
+   "kind": "cy",
+   "title": "錢幣進位：1 元換 10 元",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=one&level=normal",
+   "smoke": "interactive cy graded",
+   "steps": "①圈一圈→②換一換→③④填寫",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "cy-ten",
+   "kind": "cy",
+   "title": "錢幣進位：10 元換 100 元",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=ten&level=normal",
+   "smoke": "interactive cy ten graded",
+   "steps": "同上",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "cy-hun",
+   "kind": "cy",
+   "title": "錢幣進位：100 元換 1000 元",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=hun&level=normal",
+   "smoke": "interactive cy hun graded",
+   "steps": "同上",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "cy-single",
+   "kind": "cy",
+   "title": "錢幣進位：單次進位",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=single&level=normal",
+   "smoke": "interactive cy single graded",
+   "steps": "①數1元→②換一換→③想一想→④填寫",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "cy-chain",
+   "kind": "cy",
+   "title": "錢幣進位：連續進位",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=chain&level=normal",
+   "smoke": "interactive cy chain easy free",
+   "steps": "③選「滿了，再換」後 10 個 10 元整組拖去百位",
+   "note": "十位欄 10 枚直向堆疊，平板上確認高度",
+   "paper": ""
+  },
+  {
+   "id": "cy-sp0",
+   "kind": "cy",
+   "title": "認識湊十（特殊幣・基礎）",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=sp0&level=normal",
+   "smoke": "interactive cy sp0 graded",
+   "steps": "①選一選→②換一換",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "cy-sp1",
+   "kind": "cy",
+   "title": "湊十換 10 元（特殊幣）",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=sp1&level=normal",
+   "smoke": "interactive cy sp1 graded",
+   "steps": "①數一數→②換一換→③填",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "cy-sp10",
+   "kind": "cy",
+   "title": "湊十換 100 元（10＋50）",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=sp10&level=easy",
+   "smoke": "interactive cy sp10 easy free",
+   "steps": "同 sp1，單位放大",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "cy-sp100",
+   "kind": "cy",
+   "title": "湊十換 1000 元（100＋500）",
+   "endpoint": "/interactive/coin-carry",
+   "params": "base=sp100&level=easy",
+   "smoke": "interactive cy sp100 graded",
+   "steps": "同 sp1，單位放大",
+   "note": "",
+   "paper": ""
+  }
+ ]
+}

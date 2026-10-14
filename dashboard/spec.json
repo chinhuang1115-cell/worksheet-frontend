@@ -1,0 +1,695 @@
+{
+ "updated": "2026-10-14",
+ "note": "依文件記載盤點（後端 CLAUDE.md 通則 1～21、docs/guide/interactive-web.md、handoff），未逐行比對程式碼；實際行為以『逐項測試』為準。",
+ "statusLegend": {
+  "done": "已規格化",
+  "partial": "部分規格化／有矛盾",
+  "none": "未規格化"
+ },
+ "kindLegend": {
+  "done": "已規格化",
+  "partial": "部分／不一致",
+  "none": "未規格化",
+  "na": "不適用"
+ },
+ "adoptLegend": {
+  "must": "新頁面必備",
+  "should": "建議",
+  "opt": "視題型"
+ },
+ "levels": [
+  {
+   "id": 3,
+   "name": "強提示",
+   "paper": "完整提示",
+   "mode": "full"
+  },
+  {
+   "id": 2,
+   "name": "弱提示",
+   "paper": "淡化提示",
+   "mode": "faded"
+  },
+  {
+   "id": 1,
+   "name": "無提示",
+   "paper": "自由列式（無提示）",
+   "mode": "free"
+  }
+ ],
+ "kinds": [
+  {
+   "id": "wordprob",
+   "name": "加減應用題"
+  },
+  {
+   "id": "mul",
+   "name": "乘法概念"
+  },
+  {
+   "id": "mulwp",
+   "name": "乘法應用題"
+  },
+  {
+   "id": "mulv",
+   "name": "直式乘法"
+  },
+  {
+   "id": "dial",
+   "name": "乘法圓盤"
+  },
+  {
+   "id": "pv",
+   "name": "錢幣位值"
+  },
+  {
+   "id": "cy",
+   "name": "錢幣進位"
+  }
+ ],
+ "features": [
+  {
+   "id": "hl-color",
+   "cat": "視覺提示",
+   "name": "題目數字上色／關鍵字連動亮",
+   "desc": "游標移到（按住）正確選項，題目中對應文字才亮；答對後固定亮",
+   "levels": {
+    "3": "數字上色＋連動亮",
+    "2": "連動亮（不上色）",
+    "1": "不亮"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "na",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "na",
+    "pv": "na",
+    "cy": "na"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "通則4、對照表",
+   "note": "關鍵字步驟存在於 mulwp／mulv，但文件未載明三種難度的亮法",
+   "gap": "補：mulwp／mulv 逐難度行為"
+  },
+  {
+   "id": "pulse",
+   "cat": "視覺提示",
+   "name": "目前格子閃動／直式數字閃燈",
+   "desc": "強提示用光暈與底色提示「現在要放哪」；弱、無不閃（不示答案）",
+   "levels": {
+    "3": "閃動（光暈／底色）",
+    "2": "不閃",
+    "1": "不閃"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "partial",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "partial",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "對照表、pv／cy 小節",
+   "note": "乘法三題型文件只記強提示有提示框，未明寫閃動規則",
+   "gap": "補：mul／mulwp／mulv／dial 是否閃、閃哪裡"
+  },
+  {
+   "id": "spot",
+   "cat": "視覺提示",
+   "name": "聚光燈／整欄聚焦（coldim）",
+   "desc": "直式只顯示當下要算的那一欄；強＝非焦點欄數字變淡；弱＝再加聚光燈背景",
+   "levels": {
+    "3": "非焦點欄數字變淡（coldim）",
+    "2": "聚光燈背景＋coldim",
+    "1": "無"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "na",
+    "mulwp": "na",
+    "mulv": "none",
+    "dial": "na",
+    "pv": "na",
+    "cy": "na"
+   },
+   "status": "partial",
+   "adopt": "should",
+   "source": "通則8、對照表",
+   "note": "直式乘法是否沿用未載明",
+   "gap": "決定 mulv 要不要套用"
+  },
+  {
+   "id": "help",
+   "cat": "視覺提示",
+   "name": "連錯後正確選項閃動（.help）",
+   "desc": "錯幾次後讓正確磚閃動協助",
+   "levels": {
+    "3": "連錯 2 次後閃",
+    "2": "不閃（避免示答案）",
+    "1": "不閃"
+   },
+   "kinds": {
+    "wordprob": "partial",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "none",
+    "cy": "none"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "設計決定 vs 對照表",
+   "note": "⚠ 文件兩處矛盾：設計決定寫「連錯 2 次（無提示 3 次）正確磚閃」；對照表寫弱／無不閃。",
+   "gap": "先決定哪一版為準，再同步到所有題型"
+  },
+  {
+   "id": "keypad",
+   "cat": "視覺提示",
+   "name": "九宮格數字鍵盤亮暗",
+   "desc": "位置永遠固定；強提示不需要的鍵變淡、要用的鍵閃；弱／無全亮不閃",
+   "levels": {
+    "3": "不需要的鍵淡、要用的鍵閃",
+    "2": "全亮、不閃",
+    "1": "全亮、不閃"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "partial",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "na",
+    "pv": "na",
+    "cy": "na"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "通則5、對照表",
+   "note": "乘法題型是否一致未載明",
+   "gap": "核對 mul／mulwp／mulv"
+  },
+  {
+   "id": "carry-flash",
+   "cat": "視覺提示",
+   "name": "進退位引導閃動（.src）",
+   "desc": "可拖來源（十位數字、進位的和、留下的個位數）閃動，呼叫學生拖",
+   "levels": {
+    "3": "閃",
+    "2": "閃",
+    "1": "不閃（學生自己知道從哪拖）"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "na",
+    "mulwp": "na",
+    "mulv": "partial",
+    "dial": "na",
+    "pv": "na",
+    "cy": "na"
+   },
+   "status": "done",
+   "adopt": "should",
+   "source": "對照表",
+   "note": "",
+   "gap": ""
+  },
+  {
+   "id": "placelabel",
+   "cat": "視覺提示",
+   "name": "位值標籤／欄標題圖示",
+   "desc": "十位個位標籤；錢幣欄標題的黑白錢幣圖",
+   "levels": {
+    "3": "有",
+    "2": "有",
+    "1": "無（只有文字）"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "na",
+    "mulwp": "na",
+    "mulv": "partial",
+    "dial": "na",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "done",
+   "adopt": "should",
+   "source": "設計決定、pv／cy 小節",
+   "note": "",
+   "gap": ""
+  },
+  {
+   "id": "choices",
+   "cat": "視覺提示",
+   "name": "可選磚／選項數量",
+   "desc": "強＝只放相關選項（含少量干擾）；弱＝較多；無＝更多",
+   "levels": {
+    "3": "少量干擾",
+    "2": "較多（直式給 0～9）",
+    "1": "最多"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "none",
+    "cy": "none"
+   },
+   "status": "partial",
+   "adopt": "should",
+   "source": "設計決定",
+   "note": "其他題型的選項數量未規格化",
+   "gap": "補：各題型磚數量表"
+  },
+  {
+   "id": "tipbox",
+   "cat": "文字提示",
+   "name": "分段提示文字／懸浮提示框",
+   "desc": "提示文字出現的位置與時機",
+   "levels": {
+    "3": "顯示（跟著目前步驟）",
+    "2": "wordprob 無；dial／cy／pv 有（不閃）",
+    "1": "無"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "partial",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "done",
+    "pv": "partial",
+    "cy": "done"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "設計決定、handoff、pv／cy 小節",
+   "note": "⚠ 弱提示有無提示框各題型不一致（handoff：「其他乘法題型的弱提示仍沒有提示框，使用者未要求」）",
+   "gap": "決定弱提示的通則：一律有／一律無／依題型"
+  },
+  {
+   "id": "tipstyle",
+   "cat": "文字提示",
+   "name": "提示文字寫法原則",
+   "desc": "簡單、易懂、生活化；一句話只講一件事；避免「位值欄」「圈組」等術語（例：「10 個一包」）",
+   "levels": null,
+   "kinds": {
+    "wordprob": "none",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "pv／cy 小節（2026-10-14）",
+   "note": "只在錢幣題型明文；加減／乘法未盤點",
+   "gap": "全面盤點既有提示句，統一寫法"
+  },
+  {
+   "id": "wrongmsg",
+   "cat": "文字提示",
+   "name": "放錯回饋文字",
+   "desc": "彈回＋說明為什麼、該放哪",
+   "levels": {
+    "3": "具體原因＋去處",
+    "2": "具體原因",
+    "1": "加減：仍有文字（連錯 3 次才提示）；錢幣進位：只說「再試一次！」"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "partial",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "partial",
+    "pv": "partial",
+    "cy": "partial"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "設計決定、pv／cy 小節",
+   "note": "⚠ 無提示時的錯誤文字，加減與錢幣進位規則不同",
+   "gap": "統一「無提示」的錯誤回饋標準"
+  },
+  {
+   "id": "hover-read",
+   "cat": "語音報讀",
+   "name": "滑過朗讀（滑鼠）",
+   "desc": "滑鼠移到文句／語詞／選項停 180ms 就念；空格不念；功能按鈕不念；觸控不觸發；頂端 🗣 可關",
+   "levels": {
+    "3": "同左",
+    "2": "同左",
+    "1": "同左"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "done",
+    "pv": "partial",
+    "cy": "partial"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "通則17",
+   "note": "⚠ 三種難度行為完全相同；是否「無提示不念」未定。pv／cy 的錢幣圖示不朗讀",
+   "gap": "決定無提示是否關閉滑過朗讀；平板（觸控）無滑過，需另一種觸發"
+  },
+  {
+   "id": "auto-read",
+   "cat": "語音報讀",
+   "name": "強提示文字自動朗讀",
+   "desc": "提示框文字自動念；弱、無不自動念",
+   "levels": {
+    "3": "自動念",
+    "2": "不念",
+    "1": "不念"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "partial",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "partial",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "done",
+   "adopt": "must",
+   "source": "通則17、pv／cy 小節",
+   "note": "瀏覽器自動播放限制：第一題在使用者點過頁面前可能不發聲",
+   "gap": ""
+  },
+  {
+   "id": "say-num",
+   "cat": "語音報讀",
+   "name": "數字與單位念法",
+   "desc": "乘法題型 1 念「衣」；圓盤畫面「5×1＝？」語音念「5 1 什麼」；國字數字；「第 2 盤」念「第二」",
+   "levels": null,
+   "kinds": {
+    "wordprob": "none",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
+    "pv": "none",
+    "cy": "none"
+   },
+   "status": "partial",
+   "adopt": "should",
+   "source": "通則20、21",
+   "note": "加減與錢幣題型的念法（元、個、十）規則散在各 section，無統一表",
+   "gap": "整理成一張念法對照表"
+  },
+  {
+   "id": "rate",
+   "cat": "語音報讀",
+   "name": "語速與語音選擇",
+   "desc": "四段語速 0.55／0.7／0.9／1.1；rankVoice 優先 Google 國語（臺灣）＞Edge Natural＞Apple 美佳",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "done",
+   "adopt": "must",
+   "source": "通則17",
+   "note": "沒聽過實際聲音（只攔截過送給 speechSynthesis 的文字）",
+   "gap": ""
+  },
+  {
+   "id": "speech-wait",
+   "cat": "語音報讀",
+   "name": "換畫面前等語音唸完＋停 2 秒",
+   "desc": "答完最後一步，語音念完再停 2 秒才切答案卷；下一題按鈕等 3.3 秒",
+   "levels": null,
+   "kinds": {
+    "wordprob": "none",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "partial",
+   "adopt": "should",
+   "source": "pv／cy 小節（2026-10-14）",
+   "note": "只在錢幣題型",
+   "gap": "評估其他題型是否需要"
+  },
+  {
+   "id": "auto-fill",
+   "cat": "自動完成度",
+   "name": "強提示的自動帶入",
+   "desc": "強提示時，哪些「機械步驟」由系統代做（例：錢幣進位拖完最後一包，剩下的 1 元自動走進個位）；弱／無由學生做",
+   "levels": {
+    "3": "系統代做指定機械步驟",
+    "2": "學生自己做",
+    "1": "學生自己做"
+   },
+   "kinds": {
+    "wordprob": "none",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "none",
+    "cy": "done"
+   },
+   "status": "none",
+   "adopt": "must",
+   "source": "cy 小節",
+   "note": "⚠ 沒有通則：只有錢幣進位有；加減／乘法／圓盤／位值都沒定義「強提示自動做到哪」",
+   "gap": "定義自動完成度分級（見規格建議）"
+  },
+  {
+   "id": "graded",
+   "cat": "自動完成度",
+   "name": "逐題漸退（同一份學單提示逐題淡化）",
+   "desc": "同一份互動頁內，第 1 題強、之後逐題淡、最後一題無提示（對應紙本逐題漸退淡化）",
+   "levels": null,
+   "kinds": {
+    "wordprob": "none",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "none",
+    "cy": "none"
+   },
+   "status": "none",
+   "adopt": "must",
+   "source": "wordprob 小節：「hint 欄位保留給之後的逐題漸退，介面目前不使用」",
+   "note": "⚠ spec 已帶每題 hint 欄位，但介面未使用，且「哪些提示先退、哪些後退」未定",
+   "gap": "新增規格：每題 hint 對應到各功能的開關"
+  },
+  {
+   "id": "live-color",
+   "cat": "互動規則",
+   "name": "拖曳經過即時變綠／紅",
+   "desc": "拖到格子上方時即時顯示對／錯",
+   "levels": {
+    "3": "有",
+    "2": "無",
+    "1": "無"
+   },
+   "kinds": {
+    "wordprob": "done",
+    "mul": "na",
+    "mulwp": "na",
+    "mulv": "partial",
+    "dial": "na",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "done",
+   "adopt": "should",
+   "source": "通則6、pv 小節",
+   "note": "",
+   "gap": ""
+  },
+  {
+   "id": "drag",
+   "cat": "互動規則",
+   "name": "拖曳為主、點一下備援",
+   "desc": "Pointer Events；grab／grabbing 游標；pv／cy 步驟①②只能拖（不開放點一下）",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "done",
+   "adopt": "must",
+   "source": "通則3、pv 小節",
+   "note": "",
+   "gap": ""
+  },
+  {
+   "id": "order",
+   "cat": "互動規則",
+   "name": "放置順序（先符號再數字）",
+   "desc": "橫式與直式都先放 ＋／－，再放數字（ord 機制）",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "na",
+    "mulwp": "na",
+    "mulv": "partial",
+    "dial": "na",
+    "pv": "na",
+    "cy": "na"
+   },
+   "status": "done",
+   "adopt": "should",
+   "source": "通則13",
+   "note": "",
+   "gap": ""
+  },
+  {
+   "id": "undo",
+   "cat": "互動規則",
+   "name": "上一步／下一步（復原重做）",
+   "desc": "快照式；只在直式計算",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "na",
+    "mulwp": "na",
+    "mulv": "partial",
+    "dial": "na",
+    "pv": "na",
+    "cy": "na"
+   },
+   "status": "partial",
+   "adopt": "should",
+   "source": "通則12",
+   "note": "是否擴到其他多步驟題型未定",
+   "gap": ""
+  },
+  {
+   "id": "noscore",
+   "cat": "互動規則",
+   "name": "不計時、不扣分、不限次數",
+   "desc": "錯了就彈回重試",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "done",
+   "adopt": "must",
+   "source": "設計決定",
+   "note": "",
+   "gap": ""
+  },
+  {
+   "id": "level-ui",
+   "cat": "介面",
+   "name": "難度三段切換與記憶",
+   "desc": "右上角強／弱／無；切換＝這題重來、星星保留；wp_level 記住；URL mode 只決定第一次預設",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "done",
+   "adopt": "must",
+   "source": "設計決定",
+   "note": "",
+   "gap": ""
+  },
+  {
+   "id": "paper",
+   "cat": "介面",
+   "name": "作答紙",
+   "desc": "完成內容「寫」到題目下方；只寫橫式、直式、答句；圓盤不寫；錢幣題型步驟③用答案卷淡入淡出",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "done",
+   "adopt": "should",
+   "source": "通則7",
+   "note": "",
+   "gap": ""
+  },
+  {
+   "id": "layout",
+   "cat": "介面",
+   "name": "版面與裝置",
+   "desc": "平板橫放 1024 最佳化；<820 單欄；按鈕 ≥60px；頂端列凍結；字型芫荽體",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "done",
+    "mulwp": "done",
+    "mulv": "done",
+    "dial": "done",
+    "pv": "done",
+    "cy": "done"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "通則16、14",
+   "note": "⚠ 平板實機手感、CSS zoom 只在 Chromium 驗證",
+   "gap": ""
+  },
+  {
+   "id": "record",
+   "cat": "介面",
+   "name": "成績紀錄",
+   "desc": "localStorage interactive_wordprob_records（含 level）；window.spedProgress.recordExercise",
+   "levels": null,
+   "kinds": {
+    "wordprob": "done",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "none",
+    "cy": "none"
+   },
+   "status": "partial",
+   "adopt": "opt",
+   "source": "設計決定",
+   "note": "其他題型是否寫入未載明",
+   "gap": "決定是否統一寫入並帶 level"
+  }
+ ]
+}
