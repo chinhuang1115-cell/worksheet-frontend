@@ -1,5 +1,5 @@
 {
- "version": "2026-10-14",
+ "version": "2026-10-14b",
  "note": "互動版提示設定檔：強(3)／弱(2)／無(1)提示各自開哪些功能。權威來源在前端 repo；後端用 toolkit/sync_hint_profile.py 同步成 backend/hint_profile.json，產生頁面時內嵌進 SPEC.hintProfile，模板以 H('功能') 讀取。改行為＝改這個檔，不要在模板裡寫死 level===N。",
  "decisions": {
   "help": "三級都會在連錯後閃出正確位置，門檻不同：強 2 次、弱 3 次、無 4 次（使用者 2026-10-14）",
@@ -8,20 +8,160 @@
   "autoDo": "只代做重複性機械步驟（學生完成判斷之後的搬移／換錢動畫）；圈包、選算式、計算、填寫一律由學生做（使用者 2026-10-14）"
  },
  "features": {
-  "flash":         {"3": true,  "2": false, "1": false, "desc": "目前要放的格子／欄位閃動、直式要算的數字閃燈、要用的鍵閃"},
-  "helpAfter":     {"3": 2,     "2": 3,     "1": 4,     "desc": "同一步驟累計放錯幾次後，閃出正確位置"},
-  "tipbox":        {"3": true,  "2": true,  "1": false, "desc": "文字提示框"},
-  "autoRead":      {"3": true,  "2": false, "1": false, "desc": "提示文字與累積幣值自動朗讀"},
-  "liveColor":     {"3": true,  "2": false, "1": false, "desc": "拖曳經過時即時變綠／紅"},
-  "autoDo":        {"3": true,  "2": false, "1": false, "desc": "系統代做機械步驟（換錢動畫、剩下的錢幣自動走進個位）"},
-  "wrongDetailAfter": {"3": 1,  "2": 1,     "1": 3,     "desc": "同一步驟累計錯幾次起，錯誤回饋改成具體說明（1＝立即）"},
-  "colIcon":       {"3": true,  "2": true,  "1": false, "desc": "位值欄標題的黑白錢幣圖示"},
-  "keypadDim":     {"3": true,  "2": false, "1": false, "desc": "數字鍵盤：不需要的鍵變淡"},
-  "focusDim":      {"3": true,  "2": true,  "1": false, "desc": "直式：非焦點欄數字變淡"},
-  "spot":          {"3": false, "2": true,  "1": false, "desc": "直式：聚光燈區間背景"},
-  "carryFlash":    {"3": true,  "2": true,  "1": false, "desc": "進退位可拖來源閃動"},
-  "numColor":      {"3": true,  "2": false, "1": false, "desc": "題目數字上色"}
+  "flash": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "目前要放的格子／欄位閃動、直式要算的數字閃燈、要用的鍵閃"
+  },
+  "helpAfter": {
+   "3": 2,
+   "2": 3,
+   "1": 4,
+   "desc": "同一步驟累計放錯幾次後，閃出正確位置"
+  },
+  "tipbox": {
+   "3": true,
+   "2": true,
+   "1": false,
+   "desc": "文字提示框"
+  },
+  "autoRead": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "提示文字與累積幣值自動朗讀"
+  },
+  "liveColor": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "拖曳經過時即時變綠／紅"
+  },
+  "autoDo": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "系統代做機械步驟（換錢動畫、剩下的錢幣自動走進個位）"
+  },
+  "wrongDetailAfter": {
+   "3": 1,
+   "2": 1,
+   "1": 3,
+   "desc": "同一步驟累計錯幾次起，錯誤回饋改成具體說明（1＝立即）"
+  },
+  "colIcon": {
+   "3": true,
+   "2": true,
+   "1": false,
+   "desc": "位值欄標題的黑白錢幣圖示"
+  },
+  "keypadDim": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "數字鍵盤：不需要的鍵變淡"
+  },
+  "focusDim": {
+   "3": true,
+   "2": true,
+   "1": false,
+   "desc": "直式：非焦點欄數字變淡"
+  },
+  "spot": {
+   "3": false,
+   "2": true,
+   "1": false,
+   "desc": "直式：聚光燈區間背景"
+  },
+  "carryFlash": {
+   "3": true,
+   "2": true,
+   "1": false,
+   "desc": "進退位可拖來源閃動"
+  },
+  "numColor": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "題目數字上色"
+  }
  },
- "adopted": ["pv", "cy"],
- "adoptedNote": "adopted＝已有自動化測試（toolkit/test_hint_profile.py）驗證行為與本檔一致的題型；其他題型共用同一引擎、行為也會跟著設定檔走，但尚未逐項驗證。"
+ "adopted": [
+  "pv",
+  "cy"
+ ],
+ "adoptedNote": "adopted＝已有自動化測試（toolkit/test_hint_profile.py）驗證行為與本檔一致的題型；其他題型共用同一引擎、行為也會跟著設定檔走，但尚未逐項驗證。",
+ "groups": {
+  "see": [
+   "flash",
+   "carryFlash",
+   "keypadDim",
+   "focusDim",
+   "spot",
+   "liveColor",
+   "numColor",
+   "colIcon"
+  ],
+  "say": [
+   "tipbox",
+   "autoRead",
+   "wrongDetailAfter",
+   "helpAfter"
+  ],
+  "do": [
+   "autoDo"
+  ],
+  "_note": "逐題漸退時，三組提示各自有自己的難度（3 強／2 弱／1 無），再各自去 features 查該難度的值。see＝視覺提示、say＝文字與語音提示、do＝系統代做。"
+ },
+ "graded": {
+  "status": "規格已定（使用者 2026-10-14 選分組退場，文字語音先退、視覺後退），尚未實作",
+  "stages": [
+   {
+    "name": "S1",
+    "see": 3,
+    "say": 3,
+    "do": 3
+   },
+   {
+    "name": "S2",
+    "see": 3,
+    "say": 2,
+    "do": 2
+   },
+   {
+    "name": "S3",
+    "see": 3,
+    "say": 1,
+    "do": 1
+   },
+   {
+    "name": "S4",
+    "see": 2,
+    "say": 1,
+    "do": 1
+   },
+   {
+    "name": "S5",
+    "see": 1,
+    "say": 1,
+    "do": 1
+   }
+  ],
+  "rules": {
+   "mapping": "第 i 題（從 0 起，共 n 題）使用的階段＝round(i × (階段數−1) ÷ (n−1))；第 1 題固定 S1、最後一題固定 S5，中間平均分配（n=5 → S1…S5；n=3 → S1,S3,S5；n=10 → S1,S1,S2,S2,S3,S3,S4,S4,S5,S5 附近）。",
+   "oneWay": "只往下退，不回升；同一題內不變，換題才換。",
+   "hold": {
+    "enabled": false,
+    "wrongAtLeast": 3,
+    "note": "選用：某一題累計放錯達 wrongAtLeast 次，下一題停在同一階段（不前進一階）。預設關閉＝固定排程，老師好預期。"
+   },
+   "entry": "網址 ?lv=graded（老師用連結開啟）；漸退模式下隱藏頁面右上角的強／弱／無切換，學生不能自己切；中途換模式＝整份重來。",
+   "display": "不對學生顯示階段或等級名稱。",
+   "record": "成績紀錄加 graded:[{q, stage, wrong}]，每題記階段與累計放錯次數。",
+   "lastQuestion": "最後一題一律 S5（全部無提示）；錯誤回饋照無提示規則（先說再試一次，累計錯 3 次才具體說明）。"
+  },
+  "overrides": "未列入 groups 的功能（結構性步驟，例如步驟跳過、圈圈編號）不受漸退影響。",
+  "order": "文字語音（say）與代做（do）先退，視覺（see）後退：學生先失去提示框、朗讀、代做，最後才失去閃燈、聚光、鍵盤亮暗等視覺輔助。"
+ }
 }

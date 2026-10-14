@@ -515,23 +515,23 @@
   {
    "id": "graded",
    "cat": "自動完成度",
-   "name": "逐題漸退（同一份學單提示逐題淡化）",
-   "desc": "同一份互動頁內，第 1 題強、之後逐題淡、最後一題無提示（對應紙本逐題漸退淡化）",
+   "name": "逐題漸退",
+   "desc": "同一份互動頁內，提示分三組（視覺／文字語音／代做）依階段 S1→S5 逐題退場，文字語音與代做先退、視覺後退；第 1 題 S1（全強）、最後一題 S5（全無）；只退不升；老師用 ?lv=graded 開啟，學生端不顯示切換。",
    "levels": null,
    "kinds": {
-    "wordprob": "none",
-    "mul": "none",
-    "mulwp": "none",
-    "mulv": "none",
-    "dial": "none",
-    "pv": "none",
-    "cy": "none"
+    "wordprob": "partial",
+    "mul": "partial",
+    "mulwp": "partial",
+    "mulv": "partial",
+    "dial": "partial",
+    "pv": "partial",
+    "cy": "partial"
    },
-   "status": "none",
+   "status": "partial",
    "adopt": "must",
    "source": "wordprob 小節：「hint 欄位保留給之後的逐題漸退，介面目前不使用」",
-   "note": "⚠ spec 已帶每題 hint 欄位，但介面未使用，且「哪些提示先退、哪些後退」未定",
-   "gap": "新增規格：每題 hint 對應到各功能的開關"
+   "note": "規格已定（hint-profile.json 的 graded 區），尚未實作：模板還沒讀 graded，也沒有 ?lv=graded 入口與自動測試。",
+   "gap": "實作＋自動測試（先做錢幣位值／錢幣進位）"
   },
   {
    "id": "live-color",
