@@ -18,12 +18,14 @@ nav h1{font-size:19px;margin:0 0 2px;padding:0 8px}
 .sitelink{display:block;text-align:center;text-decoration:none;background:#0e7490;color:#fff;border-radius:99px;padding:6px 0;margin:0 0 10px;font-weight:700;font-size:14px}.sitelink:hover{background:#155e75}
 .meta{color:var(--mute);font-size:12.5px;padding:0 8px 10px}
 nav input[type=search]{width:100%;font:inherit;font-size:14px;padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:var(--bg);color:var(--ink);margin-bottom:8px}
-.m{display:flex;justify-content:space-between;font-weight:800;padding:8px 8px 4px;margin-top:8px;border:0;background:none;color:var(--ink);font-size:15px;width:100%;text-align:left;cursor:pointer;font-family:inherit}
-.m small{color:var(--mute);font-weight:500}
-.s{display:flex;justify-content:space-between;width:100%;border:0;background:none;font:inherit;text-align:left;padding:7px 10px 7px 22px;border-radius:9px;color:var(--mute);cursor:pointer}
+/* 主類：深色底，與次類（淺底、選中為橘）形成對比 */
+.m{display:flex;justify-content:space-between;align-items:center;font-weight:800;padding:7px 12px;margin-top:10px;border:0;border-radius:10px;background:#334155;color:#fff;font-size:15px;width:100%;text-align:left;cursor:pointer;font-family:inherit}
+.m:hover{background:#475569}
+.m small{color:#cbd5e1;font-weight:500}
+.s{margin-top:2px;display:flex;justify-content:space-between;width:100%;border:0;background:none;font:inherit;text-align:left;padding:7px 10px 7px 22px;border-radius:9px;color:var(--mute);cursor:pointer}
 .s:hover{background:var(--ac-soft);color:var(--ink)}
 .s.on{background:var(--ac);color:#fff;font-weight:700}
-.m.on{color:var(--ac)}
+.m.on{background:var(--ac)}.m.on small{color:#fff}
 main{padding:20px 26px 60px;min-width:0}
 .crumb{color:var(--mute);font-size:13px}
 .head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
