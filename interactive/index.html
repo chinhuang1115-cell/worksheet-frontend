@@ -19,6 +19,9 @@ h1{font-size:22px;margin:0}
 .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
 .bar input[type=search]{flex:1;min-width:200px;font:inherit;font-size:15px;padding:9px 14px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--ink)}
 .chip{font:inherit;font-size:14px;padding:6px 16px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--ink);cursor:pointer}
+.facets{display:flex;gap:6px 18px;flex-wrap:wrap;margin:8px 0 0}
+.fgrp{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.fn{color:var(--mute);font-size:13px;margin-right:2px}
+.chip.sm{font-size:13px;padding:3px 12px}
 .chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
 .chip small{opacity:.7;margin-left:4px}
 main{max-width:1280px;margin:0 auto;padding:6px 20px 60px}
@@ -64,6 +67,7 @@ h3{font-size:15px;margin:0 0 10px}
     <span id="fam"></span>
     <button class="chip" id="view">清單</button>
   </div>
+  <div class="facets" id="facets"></div>
 </header>
 <main id="main"></main>
 <div class="toast" id="toast"></div>
@@ -78,8 +82,21 @@ const kindName=id=>(CAT.kinds.find(k=>k.id===id)||{}).name||id;
 const url=(it,lv)=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+(lv?'lv='+lv[0]+'&mode='+lv[2]:'');
 /* 提示難度改在互動頁內切換，總覽不顯示 */
 const GR=new Set(['pv','cy','wordprob','mul','mulwp','mulv','dial']);      // 漸退（?lv=graded）：引擎層支援，自動測試目前只有錢幣位值
+// 小次類（頂端篩選）：由題型參數推得，不另存資料
+const FACETS=['運算','位數','進位','難度'];
+let FSEL={};
+function facets(it){
+  const o=Object.fromEntries(new URLSearchParams(it.params||'')), f={};
+  if(it.kind==='wordprob'){f['運算']={sub:'減法',add:'加法',mix:'加減交錯'}[o.op]; f['位數']=o.digits==='3'?'三位數':'兩位數'}
+  if(it.kind==='mulv')f['進位']={none:'不進位',yes:'進位',mix:'交錯'}[o.regroup];
+  if(['mul','mulwp','dial','pv'].includes(it.kind))f['難度']={easy:'簡單',normal:'一般'}[o.level];
+  return f;
+}
+function inScope(it){return !fam||FAM_OF[it.kind]===fam}
+function facetOK(it){const f=facets(it);return FACETS.every(n=>!FSEL[n]||f[n]===FSEL[n])}
 function match(it){
   if(fam&&FAM_OF[it.kind]!==fam)return false;
+  if(!facetOK(it))return false;
   const s=q.trim().toLowerCase(); if(!s)return true;
   return (it.title+it.paper+it.steps+it.note+it.endpoint+it.params+kindName(it.kind)+(FAMS.find(f=>f[0]===FAM_OF[it.kind])||[])[1]).toLowerCase().includes(s);
 }
@@ -95,6 +112,16 @@ function render(){
   document.body.classList.toggle('list',list);
   $('#fam').innerHTML=[['','全部',CAT.items.length],...FAMS.map(f=>[f[0],f[2],CAT.items.filter(i=>FAM_OF[i.kind]===f[0]).length])].map(f=>`<button class="chip ${fam===f[0]?'on':''}" data-fam="${f[0]}">${f[1]}<small>${f[2]}</small></button>`).join(' ');
   $('#meta').innerHTML=`共 ${CAT.items.length} 個頁面・資料更新 ${CAT.updated}`;
+  // 頂端篩選：只列目前範圍內有 2 種以上選項的小次類
+  const scope=CAT.items.filter(inScope), fh=[];
+  for(const n of FACETS){
+    if(!fam){delete FSEL[n];continue}      // 選了主類才出現（「全部」時各題型的篩選項混在一起會亂）
+    const vals=[...new Set(scope.map(i=>facets(i)[n]).filter(Boolean))];
+    if(vals.length<2){delete FSEL[n];continue}
+    if(FSEL[n]&&!vals.includes(FSEL[n]))delete FSEL[n];
+    fh.push(`<span class="fgrp"><span class="fn">${n}</span>${['',...vals].map(v=>`<button class="chip sm ${(FSEL[n]||'')===v?'on':''}" data-fa="${n}" data-fv="${v}">${v||'全部'}</button>`).join('')}</span>`);
+  }
+  $('#facets').innerHTML=fh.join('');
   let h='';
   for(const [fid,name] of FAMS){
     const inF=items.filter(i=>FAM_OF[i.kind]===fid); if(!inF.length)continue;
@@ -109,6 +136,7 @@ function render(){
 document.addEventListener('click',e=>{
   const c=e.target.closest('[data-copy]'); if(c){const t=c.dataset.copy;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()});const m=$('#toast');m.textContent='已複製連結';m.classList.add('on');setTimeout(()=>m.classList.remove('on'),1600);return}
   const t=e.target.closest('.tile'); if(t&&!q.trim()){const k=t.dataset.k; OPEN.has(k)?OPEN.delete(k):OPEN.add(k); try{localStorage.setItem('hub_open',JSON.stringify([...OPEN]))}catch(_){} render(); return}
+  const fa=e.target.closest('[data-fa]'); if(fa){FSEL[fa.dataset.fa]=fa.dataset.fv; render(); return}
   const f=e.target.closest('[data-fam]'); if(f){fam=f.dataset.fam;try{localStorage.setItem('hub_fam',fam)}catch(_){}render()}
 });
 $('#q').addEventListener('input',e=>{q=e.target.value;render()});
