@@ -23,13 +23,13 @@ h1{font-size:22px;margin:0}
 .chip small{opacity:.7;margin-left:4px}
 main{max-width:1280px;margin:0 auto;padding:6px 20px 60px}
 h2{font-size:18px;margin:26px 0 2px}
-details.sub2{margin:10px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 12px}
-details.sub2[open]{padding-bottom:12px}
-details.sub2>summary{cursor:pointer;list-style:none;font-size:15px;font-weight:700;padding:11px 0;display:flex;align-items:center;gap:8px}
-details.sub2>summary::-webkit-details-marker{display:none}
-details.sub2>summary::before{content:"▸";color:var(--ac);transition:transform .15s}
-details.sub2[open]>summary::before{transform:rotate(90deg)}
-details.sub2>summary small{color:var(--mute);font-weight:500;font-size:12.5px}
+h3{font-size:15px;margin:0 0 10px}
+.subgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+.tile{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:16px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.tile b{font-size:16px}.tile small{color:var(--mute);font-size:12.5px}
+.tile:hover{border-color:var(--ac)}
+.tile.on{background:var(--ac);border-color:var(--ac);color:#fff}.tile.on small{color:#fff;opacity:.85}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:0 0 12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .th{display:block;aspect-ratio:4/3;background:var(--ac-soft) center/cover no-repeat;border-bottom:1px solid var(--line);position:relative}
@@ -99,19 +99,18 @@ function render(){
   for(const [fid,name] of FAMS){
     const inF=items.filter(i=>FAM_OF[i.kind]===fid); if(!inF.length)continue;
     h+=`<h2>${name} <span class="sub">${inF.length} 頁</span></h2>`;
-    for(const k of CAT.kinds.filter(k=>FAM_OF[k.id]===fid)){
-      const g=inF.filter(i=>i.kind===k.id); if(!g.length)continue;
-      const op=q.trim()||OPEN.has(k.id);      // 次類預設收合；搜尋時自動展開符合者
-      h+=`<details class="sub2" data-k="${k.id}"${op?' open':''}><summary>${k.name}<small>${g.length} 頁</small></summary><div class="grid">${g.map(i=>card(i)).join('')}</div></details>`;
-    }
+    const ks=CAT.kinds.filter(k=>FAM_OF[k.id]===fid&&inF.some(i=>i.kind===k.id));
+    const sel=k=>q.trim()||OPEN.has(k.id);      // 次類預設收合；搜尋時符合者全部展開
+    h+=`<div class="subgrid">${ks.map(k=>`<button class="tile${sel(k)?' on':''}" data-k="${k.id}"><b>${k.name}</b><small>${inF.filter(i=>i.kind===k.id).length} 頁</small></button>`).join('')}</div>`;
+    for(const k of ks) if(sel(k)) h+=`<div class="panel"><h3>${k.name}</h3><div class="grid">${inF.filter(i=>i.kind===k.id).map(i=>card(i)).join('')}</div></div>`;
   }
   $('#main').innerHTML=h||'<div class="empty">沒有符合的互動頁</div>';
 }
 document.addEventListener('click',e=>{
   const c=e.target.closest('[data-copy]'); if(c){const t=c.dataset.copy;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()});const m=$('#toast');m.textContent='已複製連結';m.classList.add('on');setTimeout(()=>m.classList.remove('on'),1600);return}
+  const t=e.target.closest('.tile'); if(t&&!q.trim()){const k=t.dataset.k; OPEN.has(k)?OPEN.delete(k):OPEN.add(k); try{localStorage.setItem('hub_open',JSON.stringify([...OPEN]))}catch(_){} render(); return}
   const f=e.target.closest('[data-fam]'); if(f){fam=f.dataset.fam;try{localStorage.setItem('hub_fam',fam)}catch(_){}render()}
 });
-document.addEventListener('toggle',e=>{const d=e.target; if(!d.matches||!d.matches('details.sub2')||q.trim())return; d.open?OPEN.add(d.dataset.k):OPEN.delete(d.dataset.k); try{localStorage.setItem('hub_open',JSON.stringify([...OPEN]))}catch(_){}},true);
 $('#q').addEventListener('input',e=>{q=e.target.value;render()});
 $('#view').addEventListener('click',()=>{list=!list;try{localStorage.setItem('hub_view',list?'list':'grid')}catch(_){}render()});
 window.addEventListener('focus',()=>CAT&&render());
