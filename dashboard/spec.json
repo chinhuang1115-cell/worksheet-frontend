@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-14",
+ "updated": "2026-10-15",
  "note": "依文件記載盤點，並以 hint-profile.json（提示設定檔）為「強／弱／無」行為的權威來源。標 🧪 的功能已有自動測試（toolkit/test_hint_profile.py，錢幣位值＋錢幣進位）；其他仍以『逐項測試』為準。",
  "statusLegend": {
   "done": "已規格化",
@@ -324,6 +324,64 @@
    "autotest": [
     "pv",
     "cy"
+   ]
+  },
+  {
+   "cat": "文字提示",
+   "kinds": {
+    "wordprob": "done",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "none",
+    "cy": "none"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "使用者 2026-10-15",
+   "gap": "乘法直式（mulv）尚未套用",
+   "id": "calc-tip",
+   "name": "步驟③計算提示框（懸浮、做完淡出）",
+   "desc": "直式計算的分步提示放在直式右側的懸浮提示框，分步計算框的上方；每個階段做完淡出再換下一句。強、弱有，無提示沒有。",
+   "levels": {
+    "3": "顯示",
+    "2": "顯示",
+    "1": "無"
+   },
+   "note": "加減（wordprob）已實作並有自動測試；第一句是「把數字像蛋糕一樣，一層一層地放整齊。記得：百元對百元、十元對十元、1元對1元。」",
+   "profile": "calcTip",
+   "autotest": [
+    "calc"
+   ]
+  },
+  {
+   "cat": "文字提示",
+   "kinds": {
+    "wordprob": "done",
+    "mul": "none",
+    "mulwp": "none",
+    "mulv": "none",
+    "dial": "none",
+    "pv": "none",
+    "cy": "none"
+   },
+   "status": "partial",
+   "adopt": "must",
+   "source": "使用者 2026-10-15",
+   "gap": "乘法直式（mulv）尚未套用",
+   "id": "read-calc-tip",
+   "name": "計算提示框自動朗讀",
+   "desc": "弱提示：計算提示框的文字自動念（第一句也念，因為弱提示不念步驟標題）；強提示：不自動念，點一下才念（互動頁是練習與教學的媒介，細節只當備用）。",
+   "levels": {
+    "3": "不自動念（點一下才念）",
+    "2": "自動念",
+    "1": "無"
+   },
+   "note": "語速快時句間停頓 0.7 秒；超過兩句分句停頓。",
+   "profile": "readCalcTip",
+   "autotest": [
+    "calc"
    ]
   },
   {
