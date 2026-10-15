@@ -332,15 +332,15 @@
     "wordprob": "done",
     "mul": "none",
     "mulwp": "none",
-    "mulv": "none",
+    "mulv": "done",
     "dial": "none",
     "pv": "none",
     "cy": "none"
    },
-   "status": "partial",
+   "status": "done",
    "adopt": "must",
    "source": "使用者 2026-10-15",
-   "gap": "乘法直式（mulv）尚未套用",
+   "gap": "",
    "id": "calc-tip",
    "name": "步驟③計算提示框（懸浮、做完淡出）",
    "desc": "直式計算的主動提示放在直式右側的懸浮提示框，每個階段做完淡出再換下一句。強、弱有，無提示沒有；不自動朗讀，點一下才念。",
@@ -349,7 +349,7 @@
     "2": "顯示",
     "1": "無"
    },
-   "note": "加減（wordprob）已實作並有自動測試；第一句是「把數字像蛋糕一樣，一層一層地放整齊。記得：百元對百元、十元對十元、1元對1元。」",
+   "note": "加減（wordprob）、乘法直式（mulv）已實作並有自動測試（calc）。",
    "profile": "calcTip",
    "autotest": [
     "calc"
@@ -361,15 +361,15 @@
     "wordprob": "done",
     "mul": "none",
     "mulwp": "none",
-    "mulv": "none",
+    "mulv": "done",
     "dial": "none",
     "pv": "none",
     "cy": "none"
    },
-   "status": "partial",
+   "status": "done",
    "adopt": "must",
    "source": "使用者 2026-10-15",
-   "gap": "乘法直式（mulv）尚未套用",
+   "gap": "",
    "id": "wrong-msg-box",
    "name": "步驟③放錯回饋的懸浮訊息框（被動、自動朗讀）",
    "desc": "學生放錯時，回饋訊息出現在直式計算右側的懸浮訊息框（紅框）、出現時自動朗讀，放對、換階段、復原重做或 12 秒後淡出隱藏；強、弱有，無提示不念。主動的計算提示框不自動念，點一下才念。",
@@ -378,7 +378,7 @@
     "2": "出現時自動念",
     "1": "顯示但不念"
    },
-   "note": "加減（wordprob）已實作；乘法直式（mulv）尚未套用。",
+   "note": "加減（wordprob）、乘法直式（mulv）已實作並有自動測試（calc）。",
    "profile": "readWrongMsg",
    "autotest": [
     "calc"
