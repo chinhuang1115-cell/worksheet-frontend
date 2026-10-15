@@ -5,29 +5,34 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>互動學習單</title>
 <style>
-:root{--bg:#f6f5f2;--card:#fff;--ink:#2b3440;--mute:#6b7683;--line:#e3e0d9;--ac:#e8863a;--ac-soft:#fdf0e3}
-@media (prefers-color-scheme:dark){:root{--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--ac-soft:#3a2e24}}
+:root{--L0:#0e7490;--L1:#1e293b;--L2:#475569;--L3:#e2e8f0;--L3t:#334155;--rail:#94a3b8;--bg:#f6f5f2;--card:#fff;--ink:#2b3440;--mute:#6b7683;--line:#e3e0d9;--ac:#e8863a;--ac-soft:#fdf0e3}
+@media (prefers-color-scheme:dark){:root{--L1:#0f172a;--L2:#64748b;--L3:#3a414d;--L3t:#e8eaee;--rail:#64748b;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--ac-soft:#3a2e24}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "芫荽","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
 .wrap{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
 nav{background:var(--card);border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto}
 nav h1{font-size:19px;margin:0 0 2px;padding:0 8px}
 .home{color:inherit;text-decoration:none}.home:hover{color:var(--ac)}
-.homebtn{display:block;text-align:center;text-decoration:none;color:var(--ac);border:1.5px solid var(--ac);border-radius:99px;padding:6px 0;margin:0 0 8px;font-weight:700}.homebtn:hover{background:var(--ac);color:#fff}
+/* 階層配色（由外到內）：L0 網站＝青藍｜L1 互動學習單＝最深｜L2 主類＝深灰藍｜L3 次類＝淺灰藍；選中＝橘 */
+.homebtn{display:block;text-align:center;text-decoration:none;background:var(--L1);color:#fff;border-radius:99px;padding:6px 0;margin:0 0 8px;font-weight:700}.homebtn:hover{filter:brightness(1.25)}
 /* 連回網站：用青藍色塊，和總覽本身的橘色區分「這是離開總覽」 */
-.sitelink{display:block;text-align:center;text-decoration:none;background:#0e7490;color:#fff;border-radius:99px;padding:6px 0;margin:0 0 10px;font-weight:700;font-size:14px}.sitelink:hover{background:#155e75}
+.sitelink{display:block;text-align:center;text-decoration:none;background:var(--L0);color:#fff;border-radius:99px;padding:6px 0;margin:0 0 8px;font-weight:700;font-size:14px}.sitelink:hover{background:#155e75}
 .meta{color:var(--mute);font-size:12.5px;padding:0 8px 10px}
 nav input[type=search]{width:100%;font:inherit;font-size:14px;padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:var(--bg);color:var(--ink);margin-bottom:8px}
 /* 主類：深色底，與次類（淺底、選中為橘）形成對比 */
-.m{display:flex;justify-content:space-between;align-items:center;font-weight:800;padding:7px 12px;margin-top:10px;border:0;border-radius:10px;background:#334155;color:#fff;font-size:15px;width:100%;text-align:left;cursor:pointer;font-family:inherit}
-.m:hover{background:#475569}
+
+.m{display:flex;justify-content:space-between;align-items:center;font-weight:800;padding:7px 12px;margin-top:12px;border:0;border-radius:10px;background:var(--L2);color:#fff;font-size:15px;width:100%;text-align:left;cursor:pointer;font-family:inherit}
+.m:hover{filter:brightness(1.15)}
 .m small{color:#cbd5e1;font-weight:500}
-.s{margin-top:2px;display:flex;justify-content:space-between;width:100%;border:0;background:none;font:inherit;text-align:left;padding:7px 10px 7px 22px;border-radius:9px;color:var(--mute);cursor:pointer}
-.s:hover{background:var(--ac-soft);color:var(--ink)}
+/* 次類：縮排＋左側連接線，淺色底，表示隸屬於上方主類 */
+.sub3{margin:2px 0 0 14px;padding-left:8px;border-left:3px solid var(--rail)}
+.s{margin-top:3px;display:flex;justify-content:space-between;width:100%;border:0;background:var(--L3);font:inherit;text-align:left;padding:7px 10px 7px 12px;border-radius:9px;color:var(--L3t);cursor:pointer}
+.s:hover{filter:brightness(.95)}
 .s.on{background:var(--ac);color:#fff;font-weight:700}
 .m.on{background:var(--ac)}.m.on small{color:#fff}
 main{padding:20px 26px 60px;min-width:0}
-.crumb{color:var(--mute);font-size:13px}
+.crumb{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:12.5px}
+.bc{display:inline-block;text-decoration:none;border-radius:99px;padding:1px 11px;color:#fff;font-weight:700}.bc.l0{background:var(--L0)}.bc.l1{background:var(--L1)}.bc.l2{background:var(--L2)}.bc.l3{background:var(--ac)}.cs{color:var(--mute)}
 .head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 h2{font-size:22px;margin:2px 0 0}
 .chip{font:inherit;font-size:13px;padding:3px 13px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--ink);cursor:pointer}
@@ -105,7 +110,7 @@ function render(){
   const cnt=id=>CAT.items.filter(i=>i.kind===id).length;
   $('#nav').innerHTML=FAMS.map(([fid,name])=>{const ks=kinds.filter(k=>FAM_OF[k.id]===fid);
     return `<button class="m ${sel==='fam:'+fid?'on':''}" data-sel="fam:${fid}">${name}<small>${ks.reduce((a,k)=>a+cnt(k.id),0)}</small></button>`+
-    ks.map(k=>`<button class="s ${sel===k.id?'on':''}" data-sel="${k.id}"><span>${k.name}</span><span>${cnt(k.id)}</span></button>`).join('')}).join('');
+    `<div class="sub3">`+ks.map(k=>`<button class="s ${sel===k.id?'on':''}" data-sel="${k.id}"><span>${k.name}</span><span>${cnt(k.id)}</span></button>`).join('')+`</div>`}).join('');
   const searching=!!q.trim();
   const scope=searching?CAT.items:CAT.items.filter(inSel);
   // 頂端篩選：只列目前範圍內有 2 種以上選項的小次類
@@ -124,7 +129,7 @@ function render(){
   else if(searching||sel.startsWith('fam:')){      // 跨次類：依次類分段
     body=kinds.filter(k=>items.some(i=>i.kind===k.id)).map(k=>`<div class="sec"><h3>${k.name}</h3><div class="grid">${items.filter(i=>i.kind===k.id).map(card).join('')}</div></div>`).join('');
   } else body=`<div class="grid">${items.map(card).join('')}</div>`;
-  $('#main').innerHTML=`<div class="head"><div><div class="crumb">${searching?'全部題型':famName+(sel.startsWith('fam:')?'':' ›')}</div><h2>${title}</h2></div><span><button class="chip" id="view">${list?'縮圖':'清單'}</button></span></div>
+  $('#main').innerHTML=`<div class="head"><div><div class="crumb"><a class="bc l0" href="../">易數教室</a><span class="cs">›</span><a class="bc l1" href="#" data-home>互動學習單</a>${searching?'':`<span class="cs">›</span><a class="bc l2" href="#" data-sel="fam:${fam}">${famName}</a>`+(sel.startsWith('fam:')?'':`<span class="cs">›</span><span class="bc l3">${kindName(sel)}</span>`)}</div><h2>${title}</h2></div><span><button class="chip" id="view">${list?'縮圖':'清單'}</button></span></div>
     <div class="facets">${fh.join('')}</div>${body}`;
 }
 function goHome(){sel='';FSEL={};q='';$('#q').value='';try{localStorage.removeItem('hub_sel')}catch(_){}render();scrollTo(0,0)}      // 首頁＝總覽的預設畫面（第一個次類、無搜尋、無篩選）
