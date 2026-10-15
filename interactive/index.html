@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>互動學習單</title>
 <style>
-:root{--L0:#0e7490;--L1:#1e293b;--L2:#475569;--L3:#e2e8f0;--L3t:#334155;--rail:#94a3b8;--bg:#f6f5f2;--card:#fff;--ink:#2b3440;--mute:#6b7683;--line:#e3e0d9;--ac:#e8863a;--ac-soft:#fdf0e3}
-@media (prefers-color-scheme:dark){:root{--L1:#0f172a;--L2:#64748b;--L3:#3a414d;--L3t:#e8eaee;--rail:#64748b;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--ac-soft:#3a2e24}}
+:root{--L0:#3f8f8a;--L1:#2f4d6e;--L2:#5a86ad;--L3:#e9f1f9;--L3t:#2f4d6e;--rail:#a9c4de;--bg:#f6f5f2;--card:#fff;--ink:#2b3440;--mute:#6b7683;--line:#e3e0d9;--ac:#e8863a;--ac-soft:#fdf0e3}
+@media (prefers-color-scheme:dark){:root{--L0:#3a8a86;--L1:#27405c;--L2:#4d7599;--L3:#2f3b4a;--L3t:#dbe7f3;--rail:#4d6a88;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--ac-soft:#3a2e24}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "芫荽","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
 .wrap{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
@@ -21,14 +21,14 @@ nav h1{font-size:19px;margin:0 0 2px;padding:0 8px}
 nav input[type=search]{width:100%;font:inherit;font-size:14px;padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:var(--bg);color:var(--ink);margin-bottom:8px}
 /* 主類：深色底，與次類（淺底、選中為橘）形成對比 */
 
-.m{display:flex;justify-content:space-between;align-items:center;font-weight:800;padding:7px 12px;margin-top:12px;border:0;border-radius:10px;background:var(--L2);color:#fff;font-size:15px;width:100%;text-align:left;cursor:pointer;font-family:inherit}
+.m{box-shadow:none;display:flex;justify-content:space-between;align-items:center;font-weight:800;padding:7px 12px;margin-top:12px;border:0;border-radius:10px;background:var(--L2);color:#fff;font-size:15px;width:100%;text-align:left;cursor:pointer;font-family:inherit}
 .m:hover{filter:brightness(1.15)}
 .m small{color:#cbd5e1;font-weight:500}
 /* 次類：縮排＋左側連接線，淺色底，表示隸屬於上方主類 */
-.sub3{margin:2px 0 0 14px;padding-left:8px;border-left:3px solid var(--rail)}
-.s{margin-top:3px;display:flex;justify-content:space-between;width:100%;border:0;background:var(--L3);font:inherit;text-align:left;padding:7px 10px 7px 12px;border-radius:9px;color:var(--L3t);cursor:pointer}
+.sub3{margin:2px 0 0 14px;padding-left:8px;border-left:4px solid var(--rail)}
+.s{margin-top:3px;display:flex;justify-content:space-between;width:100%;border:0;background:var(--L3);font:inherit;font-weight:500;text-align:left;padding:7px 10px 7px 12px;border-radius:9px;color:var(--L3t);cursor:pointer}
 .s:hover{filter:brightness(.95)}
-.s.on{background:var(--ac);color:#fff;font-weight:700}
+.s.on{background:var(--ac);color:#fff;font-weight:800}
 .m.on{background:var(--ac)}.m.on small{color:#fff}
 main{padding:20px 26px 60px;min-width:0}
 .crumb{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:12.5px}
