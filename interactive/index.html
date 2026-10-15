@@ -33,16 +33,14 @@ details.sub2>summary small{color:var(--mute);font-weight:500;font-size:12.5px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .th{display:block;aspect-ratio:4/3;background:var(--ac-soft) center/cover no-repeat;border-bottom:1px solid var(--line);position:relative}
-.th img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.th img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;padding:6px}
 .th .code{position:absolute;left:8px;top:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11.5px;padding:1px 9px;border-radius:99px}
-.info{padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.info{padding:10px 12px;display:flex;align-items:center;gap:8px;flex:1}
+.t{flex:1;color:inherit;text-decoration:none}
+.cp{border:0;background:none;cursor:pointer;font-size:15px;opacity:.5;padding:2px 4px}.cp:hover{opacity:1}
 .t{font-weight:700;line-height:1.35}
 .st{color:var(--mute);font-size:12.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .lv{display:flex;gap:6px;margin-top:auto;padding-top:4px}
-.lv a{flex:1;text-align:center;text-decoration:none;font-size:14px;padding:6px 0;border-radius:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px}
-.lv a.lg{flex:.8;background:transparent;border:1.5px dashed var(--ac);color:var(--ac)}
-.lv a.l3{background:var(--l3);color:var(--l3t)}.lv a.l2{background:var(--l2);color:var(--l2t)}.lv a.l1{background:var(--l1);color:var(--l1t)}
-.lv a:hover{filter:brightness(1.07)}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--todo);border:1.5px solid rgba(255,255,255,.85)}
 .dot.pass{background:var(--ok)}.dot.fail{background:var(--bad)}
 .foot{display:flex;gap:10px;align-items:center;color:var(--mute);font-size:12px}
@@ -51,8 +49,6 @@ details.sub2>summary small{color:var(--mute);font-weight:500;font-size:12.5px}
 .list .grid{grid-template-columns:1fr}
 .list .card{flex-direction:row;align-items:stretch}
 .list .th{aspect-ratio:auto;width:150px;flex:none;border-bottom:0;border-right:1px solid var(--line)}
-.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--mute);font-size:12.5px;margin:6px 0 0}
-.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:0}
 .empty{color:var(--mute);padding:40px 0;text-align:center}
 .toast{position:fixed;right:16px;bottom:16px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;opacity:0;transition:.3s;pointer-events:none}
 .toast.on{opacity:1}
@@ -68,7 +64,6 @@ details.sub2>summary small{color:var(--mute);font-weight:500;font-size:12.5px}
     <span id="fam"></span>
     <button class="chip" id="view">清單</button>
   </div>
-  <div class="legend"><span>按鈕＝開啟時的提示難度</span><span><i style="background:var(--l3)"></i>強提示（完整提示）</span><span><i style="background:var(--l2)"></i>弱提示（淡化提示）</span><span><i style="background:var(--l1)"></i>無提示（自由列式）</span><span>虛線「漸退」＝同一份練習提示逐題退場（老師用）</span></div>
 </header>
 <main id="main"></main>
 <div class="toast" id="toast"></div>
@@ -81,6 +76,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const kindName=id=>(CAT.kinds.find(k=>k.id===id)||{}).name||id;
 const url=(it,lv)=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+(lv?'lv='+lv[0]+'&mode='+lv[2]:'');
+/* 提示難度改在互動頁內切換，總覽不顯示 */
 const GR=new Set(['pv','cy','wordprob','mul','mulwp','mulv','dial']);      // 漸退（?lv=graded）：引擎層支援，自動測試目前只有錢幣位值
 function match(it){
   if(fam&&FAM_OF[it.kind]!==fam)return false;
@@ -88,11 +84,10 @@ function match(it){
   return (it.title+it.paper+it.steps+it.note+it.endpoint+it.params+kindName(it.kind)+(FAMS.find(f=>f[0]===FAM_OF[it.kind])||[])[1]).toLowerCase().includes(s);
 }
 function card(it){
-  return `<div class="card"><a class="th" href="${url(it,LV[0])}" target="_blank" rel="noopener" aria-label="開啟 ${esc(it.title)}">
+  return `<div class="card"><a class="th" href="${url(it,null)}" target="_blank" rel="noopener" aria-label="開啟 ${esc(it.title)}">
     <img src="thumbs/${it.id}.webp" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}</a>
-   <div class="info"><div class="t">${esc(it.title)}</div><div class="st">${esc(it.steps)}</div>
-   <div class="lv">${LV.map(l=>`<a class="l${l[0]}" href="${url(it,l)}" target="_blank" rel="noopener">${l[1]}提示</a>`).join('')}${GR.has(it.kind)?`<a class="lg" href="${url(it,LVG)}" target="_blank" rel="noopener" title="逐題漸退：提示隨題號逐步退場（老師用）">漸退</a>`:''}</div>
-   <div class="foot"><button data-copy="${esc(url(it,null))}">🔗 複製連結</button>${it.note?`<span title="${esc(it.note)}">ⓘ ${esc(it.note.slice(0,18))}</span>`:''}</div></div></div>`;
+   <div class="info"><a class="t" href="${url(it,null)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+   <button class="cp" data-copy="${esc(url(it,null))}" title="複製連結" aria-label="複製連結">🔗</button></div></div>`;
 }
 function render(){
   const items=CAT.items.filter(match);

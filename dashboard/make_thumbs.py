@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """為統整頁（interactive/index.html）產生每個互動頁的縮圖：依 catalog.json 的端點與參數，用後端產生器產出 HTML，
-以 Chromium 截圖（強提示、第一題開場畫面），存成 interactive/thumbs/<id>.webp（寬 520）。
+以 Chromium 截圖題目卡（只呈現題目，不含提示版本切換），存成 interactive/thumbs/<id>.webp（寬 520）。
 用法：python dashboard/make_thumbs.py <後端 repo 路徑> [id ...]      需要 playwright、Pillow；chromium 位置用 PW_CHROMIUM 指定。
 新增／改版互動頁後重跑（只重做指定的 id，沒指定就全部）。"""
 import io, json, os, pathlib, sys, tempfile
@@ -39,6 +39,9 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
         pg = b.new_page(viewport={'width': 1100, 'height': 780})
         pg.add_init_script("localStorage.setItem('wp_level','3')")
         pg.goto('file://' + str(f)); pg.wait_for_selector('.card', state='attached'); pg.wait_for_timeout(1800)
-        im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); im.thumbnail((520, 520))
+        pg.evaluate("document.querySelectorAll('body *').forEach(e=>{if(getComputedStyle(e).position==='fixed')e.style.visibility='hidden'})")      # 凍結的頂端列會蓋到截圖
+        el = pg.query_selector('main .lcol')      # 縮圖只呈現題目（左欄題目卡）；圓盤沒有題目卡，改取作答區
+        if not el or el.bounding_box()['height'] < 60: el = pg.query_selector('main #steps')
+        im = Image.open(io.BytesIO(el.screenshot())).convert('RGB'); im.thumbnail((520, 520))
         im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'])
     b.close()
