@@ -56,9 +56,9 @@ h2{font-size:22px;margin:2px 0 0}
 <body>
 <div class="wrap">
 <nav>
-  <h1><a class="home" href="../" title="回首頁">互動學習單</a></h1>
+  <h1><a class="home" href="#" data-home title="回首頁">互動學習單</a></h1>
   <div class="meta" id="meta">載入中…</div>
-  <a class="homebtn" href="../">🏠 回首頁</a>
+  <a class="homebtn" href="#" data-home>🏠 回首頁</a>
   <input type="search" id="q" placeholder="搜尋題型、單元、代碼">
   <div id="nav"></div>
 </nav>
@@ -119,10 +119,12 @@ function render(){
   else if(searching||sel.startsWith('fam:')){      // 跨次類：依次類分段
     body=kinds.filter(k=>items.some(i=>i.kind===k.id)).map(k=>`<div class="sec"><h3>${k.name}</h3><div class="grid">${items.filter(i=>i.kind===k.id).map(card).join('')}</div></div>`).join('');
   } else body=`<div class="grid">${items.map(card).join('')}</div>`;
-  $('#main').innerHTML=`<div class="head"><div><div class="crumb">${searching?'全部題型':famName+(sel.startsWith('fam:')?'':' ›')}</div><h2>${title}</h2></div><span><a class="chip" style="text-decoration:none" href="../">🏠 回首頁</a> <button class="chip" id="view">${list?'縮圖':'清單'}</button></span></div>
+  $('#main').innerHTML=`<div class="head"><div><div class="crumb">${searching?'全部題型':famName+(sel.startsWith('fam:')?'':' ›')}</div><h2>${title}</h2></div><span><button class="chip" id="view">${list?'縮圖':'清單'}</button></span></div>
     <div class="facets">${fh.join('')}</div>${body}`;
 }
+function goHome(){sel='';FSEL={};q='';$('#q').value='';try{localStorage.removeItem('hub_sel')}catch(_){}render();scrollTo(0,0)}      // 首頁＝總覽的預設畫面（第一個次類、無搜尋、無篩選）
 document.addEventListener('click',e=>{
+  if(e.target.closest('[data-home]')){e.preventDefault();goHome();return}
   const c=e.target.closest('[data-copy]'); if(c){const t=c.dataset.copy;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()});const m=$('#toast');m.textContent='已複製連結';m.classList.add('on');setTimeout(()=>m.classList.remove('on'),1600);return}
   const s=e.target.closest('[data-sel]'); if(s){sel=s.dataset.sel;FSEL={};q='';$('#q').value='';try{localStorage.setItem('hub_sel',sel)}catch(_){}render();scrollTo(0,0);return}
   const fa=e.target.closest('[data-fa]'); if(fa){FSEL[fa.dataset.fa]=fa.dataset.fv; render(); return}
