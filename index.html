@@ -153,15 +153,15 @@
 
       <!-- 左側分類一覽 -->
       <div style="width:180px;flex-shrink:0;position:sticky;top:{{ homeStickyTop }};display:flex;flex-direction:column;gap:2px;">
-        <div style="font-size:var(--text-2xs);color:var(--text-muted);letter-spacing:var(--tracking-wider);font-weight:700;padding:0 10px 8px;">題型分類</div>
-        <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="6">
+        <div style="font-size:var(--text-xs);color:var(--color-brand-900);background:var(--color-brand-200);letter-spacing:var(--tracking-wider);font-weight:800;padding:6px 12px;border-radius:var(--radius-md);margin-bottom:4px;">題型分類</div>
+        <div style="margin-left:10px;padding-left:8px;border-left:3px solid var(--color-brand-200);display:flex;flex-direction:column;gap:3px;"><sc-for list="{{ categories }}" as="cat" hint-placeholder-count="6">
           <div style="{{ cat.style }}" onClick="{{ cat.onClick }}">{{ cat.label }}</div>
-        </sc-for>
+        </sc-for></div>
         <div style="height:1px;background:var(--border-subtle);margin:12px 4px;"></div>
-        <div style="font-size:var(--text-2xs);color:var(--text-muted);letter-spacing:var(--tracking-wider);font-weight:700;padding:0 10px 8px;">年級</div>
-        <sc-for list="{{ grades }}" as="g" hint-placeholder-count="4">
+        <div style="font-size:var(--text-xs);color:var(--color-brand-900);background:var(--color-brand-200);letter-spacing:var(--tracking-wider);font-weight:800;padding:6px 12px;border-radius:var(--radius-md);margin-bottom:4px;">年級</div>
+        <div style="margin-left:10px;padding-left:8px;border-left:3px solid var(--color-brand-200);display:flex;flex-direction:column;gap:3px;"><sc-for list="{{ grades }}" as="g" hint-placeholder-count="4">
           <div style="{{ g.style }}" onClick="{{ g.onClick }}">{{ g.label }}</div>
-        </sc-for>
+        </sc-for></div>
       </div>
 
       <!-- 右側 -->
@@ -4805,8 +4805,8 @@ class Component extends DCLogic {
       ? '--color-brand-50:oklch(0.970 0.020 258);--color-brand-100:oklch(0.930 0.055 258);--color-brand-200:oklch(0.870 0.105 258);--color-brand-300:oklch(0.770 0.155 258);--color-brand-400:oklch(0.645 0.195 258);--color-brand-500:oklch(0.515 0.240 258);--color-brand-600:oklch(0.430 0.230 258);--color-brand-700:oklch(0.350 0.200 258);--color-brand-800:oklch(0.265 0.160 258);--color-brand-900:oklch(0.185 0.110 258);--text-brand:oklch(0.430 0.230 258);--font-display:\'Iansui\',serif;'
       : '--color-brand-50:oklch(0.975 0.025 55);--color-brand-100:oklch(0.94 0.05 55);--color-brand-200:oklch(0.87 0.08 55);--color-brand-300:oklch(0.77 0.12 55);--color-brand-400:oklch(0.65 0.15 50);--color-brand-500:oklch(0.55 0.16 45);--color-brand-600:oklch(0.47 0.15 42);--color-brand-700:oklch(0.39 0.13 40);--color-brand-800:oklch(0.30 0.10 38);--color-brand-900:oklch(0.22 0.07 36);--text-brand:oklch(0.47 0.15 42);--font-display:\'Iansui\',serif;';
     const brandBarBg = isAdmin ? 'var(--color-brand-800)' : 'var(--color-brand-500)';
-    const catStyle = (active) => `padding:9px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);${active ? 'background:var(--color-brand-500);color:#fff;font-weight:600;' : 'color:var(--text-secondary);'}`;
-    const gradeStyle = (active) => `padding:9px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:600;' : 'color:var(--text-secondary);'}`;
+    const catStyle = (active) => `padding:8px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);${active ? 'background:var(--color-brand-500);color:#fff;font-weight:700;' : 'background:var(--color-brand-50);color:var(--color-brand-800);font-weight:500;'}`;
+    const gradeStyle = (active) => `padding:8px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);${active ? 'background:var(--color-brand-500);color:#fff;font-weight:700;' : 'background:var(--color-brand-50);color:var(--color-brand-800);font-weight:500;'}`;
     const sortStyle = (active) => `padding:4px 12px;border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-xs);${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:600;' : 'color:var(--text-secondary);'}`;
     const viewModeStyle = (active) => `padding:5px 12px;border-radius:var(--radius-full);cursor:pointer;font-size:var(--text-xs);border:1.5px solid ${active ? 'var(--color-brand-500)' : 'var(--border-default)'};${active ? 'background:var(--color-brand-50);color:var(--color-brand-700);font-weight:700;' : 'color:var(--text-secondary);'}`;
 
