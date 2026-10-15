@@ -130,7 +130,7 @@ function render(){
   else if(searching||sel.startsWith('fam:')){      // 跨次類：依次類分段
     body=kinds.filter(k=>items.some(i=>i.kind===k.id)).map(k=>`<div class="sec"><h3>${k.name}</h3><div class="grid">${items.filter(i=>i.kind===k.id).map(card).join('')}</div></div>`).join('');
   } else body=`<div class="grid">${items.map(card).join('')}</div>`;
-  $('#main').innerHTML=`<div class="head"><div><div class="crumb"><a class="bc l0" href="../">易數教室</a><span class="cs">›</span><a class="bc l1" href="#" data-home>互動學習單</a>${searching?'':`<span class="cs">›</span><a class="bc l2" href="#" data-sel="fam:${fam}">${famName}</a>`+(sel.startsWith('fam:')?'':`<span class="cs">›</span><span class="bc l3">${kindName(sel)}</span>`)}</div><h2>${title}</h2></div><span><button class="chip" id="view">${list?'縮圖':'清單'}</button></span></div>
+  $('#main').innerHTML=`<div class="head"><div><div class="crumb"><a class="bc l1" href="#" data-home>互動學習單</a>${searching?'':`<span class="cs">›</span><a class="bc l2" href="#" data-sel="fam:${fam}">${famName}</a>`+(sel.startsWith('fam:')?'':`<span class="cs">›</span><span class="bc l3">${kindName(sel)}</span>`)}</div><h2>${title}</h2></div><span><button class="chip" id="view">${list?'縮圖':'清單'}</button></span></div>
     <div class="facets">${fh.join('')}</div>${body}`;
 }
 function goHome(){sel='';FSEL={};q='';$('#q').value='';try{localStorage.removeItem('hub_sel')}catch(_){}render();scrollTo(0,0)}      // 首頁＝總覽的預設畫面（第一個次類、無搜尋、無篩選）
