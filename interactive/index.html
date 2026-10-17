@@ -85,13 +85,14 @@ const navName=n=>{const m=/^(.+?)[_ ](.+)$/.exec(n);return m?`${m[1]}<small clas
 const kindName=id=>(CAT.kinds.find(k=>k.id===id)||{}).name||id;
 const url=it=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+'lv=2&mode=faded';      // 從總覽進入一律弱提示（網址指定，優先於瀏覽器記住的難度）；進去後自行切換
 // 小次類（頂端篩選）：由題型參數推得，不另存資料
-const FACETS=['運算','位數','進位','難度'];
+const FACETS=['運算','位數','進位','難度','類別'];
 let FSEL={};
 function facets(it){
   const o=Object.fromEntries(new URLSearchParams(it.params||'')), f={};
   if(it.kind==='wordprob'){f['運算']={sub:'減法',add:'加法',mix:'加減交錯'}[o.op]; f['位數']=o.digits==='3'?'三位數':'兩位數'}
   if(it.kind==='mulv')f['進位']={none:'不進位',yes:'進位',mix:'交錯'}[o.regroup];
   if(['mul','mulwp','dial','pv'].includes(it.kind))f['難度']={easy:'簡單',normal:'一般'}[o.level];
+  if(it.kind==='mulwp')f['類別']=/mul-concept/.test(it.endpoint)?'算數量':'算價錢';      // 乘法應用題 1*1 併入乘法概念後，用類別分「算數量／算價錢」（使用者 2026-10-17）
   return f;
 }
 const inSel=it=>sel.startsWith('fam:')?FAM_OF[it.kind]===sel.slice(4):it.kind===sel;
