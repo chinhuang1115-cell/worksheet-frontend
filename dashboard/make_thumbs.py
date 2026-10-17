@@ -17,18 +17,38 @@ out = here.parent / 'interactive' / 'thumbs'; out.mkdir(parents=True, exist_ok=T
 
 
 def gen(item):
+    N = 8 if 'calc=1' in item['params'] else 3      # 直式計算題多出幾題，才選得到「有進退位」「加法」的示範題
     q = {k: v[0] for k, v in parse_qs(item['params']).items()}
     ep = item['endpoint'].rsplit('/', 1)[1]
     th = '文具店' if ep == 'sub2noreg-app' else '甜點店'
     if ep == 'sub2noreg-app':
-        return iw.generate(th, 3, 'full', 11, q.get('op', 'sub'), q.get('regroup', 'none'), int(q.get('digits', 2)), q.get('calc') == '1')
-    if ep == 'mul-concept': return iw.generate_mul(th, 3, 'full', 11, q.get('level', 'normal'))
-    if ep == 'mul-wordprob': return iw.generate_mulwp(th, 3, 'full', 11, q.get('level', 'normal'))
-    if ep == 'mul-vertical': return iw.generate_mulv(th, 3, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1')
-    if ep == 'mul-dial': return iw.generate_dial(th, 3, 'full', 11, q.get('level', 'normal'))
-    if ep == 'place-value': return iw.generate_pv(th, 3, 'full', 11, q.get('level', 'normal'))
-    if ep == 'coin-carry': return iw.generate_cy(th, 3, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))
+        return iw.generate(th, N, 'full', 11, q.get('op', 'sub'), q.get('regroup', 'none'), int(q.get('digits', 2)), q.get('calc') == '1')
+    if ep == 'mul-concept': return iw.generate_mul(th, N, 'full', 11, q.get('level', 'normal'))
+    if ep == 'mul-wordprob': return iw.generate_mulwp(th, N, 'full', 11, q.get('level', 'normal'))
+    if ep == 'mul-vertical': return iw.generate_mulv(th, N, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1')
+    if ep == 'mul-dial': return iw.generate_dial(th, N, 'full', 11, q.get('level', 'normal'))
+    if ep == 'place-value': return iw.generate_pv(th, N, 'full', 11, q.get('level', 'normal'))
+    if ep == 'coin-carry': return iw.generate_cy(th, N, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))
     raise SystemExit('未知端點：' + ep)
+
+
+CALC_CSS = """*{box-sizing:border-box}body{margin:0;width:520px;height:390px;background:#fdf0e3;display:flex;align-items:center;justify-content:center;font-family:"芫荽","Noto Sans CJK TC",sans-serif}
+.bd{background:#1f2937;border-radius:20px;padding:26px 32px;color:#fff;font-size:68px;font-weight:700}.r{display:flex;gap:10px;align-items:center}
+.r i{font-style:normal;width:76px;height:84px;text-align:center;line-height:84px}.r i.op{color:#93c5fd}.q{border:3px dashed #94a3b8;border-radius:14px;color:#94a3b8;margin:4px 0;height:76px;line-height:70px}.ln{height:5px;background:#94a3b8;margin:8px 0}"""
+
+
+def calc_thumb(b, P0):
+    """計算格特寫縮圖：依第一題的數字畫深色計算板（符號在最左欄、數字靠右對齊、答案虛線格依答案位數）"""
+    a, bb, ans = str(P0['a']), str(P0['b']), str(P0['ans'])
+    n = max(len(a), len(bb), len(ans))
+    row = lambda t: ''.join(f'<i>{t[i - (n - len(t))] if i >= n - len(t) else ""}</i>' for i in range(n))
+    sym = {'-': '－', '+': '＋', '×': '×'}.get(P0['op'], P0['op'])
+    qs = ''.join('<i class="q">?</i>' for _ in range(len(ans)))
+    pad = '<i></i>' * (n - len(ans))
+    html = (f'<style>{CALC_CSS}</style><div class="bd"><div class="r"><i class="op">{sym}</i>{row(a)}</div><div class="r"><i></i>{row(bb)}</div>'
+            f'<div class="ln"></div><div class="r"><i></i>{pad}{qs}</div></div>')
+    pg = b.new_page(viewport={'width': 520, 'height': 390}); pg.set_content(html); pg.wait_for_timeout(200)
+    im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
 
 
 with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
@@ -39,6 +59,10 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
         pg = b.new_page(viewport={'width': 1100, 'height': 780})
         pg.add_init_script("localStorage.setItem('wp_level','3')")
         pg.goto('file://' + str(f)); pg.wait_for_selector('.card', state='attached'); pg.wait_for_timeout(1800)
+        if 'calc=1' in it['params']:      # 直式計算題：縮圖只畫「計算格特寫」（深色板、直式算式、答案虛線格；使用者 2026-10-17 選方案 A），不拍題目卡
+            want_rg = 'regroup=none' not in it['params']; want_op = '+' if 'op=mix' in it['params'] else None      # 示範題：不進退位的卡要選沒進退位的題，其餘選有進退位的；加減交錯的卡選加法，才和減法卡的縮圖不同
+            P0 = pg.evaluate("(w=>{const L=P.filter(p=>!!p.regroup===w[0]&&(!w[1]||p.op===w[1])); const p=L[0]||P[0]; return {a:p.a,b:p.b,op:p.op,ans:p.ans}})", [want_rg, want_op])
+            im = calc_thumb(b, P0); im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'], '(計算格特寫)'); continue
         pg.evaluate("document.querySelectorAll('body *').forEach(e=>{if(getComputedStyle(e).position==='fixed')e.style.visibility='hidden'})")      # 凍結的頂端列會蓋到截圖
         el = pg.query_selector('main .lcol')      # 縮圖只呈現題目（左欄題目卡）；圓盤沒有題目卡，改取作答區
         if not el or el.bounding_box()['height'] < 60: el = pg.query_selector('main #steps')
