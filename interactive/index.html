@@ -44,6 +44,7 @@ h2{font-size:22px;margin:2px 0 0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .th{display:block;aspect-ratio:4/3;background:var(--ac-soft);border-bottom:1px solid var(--line);position:relative}
 .th img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;padding:6px}
+.th .rgtag{position:absolute;right:8px;top:8px;color:#fff;font-size:13px;font-weight:800;padding:2px 11px;border-radius:99px;box-shadow:0 1px 3px rgba(0,0,0,.2)}.rgtag.gn{background:var(--L0)}.rgtag.gy{background:var(--ac)}.rgtag.gx{background:var(--L2)}
 .th .code{position:absolute;left:8px;top:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11.5px;padding:1px 9px;border-radius:99px}
 .info{padding:10px 12px;display:flex;align-items:center;gap:8px;flex:1}
 .t{flex:1;color:inherit;text-decoration:none;font-weight:700;line-height:1.35}
@@ -98,9 +99,19 @@ function facets(it){
 const inSel=it=>sel.startsWith('fam:')?FAM_OF[it.kind]===sel.slice(4):it.kind===sel;
 function textOK(it){const s=q.trim().toLowerCase(); if(!s)return true;
   return (it.title+it.paper+it.steps+it.note+it.endpoint+it.params+kindName(it.kind)+(FAMS.find(f=>f[0]===FAM_OF[it.kind])||[])[1]).toLowerCase().includes(s)}
+function rgTag(it){      // 直式計算題縮圖右上角的進退位標籤（使用者 2026-10-17）：綠＝不進退位、橘＝要進退位、藍＝交錯
+  if(it.kind!=='wordprobc'&&it.kind!=='mulvc')return '';
+  const o=Object.fromEntries(new URLSearchParams(it.params||'')), rg=o.regroup, add=o.op==='add', mix=o.op==='mix';
+  let t,c;
+  if(it.kind==='mulvc'){t={none:'不進位',yes:'進位',mix:'交錯'}[rg];c={none:'gn',yes:'gy',mix:'gx'}[rg]}
+  else if(o.digits==='3'){t=rg==='chain'?'連續退位':add?'雙重進位':'雙重退位';c='gy'}
+  else if(mix){t='進退位交錯';c='gx'}
+  else {t=rg==='none'?(add?'不進位':'不退位'):(add?'進位':'退位');c=rg==='none'?'gn':'gy'}
+  return `<span class="rgtag ${c}">${t}</span>`;
+}
 function card(it){
   return `<div class="card"><a class="th" href="${url(it)}" target="_blank" rel="noopener" aria-label="開啟 ${esc(it.title)}">
-    <img src="thumbs/${it.id}.webp" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}</a>
+    <img src="thumbs/${it.id}.webp" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}${rgTag(it)}</a>
    <div class="info"><a class="t" href="${url(it)}" target="_blank" rel="noopener">${esc(it.title)}</a>
    <button class="cp" data-copy="${esc(url(it))}" title="複製連結" aria-label="複製連結">🔗</button></div></div>`;
 }
