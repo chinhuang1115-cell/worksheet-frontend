@@ -111,7 +111,7 @@ function rgTag(it){      // 直式計算題縮圖右上角的進退位標籤（�
 }
 function card(it){
   return `<div class="card"><a class="th" href="${url(it)}" target="_blank" rel="noopener" aria-label="開啟 ${esc(it.title)}">
-    <img src="thumbs/${it.id}.webp" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}${rgTag(it)}</a>
+    <img src="thumbs/${it.id}.webp?v=${CAT.thumbsV||0}" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}${rgTag(it)}</a>
    <div class="info"><a class="t" href="${url(it)}" target="_blank" rel="noopener">${esc(it.title)}</a>
    <button class="cp" data-copy="${esc(url(it))}" title="複製連結" aria-label="複製連結">🔗</button></div></div>`;
 }

@@ -71,3 +71,5 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
         im = Image.open(io.BytesIO(el.screenshot())).convert('RGB'); im.thumbnail((520, 520))
         im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'])
     b.close()
+    cat['thumbsV'] = int(__import__('time').time())      # 縮圖網址帶版本號，重產後瀏覽器／CDN 才不會沿用舊圖（使用者 2026-10-17 看到舊縮圖）
+    (here / 'catalog.json').write_text(json.dumps(cat, ensure_ascii=False, indent=1), encoding='utf-8')
