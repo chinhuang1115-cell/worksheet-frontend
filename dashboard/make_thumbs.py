@@ -24,7 +24,7 @@ def gen(item):
         return iw.generate(th, 3, 'full', 11, q.get('op', 'sub'), q.get('regroup', 'none'), int(q.get('digits', 2)))
     if ep == 'mul-concept': return iw.generate_mul(th, 3, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-wordprob': return iw.generate_mulwp(th, 3, 'full', 11, q.get('level', 'normal'))
-    if ep == 'mul-vertical': return iw.generate_mulv(th, 3, 'full', 11, q.get('regroup', 'none'))
+    if ep == 'mul-vertical': return iw.generate_mulv(th, 3, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1')
     if ep == 'mul-dial': return iw.generate_dial(th, 3, 'full', 11, q.get('level', 'normal'))
     if ep == 'place-value': return iw.generate_pv(th, 3, 'full', 11, q.get('level', 'normal'))
     if ep == 'coin-carry': return iw.generate_cy(th, 3, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))

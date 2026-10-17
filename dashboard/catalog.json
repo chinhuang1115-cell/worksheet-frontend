@@ -16,6 +16,10 @@
    "name": "乘法應用題 2*1"
   },
   {
+   "id": "mulvc",
+   "name": "乘法直式計算"
+  },
+  {
    "id": "dial",
    "name": "乘法圓盤"
   },
@@ -216,6 +220,39 @@
    "params": "regroup=mix",
    "smoke": "interactive mul vertical mix",
    "steps": "關鍵字→橫式→直式（每欄查九九乘法表）→答句",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulvc-none",
+   "kind": "mulvc",
+   "title": "直式乘法計算（不進位）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=none&calc=1",
+   "smoke": "interactive mul vertical calc",
+   "steps": "直式計算（每欄查九九乘法表）；題目只有橫式，從乘法應用題 2*1 擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulvc-yes",
+   "kind": "mulvc",
+   "title": "直式乘法計算（進位）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=yes&calc=1",
+   "smoke": "interactive mul vertical calc",
+   "steps": "直式計算（每欄查九九乘法表）；題目只有橫式，從乘法應用題 2*1 擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulvc-mix",
+   "kind": "mulvc",
+   "title": "直式乘法計算（進位／不進位交錯）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=mix&calc=1",
+   "smoke": "interactive mul vertical calc",
+   "steps": "直式計算（每欄查九九乘法表）；題目只有橫式，從乘法應用題 2*1 擷取",
    "note": "",
    "paper": ""
   },
