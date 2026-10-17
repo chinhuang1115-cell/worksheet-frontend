@@ -63,9 +63,9 @@ def div_thumb(b, P0):
     """除法計算格特寫縮圖：房子（除號）、妖怪（被除數）、玩家（除數）、商的虛線格、乘積與餘數的虛線格"""
     a, d = str(P0['a']), P0['b']; big = P0.get('big')
     q1 = '<i class="x">✗</i>' if big else '<i class="q">?</i>'
-    html = (f'<style>{DIV_CSS}</style><div class="bd"><span></span><span class="de">👹</span>{q1}<i class="q">?</i>'
+    html = (f'<style>{DIV_CSS}</style><div class="bd"><span></span><span class="de"></span>{q1}<i class="q">?</i>'
             f'<i style="grid-row:2;grid-column:1">{d}</i><span class="hs" style="grid-row:2;grid-column:2/5"></span><i style="grid-row:2;grid-column:3">{a[0]}</i><i style="grid-row:2;grid-column:4">{a[1]}</i>'
-            f'<span class="de">🧒</span><span></span><span></span><i class="q">?</i><span></span><span></span><div class="ln"></div></div>')
+            f'<span class="de"></span><span></span><span></span><i class="q">?</i><span></span><span></span><div class="ln"></div></div>')
     pg = b.new_page(viewport={'width': 520, 'height': 390}); pg.set_content(html); pg.wait_for_timeout(250)
     im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
 
