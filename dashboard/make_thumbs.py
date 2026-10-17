@@ -21,7 +21,7 @@ def gen(item):
     ep = item['endpoint'].rsplit('/', 1)[1]
     th = '文具店' if ep == 'sub2noreg-app' else '甜點店'
     if ep == 'sub2noreg-app':
-        return iw.generate(th, 3, 'full', 11, q.get('op', 'sub'), q.get('regroup', 'none'), int(q.get('digits', 2)))
+        return iw.generate(th, 3, 'full', 11, q.get('op', 'sub'), q.get('regroup', 'none'), int(q.get('digits', 2)), q.get('calc') == '1')
     if ep == 'mul-concept': return iw.generate_mul(th, 3, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-wordprob': return iw.generate_mulwp(th, 3, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-vertical': return iw.generate_mulv(th, 3, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1')

@@ -8,6 +8,10 @@
    "name": "加減應用題"
   },
   {
+   "id": "wordprobc",
+   "name": "加減直式計算"
+  },
+  {
    "id": "mulwp",
    "name": "乘法應用題 1*1"
   },
@@ -143,6 +147,94 @@
    "params": "op=add&digits=3&regroup=double",
    "smoke": null,
    "steps": "①找關鍵字→②橫式→③直式（三位數）→④答句；十位和、百位和各拆兩步",
+   "note": "smoke 未涵蓋，建議補測項",
+   "paper": ""
+  },
+  {
+   "id": "wpc-sub-none",
+   "kind": "wordprobc",
+   "title": "兩位數減法直式計算（不退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=sub&regroup=none&calc=1",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "試點題型",
+   "paper": ""
+  },
+  {
+   "id": "wpc-sub-yes",
+   "kind": "wordprobc",
+   "title": "兩位數減法直式計算（退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=sub&regroup=yes&calc=1",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wpc-add-none",
+   "kind": "wordprobc",
+   "title": "兩位數加法直式計算（不進位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=add&regroup=none&calc=1",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wpc-add-yes",
+   "kind": "wordprobc",
+   "title": "兩位數加法直式計算（進位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=add&regroup=yes&calc=1",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wpc-mix",
+   "kind": "wordprobc",
+   "title": "兩位數加減交錯直式計算（含進退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=mix&regroup=mix&calc=1",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wpc-3d-sub-double",
+   "kind": "wordprobc",
+   "title": "三位數減法直式計算（雙重退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=sub&digits=3&regroup=double&calc=1",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wpc-3d-sub-chain",
+   "kind": "wordprobc",
+   "title": "三位數減法直式計算（連續退位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=sub&digits=3&regroup=chain&calc=1",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "wpc-3d-add-double",
+   "kind": "wordprobc",
+   "title": "三位數加法直式計算（雙重進位）",
+   "endpoint": "/interactive/sub2noreg-app",
+   "params": "op=add&digits=3&regroup=double&calc=1",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
    "note": "smoke 未涵蓋，建議補測項",
    "paper": ""
   },
