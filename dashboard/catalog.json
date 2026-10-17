@@ -34,6 +34,10 @@
   {
    "id": "cy",
    "name": "錢幣進位"
+  },
+  {
+   "id": "divvc",
+   "name": "除法直式計算"
   }
  ],
  "levels": [
@@ -490,7 +494,51 @@
    "steps": "①數一數→②換一換→③填（單位放大）",
    "note": "",
    "paper": ""
+  },
+  {
+   "id": "divvc-none",
+   "kind": "divvc",
+   "title": "直式除法計算（沒有幫手）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "divtype=none",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvc-help",
+   "kind": "divvc",
+   "title": "直式除法計算（找幫手）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "divtype=help",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvc-big",
+   "kind": "divvc",
+   "title": "直式除法計算（不能大欺小）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "divtype=big",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvc-mix",
+   "kind": "divvc",
+   "title": "直式除法計算（三種混合）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "divtype=mix",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
+   "note": "",
+   "paper": ""
   }
  ],
- "thumbsV": 1792214236
+ "thumbsV": 1792229197
 }

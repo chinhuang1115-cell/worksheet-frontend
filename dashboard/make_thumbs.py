@@ -17,7 +17,7 @@ out = here.parent / 'interactive' / 'thumbs'; out.mkdir(parents=True, exist_ok=T
 
 
 def gen(item):
-    N = 8 if 'calc=1' in item['params'] else 3      # 直式計算題多出幾題，才選得到「有進退位」「加法」的示範題
+    N = 8 if ('calc=1' in item['params'] or 'divtype=' in item['params']) else 3      # 直式計算題多出幾題，才選得到「有進退位」「加法」的示範題
     q = {k: v[0] for k, v in parse_qs(item['params']).items()}
     ep = item['endpoint'].rsplit('/', 1)[1]
     th = '文具店' if ep == 'sub2noreg-app' else '甜點店'
@@ -26,6 +26,7 @@ def gen(item):
     if ep == 'mul-concept': return iw.generate_mul(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-wordprob': return iw.generate_mulwp(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-vertical': return iw.generate_mulv(th, N, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1')
+    if ep == 'div-vertical': return iw.generate_divv(th, N, 'full', 11, q.get('divtype', 'mix'))
     if ep == 'mul-dial': return iw.generate_dial(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'place-value': return iw.generate_pv(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'coin-carry': return iw.generate_cy(th, N, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))
@@ -52,6 +53,23 @@ def calc_thumb(b, P0):
     im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
 
 
+DIV_CSS = """*{box-sizing:border-box}body{margin:0;width:520px;height:390px;background:#fdf0e3;display:flex;align-items:flex-end;justify-content:center;padding-bottom:22px;font-family:"芫荽","Noto Sans CJK TC",sans-serif}
+.bd{background:#1f2937;border-radius:18px;padding:18px 26px;color:#fff;font-size:52px;font-weight:700;display:grid;grid-template-columns:70px 24px 66px 66px;gap:6px 8px;align-items:center;justify-items:center}
+.bd i{font-style:normal;width:60px;height:62px;text-align:center;line-height:62px}.q{border:3px dashed #94a3b8;border-radius:12px;color:#94a3b8;height:56px;line-height:50px}.x{border:3px dashed #f87171;border-radius:12px;color:#f87171;height:56px;line-height:50px}
+.hs{align-self:stretch;justify-self:stretch;border-left:6px solid #cbd5e1;border-top:6px solid #cbd5e1;border-radius:8px 0 0 0;margin:-3px 0}.ln{grid-column:3/5;width:100%;height:5px;background:#94a3b8}.de{font-size:34px;line-height:1}"""
+
+
+def div_thumb(b, P0):
+    """除法計算格特寫縮圖：房子（除號）、妖怪（被除數）、玩家（除數）、商的虛線格、乘積與餘數的虛線格"""
+    a, d = str(P0['a']), P0['b']; big = P0.get('big')
+    q1 = '<i class="x">✗</i>' if big else '<i class="q">?</i>'
+    html = (f'<style>{DIV_CSS}</style><div class="bd"><span></span><span class="de">👹</span>{q1}<i class="q">?</i>'
+            f'<i style="grid-row:2;grid-column:1">{d}</i><span class="hs" style="grid-row:2;grid-column:2/5"></span><i style="grid-row:2;grid-column:3">{a[0]}</i><i style="grid-row:2;grid-column:4">{a[1]}</i>'
+            f'<span class="de">🧒</span><span></span><span></span><i class="q">?</i><span></span><span></span><div class="ln"></div></div>')
+    pg = b.new_page(viewport={'width': 520, 'height': 390}); pg.set_content(html); pg.wait_for_timeout(250)
+    im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
+
+
 with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
     b = p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM', '/opt/pw-browsers/chromium'))
     for it in cat['items']:
@@ -60,6 +78,10 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
         pg = b.new_page(viewport={'width': 1100, 'height': 780})
         pg.add_init_script("localStorage.setItem('wp_level','3')")
         pg.goto('file://' + str(f)); pg.wait_for_selector('.card', state='attached'); pg.wait_for_timeout(1800)
+        if it['kind'] == 'divvc':      # 除法計算：房子特寫（依卡片類型挑示範題：沒有幫手／找幫手／不能大欺小；混合取第一題）
+            want = it['params'].split('divtype=')[1].split('&')[0]
+            P0 = pg.evaluate("(w=>{const L=P.filter(p=>w==='mix'||(w==='big'?p.big:w==='help'?p.help:(!p.big&&!p.help))); const p=L[0]||P[0]; return {a:p.a,b:p.b,big:p.big}})", want)
+            im = div_thumb(b, P0); im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'], '(房子特寫)'); continue
         if 'calc=1' in it['params']:      # 直式計算題：縮圖只畫「計算格特寫」（深色板、直式算式、答案虛線格；使用者 2026-10-17 選方案 A），不拍題目卡
             want_rg = 'regroup=none' not in it['params']; want_op = '+' if 'op=mix' in it['params'] else None      # 示範題：不進退位的卡要選沒進退位的題，其餘選有進退位的；加減交錯的卡選加法，才和減法卡的縮圖不同
             P0 = pg.evaluate("(w=>{const L=P.filter(p=>!!p.regroup===w[0]&&(!w[1]||p.op===w[1])); const p=L[0]||P[0]; return {a:p.a,b:p.b,op:p.op,ans:p.ans}})", [want_rg, want_op])
