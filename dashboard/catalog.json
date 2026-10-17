@@ -8,10 +8,6 @@
    "name": "加減應用題"
   },
   {
-   "id": "mul",
-   "name": "乘法概念_只有數字"
-  },
-  {
    "id": "mulwp",
    "name": "乘法應用題 1*1"
   },
@@ -148,7 +144,7 @@
   },
   {
    "id": "mul-concept-easy",
-   "kind": "mul",
+   "kind": "mulwp",
    "title": "乘法概念：幾個幾（簡單）",
    "endpoint": "/interactive/mul-concept",
    "params": "level=easy",
@@ -159,7 +155,7 @@
   },
   {
    "id": "mul-concept-normal",
-   "kind": "mul",
+   "kind": "mulwp",
    "title": "乘法概念：幾個幾（一般）",
    "endpoint": "/interactive/mul-concept",
    "params": "level=normal",
