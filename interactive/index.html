@@ -29,7 +29,7 @@ nav input[type=search]{width:100%;font:inherit;font-size:14px;padding:8px 14px;b
 .sub3{margin:2px 0 0 14px;padding-left:8px;border-left:4px solid var(--rail)}
 .s{margin-top:3px;display:flex;justify-content:space-between;width:100%;border:0;background:var(--L3);font:inherit;font-weight:500;text-align:left;padding:7px 10px 7px 12px;border-radius:9px;color:var(--L3t);cursor:pointer}
 .s:hover{filter:brightness(.95)}
-.s span:last-child{color:#2a8a83;font-weight:800}.s.on{background:var(--ac);color:#fff;font-weight:800}.s.on span:last-child{color:#fff}@media (prefers-color-scheme:dark){.s span:last-child{color:#7fd1cb}.s.on span:last-child{color:#fff}}
+.s span:last-child{color:#2a8a83;font-weight:800}.s .sfx{display:block;font-size:12.5px;font-weight:500;opacity:.85}.s.on{background:var(--ac);color:#fff;font-weight:800}.s.on span:last-child{color:#fff}@media (prefers-color-scheme:dark){.s span:last-child{color:#7fd1cb}.s.on span:last-child{color:#fff}}
 .m.on{background:var(--ac)}.m.on small{color:#fff}
 main{padding:20px 26px 60px;min-width:0}
 .crumb{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:12.5px}
@@ -81,6 +81,7 @@ const FAM_OF={wordprob:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',dial:'mul',pv
 let CAT=null, q='', sel=localStorage.getItem('hub_sel')||'', list=localStorage.getItem('hub_view')==='list';   // sel：'fam:乘法主類 id' 或 次類 kind id；空＝第一個次類
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const navName=n=>{const m=/^(.+?)[_ ](.+)$/.exec(n);return m?`${m[1]}<small class="sfx">${m[2]}</small>`:n};      // 名稱的綴詞（底線或空格後）在導覽列另起一行
 const kindName=id=>(CAT.kinds.find(k=>k.id===id)||{}).name||id;
 const url=it=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+'lv=2&mode=faded';      // 從總覽進入一律弱提示（網址指定，優先於瀏覽器記住的難度）；進去後自行切換
 // 小次類（頂端篩選）：由題型參數推得，不另存資料
@@ -110,7 +111,7 @@ function render(){
   const cnt=id=>CAT.items.filter(i=>i.kind===id).length;
   $('#nav').innerHTML=FAMS.map(([fid,name])=>{const ks=kinds.filter(k=>FAM_OF[k.id]===fid);
     return `<button class="m ${sel==='fam:'+fid?'on':''}" data-sel="fam:${fid}">${name}<small>${ks.reduce((a,k)=>a+cnt(k.id),0)}</small></button>`+
-    `<div class="sub3">`+ks.map(k=>`<button class="s ${sel===k.id?'on':''}" data-sel="${k.id}"><span>${k.name}</span><span>${cnt(k.id)}</span></button>`).join('')+`</div>`}).join('');
+    `<div class="sub3">`+ks.map(k=>`<button class="s ${sel===k.id?'on':''}" data-sel="${k.id}"><span>${navName(k.name)}</span><span>${cnt(k.id)}</span></button>`).join('')+`</div>`}).join('');
   const searching=!!q.trim();
   const scope=searching?CAT.items:CAT.items.filter(inSel);
   // 頂端篩選：只列目前範圍內有 2 種以上選項的小次類
