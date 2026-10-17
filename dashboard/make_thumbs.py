@@ -43,9 +43,11 @@ def calc_thumb(b, P0):
     n = max(len(a), len(bb), len(ans))
     row = lambda t: ''.join(f'<i>{t[i - (n - len(t))] if i >= n - len(t) else ""}</i>' for i in range(n))
     sym = {'-': '－', '+': '＋', '×': '×'}.get(P0['op'], P0['op'])
+    k = n - len(bb)      # 符號緊貼第二列數字的左邊（一位數乘數：「× 4」不要隔著空欄）
+    row2 = ''.join(f'<i class="op">{sym}</i>' if c == k else f'<i>{bb[c - 1 - k] if c > k else ""}</i>' for c in range(n + 1))
     qs = ''.join('<i class="q">?</i>' for _ in range(len(ans)))
     pad = '<i></i>' * (n - len(ans))
-    html = (f'<style>{CALC_CSS}</style><div class="bd"><div class="r"><i></i>{row(a)}</div><div class="r"><i class="op">{sym}</i>{row(bb)}</div>'
+    html = (f'<style>{CALC_CSS}</style><div class="bd"><div class="r"><i></i>{row(a)}</div><div class="r">{row2}</div>'
             f'<div class="ln"></div><div class="r"><i></i>{pad}{qs}</div></div>')
     pg = b.new_page(viewport={'width': 520, 'height': 390}); pg.set_content(html); pg.wait_for_timeout(200)
     im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
