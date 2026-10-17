@@ -32,9 +32,9 @@ def gen(item):
     raise SystemExit('未知端點：' + ep)
 
 
-CALC_CSS = """*{box-sizing:border-box}body{margin:0;width:520px;height:390px;background:#fdf0e3;display:flex;align-items:center;justify-content:center;font-family:"芫荽","Noto Sans CJK TC",sans-serif}
-.bd{background:#1f2937;border-radius:20px;padding:26px 32px;color:#fff;font-size:68px;font-weight:700}.r{display:flex;gap:10px;align-items:center}
-.r i{font-style:normal;width:76px;height:84px;text-align:center;line-height:84px}.r i.op{color:#93c5fd}.q{border:3px dashed #94a3b8;border-radius:14px;color:#94a3b8;margin:4px 0;height:76px;line-height:70px}.ln{height:5px;background:#94a3b8;margin:8px 0}"""
+CALC_CSS = """*{box-sizing:border-box}body{margin:0;width:520px;height:390px;background:#fdf0e3;display:flex;align-items:flex-end;justify-content:center;padding-bottom:22px;font-family:"芫荽","Noto Sans CJK TC",sans-serif}
+.bd{background:#1f2937;border-radius:18px;padding:20px 28px;color:#fff;font-size:52px;font-weight:700}.r{display:flex;gap:8px;align-items:center}
+.r i{font-style:normal;width:58px;height:64px;text-align:center;line-height:64px}.r i.op{color:#93c5fd}.q{border:3px dashed #94a3b8;border-radius:12px;color:#94a3b8;margin:4px 0;height:58px;line-height:54px}.ln{height:5px;background:#94a3b8;margin:7px 0}"""      # 下方對齊、板子縮小：右上角留給進退位標籤（標籤在總覽頁用 CSS 疊上去）
 
 
 def calc_thumb(b, P0):
