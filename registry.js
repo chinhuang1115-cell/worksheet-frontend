@@ -3135,5 +3135,54 @@ window.WORKSHEET_REGISTRY = [
       { "key": "zonghe-3a-r01-blank", "label": "綜合練習 A（計算格空白）" },
       { "key": "zonghe-3a-r02-blank", "label": "綜合練習 B（加強退位・計算格空白）" }
     ]
+  },
+  {
+    "id": "circle",
+    "code": "N603",
+    "grade": "6",
+    "name": "計算練習＿圓周長與圓面積",
+    "ops": [],
+    "keywords": [
+      "circle",
+      "圓周長",
+      "圓面積",
+      "圓周率",
+      "半徑",
+      "直徑"
+    ],
+    "desc": "圓周長與圓面積的計算練習共 8 題：已知直徑／半徑求周長或面積、已知周長或面積反求直徑或半徑，最後兩題是小狗牽繩的生活應用。圖上的長度每次隨機，反求題的數字保證除得盡。",
+    "sortKey": [
+      9,
+      0,
+      4
+    ],
+    "home": {
+      "icon": "⭕",
+      "sub": "圓周長 × 圓面積",
+      "desc": "用 3.14 算圓周長與圓面積，再從周長或面積反推直徑、半徑，最後用小狗牽繩的情境做生活應用。",
+      "features": [
+        "每次隨機",
+        "正算與反求各半",
+        "六年級"
+      ]
+    },
+    "diffInfo": {
+      "grade": "六年級",
+      "level": "進階",
+      "levelColor": "#f59e0b",
+      "code": "N603",
+      "desc": "圓周長＝直徑×3.14、圓面積＝半徑×半徑×3.14，含由周長／面積反求長度。"
+    },
+    "sample": {
+      "pdf": "assets/circle_sample.pdf",
+      "name": "計算練習_圓周長與圓面積_範本.pdf"
+    },
+    "layout": {
+      "panel": null,
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
   }
 ];
