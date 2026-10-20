@@ -78,7 +78,7 @@ h2{font-size:22px;margin:2px 0 0}
 <div class="toast" id="toast"></div>
 <script>
 const FAMS=[['wordprob','加減'],['mul','乘法'],['div','除法'],['coin','錢幣']];
-const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',divvc:'div',dial:'mul',pv:'coin',cy:'coin'};
+const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',divvc:'div',ff:'div',dial:'mul',pv:'coin',cy:'coin'};
 let CAT=null, q='', sel=localStorage.getItem('hub_sel')||'', list=localStorage.getItem('hub_view')==='list';   // sel：'fam:乘法主類 id' 或 次類 kind id；空＝第一個次類
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -93,6 +93,7 @@ function facets(it){
   if(it.kind==='wordprob'||it.kind==='wordprobc'){f['運算']={sub:'減法',add:'加法',mix:'加減交錯'}[o.op]; f['位數']=o.digits==='3'?'三位數':'兩位數'}
   if(it.kind==='mulv'||it.kind==='mulvc')f['進位']={none:'不進位',yes:'進位',mix:'交錯'}[o.regroup];
   if(['mul','mulwp','dial','pv'].includes(it.kind))f['難度']={easy:'簡單',normal:'一般'}[o.level];
+  if(it.kind==='ff')f['類別']={share:'平分給幾個人',group:'每幾個包成一包',rem:'有餘數'}[o.ftype];
   if(it.kind==='divvc')f['幫手']={none:'沒有幫手',help:'找幫手',big:'不能大欺小',mix:'混合'}[o.divtype];
   if(it.kind==='mulwp')f['類別']=/mul-concept/.test(it.endpoint)?'算數量':'算價錢';      // 乘法應用題 1*1 併入乘法概念後，用類別分「算數量／算價錢」（使用者 2026-10-17）
   return f;

@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-14",
+ "updated": "2026-10-20",
  "backend": "https://web-production-0542f.up.railway.app",
  "backendCommit": "b4d8a33",
  "kinds": [
@@ -38,6 +38,10 @@
   {
    "id": "divvc",
    "name": "除法直式計算"
+  },
+  {
+   "id": "ff",
+   "name": "分分看（除法概念）"
   }
  ],
  "levels": [
@@ -538,7 +542,40 @@
    "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
    "note": "",
    "paper": ""
+  },
+  {
+   "id": "ff-share",
+   "kind": "ff",
+   "title": "分分看：平分給幾個人",
+   "endpoint": "/interactive/fenfen",
+   "params": "ftype=share&level=normal",
+   "smoke": "interactive ff share graded",
+   "steps": "① 一人一個輪流發 → ② 填一個人有幾個",
+   "note": "對應紙本 N203A 分分看",
+   "paper": "N203A 分分看"
+  },
+  {
+   "id": "ff-group",
+   "kind": "ff",
+   "title": "分分看：每幾個包成一包",
+   "endpoint": "/interactive/fenfen",
+   "params": "ftype=group&level=normal",
+   "smoke": "interactive ff group graded",
+   "steps": "① 一把一把放進盒子（長出加法算式）→ ② 填共可包成幾包",
+   "note": "對應紙本 N203A 分分看",
+   "paper": "N203A 分分看"
+  },
+  {
+   "id": "ff-rem",
+   "kind": "ff",
+   "title": "分分看：有餘數（幾盤、剩幾個）",
+   "endpoint": "/interactive/fenfen",
+   "params": "ftype=rem&level=normal",
+   "smoke": "interactive ff rem graded",
+   "steps": "① 點著數圈成一盤 → ② 拉去盤子 → ③ 填幾盤、剩幾個",
+   "note": "對應紙本 N203A 分分看",
+   "paper": "N203A 分分看"
   }
  ],
- "thumbsV": 1792245855
+ "thumbsV": 1792503953
 }

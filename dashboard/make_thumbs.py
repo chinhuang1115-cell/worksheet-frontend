@@ -30,6 +30,7 @@ def gen(item):
     if ep == 'mul-dial': return iw.generate_dial(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'place-value': return iw.generate_pv(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'coin-carry': return iw.generate_cy(th, N, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))
+    if ep == 'fenfen': return iw.generate_ff('水果', N, 'full', 11, q.get('level', 'normal'), q.get('ftype', 'share'))
     raise SystemExit('未知端點：' + ep)
 
 
