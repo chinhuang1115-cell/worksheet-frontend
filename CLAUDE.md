@@ -53,3 +53,15 @@
 ## sample PDF 預算圖（2026-10-07）
 
 `assets/img/` 是由後端 repo `toolkit/make_sample_images.py` 產生的每頁 WebP 與 `manifest.json`，前端優先載圖、沒有才用 pdf.js。**換 `assets/*.pdf` 時必須一併更新 `assets/img/` 並 bump `SAMPLE_VER`**（`python <後端>/toolkit/make_sample_images.py assets`）。
+
+## 題型詳情頁的「題型管理工具」（管理端，2026-10-21）
+
+`index.html` 題型詳情頁（`ADMIN-ONLY-START` 區塊，`isAdmin` 才顯示）展開後是**兩張 1:1 等寬卡片並排**：「各版型售價一覽」＋「範本與檔案」（範本管理、檢視用下載）。**管理員檢核表已移除**，QA 標記改走管理導覽列的 QA 頁。改這塊時：
+
+- 兩卡外層 grid 用 `minmax(0,1fr) minmax(0,1fr)`，卡片樣式（accent-50 底、warning-500 框、12px 14px 內距、標題下距 8px）保持一致；改完量測兩欄寬、上緣 y、欄距（2026-10-21 實測 544px／同 y／16px）。
+- 管理模式本機預覽：`localStorage.ys_admin_mode='1'`、`ys_welcome_seen='1'`，開 `#screen=home&item=<題型id>` 後點「題型管理工具」展開。
+- 「定價與購買設定」頁（`isScreenConfig` 區塊）另有一份管理員檢核表，尚未比照移除。
+
+## 推送前先同步 main 的踩坑（2026-10-21）
+
+本機前端 repo 的 `main` 可能落後遠端數百個 commit（別的 session 先推了 sample 圖與 `index.html`），`git fetch` 後才看得出。`git rebase` 會因「未追蹤的 `assets/img/*`、`assets/*_sample.pdf` 與遠端已收錄的檔案同名」而中止。做法：先把這些未追蹤檔移到暫存區備份（不要刪），再 `git rebase --autostash origin/main`（本機未提交的 `registry.js` 等用 autostash 帶過），推送前 `grep` 確認自己的改動仍在。`git fetch`／`push` 偶爾超過 120 秒，用 `timeout` 包起來。
