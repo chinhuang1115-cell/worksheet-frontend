@@ -501,68 +501,15 @@
           <!-- ADMIN-ONLY-START -->
           <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
             <div style="margin-bottom:16px;">
-              <!-- 題型管理工具列（共用管理導覽列已在頁面最上方；此處僅保留檢核表展開／收合切換）-->
+              <!-- 題型管理工具列（共用管理導覽列已在頁面最上方；展開後為「各版型售價一覽」「範本與檔案」兩張等寬卡片並排，管理員檢核表已移除，QA 檢核請走管理導覽列的 QA 頁）-->
               <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;border-radius:var(--radius-md);background:var(--color-warning-500);flex-wrap:nowrap;" onClick="{{ onToggleAdminPanel }}">
                 <span style="font-size:var(--text-sm);color:#fff;pointer-events:none;">{{ adminPanelCaret }}</span>
                 <span style="font-size:var(--text-sm);font-weight:700;color:#fff;letter-spacing:var(--tracking-wide);pointer-events:none;font-family:'Iansui','新細明體',PMingLiU,serif;">題型管理工具</span>
               </div>
               <sc-if value="{{ adminPanelOpen }}" hint-placeholder-val="{{ true }}">
-              <div style="margin-top:12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,1fr);gap:16px;align-items:start;">
-
-                  <div style="background: var(--color-warning-100); border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); overflow: hidden; min-width: 0; width: 100%">
-                    <div style="padding: 10px 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; width: 100%; box-sizing: border-box;">
-                      <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">管理員檢核表</span>
-                      <div style="display:flex;align-items:center;gap:6px;">
-                        <span style="font-size:var(--text-xs);font-weight:600;color:var(--text-secondary);">QA：</span>
-
-                        <button onClick="{{ detailItem.onAdminPass }}" style="width:26px;height:26px;border-radius:50%;cursor:pointer;background:{{ detailItem.adminPassBg }};color:{{ detailItem.adminPassColor }};border:1.5px solid {{ detailItem.adminPassBorder }};font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">✓</button>
-                        <button onClick="{{ detailItem.onAdminWarn }}" style="width:26px;height:26px;border-radius:50%;cursor:pointer;background:{{ detailItem.adminWarnBg }};color:{{ detailItem.adminWarnColor }};border:1.5px solid {{ detailItem.adminWarnBorder }};font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;">▲</button>
-                        <button onClick="{{ detailItem.onAdminFail }}" style="width:26px;height:26px;border-radius:50%;cursor:pointer;background:{{ detailItem.adminFailBg }};color:{{ detailItem.adminFailColor }};border:1.5px solid {{ detailItem.adminFailBorder }};font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">✕</button>
-                      </div>
-                      <span style="display:flex;align-items:center;gap:5px;font-size:var(--text-2xs);font-weight:700;padding:4px 10px;border-radius:var(--radius-full);background:{{ detailItem.lockChipBg }};color:#fff;">{{ detailItem.lockLabel }}</span>
-                      <div style="flex:1;"></div><span style="font-size:var(--text-2xs);font-weight:600;color:var(--text-secondary);padding:5px 10px;border-radius:var(--radius-md);border:1px solid var(--color-warning-600);background:#fff;cursor:pointer;" onClick="{{ onClearChecklist }}">清除全部標記</span>
-
-                    </div><div style="padding: 12px 14px; display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; border-top: 1px solid var(--color-warning-500); width: 100%; box-sizing: border-box;">
-                      <sc-for list="{{ detailItem.checklistCategories }}" as="cat" hint-placeholder-count="4">
-                        <div style="background:#fff;border:1px solid var(--color-warning-500);border-radius:var(--radius-md);overflow:hidden;">
-                          <div style="display: flex; align-items: center; gap: 6px; padding: 6px 10px; background-color: var(--color-accent-200)">
-                            <span style="flex:1;font-size:var(--text-2xs);font-weight:700;color:var(--text-primary);">{{ cat.title }}</span>
-                            <span style="font-size:9px;font-weight:700;color:var(--text-secondary);letter-spacing:var(--tracking-wide);">檢核</span>
-                          </div>
-                          <div style="display:flex;flex-direction:column;">
-                            <sc-for list="{{ cat.items }}" as="it2" hint-placeholder-count="2">
-                              <sc-if value="{{ it2.notNote }}" hint-placeholder-val="{{ true }}">
-                                <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;border-top:1px solid var(--color-warning-100);cursor:pointer;" onClick="{{ it2.onToggle }}">
-                                  <div style="flex:1;min-width:0;">
-                                    <div style="font-size:var(--text-2xs);font-weight:700;color:var(--text-primary);">{{ it2.label }}</div>
-                                    <div style="font-size:9px;color:var(--text-secondary);margin-top:1px;">{{ it2.value }}</div>
-                                  </div>
-                                  <div style="width:15px;height:15px;border-radius:50%;border:1.5px solid {{ it2.circleColor }};background:{{ it2.circleFill }};flex-shrink:0;"></div>
-                                </div>
-                              </sc-if>
-                              <sc-if value="{{ it2.isNote }}" hint-placeholder-val="{{ false }}">
-                                <div style="padding:7px 10px;border-top:1px solid var(--color-warning-100);">
-                                  <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onClick="{{ it2.onToggleEdit }}">
-                                    <span style="font-size:var(--text-2xs);font-weight:700;color:var(--text-primary);">{{ it2.label }}</span>
-                                    <span style="font-size:9px;font-weight:700;color:var(--text-brand);">{{ it2.editLabel }}</span>
-                                  </div>
-                                  <sc-if value="{{ it2.editing }}" hint-placeholder-val="{{ false }}">
-                                    <textarea value="{{ it2.noteText }}" onChange="{{ it2.onNoteChange }}" placeholder="輸入 QA 備註…" style="width:100%;margin-top:6px;min-height:48px;border-radius:var(--radius-md);border:1.5px solid var(--color-warning-600);padding:6px 8px;font-size:var(--text-2xs);font-family:var(--font-sans);resize:vertical;"></textarea>
-                                  </sc-if>
-                                  <sc-if value="{{ it2.notEditing }}" hint-placeholder-val="{{ true }}">
-                                    <div style="font-size:9px;color:var(--text-secondary);margin-top:1px;white-space:pre-wrap;">{{ it2.staticText }}</div>
-                                  </sc-if>
-                                </div>
-                              </sc-if>
-                            </sc-for>
-                          </div>
-                        </div>
-                      </sc-for>
-                    </div>
-
-
-                  </div><div style="border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); padding: 12px 14px; min-width: 0; width: 100%; box-sizing: border-box; align-self: auto; background-color: var(--color-accent-50)">
-                    <div style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);margin-bottom:2px;">各版型售價一覽（預設：每份 4 張）</div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start;">
+                  <div style="border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); padding: 12px 14px; min-width: 0; width: 100%; box-sizing: border-box; background-color: var(--color-accent-50)">
+                    <div style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);margin-bottom:8px;">各版型售價一覽（預設：每份 4 張）</div>
 
                     <div style="background:#fff;border:1px solid var(--color-warning-500);border-radius:var(--radius-md);overflow:hidden;">
                       <div style="{{ variantTableStyle }}">
@@ -590,8 +537,11 @@
                         <span style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:700;color:var(--color-error-600);">{{ detailItem.variantTotalPrice }} 元</span>
                       </div>
                     </div>
+                  </div>
 
-                    <div style="margin-top:12px;border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); padding: 12px 14px; background-color: #fff;">
+                  <div style="border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); padding: 12px 14px; min-width: 0; width: 100%; box-sizing: border-box; background-color: var(--color-accent-50)">
+                    <div style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);margin-bottom:8px;">範本與檔案</div>
+                    <div style="border: 1px solid var(--color-warning-500); border-radius: var(--radius-lg); padding: 12px 14px; background-color: #fff;">
                       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <span style="font-size:var(--text-sm);font-weight:700;color:var(--text-primary);">範本管理</span>
                         <span style="{{ detailItem.templateModifiedBadgeStyle }}font-size:var(--text-2xs);font-weight:700;color:#fff;background:var(--color-error-600);border-radius:var(--radius-full);padding:3px 10px;">⚠ 範本已修改，待重新產生 sample PDF</span>
