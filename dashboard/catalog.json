@@ -42,6 +42,10 @@
   {
    "id": "ff",
    "name": "分分看（除法概念）"
+  },
+  {
+   "id": "cf",
+   "name": "除法概念（平分連到算式）"
   }
  ],
  "levels": [
@@ -575,7 +579,51 @@
    "steps": "① 點著數圈成一盤 → ② 拉去盤子 → ③ 填幾盤、剩幾個",
    "note": "對應紙本 N203A 分分看",
    "paper": "N203A 分分看"
+  },
+  {
+   "id": "cf-plate",
+   "kind": "cf",
+   "title": "除法概念：分到盤子，連到算式",
+   "endpoint": "/interactive/chufa",
+   "params": "stage=plate&level=normal",
+   "smoke": "interactive cf plate graded",
+   "steps": "① 一人一個輪流發（第一輪親手、之後自動）→ ② 每盤個數拉進加法算式 → ③ 寫成乘法 → ④ 填一個人有幾個",
+   "note": "對應紙本 N210A 除法概念",
+   "paper": "N210C／N210D 分到盤子、數字尺"
+  },
+  {
+   "id": "cf-tree",
+   "kind": "cf",
+   "title": "除法概念：分解圖試一試（2–5 人）",
+   "endpoint": "/interactive/chufa",
+   "params": "stage=tree&div=small&level=normal",
+   "smoke": "interactive cf tree small graded",
+   "steps": "① 從數字尺選一個數、看加起來是不是剛好 → ② 寫成乘法 → ③ 填一個人有幾個",
+   "note": "對應紙本 N210A 除法概念",
+   "paper": "N210E 移除輔助圖（除數 2–5）"
+  },
+  {
+   "id": "cf-treebig",
+   "kind": "cf",
+   "title": "除法概念：試一試（5–9 人，不附分解圖）",
+   "endpoint": "/interactive/chufa",
+   "params": "stage=tree&div=big&level=normal",
+   "smoke": "interactive cf tree big graded",
+   "steps": "① 從數字尺選一個數、看加起來是不是剛好 → ② 寫成乘法 → ③ 填一個人有幾個",
+   "note": "對應紙本 N210A 除法概念",
+   "paper": "N210F 移除輔助圖（除數 5–9）"
+  },
+  {
+   "id": "cf-table",
+   "kind": "cf",
+   "title": "除法概念：用九九乘法大樓",
+   "endpoint": "/interactive/chufa",
+   "params": "stage=table&level=normal",
+   "smoke": "interactive cf table graded",
+   "steps": "① 在乘法大樓找哪一層剛好 → ② 回頭填加法與乘法算式 → ③ 填一個人有幾個",
+   "note": "對應紙本 N210A 除法概念",
+   "paper": "N210G 用九九乘法"
   }
  ],
- "thumbsV": 1792503953
+ "thumbsV": 1792575931
 }
