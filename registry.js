@@ -1670,7 +1670,7 @@ window.WORKSHEET_REGISTRY = [
       "直式",
       "計算練習"
     ],
-    "desc": "小數的除法單元，依學習階段分三類：\n②計算練習：直式，6 題固定涵蓋六種題型：整數÷一位小數、兩位小數÷一位小數、兩位小數÷整數、一位小數÷兩位小數、一位小數÷一位小數，每題附除號框與計算格\n③應用解題：6 題生活情境（幾倍、分裝、面積求邊長、單價），先列式再用計算格計算。全部整除，數字每次隨機。\n④綜合複習（小數除法綜合練習＿填填看比大小計算應用）：2 頁，填填看（已知 A÷B＝C 求移位後的商）、比大小（＞＜＝）、直式計算 6 題、應用題 4 題；附解答版（answers=true）。",
+    "desc": "小數的除法單元，依學習階段分兩類：\n②計算練習：直式，6 題固定涵蓋六種題型：整數÷一位小數、兩位小數÷一位小數、兩位小數÷整數、一位小數÷兩位小數、一位小數÷一位小數，每題附除號框與計算格\n③應用解題：6 題生活情境（幾倍、分裝、面積求邊長、單價），先列式再用計算格計算。全部整除，數字每次隨機。",
     "sortKey": [
       6,
       1,
@@ -1696,13 +1696,11 @@ window.WORKSHEET_REGISTRY = [
     },
     "sample": [
       { "pdf": "assets/decdiv_sample.pdf", "name": "計算練習_小數的除法_範例.pdf", "label": "直式計算", "key": "decdiv" },
-      { "pdf": "assets/decdivapp_sample.pdf", "name": "計算練習_小數除法應用題_範例.pdf", "label": "應用題", "key": "decdivapp" },
-      { "pdf": "assets/decdivmix_sample.pdf", "name": "小數除法綜合練習_範例.pdf", "label": "綜合練習", "key": "decdivmix" }
+      { "pdf": "assets/decdivapp_sample.pdf", "name": "計算練習_小數除法應用題_範例.pdf", "label": "應用題", "key": "decdivapp" }
     ],
     "variants": [
       { "key": "decdiv",    "label": "直式計算", "stage": "計算練習", "pill": "直式計算" },
-      { "key": "decdivapp", "label": "應用題",   "stage": "應用解題", "pill": "生活應用題" },
-      { "key": "decdivmix", "label": "綜合練習", "stage": "綜合複習", "pill": "填填看比大小計算應用" }
+      { "key": "decdivapp", "label": "應用題",   "stage": "應用解題", "pill": "生活應用題" }
     ],
     "layout": {
       "panel": "pingfenPanel",
