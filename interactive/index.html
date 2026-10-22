@@ -78,7 +78,7 @@ h2{font-size:22px;margin:2px 0 0}
 <div class="toast" id="toast"></div>
 <script>
 const FAMS=[['wordprob','加減'],['mul','乘法'],['div','除法'],['coin','錢幣']];
-const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',divvc:'div',ff:'div',cf:'div',dial:'mul',pv:'coin',cy:'coin'};
+const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',divvc:'div',divvc3:'div',divvcd:'div',ff:'div',cf:'div',dial:'mul',pv:'coin',cy:'coin'};
 let CAT=null, q='', sel=localStorage.getItem('hub_sel')||'', list=localStorage.getItem('hub_view')==='list';   // sel：'fam:乘法主類 id' 或 次類 kind id；空＝第一個次類
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -86,7 +86,7 @@ const navName=n=>{const m=/^(.+?)[_ ](.+)$/.exec(n);return m?`${m[1]}<small clas
 const kindName=id=>(CAT.kinds.find(k=>k.id===id)||{}).name||id;
 const url=it=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+'lv=2&mode=faded';      // 從總覽進入一律弱提示（網址指定，優先於瀏覽器記住的難度）；進去後自行切換
 // 小次類（頂端篩選）：由題型參數推得，不另存資料
-const FACETS=['運算','位數','進位','難度','類別','幫手'];
+const FACETS=['運算','位數','進位','難度','類別','幫手','餘數'];
 let FSEL={};
 function facets(it){
   const o=Object.fromEntries(new URLSearchParams(it.params||'')), f={};
@@ -95,7 +95,8 @@ function facets(it){
   if(['mul','mulwp','dial','pv'].includes(it.kind))f['難度']={easy:'簡單',normal:'一般'}[o.level];
   if(it.kind==='ff')f['類別']={share:'平分給幾個人',group:'每幾個包成一包',rem:'有餘數'}[o.ftype];
   if(it.kind==='cf')f['類別']={plate:'分到盤子',tree:'分解圖試一試',table:'九九乘法大樓'}[o.stage];
-  if(it.kind==='divvc')f['幫手']={none:'沒有幫手',help:'找幫手',big:'不能大欺小',mix:'混合'}[o.divtype];
+  if(it.kind==='divvc'||it.kind==='divvc3'){f['幫手']={none:'沒有幫手',help:'找幫手',big:'不能大欺小',zero:'商要補 0',mix:'混合'}[o.divtype||'mix']; f['餘數']=o.rem==='1'?'有餘數':'整除'}
+  if(it.kind==='divvcd')f['類別']={tens:'整十',near:'看成整十'}[o.dstage];
   if(it.kind==='mulwp')f['類別']=/mul-concept/.test(it.endpoint)?'算數量':'算價錢';      // 乘法應用題 1*1 併入乘法概念後，用類別分「算數量／算價錢」（使用者 2026-10-17）
   return f;
 }
@@ -103,10 +104,11 @@ const inSel=it=>sel.startsWith('fam:')?FAM_OF[it.kind]===sel.slice(4):it.kind===
 function textOK(it){const s=q.trim().toLowerCase(); if(!s)return true;
   return (it.title+it.paper+it.steps+it.note+it.endpoint+it.params+kindName(it.kind)+(FAMS.find(f=>f[0]===FAM_OF[it.kind])||[])[1]).toLowerCase().includes(s)}
 function rgTag(it){      // 直式計算題縮圖右上角的進退位標籤（使用者 2026-10-17）：綠＝不進退位、橘＝要進退位、藍＝交錯
-  if(it.kind!=='wordprobc'&&it.kind!=='mulvc'&&it.kind!=='divvc')return '';
+  if(it.kind!=='wordprobc'&&it.kind!=='mulvc'&&!it.kind.startsWith('divvc'))return '';
   const o=Object.fromEntries(new URLSearchParams(it.params||'')), rg=o.regroup, add=o.op==='add', mix=o.op==='mix';
   let t,c;
-  if(it.kind==='divvc'){const d=o.divtype;t={none:'沒有幫手',help:'找幫手',big:'不能大欺小',mix:'三種混合'}[d];c={none:'gn',help:'gy',big:'gy',mix:'gx'}[d]}
+  if(it.kind==='divvcd'){t={tens:'整十',near:'看成整十'}[o.dstage];c=o.dstage==='tens'?'gn':'gy'}
+  else if(it.kind.startsWith('divvc')){const d=o.divtype||'mix';t={none:'沒有幫手',help:'找幫手',big:'不能大欺小',zero:'商補 0',mix:'三種混合'}[d];c={none:'gn',help:'gy',big:'gy',zero:'gy',mix:'gx'}[d];if(o.rem==='1'){t+='・有餘數';c='gy'}}
   else if(it.kind==='mulvc'){t={none:'不進位',yes:'進位',mix:'交錯'}[rg];c={none:'gn',yes:'gy',mix:'gx'}[rg]}
   else if(o.digits==='3'){t=rg==='chain'?'連續退位':add?'雙重進位':'雙重退位';c='gy'}
   else if(mix){t='進退位交錯';c='gx'}

@@ -26,7 +26,7 @@ def gen(item):
     if ep == 'mul-concept': return iw.generate_mul(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-wordprob': return iw.generate_mulwp(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-vertical': return iw.generate_mulv(th, N, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1')
-    if ep == 'div-vertical': return iw.generate_divv(th, N, 'full', 11, q.get('divtype', 'mix'))
+    if ep == 'div-vertical': return iw.generate_divv(th, N, 'full', 11, q.get('divtype', 'mix'), int(q.get('digits', 2)), int(q.get('rem', 0)), int(q.get('ddig', 1)), q.get('dstage'))
     if ep == 'mul-dial': return iw.generate_dial(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'place-value': return iw.generate_pv(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'coin-carry': return iw.generate_cy(th, N, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))
@@ -72,6 +72,25 @@ def div_thumb(b, P0):
     im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
 
 
+def div_thumb2(b, P0):
+    """除法計算格特寫（泛用版：三位數被除數、二位數除數、餘數格；2026-10-22 新增，舊的 div_thumb 保留給二位數÷一位數）。
+    商的每一格對齊被除數的每一位（最高位比除數小的那一輪畫 ✗），第一個打得到的位置畫乘積虛線格（併大格時橫跨兩位），有餘數再多一格「……？」。整塊太寬就縮放到 460px 內。"""
+    a, d, steps = str(P0['a']), str(P0['b']), P0['steps']; n = len(a)
+    dw = 70 if len(d) == 1 else 112
+    cols = f'{dw}px 44px ' + ' '.join(['66px'] * n) + (' 40px 66px' if P0.get('rem') else '')
+    qs = ''.join(f'<i class="{"x" if st["kind"] == "x" else "q"}" style="grid-row:1;grid-column:{3 + k}">{"✗" if st["kind"] == "x" else "?"}</i>' for k, st in enumerate(steps))
+    rem = '<i class="de" style="grid-row:1;grid-column:%d">……</i><i class="q" style="grid-row:1;grid-column:%d">?</i>' % (3 + n, 4 + n) if P0.get('rem') else ''
+    digs = ''.join(f'<i style="grid-row:2;grid-column:{3 + k}">{c}</i>' for k, c in enumerate(a))
+    h = next(st for st in steps if st['kind'] != 'x'); k0 = h['i']; c1 = 3 + max(k0 - (1 if h.get('merge') else 0), 0); c2 = 3 + k0
+    prod = f'<i class="q" style="grid-row:3;grid-column:{c1}/{c2 + 1};width:calc(100% - 6px)">?</i><div class="ln" style="grid-row:4;grid-column:{c1}/{c2 + 1}"></div>'
+    html = (f'<style>{DIV_CSS}.bd{{grid-template-columns:{cols};zoom:1}}.bd .ln{{grid-column:auto}}</style><div class="bd" id="bd">{qs}{rem}'
+            f'<i style="grid-row:2;grid-column:1">{d}</i><span class="hs" style="grid-row:2;grid-column:2/{3 + n}"></span>{digs}{prod}</div>')
+    pg = b.new_page(viewport={'width': 520, 'height': 390}); pg.set_content(html); pg.wait_for_timeout(250)
+    pg.evaluate("(()=>{const e=document.getElementById('bd');const w=e.getBoundingClientRect().width;if(w>460)e.style.zoom=460/w})()")
+    pg.wait_for_timeout(100)
+    im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
+
+
 with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
     b = p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM', '/opt/pw-browsers/chromium'))
     for it in cat['items']:
@@ -80,10 +99,15 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
         pg = b.new_page(viewport={'width': 1100, 'height': 780})
         pg.add_init_script("localStorage.setItem('wp_level','3')")
         pg.goto('file://' + str(f)); pg.wait_for_selector('.card', state='attached'); pg.wait_for_timeout(1800)
-        if it['kind'] == 'divvc':      # 除法計算：房子特寫（依卡片類型挑示範題：沒有幫手／找幫手／不能大欺小；混合取第一題）
-            want = it['params'].split('divtype=')[1].split('&')[0]
-            P0 = pg.evaluate("(w=>{const L=P.filter(p=>w==='mix'||(w==='big'?p.big:w==='help'?p.help:(!p.big&&!p.help))); const p=L[0]||P[0]; return {a:p.a,b:p.b,big:p.big}})", want)
-            im = div_thumb(b, P0); im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'], '(房子特寫)'); continue
+        if it['kind'].startswith('divvc'):      # 除法計算：房子特寫（依卡片類型挑示範題：沒有幫手／找幫手／不能大欺小；混合取第一題）
+            prm = {k: v[0] for k, v in parse_qs(it['params']).items()}; want = prm.get('divtype', 'mix')
+            if it['kind'] == 'divvc' and 'rem' not in prm:      # 舊的四張（二位數÷一位數、整除）：維持原縮圖
+                P0 = pg.evaluate("(w=>{const L=P.filter(p=>w==='mix'||(w==='big'?p.big:w==='help'?p.help:(!p.big&&!p.help))); const p=L[0]||P[0]; return {a:p.a,b:p.b,big:p.big}})", want)
+                im = div_thumb(b, P0)
+            else:      # 新的六張（有餘數、三位數、補 0、除數二位數）：泛用版，直接用題目的逐位模擬結果
+                P0 = pg.evaluate("(w=>{const L=P.filter(p=>w==='zero'?p.steps.some(s=>s.kind==='zero'):true); const p=L[0]||P[0]; return {a:p.a,b:p.b,steps:p.steps}})", want)
+                P0['rem'] = prm.get('rem') == '1'; im = div_thumb2(b, P0)
+            im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'], '(房子特寫)'); continue
         if 'calc=1' in it['params']:      # 直式計算題：縮圖只畫「計算格特寫」（深色板、直式算式、答案虛線格；使用者 2026-10-17 選方案 A），不拍題目卡
             want_rg = 'regroup=none' not in it['params']; want_op = '+' if 'op=mix' in it['params'] else None      # 示範題：不進退位的卡要選沒進退位的題，其餘選有進退位的；加減交錯的卡選加法，才和減法卡的縮圖不同
             P0 = pg.evaluate("(w=>{const L=P.filter(p=>!!p.regroup===w[0]&&(!w[1]||p.op===w[1])); const p=L[0]||P[0]; return {a:p.a,b:p.b,op:p.op,ans:p.ans}})", [want_rg, want_op])

@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-20",
+ "updated": "2026-10-22",
  "backend": "https://web-production-0542f.up.railway.app",
  "backendCommit": "b4d8a33",
  "kinds": [
@@ -37,7 +37,15 @@
   },
   {
    "id": "divvc",
-   "name": "除法直式計算"
+   "name": "除法直式計算 2÷1"
+  },
+  {
+   "id": "divvc3",
+   "name": "除法直式計算 3÷1"
+  },
+  {
+   "id": "divvcd",
+   "name": "除法直式計算 ÷二位數"
   },
   {
    "id": "ff",
@@ -548,6 +556,72 @@
    "paper": ""
   },
   {
+   "id": "divvc-rem",
+   "kind": "divvc",
+   "title": "直式除法計算（二位數÷一位數，有餘數）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "rem=1",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、玩家＝除數、招式＝九九乘法；找幫手、不能大欺小；餘數要判斷妖怪是否「打不動了」，招式太弱會被妖怪笑）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvc3-mix",
+   "kind": "divvc3",
+   "title": "直式除法計算（三位數÷一位數，混合）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "digits=3&divtype=mix",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、玩家＝除數、招式＝九九乘法；三位數妖怪，找幫手、不能大欺小輪流出現）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvc3-zero",
+   "kind": "divvc3",
+   "title": "直式除法計算（三位數÷一位數，商要補 0）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "digits=3&divtype=zero",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、玩家＝除數、招式＝九九乘法；中間那一位打不到，商補 0）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvc3-rem",
+   "kind": "divvc3",
+   "title": "直式除法計算（三位數÷一位數，有餘數）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "digits=3&rem=1&divtype=mix",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、玩家＝除數、招式＝九九乘法；找幫手、不能大欺小；餘數要判斷妖怪是否「打不動了」，招式太弱會被妖怪笑）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvcd-tens",
+   "kind": "divvcd",
+   "title": "直式除法計算（除數二位數：整十）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "ddig=2&dstage=tens",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：玩家是整十；最高位打不動，兩隻妖怪合體找幫手；選招式、在試算格直接乘）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvcd-near",
+   "kind": "divvcd",
+   "title": "直式除法計算（除數二位數：看成整十）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "ddig=2&dstage=near",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：玩家不是整十，先用數線磁鐵看成整十，再選招式、用試算格算真的乘積；找幫手、不能大欺小）",
+   "note": "",
+   "paper": ""
+  },
+  {
    "id": "ff-share",
    "kind": "ff",
    "title": "分分看：平分給幾個人",
@@ -625,5 +699,5 @@
    "paper": "N210G 用九九乘法"
   }
  ],
- "thumbsV": 1792575931
+ "thumbsV": 1792628531
 }
