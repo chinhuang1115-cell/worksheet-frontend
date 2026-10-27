@@ -1716,7 +1716,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "fracdivmix",
     "code": "N604",
     "grade": "6",
-    "name": "分數的除法",
+    "name": "分數的除法綜合練習",
     "ops": [
       "div"
     ],
@@ -1736,7 +1736,7 @@ window.WORKSHEET_REGISTRY = [
     ],
     "home": {
       "icon": "➗",
-      "sub": "綜合練習",
+      "sub": "兩頁四大題",
       "desc": "分數的除法綜合練習：倒數、比大小、顛倒相乘計算與生活應用題，兩頁一次複習完。",
       "features": [
         "兩頁四大題：填填看、比大小、計算、應用",
