@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-22",
+ "updated": "2026-10-29",
  "backend": "https://web-production-0542f.up.railway.app",
- "backendCommit": "b4d8a33",
+ "backendCommit": "013f0f7",
  "kinds": [
   {
    "id": "wordprob",
@@ -622,6 +622,28 @@
    "paper": ""
   },
   {
+   "id": "divvcd-tens-q2",
+   "kind": "divvcd",
+   "title": "直式除法計算（三位數÷二位數：整十，商兩位數）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "ddig=2&digits=3&dstage=tens&qdig=2",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：三位數÷整十，商兩位數；前兩隻妖怪合體找幫手、連打兩招；選招式、在試算格直接乘）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divvcd-near-q2",
+   "kind": "divvcd",
+   "title": "直式除法計算（三位數÷二位數：看成整十，商兩位數）",
+   "endpoint": "/interactive/div-vertical",
+   "params": "ddig=2&digits=3&dstage=near&qdig=2",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：三位數÷非整十，商兩位數；數線只接一次，每一局先看成整十試算、判斷通過後在右邊「② 真的算」算真的乘積；找幫手、不能大欺小）",
+   "note": "",
+   "paper": ""
+  },
+  {
    "id": "ff-share",
    "kind": "ff",
    "title": "分分看：平分給幾個人",
@@ -699,5 +721,5 @@
    "paper": "N210G 用九九乘法"
   }
  ],
- "thumbsV": 1792628531
+ "thumbsV": 1793266380
 }

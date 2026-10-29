@@ -96,7 +96,7 @@ function facets(it){
   if(it.kind==='ff')f['類別']={share:'平分給幾個人',group:'每幾個包成一包',rem:'有餘數'}[o.ftype];
   if(it.kind==='cf')f['類別']={plate:'分到盤子',tree:'分解圖試一試',table:'九九乘法大樓'}[o.stage];
   if(it.kind==='divvc'||it.kind==='divvc3'){f['幫手']={none:'沒有幫手',help:'找幫手',big:'不能大欺小',zero:'商要補 0',mix:'混合'}[o.divtype||'mix']; f['餘數']=o.rem==='1'?'有餘數':'整除'}
-  if(it.kind==='divvcd')f['類別']={tens:'整十',near:'看成整十'}[o.dstage];
+  if(it.kind==='divvcd')f['類別']={tens:'整十',near:'看成整十'}[o.dstage]+(o.qdig==='2'?'・商兩位數':'');
   if(it.kind==='mulwp')f['類別']=/mul-concept/.test(it.endpoint)?'算數量':'算價錢';      // 乘法應用題 1*1 併入乘法概念後，用類別分「算數量／算價錢」（使用者 2026-10-17）
   return f;
 }
@@ -107,7 +107,7 @@ function rgTag(it){      // 直式計算題縮圖右上角的進退位標籤（�
   if(it.kind!=='wordprobc'&&it.kind!=='mulvc'&&!it.kind.startsWith('divvc'))return '';
   const o=Object.fromEntries(new URLSearchParams(it.params||'')), rg=o.regroup, add=o.op==='add', mix=o.op==='mix';
   let t,c;
-  if(it.kind==='divvcd'){t={tens:'整十',near:'看成整十'}[o.dstage];c=o.dstage==='tens'?'gn':'gy'}
+  if(it.kind==='divvcd'){t={tens:'整十',near:'看成整十'}[o.dstage]+(o.qdig==='2'?'・商兩位數':'');c=o.dstage==='tens'?'gn':'gy'}
   else if(it.kind.startsWith('divvc')){const d=o.divtype||'mix';t={none:'沒有幫手',help:'找幫手',big:'不能大欺小',zero:'商補 0',mix:'三種混合'}[d];c={none:'gn',help:'gy',big:'gy',zero:'gy',mix:'gx'}[d];if(o.rem==='1'){t+='・有餘數';c='gy'}}
   else if(it.kind==='mulvc'){t={none:'不進位',yes:'進位',mix:'交錯'}[rg];c={none:'gn',yes:'gy',mix:'gx'}[rg]}
   else if(o.digits==='3'){t=rg==='chain'?'連續退位':add?'雙重進位':'雙重退位';c='gy'}
