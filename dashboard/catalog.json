@@ -24,6 +24,10 @@
    "name": "乘法直式計算"
   },
   {
+   "id": "mulvc2",
+   "name": "乘法直式計算 2×2"
+  },
+  {
    "id": "dial",
    "name": "乘法圓盤"
   },
@@ -369,6 +373,39 @@
    "params": "regroup=mix&calc=1",
    "smoke": "interactive mul vertical calc",
    "steps": "直式計算（每欄查九九乘法表）；題目只有橫式，從乘法應用題 2*1 擷取",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulvc2-none",
+   "kind": "mulvc2",
+   "title": "直式乘法計算 2×2（不進位）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=none&calc=1&mdig=2",
+   "smoke": "interactive mul vertical 2x2",
+   "steps": "兩層蛋糕：先用個位乘（橘）、墊 0（小幫手）、再用十位乘（藍），最後兩層相加；聚光燈＋螢光箭頭",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulvc2-yes",
+   "kind": "mulvc2",
+   "title": "直式乘法計算 2×2（進位）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=yes&calc=1&mdig=2",
+   "smoke": "interactive mul vertical 2x2",
+   "steps": "兩層蛋糕：先用個位乘（橘）、墊 0（小幫手）、再用十位乘（藍），最後兩層相加；聚光燈＋螢光箭頭",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "mulvc2-mix",
+   "kind": "mulvc2",
+   "title": "直式乘法計算 2×2（進位／不進位交錯）",
+   "endpoint": "/interactive/mul-vertical",
+   "params": "regroup=mix&calc=1&mdig=2",
+   "smoke": "interactive mul vertical 2x2",
+   "steps": "兩層蛋糕：先用個位乘（橘）、墊 0（小幫手）、再用十位乘（藍），最後兩層相加；聚光燈＋螢光箭頭",
    "note": "",
    "paper": ""
   },
@@ -747,5 +784,5 @@
    "paper": "N210G 用九九乘法"
   }
  ],
- "thumbsV": 1793326458
+ "thumbsV": 1793375458
 }

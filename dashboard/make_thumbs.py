@@ -25,7 +25,7 @@ def gen(item):
         return iw.generate(th, N, 'full', 11, q.get('op', 'sub'), q.get('regroup', 'none'), int(q.get('digits', 2)), q.get('calc') == '1')
     if ep == 'mul-concept': return iw.generate_mul(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-wordprob': return iw.generate_mulwp(th, N, 'full', 11, q.get('level', 'normal'))
-    if ep == 'mul-vertical': return iw.generate_mulv(th, N, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1')
+    if ep == 'mul-vertical': return iw.generate_mulv(th, N, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1', int(q.get('mdig', 1)))
     if ep == 'div-vertical': return iw.generate_divv(th, N, 'full', 11, q.get('divtype', 'mix'), int(q.get('digits', 2)), int(q.get('rem', 0)), int(q.get('ddig', 1)), q.get('dstage'), int(q.get('qdig', 1)))
     if ep in ('div-int-dec', 'div-dec-int'): return iw.generate_divdec('int' if ep == 'div-int-dec' else 'dec', th, N, 'full', 11)
     if ep == 'mul-dial': return iw.generate_dial(th, N, 'full', 11, q.get('level', 'normal'))
