@@ -17,7 +17,7 @@ out = here.parent / 'interactive' / 'thumbs'; out.mkdir(parents=True, exist_ok=T
 
 
 def gen(item):
-    N = 8 if ('calc=1' in item['params'] or 'divtype=' in item['params']) else 3      # 直式計算題多出幾題，才選得到「有進退位」「加法」的示範題
+    N = 8 if ('calc=1' in item['params'] or 'divtype=' in item['params'] or item['kind'] == 'divdec') else 3      # 直式計算題多出幾題，才選得到「有進退位」「加法」的示範題
     q = {k: v[0] for k, v in parse_qs(item['params']).items()}
     ep = item['endpoint'].rsplit('/', 1)[1]
     th = '文具店' if ep == 'sub2noreg-app' else '甜點店'
@@ -27,6 +27,7 @@ def gen(item):
     if ep == 'mul-wordprob': return iw.generate_mulwp(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'mul-vertical': return iw.generate_mulv(th, N, 'full', 11, q.get('regroup', 'none'), q.get('calc') == '1')
     if ep == 'div-vertical': return iw.generate_divv(th, N, 'full', 11, q.get('divtype', 'mix'), int(q.get('digits', 2)), int(q.get('rem', 0)), int(q.get('ddig', 1)), q.get('dstage'), int(q.get('qdig', 1)))
+    if ep in ('div-int-dec', 'div-dec-int'): return iw.generate_divdec('int' if ep == 'div-int-dec' else 'dec', th, N, 'full', 11)
     if ep == 'mul-dial': return iw.generate_dial(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'place-value': return iw.generate_pv(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'coin-carry': return iw.generate_cy(th, N, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))
@@ -91,6 +92,27 @@ def div_thumb2(b, P0):
     im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
 
 
+
+def div_thumb_dec(b, P0):
+    """除法「商是小數」（小數關）的房子特寫（2026-10-30）：被除數照原貌、後面補到百分位的隱藏版妖怪畫成灰色虛線 0，
+    小數點畫成黃色發光點（被除數與商各一個，商的小數點對齊被除數），小數點右邊鋪深藍的「小數關」；商的個位打 ✗ 的題目畫 ✗。"""
+    d, dc, steps = str(P0['b']), P0['dec'], P0['steps']; dp, nd, hid = dc['dp'], dc['ND'], dc['hid']
+    hid = min(hid, nd)
+    cols = f'{70 if len(d) == 1 else 112}px 44px ' + ' '.join(['66px'] * nd)
+    qs = ''.join(f'<i class="{"x" if k < len(steps) and steps[k]["kind"] == "x" else "q"}{" dp" if k == dp - 1 else ""}" style="grid-row:1;grid-column:{3 + k}">{"✗" if k < len(steps) and steps[k]["kind"] == "x" else "?"}</i>' for k in range(nd))
+    digs = ''.join(f'<i class="{"hd" if k >= hid else ""}{" dp" if k == dp - 1 else ""}" style="grid-row:2;grid-column:{3 + k}">{c}</i>' for k, c in enumerate(str(x) for x in dc['digits']))
+    css = (f'{DIV_CSS}.bd{{grid-template-columns:{cols};zoom:1;position:relative;overflow:hidden;padding-bottom:40px}}.bd>*{{position:relative;z-index:1}}'
+           '.bd i.hd{border:3px dashed #9ca3af;border-radius:12px;color:#9ca3af;height:56px;line-height:50px;opacity:.75}'
+           '.bd i.dp::after{content:"";position:absolute;right:-11px;bottom:6px;width:12px;height:12px;border-radius:50%;background:#fde047;box-shadow:0 0 6px 3px rgba(253,224,71,.85),0 0 16px 6px rgba(253,224,71,.4)}'
+           '.zone{position:absolute!important;z-index:0!important;top:0;bottom:0;right:0;background:#183d55;border-left:4px solid rgba(253,224,71,.75)}')
+    html = (f'<style>{css}</style><div class="bd" id="bd"><div class="zone" id="zn"></div>{qs}'
+            f'<i style="grid-row:2;grid-column:1">{d}</i><span class="hs" style="grid-row:2;grid-column:2/{3 + nd}"></span>{digs}</div>')
+    pg = b.new_page(viewport={'width': 520, 'height': 390}); pg.set_content(html); pg.wait_for_timeout(250)
+    pg.evaluate("(dp=>{const e=document.getElementById('bd'),c=e.querySelectorAll('i[style*=\"grid-row:2\"]')[dp+1];const z=document.getElementById('zn');z.style.left=(c.offsetLeft-6)+'px';const w=e.getBoundingClientRect().width;if(w>460)e.style.zoom=460/w})", dp)
+    pg.wait_for_timeout(100)
+    im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); pg.close(); return im
+
+
 with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
     b = p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM', '/opt/pw-browsers/chromium'))
     for it in cat['items']:
@@ -99,6 +121,9 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
         pg = b.new_page(viewport={'width': 1100, 'height': 780})
         pg.add_init_script("localStorage.setItem('wp_level','3')")
         pg.goto('file://' + str(f)); pg.wait_for_selector('.card', state='attached'); pg.wait_for_timeout(1800)
+        if it['kind'] == 'divdec':      # 商是小數：示範題挑「商比 1 小」（有 ✗ 變身、看得到隱藏版妖怪）
+            P0 = pg.evaluate("(()=>{const L=P.filter(p=>p.dec&&p.dec.lt1); const p=L[0]||P[0]; return {b:p.b,dec:p.dec,steps:p.steps}})()")
+            im = div_thumb_dec(b, P0); im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'], '(房子特寫・小數關)'); continue
         if it['kind'].startswith('divvc'):      # 除法計算：房子特寫（依卡片類型挑示範題：沒有幫手／找幫手／不能大欺小；混合取第一題）
             prm = {k: v[0] for k, v in parse_qs(it['params']).items()}; want = prm.get('divtype', 'mix')
             if it['kind'] == 'divvc' and 'rem' not in prm:      # 舊的四張（二位數÷一位數、整除）：維持原縮圖

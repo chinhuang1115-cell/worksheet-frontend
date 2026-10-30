@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-29",
+ "updated": "2026-10-30",
  "backend": "https://web-production-0542f.up.railway.app",
- "backendCommit": "013f0f7",
+ "backendCommit": "5731f03",
  "kinds": [
   {
    "id": "wordprob",
@@ -46,6 +46,10 @@
   {
    "id": "divvcd",
    "name": "除法直式計算 ÷二位數"
+  },
+  {
+   "id": "divdec",
+   "name": "除法直式計算 商是小數"
   },
   {
    "id": "ff",
@@ -644,6 +648,28 @@
    "paper": ""
   },
   {
+   "id": "divdec-int",
+   "kind": "divdec",
+   "title": "直式除法計算（整數÷整數，商是小數）",
+   "endpoint": "/interactive/div-int-dec",
+   "params": "",
+   "smoke": "interactive div decimal",
+   "steps": "直式計算（打怪遊戲：被除數後面的灰色隱藏版妖怪；後面沒有妖怪時判斷「打完了嗎」，進小數關點上小數點，商的個位 ✗ 變身成 0，一直打到除盡）",
+   "note": "",
+   "paper": ""
+  },
+  {
+   "id": "divdec-dec",
+   "kind": "divdec",
+   "title": "直式除法計算（小數÷整數）",
+   "endpoint": "/interactive/div-dec-int",
+   "params": "",
+   "smoke": "interactive div decimal",
+   "steps": "直式計算（打怪遊戲：下一隻妖怪在小數點後面就直接進小數關，商的小數點對齊被除數；商的個位 ✗ 變身成 0；剩下沒打完叫醒灰色隱藏版妖怪，一直打到除盡）",
+   "note": "",
+   "paper": ""
+  },
+  {
    "id": "ff-share",
    "kind": "ff",
    "title": "分分看：平分給幾個人",
@@ -721,5 +747,5 @@
    "paper": "N210G 用九九乘法"
   }
  ],
- "thumbsV": 1793266380
+ "thumbsV": 1793326458
 }
