@@ -1,7 +1,7 @@
 {
  "updated": "2026-11-03",
  "backend": "https://web-production-0542f.up.railway.app",
- "backendCommit": "d9f5b8e",
+ "backendCommit": "0b0a132",
  "kinds": [
   {
    "id": "wordprob",
@@ -821,5 +821,5 @@
    "paper": "（無對應紙本）"
   }
  ],
- "thumbsV": 1793691945
+ "thumbsV": 1793750202
 }
