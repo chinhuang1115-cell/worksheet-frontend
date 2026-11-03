@@ -115,6 +115,18 @@
    "2": true,
    "1": false,
    "desc": "步驟③放錯的回饋（被動訊息）：出現在直式計算右側的懸浮訊息框、出現時自動朗讀、不需要時淡出隱藏（強、弱有；無提示不念）。主動的計算提示框（calcTip）不自動念，點一下才念（使用者 2026-10-15）"
+  },
+  "proRing": {
+   "3": true,
+   "2": true,
+   "1": false,
+   "desc": "量角器：對齊後亮起 0 那一邊的那一圈、另一圈變暗（強、弱有；無提示兩圈都正常、光帶改成整個扇形）"
+  },
+  "proBubble": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "量角器：推成功時紅色圓圈直接寫出度數並進下一題（強有；弱、無提示要學生自己打「這個角是 □ 度」）"
   }
  },
  "adopted": [
@@ -136,7 +148,8 @@
    "spot",
    "liveColor",
    "numColor",
-   "colIcon"
+   "colIcon",
+   "proRing"
   ],
   "say": [
    "tipbox",
@@ -146,7 +159,8 @@
    "readTitle",
    "readAsk",
    "calcTip",
-   "readWrongMsg"
+   "readWrongMsg",
+   "proBubble"
   ],
   "do": [
    "autoDo",

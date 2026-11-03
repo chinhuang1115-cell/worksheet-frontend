@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-30",
+ "updated": "2026-11-03",
  "backend": "https://web-production-0542f.up.railway.app",
- "backendCommit": "5731f03",
+ "backendCommit": "1f51459",
  "kinds": [
   {
    "id": "wordprob",
@@ -62,6 +62,10 @@
   {
    "id": "cf",
    "name": "除法概念（平分連到算式）"
+  },
+  {
+   "id": "pro",
+   "name": "量角器"
   }
  ],
  "levels": [
@@ -782,7 +786,18 @@
    "steps": "① 在乘法大樓找哪一層剛好 → ② 回頭填加法與乘法算式 → ③ 填一個人有幾個",
    "note": "對應紙本 N210A 除法概念",
    "paper": "N210G 用九九乘法"
+  },
+  {
+   "id": "pro-measure",
+   "kind": "pro",
+   "title": "量角器：量量看（整十度）",
+   "endpoint": "/interactive/protractor",
+   "params": "",
+   "smoke": "interactive pro graded",
+   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，紅線貼住一條邊 → ③ 沿著亮起來的那一圈往上推 → ④ 填這個角幾度（弱、無提示）",
+   "note": "四年級角度：認識量角器、量角",
+   "paper": "（無對應紙本）"
   }
  ],
- "thumbsV": 1793375458
+ "thumbsV": 1793669518
 }
