@@ -97,6 +97,7 @@ function facets(it){
   if(it.kind==='cf')f['類別']={plate:'分到盤子',tree:'分解圖試一試',table:'九九乘法大樓'}[o.stage];
   if(it.kind==='divvc'||it.kind==='divvc3'){f['幫手']={none:'沒有幫手',help:'找幫手',big:'不能大欺小',zero:'商要補 0',mix:'混合'}[o.divtype||'mix']; f['餘數']=o.rem==='1'?'有餘數':'整除'}
   if(it.kind==='divvcd')f['類別']={tens:'整十',near:'看成整十'}[o.dstage]+(o.qdig==='2'?'・商兩位數':'');
+  if(it.kind==='pro')f['類別']={outer:'外圈',inner:'內圈',mix:'內外圈混合'}[o.ring||'mix'];      // 量角器：只練外圈／內圈／混合（2026-11-03）
   if(it.kind==='divdec')f['類別']=/div-int-dec/.test(it.endpoint)?'整數÷整數':'小數÷整數';      // 商是小數（小數關，2026-10-30）
   if(it.kind==='mulwp')f['類別']=/mul-concept/.test(it.endpoint)?'算數量':'算價錢';      // 乘法應用題 1*1 併入乘法概念後，用類別分「算數量／算價錢」（使用者 2026-10-17）
   return f;
