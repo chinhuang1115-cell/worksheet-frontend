@@ -1,7 +1,7 @@
 {
  "updated": "2026-11-03",
  "backend": "https://web-production-0542f.up.railway.app",
- "backendCommit": "5af94aa",
+ "backendCommit": "22f483d",
  "kinds": [
   {
    "id": "wordprob",
@@ -794,7 +794,7 @@
    "endpoint": "/interactive/protractor",
    "params": "ring=outer",
    "smoke": "interactive pro graded",
-   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推動線往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
+   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推桿往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
    "note": "四年級角度：邊在左邊，從左邊的 0 數外圈黑字",
    "paper": "（無對應紙本）"
   },
@@ -805,7 +805,7 @@
    "endpoint": "/interactive/protractor",
    "params": "ring=inner",
    "smoke": "interactive pro graded",
-   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推動線往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
+   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推桿往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
    "note": "四年級角度：邊在右邊，從右邊的 0 數內圈紅字",
    "paper": "（無對應紙本）"
   },
@@ -816,7 +816,7 @@
    "endpoint": "/interactive/protractor",
    "params": "ring=mix",
    "smoke": "interactive pro graded",
-   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推動線往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
+   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推桿往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
    "note": "四年級角度：邊在左右各半",
    "paper": "（無對應紙本）"
   }
