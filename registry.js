@@ -1080,6 +1080,70 @@ window.WORKSHEET_REGISTRY = [
   },
 
   {
+    "id": "add1",
+    "code": "N104A",
+    "name": "加減計算練習＿加法與加減綜合（18以內）",
+    "grade": 1,
+    "ops": [
+      "add",
+      "sub",
+      "mix"
+    ],
+    "keywords": [
+      "一位數",
+      "加法",
+      "18以內",
+      "進位",
+      "退位",
+      "加減綜合",
+      "算術練習"
+    ],
+    "desc": "沿用十以內減法（N101A）的直式格版面，提示逐列漸退。共 4 種版型：10 以內加法、18 以內加法（個位數＋個位數進位）、加減綜合不進退位、加減綜合進退位。",
+    "sortKey": [
+      1,
+      1,
+      2
+    ],
+    "home": {
+      "icon": "➕",
+      "label": "18以內加法與加減綜合",
+      "sub": "4 種版型選擇"
+    },
+    "diffInfo": null,
+    "sample": [
+      { "pdf": "assets/add10_sample.pdf", "name": "加法_10以內_範例.pdf", "label": "10 以內加法", "key": "add10" },
+      { "pdf": "assets/add18_sample.pdf", "name": "加法_18以內_範例.pdf", "label": "18 以內加法（進位）", "key": "add18" },
+      { "pdf": "assets/calcmix_noreg_sample.pdf", "name": "加減綜合_不進退位_範例.pdf", "label": "加減綜合（不進退位）", "key": "calcmix-noreg" },
+      { "pdf": "assets/calcmix_reg_sample.pdf", "name": "加減綜合_進退位_範例.pdf", "label": "加減綜合（進退位）", "key": "calcmix-reg" }
+    ],
+    "layout": {
+      "panel": "sub1Panel",
+      "themeSet": "cheap",
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    },
+    "variants": [
+      {
+        "key": "add10",
+        "label": "10 以內加法"
+      },
+      {
+        "key": "add18",
+        "label": "18 以內加法（進位）"
+      },
+      {
+        "key": "calcmix-noreg",
+        "label": "加減綜合（不進退位）"
+      },
+      {
+        "key": "calcmix-reg",
+        "label": "加減綜合（進退位）"
+      }
+    ]
+  },
+
+  {
     "id": "huachu4add-en",
     "code": "N301D",
     "grade": "3",
