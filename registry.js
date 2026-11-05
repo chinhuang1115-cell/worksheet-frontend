@@ -1415,7 +1415,7 @@ window.WORKSHEET_REGISTRY = [
       "平分",
       "九九乘法"
     ],
-    "desc": "用「分」建立除法概念：從畫圈、分到盤子，到加法與乘法算式提示，再逐步拿掉輔助，共 6 種版型，可依學生程度選擇。",
+    "desc": "用「分」建立除法概念：從畫圈、分到盤子，到加法與乘法算式提示，再逐步拿掉輔助，共 7 種版型，可依學生程度選擇。",
     "sortKey": [
       4,
       2,
@@ -1423,7 +1423,7 @@ window.WORKSHEET_REGISTRY = [
     ],
     "home": {
       "icon": "➗",
-      "sub": "除法概念（6 種版型）",
+      "sub": "除法概念（7 種版型）",
       "desc": "先動手把東西平分出去，再連到加法與九九乘法算式，鷹架由多到少，適合初學等分除法的學生。",
       "features": [
         "畫一畫 → 分到盤子 → 數字尺",
@@ -1444,7 +1444,8 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/chufa_s3_sample.pdf", "name": "除法概念_階段三_數字尺_範例.pdf", "label": "階段三 數字尺", "key": "chufa-s3" },
       { "pdf": "assets/chufa_s4_sample.pdf", "name": "除法概念_階段四_移除輔助圖_除數2至5_範例.pdf", "label": "階段四 移除輔助圖 2–5", "key": "chufa-s4" },
       { "pdf": "assets/chufa_s5_sample.pdf", "name": "除法概念_階段五_移除輔助圖_除數5至9_範例.pdf", "label": "階段五 移除輔助圖 5–9", "key": "chufa-s5" },
-      { "pdf": "assets/chufa_s6_sample.pdf", "name": "除法概念_階段六_用九九乘法_範例.pdf", "label": "階段六 用九九乘法", "key": "chufa-s6" }
+      { "pdf": "assets/chufa_s6_sample.pdf", "name": "除法概念_階段六_用九九乘法_範例.pdf", "label": "階段六 用九九乘法", "key": "chufa-s6" },
+      { "pdf": "assets/chufa_s7_sample.pdf", "name": "除法概念_階段七_乘法變除法_範例.pdf", "label": "階段七 乘法變除法", "key": "chufa-s7" }
     ],
     "layout": {
       "panel": "chufaPanel",
@@ -1477,6 +1478,10 @@ window.WORKSHEET_REGISTRY = [
       {
         "key": "chufa-s6",
         "label": "階段六 用九九乘法"
+      },
+      {
+        "key": "chufa-s7",
+        "label": "階段七 乘法變除法"
       }
     ]
   },
@@ -1711,6 +1716,46 @@ window.WORKSHEET_REGISTRY = [
     "sample": {
       "pdf": "assets/chufa_s6_sample.pdf",
       "name": "除法概念_階段六_用九九乘法_範例.pdf"
+    },
+    "layout": {
+      "panel": "fenfenPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    }
+  },
+  {
+    "id": "chufa-s7",
+    "code": "N210H",
+    "grade": "2",
+    "name": "除法概念＿階段七 乘法變除法（兩位數）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "除法",
+      "等分",
+      "平分",
+      "除法概念"
+    ],
+    "desc": "把 N 個物品平分到 X 個盤子，先畫一畫，再由「□×X＝N」寫出除法算式「N÷X＝□」，第一次認識除號，4 題，數字每次隨機。",
+    "sortKey": [
+      4,
+      2,
+      1
+    ],
+    "home": null,
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N210H",
+      "desc": "從乘法連到除法：用學過的九九乘法找出每人幾個，再寫成除法算式。"
+    },
+    "sample": {
+      "pdf": "assets/chufa_s7_sample.pdf",
+      "name": "除法概念_階段七_乘法變除法_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
