@@ -1445,7 +1445,7 @@ window.WORKSHEET_REGISTRY = [
       { "pdf": "assets/chufa_s4_sample.pdf", "name": "除法概念_階段四_移除輔助圖_除數2至5_範例.pdf", "label": "階段四 移除輔助圖 2–5", "key": "chufa-s4" },
       { "pdf": "assets/chufa_s5_sample.pdf", "name": "除法概念_階段五_移除輔助圖_除數5至9_範例.pdf", "label": "階段五 移除輔助圖 5–9", "key": "chufa-s5" },
       { "pdf": "assets/chufa_s6_sample.pdf", "name": "除法概念_階段六_用九九乘法_範例.pdf", "label": "階段六 用九九乘法", "key": "chufa-s6" },
-      { "pdf": "assets/chufa_s7_sample.pdf", "name": "除法概念_階段七_乘法變除法_範例.pdf", "label": "階段七 乘法變除法", "key": "chufa-s7" }
+      { "pdf": "assets/chufa_s7_sample.pdf", "name": "除法概念_階段七_除法概念_範例.pdf", "label": "階段七 除法概念", "key": "chufa-s7" }
     ],
     "layout": {
       "panel": "chufaPanel",
@@ -1481,7 +1481,7 @@ window.WORKSHEET_REGISTRY = [
       },
       {
         "key": "chufa-s7",
-        "label": "階段七 乘法變除法"
+        "label": "階段七 除法概念"
       }
     ]
   },
@@ -1729,7 +1729,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s7",
     "code": "N210H",
     "grade": "2",
-    "name": "除法概念＿階段七 乘法變除法（兩位數）",
+    "name": "除法概念＿階段七 除法概念（兩位數）",
     "ops": [
       "div"
     ],
@@ -1739,7 +1739,7 @@ window.WORKSHEET_REGISTRY = [
       "平分",
       "除法概念"
     ],
-    "desc": "把 N 個物品平分到 X 個盤子，先畫一畫，再由「□×X＝N」寫出除法算式「N÷X＝□」，第一次認識除號，4 題，數字每次隨機。",
+    "desc": "把 N 個物品平分給 X 個人，先在盤子上畫一畫，再寫出「(　)×X＝總數」，並用直式乘法格算出總數，4 題，除數 2、3、4、5，數字每次隨機。",
     "sortKey": [
       4,
       2,
@@ -1751,11 +1751,11 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N210H",
-      "desc": "從乘法連到除法：用學過的九九乘法找出每人幾個，再寫成除法算式。"
+      "desc": "先分再算：在盤子上畫一畫平分，再用九九乘法與直式乘法格算出總數，連結「平分」與「乘法」。"
     },
     "sample": {
       "pdf": "assets/chufa_s7_sample.pdf",
-      "name": "除法概念_階段七_乘法變除法_範例.pdf"
+      "name": "除法概念_階段七_除法概念_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
