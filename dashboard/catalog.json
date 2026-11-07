@@ -761,7 +761,7 @@
    "endpoint": "/interactive/chufa",
    "params": "stage=tree&div=small&level=normal",
    "smoke": "interactive cf tree small graded",
-   "steps": "① 從數字尺選一個數、看加起來是不是剛好 → ② 寫成乘法 → ③ 填一個人有幾個",
+   "steps": "① 猜一個人幾個（　）× X ＝ 袋子 → 格子一格一格填好 → 減減看，剩 0 才成立（不成立就再猜）→ ② 填一個人有幾個",
    "note": "對應紙本 N210A 除法概念",
    "paper": "N210E 移除輔助圖（除數 2–5）"
   },
@@ -799,5 +799,5 @@
    "paper": "（無對應紙本）"
   }
  ],
- "thumbsV": 1794019117
+ "thumbsV": 1794020293
 }
