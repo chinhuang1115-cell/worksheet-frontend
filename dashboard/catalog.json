@@ -825,6 +825,50 @@
    "paper": ""
   },
   {
+   "id": "divwp2-share0",
+   "kind": "divwp",
+   "title": "除法應用題：二位數直式・平分（沒有剩）",
+   "endpoint": "/interactive/div-wordprob",
+   "params": "digits=2&dtype=share&rem=0",
+   "smoke": "interactive divwp2",
+   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 直式打怪 → ④ 答句（有剩寫兩句）",
+   "note": "二位數÷一位數、商兩位數，直式打怪",
+   "paper": ""
+  },
+  {
+   "id": "divwp2-share1",
+   "kind": "divwp",
+   "title": "除法應用題：二位數直式・平分（有剩）",
+   "endpoint": "/interactive/div-wordprob",
+   "params": "digits=2&dtype=share&rem=1",
+   "smoke": "interactive divwp2",
+   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 直式打怪 → ④ 答句（有剩寫兩句）",
+   "note": "二位數÷一位數、商兩位數，直式打怪",
+   "paper": ""
+  },
+  {
+   "id": "divwp2-group0",
+   "kind": "divwp",
+   "title": "除法應用題：二位數直式・分組（沒有剩）",
+   "endpoint": "/interactive/div-wordprob",
+   "params": "digits=2&dtype=group&rem=0",
+   "smoke": "interactive divwp2",
+   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 直式打怪 → ④ 答句（有剩寫兩句）",
+   "note": "二位數÷一位數、商兩位數，直式打怪",
+   "paper": ""
+  },
+  {
+   "id": "divwp2-group1",
+   "kind": "divwp",
+   "title": "除法應用題：二位數直式・分組（有剩）",
+   "endpoint": "/interactive/div-wordprob",
+   "params": "digits=2&dtype=group&rem=1",
+   "smoke": "interactive divwp2",
+   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 直式打怪 → ④ 答句（有剩寫兩句）",
+   "note": "二位數÷一位數、商兩位數，直式打怪",
+   "paper": ""
+  },
+  {
    "id": "pro-outer",
    "kind": "pro",
    "title": "量角器：外圈（黑色數字）",
@@ -858,5 +902,5 @@
    "paper": "（無對應紙本）"
   }
  ],
- "thumbsV": 1794128203
+ "thumbsV": 1794133392
 }

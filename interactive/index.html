@@ -94,7 +94,7 @@ function facets(it){
   if(it.kind==='mulv'||it.kind==='mulvc'||it.kind==='mulvc2')f['進位']={none:'不進位',yes:'進位',mix:'交錯'}[o.regroup];
   if(['mul','mulwp','dial','pv'].includes(it.kind))f['難度']={easy:'簡單',normal:'一般'}[o.level];
   if(it.kind==='ff')f['類別']={share:'平分給幾個人',group:'每幾個包成一包',rem:'有餘數'}[o.ftype];
-  if(it.kind==='divwp'){f['類別']={share:'平分',group:'分組',mix:'平分與分組混合'}[o.dtype]; f['餘數']=o.rem==='1'?'有剩':'沒有剩'}      // 除法應用題（2026-11-08）
+  if(it.kind==='divwp'){f['類別']={share:'平分',group:'分組',mix:'平分與分組混合'}[o.dtype]; f['餘數']=o.rem==='1'?'有剩':'沒有剩'; f['位數']=o.digits==='2'?'二位數直式':'九九範圍'}      // 除法應用題（2026-11-08）
   if(it.kind==='cf')f['類別']={plate:'分到盤子',tree:'分解圖試一試',table:'九九乘法大樓'}[o.stage];
   if(it.kind==='divvc'||it.kind==='divvc3'){f['幫手']={none:'沒有幫手',help:'找幫手',big:'不能大欺小',zero:'商要補 0',mix:'混合'}[o.divtype||'mix']; f['餘數']=o.rem==='1'?'有餘數':'整除'}
   if(it.kind==='divvcd')f['類別']={tens:'整十',near:'看成整十'}[o.dstage]+(o.qdig==='2'?'・商兩位數':'');
