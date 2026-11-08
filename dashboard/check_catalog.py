@@ -3,7 +3,7 @@
 用法：python dashboard/check_catalog.py <後端 repo 路徑>   （有缺漏時結束碼 1）"""
 import json, re, sys, pathlib
 backend = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else '../worksheet-backend')
-routes = set(re.findall(r'@app\.get\("(/interactive/[^"]+)"\)', (backend / 'backend/main.py').read_text(encoding='utf-8')))
+routes = set(re.findall(r'@app\.get\("(/(?:interactive|game)/[^"]+)"\)', (backend / 'backend/main.py').read_text(encoding='utf-8')))
 cat = json.loads((pathlib.Path(__file__).parent / 'catalog.json').read_text(encoding='utf-8'))
 listed = {i['endpoint'] for i in cat['items']}
 missing, stale = sorted(routes - listed), sorted(listed - routes)

@@ -70,6 +70,10 @@
   {
    "id": "pro",
    "name": "量角器"
+  },
+  {
+   "id": "game",
+   "name": "購物遊戲"
   }
  ],
  "levels": [
@@ -900,7 +904,18 @@
    "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推桿往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
    "note": "四年級角度：邊在左右各半",
    "paper": "（無對應紙本）"
+  },
+  {
+   "id": "game-breakfast-1",
+   "kind": "game",
+   "title": "早餐店購物（第 1 關：買 1 樣）",
+   "endpoint": "/game/breakfast-shop",
+   "params": "stage=1",
+   "smoke": "node toolkit/test_game_shop.js",
+   "steps": "顧客／店員輪流：①點餐→②結帳→③核對→④付錢→⑤找錢→⑥點收→收據（一台平板兩人輪流；菜單 8 樣、100 元以內）",
+   "note": "獨立網頁（2026-11-08）；規劃見 docs/早餐店購物遊戲_規劃.md",
+   "paper": ""
   }
  ],
- "thumbsV": 1794142947
+ "thumbsV": 1794143103
 }

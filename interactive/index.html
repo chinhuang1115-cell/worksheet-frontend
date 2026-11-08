@@ -77,8 +77,8 @@ h2{font-size:22px;margin:2px 0 0}
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const FAMS=[['wordprob','加減'],['mul','乘法'],['div','除法'],['coin','錢幣'],['geo','角度']];
-const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',mulvc2:'mul',divvc:'div',divvc3:'div',divvcd:'div',divdec:'div',ff:'div',cf:'div',divwp:'div',dial:'mul',pv:'coin',cy:'coin',pro:'geo'};
+const FAMS=[['wordprob','加減'],['mul','乘法'],['div','除法'],['coin','錢幣'],['geo','角度'],['game','遊戲']];
+const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',mulvc2:'mul',divvc:'div',divvc3:'div',divvcd:'div',divdec:'div',ff:'div',cf:'div',divwp:'div',dial:'mul',pv:'coin',cy:'coin',pro:'geo',game:'game'};
 let CAT=null, q='', sel=localStorage.getItem('hub_sel')||'', list=localStorage.getItem('hub_view')==='list';   // sel：'fam:乘法主類 id' 或 次類 kind id；空＝第一個次類
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

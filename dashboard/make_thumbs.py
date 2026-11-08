@@ -119,6 +119,13 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
     b = p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM', '/opt/pw-browsers/chromium'))
     for it in cat['items']:
         if only and it['id'] not in only: continue
+        if it['endpoint'].startswith('/game/'):      # 遊戲（獨立網頁，2026-11-08）：關掉換人畫面，拍整頁店面（點餐步驟、強提示）
+            import game_shop
+            q = {k: v[0] for k, v in parse_qs(it['params']).items()}
+            f = pathlib.Path(tmp) / (it['id'] + '.html'); f.write_bytes(game_shop.generate(int(q.get('stage', 1)), 3, 'full', 11))
+            pg = b.new_page(viewport={'width': 1280, 'height': 800}); pg.goto('file://' + str(f) + '?lv=3'); pg.wait_for_selector('.ov .btn'); pg.click('.ov .btn'); pg.wait_for_timeout(600)
+            im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); im.thumbnail((520, 520))
+            im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'], '(遊戲整頁)'); continue
         f = pathlib.Path(tmp) / (it['id'] + '.html'); f.write_bytes(gen(it))
         pg = b.new_page(viewport={'width': 1100, 'height': 780})
         pg.add_init_script("localStorage.setItem('wp_level','3')")
