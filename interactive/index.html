@@ -17,7 +17,9 @@ nav h1{font-size:19px;margin:0 0 2px;padding:0 8px}
 .homebtn{display:block;text-align:center;text-decoration:none;background:var(--L1);color:#fff;border-radius:99px;padding:6px 0;margin:0 0 8px;font-weight:700}.homebtn:hover{filter:brightness(1.25)}
 /* 連回網站：用青藍色塊，和總覽本身的橘色區分「這是離開總覽」 */
 /* 左側邊緣直式標籤：切換到易數教室（不同網站層級，與導覽內的按鈕區隔） */
-.edgetab{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:40;writing-mode:vertical-rl;background:var(--L0);color:#fff;text-decoration:none;font-weight:800;letter-spacing:.25em;padding:16px 8px;border-radius:0 12px 12px 0;box-shadow:2px 2px 8px rgba(0,0,0,.2);font-size:16px}.edgetab:hover{filter:brightness(1.12)}
+.edgetabs{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:10px}      /* 易數教室＋遊戲（使用者 2026-11-08：遊戲連結放在易數教室下方） */
+.edgetab.game{background:#ea580c}
+.edgetab{display:block;flex:none;height:max-content;writing-mode:vertical-rl;background:var(--L0);color:#fff;text-decoration:none;font-weight:800;letter-spacing:.25em;padding:16px 8px;border-radius:0 12px 12px 0;box-shadow:2px 2px 8px rgba(0,0,0,.2);font-size:16px}.edgetab:hover{filter:brightness(1.12)}
 .meta{color:var(--mute);font-size:12.5px;padding:0 8px 10px}
 nav input[type=search]{width:100%;font:inherit;font-size:14px;padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:var(--bg);color:var(--ink);margin-bottom:8px}
 /* 主類：深色底，與次類（淺底、選中為橘）形成對比 */
@@ -65,7 +67,7 @@ h2{font-size:22px;margin:2px 0 0}
 </style>
 </head>
 <body>
-<a class="edgetab" href="../" title="回易數教室">易數教室</a>
+<div class="edgetabs" id="edgetabs"><a class="edgetab" href="../" title="回易數教室">易數教室</a></div>
 <div class="wrap">
 <nav>
   <h1><a class="home" href="#" data-home title="互動學習單首頁">互動學習單</a></h1>
@@ -77,8 +79,8 @@ h2{font-size:22px;margin:2px 0 0}
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const FAMS=[['wordprob','加減'],['mul','乘法'],['div','除法'],['coin','錢幣'],['geo','角度'],['game','遊戲']];
-const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',mulvc2:'mul',divvc:'div',divvc3:'div',divvcd:'div',divdec:'div',ff:'div',cf:'div',divwp:'div',dial:'mul',pv:'coin',cy:'coin',pro:'geo',game:'game'};
+const FAMS=[['wordprob','加減'],['mul','乘法'],['div','除法'],['coin','錢幣'],['geo','角度']];
+const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',mulvc2:'mul',divvc:'div',divvc3:'div',divvcd:'div',divdec:'div',ff:'div',cf:'div',divwp:'div',dial:'mul',pv:'coin',cy:'coin',pro:'geo'};
 let CAT=null, q='', sel=localStorage.getItem('hub_sel')||'', list=localStorage.getItem('hub_view')==='list';   // sel：'fam:乘法主類 id' 或 次類 kind id；空＝第一個次類
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -166,7 +168,11 @@ document.addEventListener('click',e=>{
 $('#q').addEventListener('input',e=>{q=e.target.value;render()});
 window.addEventListener('focus',()=>CAT&&render());
 async function load(){
-  try{CAT=await fetch('../dashboard/catalog.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());render()}
+  try{CAT=await fetch('../dashboard/catalog.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
+    // 遊戲（kind＝game）不放在導覽樹，改成左側直式標籤、排在「易數教室」下方（使用者 2026-11-08）；catalog 仍收錄，供 check_catalog／縮圖使用
+    CAT.items.filter(i=>i.kind==='game').forEach(g=>{const a=document.createElement('a');a.className='edgetab game';a.href=CAT.backend+g.endpoint+'?'+(g.params?g.params+'&':'')+'lv=2&mode=faded';a.target='_blank';a.rel='noopener';a.title=g.title;a.textContent=g.tab||'購物遊戲';$('#edgetabs').appendChild(a)});
+    CAT.items=CAT.items.filter(i=>i.kind!=='game');
+    render()}
   catch(e){$('#main').innerHTML='<div class="empty">載入失敗：請用 http(s) 開啟（'+esc(e.message)+'）</div>'}
 }
 load(); setInterval(()=>{if(document.activeElement.id!=='q')load()},120000);
