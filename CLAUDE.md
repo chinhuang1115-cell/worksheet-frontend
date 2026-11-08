@@ -12,6 +12,7 @@
 | **互動學習單總覽**（名稱「互動學習單」，GitHub Pages 的 `/interactive/`：左側導覽樹＋縮圖三欄、頂端小次類篩選、搜尋；連結一律帶 `lv=2&mode=faded`＝從這裡進去是弱提示；**跨頁切換用左側邊緣直式標籤**：總覽→易數教室、首頁→互動學習單；階層配色與細節見後端 repo `docs/guide/interactive-web.md`「互動學習單入口、版面與切換」）。資料與儀表板共用 `dashboard/catalog.json`；**新增／改版互動頁後，除了更新 catalog，還要重產縮圖**：`python dashboard/make_thumbs.py <後端路徑> [id…]`（重產後 `catalog.json` 的 `thumbsV` 會自動更新，縮圖網址帶 `?v=` 才不會被快取沿用舊圖；`params` 含 `calc=1` 的直式計算題縮圖是靜態畫的計算格特寫，標籤是 `index.html` 的 `rgTag`） | [`interactive/`](interactive/)、[`dashboard/make_thumbs.py`](dashboard/make_thumbs.py) |
 | 認識錢幣「半自由／完全自由排列」與錢幣外觀改版的**後端交接說明**（要做什麼、演算法、驗收清單）| [`docs/後端交接_錢幣自由排列與外觀.md`](docs/後端交接_錢幣自由排列與外觀.md)；視覺依據 `docs/mock-coin-free/` |
 | 認識錢幣自由排列的**後端實作順序清單**（決策 → 外觀 → 共用模組 → 試水 → 擴充 → 收尾，含每步驗收）| [`docs/後端實作順序清單.md`](docs/後端實作順序清單.md)（規則細節在上一列的交接說明）；可直接貼給後端 session 的簡短提示：[`docs/後端提示_錢幣自由排列.md`](docs/後端提示_錢幣自由排列.md) |
+| **早餐店購物遊戲**（顧客／店員輪流、綜合四則與錢幣；2026-11-08 規劃中）的定案事項、流程、關卡、實作步驟 | [`docs/早餐店購物遊戲_規劃.md`](docs/早餐店購物遊戲_規劃.md)；模擬圖 `docs/mock-breakfast-shop/` |
 | 直式加減乘的**計算格設計規範**（尺寸、欄數、進退位、鷹架層級）| [`docs/輔助計算格規範.md`](docs/輔助計算格規範.md)；視覺依據 `docs/calc-grid-mock.html`／`.png` |
 | 計算格的**後端實作**、版面驗收、踩坑、各題型產生器 | 後端 repo：`CLAUDE.md`（核心規則）與 `docs/guide/`（詳細筆記） |
 | 題型清單、圖片處理等**技術開發規範** | 後端 repo：`toolkit/RULES.md`（題型清單在第 9 節） |

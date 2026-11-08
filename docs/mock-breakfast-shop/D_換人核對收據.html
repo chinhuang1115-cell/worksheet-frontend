@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="common.css">
+<style>
+body{background:#e7e5e4}
+.g{display:flex;gap:18px;padding:60px 24px 0}
+.p{width:400px;height:660px;border-radius:16px;overflow:hidden;background:#fdf8ec;border:3px solid #a8a29e;position:relative}
+.cap{position:absolute;top:14px;left:24px;font-size:22px;font-weight:800}
+.cap small{font-weight:400;font-size:16px;color:#57534e;margin-left:8px}
+.hand{height:100%;background:linear-gradient(160deg,#dbeafe,#bfdbfe);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center}
+.hand .big{font-size:130px}
+.hand h2{margin:0;font-size:34px;color:#1d4ed8}
+.hand p{margin:0;font-size:22px}
+.go{background:#2563eb;color:#fff;font-size:26px;font-weight:800;border-radius:16px;padding:12px 28px;border-bottom:6px solid #1e40af}
+.chk{padding:20px}
+.two{display:flex;gap:10px;margin-top:14px}
+.two>div{flex:1;border-radius:14px;padding:10px;text-align:center}
+.two .a{background:#dbeafe;border:3px solid #60a5fa}.two .b{background:#ffedd5;border:3px solid #fb923c}
+.two .em{font-size:44px}.two .v{font-size:40px;font-weight:800}
+.same{margin:18px auto 0;text-align:center;font-size:30px;font-weight:800;color:#15803d;background:#dcfce7;border:3px solid #4ade80;border-radius:14px;padding:8px}
+.alt{margin-top:22px;font-size:17px;background:#fff;border:2px dashed #a8a29e;border-radius:12px;padding:10px}
+.rc{margin:60px auto 0;width:330px;background:#fff;padding:18px 20px 100px;font-size:21px;box-shadow:0 4px 10px rgba(0,0,0,.12);position:relative;
+ -webkit-mask:radial-gradient(circle 8px at 50% 100%,transparent 98%,#000) 0 0/20px 100% repeat-x}
+.rc h3{text-align:center;margin:0 0 6px;font-size:24px}
+.rc .ln{display:flex;justify-content:space-between;border-bottom:1px dashed #d6d3d1;padding:4px 0}
+.rc .eq{font-size:22px;margin:6px 0;color:#1e3a8a}
+.rc .ans{text-align:right;font-weight:800;margin-top:8px}
+.stamp{position:absolute;right:24px;bottom:18px;color:#dc2626;border:4px solid #dc2626;border-radius:50%;width:76px;height:76px;display:flex;align-items:center;justify-content:center;font-weight:800;transform:rotate(-14deg);font-size:20px;opacity:.85}
+</style></head><body>
+<div class="label" style="right:24px;top:12px">模擬圖 D：換人、核對、收據（A／B／C 都會用到）</div>
+<div class="g">
+ <div class="p"><div class="hand"><div class="big">🧑‍🍳</div><h2>換店員了！</h2><p>請把平板交給<b>店員</b></p><div data-coins="" style="font-size:40px">🙋 ➜ 🧑‍🍳</div><span class="go">我是店員，開始 ▶</span></div><div class="cap" style="color:#1e3a8a">D1 換人畫面</div></div>
+ <div class="p chk"><div class="cap">D2 核對<small>兩人都算完才翻開</small></div>
+  <div style="margin-top:40px" class="sh"><span class="n">3</span>總價一樣嗎？</div>
+  <div class="two"><div class="a"><div class="em">🧑‍🍳</div>店員算<div class="v">55 元</div></div><div class="b"><div class="em">🙋</div>顧客算<div class="v">55 元</div></div></div>
+  <div class="same">✓ 一樣！可以付錢了</div>
+  <div class="alt"><b>如果不一樣：</b>兩張卡片抖一下，說「答案不一樣，兩個人一起再看一次」，錯的那一方重算（強提示時亮出算式）。</div>
+ </div>
+ <div class="p"><div class="cap">D3 作答紙：收據<small>每回合寫一張</small></div>
+  <div class="rc"><h3>🍳 早餐店　收據</h3>
+   <div class="ln"><span>🍔 漢堡 × 1</span><span>35 元</span></div>
+   <div class="ln"><span>🧋 奶茶 × 1</span><span>20 元</span></div>
+   <div class="eq">一共：35 ＋ 20 ＝ 55</div>
+   <div class="ln"><span>付了</span><span>100 元</span></div>
+   <div class="eq">找回：100 － 55 ＝ 45</div>
+   <div class="ans">答：一共 55 元，找回 45 元。</div>
+   <div class="stamp">算對了</div>
+  </div></div>
+</div>
+<script src="coins.js"></script></body></html>

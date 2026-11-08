@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="common.css">
+<style>
+.wrap{display:flex;gap:16px;padding:16px 60px 0}
+.left{width:520px}.right{flex:1}
+.task{background:#fefce8;border:2px dashed #eab308;border-radius:12px;padding:10px 14px;font-size:22px;font-weight:700;margin-bottom:10px}
+.menu{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;justify-items:center}
+.menu .item{width:90px}.menu .item .pic{font-size:36px}
+.tray{margin-top:12px;border:3px solid #fdba74;border-radius:40px;background:#fff7ed;padding:8px 18px;display:flex;align-items:center;gap:10px}
+.tray b{font-size:20px}
+.wallet{border:3px solid #a16207;border-radius:16px;background:#fef3c7;padding:10px;margin-top:12px;position:relative}
+.wallet h5,.plate h5{margin:0 0 6px;font-size:18px}
+.plate{margin-top:12px;border:4px dashed #ea580c;border-radius:50%/40%;background:#fff;height:150px;display:flex;align-items:center;justify-content:center;gap:10px;position:relative}
+.plate .sum{position:absolute;bottom:-14px;background:#16a34a;color:#fff;border-radius:14px;padding:2px 14px;font-size:20px;font-weight:800}
+.tip{margin-top:20px;background:#fff7ed;border:2px solid #fdba74;border-radius:12px;padding:8px 12px;font-size:18px}
+</style></head><body>
+<div class="top"><div class="l"><span class="qno">第 1 回 / 3</span><span class="th">早餐店</span><span class="ttl">早餐店購物（第 2 關：買兩樣）</span><span class="stars">★☆☆</span></div>
+<div class="role cus"><span class="av">🙋</span>現在是：顧客</div>
+<div class="r"><div class="seg"><span class="on">強提示</span><span>弱提示</span><span>無提示</span></div><span class="btn">語速：普通</span><span class="btn">🗣</span><span class="btn">🔔</span></div></div>
+<div class="label">模擬圖 A：沿用現有互動頁版面</div>
+<div class="wrap">
+ <div class="left card">
+  <div class="task">📝 任務卡：買 1 個漢堡、1 杯奶茶</div>
+  <div class="menu">
+   <div class="item"><span class="pic">🌯</span><span class="nm">蛋餅</span><span class="tag">25 元</span></div>
+   <div class="item"><span class="pic">🍔</span><span class="nm">漢堡</span><span class="tag">35 元</span></div>
+   <div class="item"><span class="pic">🥪</span><span class="nm">三明治</span><span class="tag">30 元</span></div>
+   <div class="item"><span class="pic">🍝</span><span class="nm">鐵板麵</span><span class="tag">45 元</span></div>
+   <div class="item"><span class="pic">🥔</span><span class="nm">薯餅</span><span class="tag">15 元</span></div>
+   <div class="item"><span class="pic">🧋</span><span class="nm">奶茶</span><span class="tag">20 元</span></div>
+   <div class="item"><span class="pic">🥛</span><span class="nm">豆漿</span><span class="tag">15 元</span></div>
+   <div class="item"><span class="pic">🍵</span><span class="nm">紅茶</span><span class="tag">10 元</span></div>
+   <div class="item"><span class="pic">🥚</span><span class="nm">茶葉蛋</span><span class="tag">8 元</span></div>
+   <div class="item"><span class="pic">🍘</span><span class="nm">蘿蔔糕</span><span class="tag">30 元</span></div>
+  </div>
+  <div class="tray"><b>我的托盤：</b><span style="font-size:36px">🍔🧋</span><b style="margin-left:auto;color:#15803d">一共 55 元 ✓</b></div>
+ </div>
+ <div class="right card step">
+  <div class="prog"><span class="done">① 點餐 ✓</span><span class="done">② 結帳 ✓</span><span class="done">③ 核對 ✓</span><span class="cus now">④ 付錢</span><span>⑤ 找錢</span><span>⑥ 點收</span></div>
+  <div class="sh"><span class="n">4</span>付錢：從錢包拿錢，放到盤子上</div>
+  <div class="wallet"><h5>👛 我的錢包</h5><div data-coins="h q t t t f o o o o" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div></div>
+  <div class="plate" data-coins="q f"><span class="sum">盤子上：55 元，剛好！</span></div>
+  <div class="tip">💡 要付 <b>55 元</b>。有沒有剛好的付法？</div>
+ </div>
+</div>
+<span class="note">商品圖暫用表情符號，正式版換成早餐店圖庫</span>
+<script src="coins.js"></script></body></html>
