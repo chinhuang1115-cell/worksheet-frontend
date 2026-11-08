@@ -1,0 +1,114 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="common.css">
+<style>
+.awn{height:34px;background:repeating-linear-gradient(90deg,#ef4444 0 50px,#fff 50px 100px);border-radius:0 0 22px 22px;position:relative}
+.sign{position:absolute;top:2px;left:50%;transform:translateX(-50%);background:#7c2d12;color:#fde68a;font-size:22px;font-weight:800;padding:0 24px;border-radius:10px;border:3px solid #fbbf24;line-height:34px}
+.main{display:flex;gap:10px;padding:10px 12px 0;height:646px}
+.side{border-radius:16px;padding:10px 12px;position:relative;transition:all .3s;display:flex;flex-direction:column;gap:8px}
+.side.cus{background:#fff7ed;border:4px solid #fb923c}
+.side.clk{background:#eff6ff;border:4px solid #60a5fa}
+.side.off{width:210px;opacity:.5;filter:saturate(.6)}
+.side.on{width:480px;box-shadow:0 0 0 4px rgba(251,146,60,.25),0 6px 18px rgba(0,0,0,.12)}
+.side.clk.on{box-shadow:0 0 0 4px rgba(96,165,250,.3),0 6px 18px rgba(0,0,0,.12)}
+.who{display:flex;align-items:center;gap:8px}
+.who .em{font-size:64px;line-height:1}
+.side.off .who .em{font-size:48px}
+.who b{font-size:24px}
+.cus .who b{color:#c2410c}.clk .who b{color:#1d4ed8}
+.bub{background:#fff;border:3px solid;border-radius:16px;padding:6px 12px;font-size:20px;font-weight:800;position:relative}
+.cus .bub{border-color:#ea580c;color:#c2410c}.clk .bub{border-color:#2563eb;color:#1d4ed8}
+.wait{font-size:16px;color:#57534e;font-weight:700}
+.wallet{border:3px solid #a16207;border-radius:14px;background:#fef3c7;padding:8px}
+.wallet h5,.till h5{margin:0 0 4px;font-size:17px}
+.wallet .cs{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.till{background:#fff;border:3px solid #93c5fd;border-radius:12px;padding:6px 8px}
+.till .drs{display:flex;gap:5px}
+.till .dr{flex:1;border:2px solid #bfdbfe;border-radius:8px;min-height:60px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 0;background:#f8fbff}
+.till .dr i{font-style:normal;font-size:12px;color:#64748b;font-weight:700}
+.stepc{background:#fff;border-radius:14px;padding:10px 12px;border:3px solid #ea580c}
+.clk .stepc{border-color:#2563eb}
+.vh{font-size:36px;font-weight:800;display:flex;align-items:center;gap:8px;margin-top:6px}
+.center{flex:1;display:flex;flex-direction:column;gap:8px}
+.board{background:#1f3a2e;border:8px solid #8b5a2b;border-radius:10px;padding:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.board .item{width:auto;background:#fff;border-color:#fff;padding:3px 2px 3px}
+.board .item .pic{font-size:30px}.board .item .nm{font-size:15px}.board .tag{font-size:14px}
+.board .item.dim{opacity:.4}
+.counter{flex:1;background:linear-gradient(#d6a76c,#c08a4c);border-top:10px solid #8b5a2b;border-radius:8px 8px 0 0;padding:14px 12px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;gap:12px}
+.order{grid-column:span 2;display:flex;gap:12px;align-items:center}
+.slip{background:#fff;border-radius:6px;padding:6px 10px;font-size:17px;font-weight:700;transform:rotate(-2deg);box-shadow:2px 3px 0 rgba(0,0,0,.15)}
+.tray{flex:1;background:#fff7ed;border:3px solid #fdba74;border-radius:30px;height:70px;display:flex;align-items:center;justify-content:center;font-size:44px;gap:6px}
+.mat{background:#fff;border-radius:50%/40%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative;min-height:170px}
+.mat h5{margin:0;font-size:18px}
+.mat.pay{border:4px dashed #ea580c}.mat.chg{border:4px dashed #2563eb}
+.mat.idle{border-style:solid;border-color:#e5e7eb}
+.mat .sum{position:absolute;bottom:-12px;color:#fff;border-radius:14px;padding:1px 12px;font-size:17px;font-weight:800}
+.prog{justify-content:center;margin:0}
+.lbl{position:absolute;top:116px;right:16px;background:#1f2937;color:#fff;font-size:16px;font-weight:800;padding:3px 10px;border-radius:8px;z-index:5}
+.keypad{grid-template-columns:repeat(4,62px)}
+.side.off .till .drs{display:grid;grid-template-columns:repeat(3,1fr)}
+.till .dr{min-width:0;overflow:hidden}
+.mat{height:170px;align-self:center}
+.keypad span{height:46px}
+.arrow{position:absolute;font-size:34px;color:#ea580c;font-weight:900}
+</style></head><body>
+<div class="top"><div class="l"><span class="qno">第 1 回 / 3</span><span class="th">早餐店</span><span class="ttl">早餐店購物（第 2 關：買兩樣）</span><span class="stars">★☆☆</span></div>
+<div class="role" id="role"></div>
+<div class="r"><div class="seg"><span class="on">強提示</span><span>弱提示</span><span>無提示</span></div><span class="btn">語速：普通</span><span class="btn">🗣</span><span class="btn">🔔</span></div></div>
+<div class="awn"><span class="sign">🍳 美而好早餐店</span></div>
+<div class="lbl" id="lbl"></div>
+<div class="main">
+ <div class="side cus" id="L"></div>
+ <div class="center">
+  <div class="prog" id="prog"></div>
+  <div class="board">
+   <div class="item dim"><span class="pic">🌯</span><span class="nm">蛋餅</span><span class="tag">25 元</span></div>
+   <div class="item"><span class="pic">🍔</span><span class="nm">漢堡</span><span class="tag">35 元</span></div>
+   <div class="item dim"><span class="pic">🥪</span><span class="nm">三明治</span><span class="tag">30 元</span></div>
+   <div class="item dim"><span class="pic">🍝</span><span class="nm">鐵板麵</span><span class="tag">45 元</span></div>
+   <div class="item dim"><span class="pic">🥔</span><span class="nm">薯餅</span><span class="tag">15 元</span></div>
+   <div class="item"><span class="pic">🧋</span><span class="nm">奶茶</span><span class="tag">20 元</span></div>
+   <div class="item dim"><span class="pic">🥛</span><span class="nm">豆漿</span><span class="tag">15 元</span></div>
+   <div class="item dim"><span class="pic">🍵</span><span class="nm">紅茶</span><span class="tag">10 元</span></div>
+   <div class="item dim"><span class="pic">🥚</span><span class="nm">茶葉蛋</span><span class="tag">8 元</span></div>
+   <div class="item dim"><span class="pic">🍘</span><span class="nm">蘿蔔糕</span><span class="tag">30 元</span></div>
+  </div>
+  <div class="counter">
+   <div class="order"><div class="slip">點餐單<br>🍔 漢堡 35 元<br>🧋 奶茶 20 元<br>一共 55 元</div><div class="tray">🍔🧋</div></div>
+   <div class="mat pay" id="pay"></div>
+   <div class="mat chg" id="chg"></div>
+  </div>
+ </div>
+ <div class="side clk" id="R"></div>
+</div>
+<span id="note" style="display:none"></span>
+<script>
+const T=new URLSearchParams(location.search).get('turn')||'cus';
+const kp='<div class="keypad"><span>7</span><span>8</span><span>9</span><span class="op">＋</span><span>4</span><span>5</span><span>6</span><span class="op">－</span><span>1</span><span>2</span><span>3</span><span class="op">⌫</span><span class="z">0</span></div>';
+const till=(s)=>`<div class="till"><h5>🧾 收銀機</h5><div class="drs">${[['h','100 元','h'],['q','50 元','q'],['t','10 元','t t t'],['f','5 元','f f'],['o','1 元','o o o']].map(([k,n,c])=>`<div class="dr" data-coins="${c}" data-s="${s}"><i>${n}</i></div>`).join('')}</div></div>`;
+if(T==='cus'){
+ role.className='role cus';role.innerHTML='<span class="av">🙋</span>現在是：顧客';
+ lbl.textContent='模擬圖 E1：顧客付錢（左邊變寬）';
+ L.className='side cus on';L.innerHTML=`<div class="who"><span class="em">🙋</span><div class="bub">要付 55 元，<br>我來拿錢。</div></div>
+  <div class="stepc"><div class="sh"><span class="n">4</span>付錢：從錢包拿錢，放到櫃台的盤子</div></div>
+  <div class="wallet"><h5>👛 我的錢包</h5><div class="cs" data-coins="h t t t o o o o"></div></div>
+  <div style="background:#fff;border:2px solid #fdba74;border-radius:12px;padding:6px 10px;font-size:18px">💡 有沒有剛好的付法？</div>`;
+ R.className='side clk off';R.innerHTML=`<div class="who"><span class="em">🧑‍🍳</span><b>店員</b></div><div class="wait">等一下輪到店員找錢</div>${till(.5)}`;
+ prog.innerHTML='<span class="done">點餐</span><span class="done">結帳</span><span class="done">核對</span><span class="cus now">④ 付錢</span><span>找錢</span><span>點收</span>';
+ pay.innerHTML='<h5>顧客付的錢</h5><div data-coins="q f"></div><span class="sum" style="background:#16a34a">盤子上 55 元，剛好！</span>';
+ chg.className='mat chg idle';chg.innerHTML='<h5 style="color:#9ca3af">找給顧客的錢</h5>';
+ note.textContent='輪到顧客：左邊變寬、變亮；右邊店員縮窄、變淡';
+}else{
+ role.className='role clk';role.innerHTML='<span class="av">🧑‍🍳</span>現在是：店員';
+ lbl.textContent='模擬圖 E2：店員找錢（右邊變寬）';
+ L.className='side cus off';L.innerHTML=`<div class="who"><span class="em">🙋</span><b>顧客</b></div><div class="wait">等一下輪到顧客點收</div><div class="wallet"><h5>👛 錢包</h5><div class="cs" data-coins="t t t o o o o" data-s=".6"></div></div>`;
+ R.className='side clk on';R.innerHTML=`<div class="who"><span class="em">🧑‍🍳</span><div class="bub">收你 100 元，<br>要找多少呢？</div></div>
+  <div class="stepc"><div class="sh clk"><span class="n">5</span>找錢：要找給顧客多少元？</div>
+  <div class="vh">100 － 55 ＝ <span class="dz" style="border-color:#93c5fd;background:#eff6ff;color:#1d4ed8">45</span> 元</div></div>
+  <div style="display:flex;gap:10px;align-items:flex-start">${kp}<div style="flex:1;background:#eff6ff;border:2px solid #60a5fa;border-radius:12px;padding:6px 8px;font-size:17px">💡 算好了，從收銀機拿 <b>45 元</b> 放到藍色盤子。</div></div>
+  ${till(.5)}`;
+ prog.innerHTML='<span class="done">點餐</span><span class="done">結帳</span><span class="done">核對</span><span class="done">付錢</span><span class="clk now">⑤ 找錢</span><span>點收</span>';
+ pay.innerHTML='<h5>顧客付的錢</h5><div data-coins="h"></div>';
+ chg.innerHTML='<h5>找給顧客的錢</h5><div data-coins="t t t t f" data-s=".8"></div><span class="sum" style="background:#2563eb">盤子上 45 元</span>';
+ note.textContent='輪到店員：右邊變寬、變亮；左邊顧客縮窄、變淡';
+}
+</script>
+<script src="coins.js"></script></body></html>
