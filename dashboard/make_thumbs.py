@@ -33,6 +33,7 @@ def gen(item):
     if ep == 'coin-carry': return iw.generate_cy(th, N, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))
     if ep == 'fenfen': return iw.generate_ff('水果', N, 'full', 11, q.get('level', 'normal'), q.get('ftype', 'share'))
     if ep == 'chufa': return iw.generate_cf('水果', N, 'full', 11, q.get('level', 'normal'), q.get('stage', 'plate'), q.get('div', 'small'))
+    if ep == 'div-wordprob': return iw.generate_divwp('水果', N, 'full', 11, q.get('level', 'normal'), q.get('dtype', 'share'), int(q.get('rem', 0)))
     if ep == 'protractor': return iw.generate_pro(N, 'full', 11, q.get('ring', 'mix'))
     raise SystemExit('未知端點：' + ep)
 
