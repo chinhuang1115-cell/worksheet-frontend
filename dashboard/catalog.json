@@ -776,7 +776,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "dtype=share&rem=0&level=normal",
    "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 猜一猜、減減看（剩下不夠再分一份才成立）→ ④ 答句",
+   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
    "note": "九九範圍（除數、商 2～9）；平分＝一個人有幾個，分組＝可以裝幾盒",
    "paper": ""
   },
@@ -787,7 +787,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "dtype=share&rem=1&level=normal",
    "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 猜一猜、減減看（剩下不夠再分一份才成立）→ ④ 答句",
+   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
    "note": "九九範圍（除數、商 2～9）；平分＝一個人有幾個，分組＝可以裝幾盒",
    "paper": ""
   },
@@ -798,7 +798,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "dtype=group&rem=0&level=normal",
    "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 猜一猜、減減看（剩下不夠再分一份才成立）→ ④ 答句",
+   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
    "note": "九九範圍（除數、商 2～9）；平分＝一個人有幾個，分組＝可以裝幾盒",
    "paper": ""
   },
@@ -809,7 +809,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "dtype=group&rem=1&level=normal",
    "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 猜一猜、減減看（剩下不夠再分一份才成立）→ ④ 答句",
+   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
    "note": "九九範圍（除數、商 2～9）；平分＝一個人有幾個，分組＝可以裝幾盒",
    "paper": ""
   },
@@ -820,7 +820,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "dtype=mix&rem=1&level=normal",
    "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 猜一猜、減減看（剩下不夠再分一份才成立）→ ④ 答句",
+   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
    "note": "第 1、3、5 題平分，2、4 題分組",
    "paper": ""
   },
@@ -831,7 +831,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "digits=2&dtype=share&rem=0",
    "smoke": "interactive divwp2",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 直式打怪 → ④ 答句（有剩寫兩句）",
+   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
    "note": "二位數÷一位數、商兩位數，直式打怪",
    "paper": ""
   },
@@ -842,7 +842,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "digits=2&dtype=share&rem=1",
    "smoke": "interactive divwp2",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 直式打怪 → ④ 答句（有剩寫兩句）",
+   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
    "note": "二位數÷一位數、商兩位數，直式打怪",
    "paper": ""
   },
@@ -853,7 +853,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "digits=2&dtype=group&rem=0",
    "smoke": "interactive divwp2",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 直式打怪 → ④ 答句（有剩寫兩句）",
+   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
    "note": "二位數÷一位數、商兩位數，直式打怪",
    "paper": ""
   },
@@ -864,7 +864,7 @@
    "endpoint": "/interactive/div-wordprob",
    "params": "digits=2&dtype=group&rem=1",
    "smoke": "interactive divwp2",
-   "steps": "① 這題要算什麼 → ② 列式 N ÷ X → ③ 直式打怪 → ④ 答句（有剩寫兩句）",
+   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
    "note": "二位數÷一位數、商兩位數，直式打怪",
    "paper": ""
   },
@@ -902,5 +902,5 @@
    "paper": "（無對應紙本）"
   }
  ],
- "thumbsV": 1794133392
+ "thumbsV": 1794142947
 }
