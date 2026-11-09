@@ -1302,7 +1302,7 @@ window.WORKSHEET_REGISTRY = [
       "等分",
       "平分"
     ],
-    "desc": "把 N 個物品平分給 X 個人，學生畫圓圈表示分堆，4 題，數字每次隨機。",
+    "desc": "把 N 個物品平分給 X 個人，學生自己畫圓圈分堆。兩種版型：分堆畫圈（自己畫圈，4 題）、畫一畫（虛線圓圈已畫好，直接把物品畫進去，8 題）。數字每次隨機。",
     "sortKey": [
       4,
       2,
@@ -1310,12 +1310,12 @@ window.WORKSHEET_REGISTRY = [
     ],
     "home": {
       "icon": "🌼",
-      "sub": "分分看・分堆畫圈",
-      "desc": "把物品平分給幾個人，學生自己畫圓圈分堆，從動手分建立等分概念。",
+      "sub": "分分看・分堆畫圈（2 種版型）",
+      "desc": "把物品平分給幾個人，用畫圓圈的方式分堆，從動手分建立等分概念；虛線圈已畫好的「畫一畫」適合更初階的學生。",
       "features": [
-        "學生自己畫圈分堆",
-        "4 題，數字每次隨機",
-        "版面固定，只換數字"
+        "分堆畫圈：自己畫圈，4 題",
+        "畫一畫：虛線圈已畫好，8 題",
+        "數字每次隨機"
       ]
     },
     "standalone": true,
@@ -1326,17 +1326,27 @@ window.WORKSHEET_REGISTRY = [
       "code": "N203D",
       "desc": "學生自己畫圓圈將物品平均分堆，建立等分除法的具體操作概念。"
     },
-    "sample": {
-      "pdf": "assets/fenfen_heap_sample.pdf",
-      "name": "分分看_分堆畫圈_兩位數_範本.pdf"
-    },
+    "sample": [
+      { "pdf": "assets/fenfen_heap_sample.pdf", "name": "分分看_分堆畫圈_兩位數_範本.pdf", "label": "分堆畫圈", "key": "fenfen-heap" },
+      { "pdf": "assets/chufa_s1_sample.pdf", "name": "分分看_畫一畫_兩位數_範本.pdf", "label": "畫一畫", "key": "chufa-s1" }
+    ],
     "layout": {
       "panel": "fenfenPanel",
       "themeSet": null,
       "showTheme": false,
       "prices": false,
       "interactive": false
-    }
+    },
+    "variants": [
+      {
+        "key": "fenfen-heap",
+        "label": "分堆畫圈"
+      },
+      {
+        "key": "chufa-s1",
+        "label": "畫一畫"
+      }
+    ]
   },
   {
     "id": "fenfen-pan",
@@ -1594,17 +1604,7 @@ window.WORKSHEET_REGISTRY = [
       2,
       1
     ],
-    "home": {
-      "icon": "✏️",
-      "sub": "分分看・畫一畫",
-      "desc": "在代表每個人的虛線圓圈裡畫出物品，一個一個分，不寫算式，只回答一個人有幾個。",
-      "features": [
-        "虛線圓圈代表每個人",
-        "只用畫的，不寫算式",
-        "8 題，數字每次隨機"
-      ]
-    },
-    "standalone": true,
+    "home": null,
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
