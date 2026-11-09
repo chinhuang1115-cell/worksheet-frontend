@@ -908,15 +908,15 @@
   {
    "id": "game-breakfast-1",
    "kind": "game",
-   "title": "早餐店購物（第 1 關：買 1 樣）",
+   "title": "早餐店購物（第 1～3 關）",
    "endpoint": "/game/breakfast-shop",
    "params": "stage=1",
    "smoke": "node toolkit/test_game_shop.js",
    "steps": "顧客／店員輪流：①點餐→②結帳→③核對→④付錢→⑤找錢→⑥點收→收據（一台平板兩人輪流；菜單 8 樣、100 元以內）",
-   "note": "獨立網頁（2026-11-08）；規劃見 docs/早餐店購物遊戲_規劃.md",
+   "note": "獨立網頁（2026-11-08）；遊戲頂端可選第 1～3 關；規劃見 docs/早餐店購物遊戲_規劃.md",
    "paper": "",
    "tab": "早餐店遊戲"
   }
  ],
- "thumbsV": 1794214760
+ "thumbsV": 1794219083
 }
