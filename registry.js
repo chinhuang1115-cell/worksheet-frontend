@@ -181,16 +181,7 @@ window.WORKSHEET_REGISTRY = [
       2,
       1
     ],
-    "home": {
-      "icon": "🌼",
-      "sub": "除法概念（5 種版型）",
-      "desc": "5 種版型統一在同一設定頁：圖示預印填答、有餘數、分堆畫圈、分盤畫圈、分盤格線，涵蓋等組與等分除法。",
-      "features": [
-        "無餘數：圖示預印，可選 11 種主題",
-        "有餘數：固定圖片，計算商與餘數",
-        "B版 3 種：學生自行畫圈，純換數字"
-      ]
-    },
+    "home": null,
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
@@ -1197,12 +1188,13 @@ window.WORKSHEET_REGISTRY = [
     "id": "fenfennew",
     "code": "N203B",
     "grade": "2",
-    "name": "分分看＿一步驟除法（兩位數）",
+    "name": "分分看＿無餘數（兩位數）",
     "ops": [
       "div"
     ],
     "keywords": [
       "分分看",
+      "無餘數",
       "幾組",
       "等分",
       "除法",
@@ -1214,7 +1206,17 @@ window.WORKSHEET_REGISTRY = [
       2,
       1
     ],
-    "home": null,
+    "home": {
+      "icon": "🌼",
+      "sub": "分分看・無餘數",
+      "desc": "圖示預先印好，學生數一數就能填答，可選 11 種主題，是認識等分除法的第一步。",
+      "features": [
+        "圖示預印，不必自己畫",
+        "可選 11 種主題",
+        "6 題，除數每次隨機"
+      ]
+    },
+    "standalone": true,
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
@@ -1255,7 +1257,17 @@ window.WORKSHEET_REGISTRY = [
       2,
       1
     ],
-    "home": null,
+    "home": {
+      "icon": "🌼",
+      "sub": "分分看・有餘數",
+      "desc": "圖片固定、只換除數，每題都分不完，學生圈完後同時填入商與餘數。",
+      "features": [
+        "每題都有餘數",
+        "圈一圈再填商與餘數",
+        "6 題，圖片固定"
+      ]
+    },
+    "standalone": true,
     "diffInfo": {
       "grade": "二年級",
       "level": "進階",
@@ -1296,7 +1308,17 @@ window.WORKSHEET_REGISTRY = [
       2,
       1
     ],
-    "home": null,
+    "home": {
+      "icon": "🌼",
+      "sub": "分分看・分堆畫圈",
+      "desc": "把物品平分給幾個人，學生自己畫圓圈分堆，從動手分建立等分概念。",
+      "features": [
+        "學生自己畫圈分堆",
+        "4 題，數字每次隨機",
+        "版面固定，只換數字"
+      ]
+    },
+    "standalone": true,
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
@@ -1338,7 +1360,17 @@ window.WORKSHEET_REGISTRY = [
       2,
       1
     ],
-    "home": null,
+    "home": {
+      "icon": "🌼",
+      "sub": "分分看・分盤畫圈",
+      "desc": "在盤子形狀的空間裡畫圓圈平分，沒有格線，留給學生較大的自由度。",
+      "features": [
+        "盤形空間，沒有格線",
+        "8 題（含 1 題範例）",
+        "數字每次隨機"
+      ]
+    },
+    "standalone": true,
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
@@ -1380,7 +1412,17 @@ window.WORKSHEET_REGISTRY = [
       2,
       1
     ],
-    "home": null,
+    "home": {
+      "icon": "🌼",
+      "sub": "分分看・分盤格線",
+      "desc": "盤子裡附格線，幫助學生把圓圈排整齊，等分的結果看得更清楚。",
+      "features": [
+        "盤內有格線輔助",
+        "圓圈排整齊好對照",
+        "4 題，數字每次隨機"
+      ]
+    },
+    "standalone": true,
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
@@ -1415,7 +1457,7 @@ window.WORKSHEET_REGISTRY = [
       "平分",
       "九九乘法"
     ],
-    "desc": "用「分」建立除法概念：從畫圈平分，到畫盤子連結乘法，共 2 種版型：先畫一畫平分，再畫盤子寫「(　)×X＝總數」並用直式乘法格算出總數。",
+    "desc": "用「分」建立除法概念：在盤子上畫一畫平分，再寫出「(　)×X＝總數」並用直式乘法格算出總數（畫一畫的階段已移到「分分看」分類）。",
     "sortKey": [
       4,
       2,
@@ -1423,12 +1465,12 @@ window.WORKSHEET_REGISTRY = [
     ],
     "home": {
       "icon": "➗",
-      "sub": "除法概念（2 種版型）",
-      "desc": "先動手把東西畫出來平分，再畫盤子、寫「(　)×X＝總數」並用直式乘法格算出總數，適合初學等分除法的學生。",
+      "sub": "除法概念・畫盤子寫乘法",
+      "desc": "在盤子上畫一畫把東西平分，再寫「(　)×X＝總數」並用直式乘法格算出總數，連結平分與乘法。",
       "features": [
-        "階段一：畫一畫平分",
-        "階段二：畫盤子＋直式乘法格",
-        "連結「平分」與「乘法」"
+        "在盤子上畫一畫平分",
+        "寫出「(　)×X＝總數」",
+        "用直式乘法格算總數"
       ]
     },
     "diffInfo": {
@@ -1436,11 +1478,10 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N210A",
-      "desc": "先畫一畫平分，再畫盤子寫出「(　)×X＝總數」，連結平分與乘法。"
+      "desc": "在盤子上畫一畫平分，再寫出「(　)×X＝總數」，連結平分與乘法。"
     },
     "sample": [
-      { "pdf": "assets/chufa_s1_sample.pdf", "name": "除法概念_階段一_畫一畫_範例.pdf", "label": "階段一 畫一畫", "key": "chufa-s1" },
-      { "pdf": "assets/chufa_s7_sample.pdf", "name": "除法概念_階段二_除法概念_範例.pdf", "label": "階段二 除法概念", "key": "chufa-s7" }
+      { "pdf": "assets/chufa_s7_sample.pdf", "name": "除法概念_畫盤子寫乘法_範例.pdf", "label": "畫盤子寫乘法", "key": "chufa-s7" }
     ],
     "layout": {
       "panel": "chufaPanel",
@@ -1451,12 +1492,8 @@ window.WORKSHEET_REGISTRY = [
     },
     "variants": [
       {
-        "key": "chufa-s1",
-        "label": "階段一 畫一畫"
-      },
-      {
         "key": "chufa-s7",
-        "label": "階段二 除法概念"
+        "label": "畫盤子寫乘法"
       }
     ]
   },
@@ -1539,11 +1576,13 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s1",
     "code": "N210B",
     "grade": "2",
-    "name": "除法概念＿階段一 畫一畫（兩位數）",
+    "name": "分分看＿畫一畫（兩位數）",
     "ops": [
       "div"
     ],
     "keywords": [
+      "分分看",
+      "畫一畫",
       "除法",
       "等分",
       "平分",
@@ -1555,7 +1594,17 @@ window.WORKSHEET_REGISTRY = [
       2,
       1
     ],
-    "home": null,
+    "home": {
+      "icon": "✏️",
+      "sub": "分分看・畫一畫",
+      "desc": "在代表每個人的虛線圓圈裡畫出物品，一個一個分，不寫算式，只回答一個人有幾個。",
+      "features": [
+        "虛線圓圈代表每個人",
+        "只用畫的，不寫算式",
+        "8 題，數字每次隨機"
+      ]
+    },
+    "standalone": true,
     "diffInfo": {
       "grade": "二年級",
       "level": "基礎",
@@ -1565,7 +1614,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "sample": {
       "pdf": "assets/chufa_s1_sample.pdf",
-      "name": "除法概念_階段一_畫一畫_範例.pdf"
+      "name": "分分看_畫一畫_兩位數_範本.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
@@ -1779,7 +1828,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s7",
     "code": "N210H",
     "grade": "2",
-    "name": "除法概念＿階段二 除法概念（兩位數）",
+    "name": "除法概念＿畫盤子寫乘法（兩位數）",
     "ops": [
       "div"
     ],
@@ -1805,7 +1854,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "sample": {
       "pdf": "assets/chufa_s7_sample.pdf",
-      "name": "除法概念_階段二_除法概念_範例.pdf"
+      "name": "除法概念_畫盤子寫乘法_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
