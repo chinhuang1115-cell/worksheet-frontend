@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0;background:#fff;font-family:'Noto Sans CJK TC',sans-serif">
+<svg width="760" height="640" id="s"></svg><script>
+// 尺寸與線寬沿用 coin_appearance.html（1元 r12、5元 r14、10元 r18、50元 r22）
+const R={1:12,5:14,10:18,50:22},SW={1:1.8,5:2,10:1.8,50:2.2},FS={1:15,5:15,10:17,50:20};
+const SETS=[
+ {t:'現行：白底',c:{1:['#fff','#222','#BDBDBD','#222'],5:['#fff','#222','#BDBDBD','#222'],10:['#fff','#222','#BDBDBD','#222'],50:['#fff','#222','#BDBDBD','#222']},g:0},
+ {t:'方案 A：淺色平塗（數字黑色，列印省墨）',c:{1:['#D9A877','#5A3518','#B9875A','#2B1708'],5:['#E1E4E8','#222','#A9AFB7','#222'],10:['#E1E4E8','#222','#A9AFB7','#222'],50:['#F0D77E','#5E4A12','#C9A940','#2B2205']},g:0},
+ {t:'方案 B：較飽和＋微立體漸層（螢幕上較像真錢）',c:{1:['#B9784A','#4A2A12','#8E5530','#fff'],5:['#C9CDD3','#3F444B','#9097A1','#1F2328'],10:['#C9CDD3','#3F444B','#9097A1','#1F2328'],50:['#E2B93B','#6B520C','#B48E1F','#2B2205']},g:1},
+];
+let s='<defs>';
+for(const k of [1,5,10,50]){const f=SETS[2].c[k][0];s+=`<radialGradient id="g${k}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="${f}" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></radialGradient>`;}
+s+='<filter id="gray"><feColorMatrix type="saturate" values="0"/></filter></defs>';
+function coin(cx,cy,k,set){const [fill,edge,ring,txt]=set.c[k],r=R[k];
+ return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${edge}" stroke-width="${SW[k]}"/>`+
+ (set.g?`<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#g${k})"/>`:'')+
+ (k==1?'':`<circle cx="${cx}" cy="${cy}" r="${r-4}" fill="none" stroke="${ring}" stroke-width="1"/>`)+
+ `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="${FS[k]}" font-weight="${set.g?700:400}" fill="${txt}">${k}</text>`;}
+function row(y,set,gray){let x=200,o=`<g ${gray?'filter="url(#gray)"':''}>`;
+ for(const k of [1,5,10,50]){const r=R[k];o+=coin(x+r,y,k,set);x+=r*2+26;}
+ // 一小堆混合錢幣（模擬題目裡的樣子）
+ const pile=[[50,0,0],[10,40,-6],[10,62,8],[5,92,-4],[5,110,10],[1,134,-6],[1,150,6],[1,166,-4]];
+ for(const [k,dx,dy] of pile)o+=coin(x+20+dx,y+dy,k,set);
+ return o+'</g>';}
+let y=40;
+s+=`<text x="20" y="24" font-size="18" font-weight="700">錢幣顏色 mockup（左：單枚　右：混合一堆）</text>`;
+for(const set of SETS){y+=34;s+=`<text x="20" y="${y-8}" font-size="15" font-weight="700" fill="#333">${set.t}</text>`;
+ y+=26;s+=`<text x="20" y="${y+5}" font-size="13" fill="#666">彩色</text>`+row(y,set,0);
+ y+=56;s+=`<text x="20" y="${y+5}" font-size="13" fill="#666">黑白列印</text>`+row(y,set,1);y+=40;}
+let x=200;for(const k of [1,5,10,50]){const r=R[k];s+=`<text x="${x+r}" y="${y}" text-anchor="middle" font-size="13" fill="#666">${k}元</text>`;x+=r*2+26;}
+document.getElementById('s').innerHTML=s;</script>
