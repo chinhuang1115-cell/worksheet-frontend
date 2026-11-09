@@ -2500,7 +2500,11 @@ const CONFIG_TIER_FULL_LABEL = { free: '免費', a: 'A 類', b: 'B 類', c: 'C �
 // 取代原本 8 筆 P-01~P-08 mock，涵蓋全部 ~40 個真實題型的顯示 metadata。
 // 關鍵鍵值慣例：id = registry id（查後端 locks/pricing、localStorage 狀態的 lookup 鍵）；
 //              code = registry code（表格/卡片顯示用編號，如 N-2-7）。
+// 「🌼 分分看」分類（使用者 2026-11-09）：N203A 系列（合併卡＋5 個版型）與 N210B 畫一畫自成一個分類，
+// 不再出現在「➗ 除法」。這些題型的 ops 都含 div，所以 id 判斷必須擺在 ops 判斷之前。
+const FENFEN_CAT_IDS = new Set(['fenfen', 'fenfennew', 'fenfen-rem', 'fenfen-heap', 'fenfen-pan', 'fenfen-pangrid', 'chufa-s1']);
 function _categoryOf(t) {
+  if (t && FENFEN_CAT_IDS.has(t.id)) return 'fenfen';
   // 權威規則來源 frontend/index.html:7143 — coin 判斷須先於 ops 判斷，
   // 否則 huachu4add（ops 含 add）、tuiwei4sub（ops 含 sub）等錢幣情境題型會被歸到 add/sub，
   // 導致首頁「🪙 錢幣情境」篩選與出版品題型庫的 coin 分類永遠比對不到任何項目。
@@ -2546,9 +2550,12 @@ function adaptRegistry(reg) {
     tag: (t.home && t.home.sub) || '',
     desc: (t.home && t.home.desc) || t.desc || '',
     category: _categoryOf(t),
-    // 權威規則來源 frontend/index.html:7139 — home:null 的合併子版型（fenfennew/fenfen-rem/
-    // fenfen-heap/fenfen-pan/fenfen-pangrid）不應出現在消費端首頁卡片格，只在管理端全量列表顯示。
+    // 權威規則來源 frontend/index.html:7139 — home:null 的條目不出現在消費端首頁卡片格，只在管理端全量列表顯示。
+    // 2026-11-09 起分分看系列（fenfennew/fenfen-rem/fenfen-heap/fenfen-pan/fenfen-pangrid）改為各自一張卡
+    // （home 已補齊＋standalone:true），反而是合併卡 N203A（id: fenfen）改成 home:null 退出首頁。
     hasHome: !!t.home,
+    // standalone:true＝即使同時掛在父題型 variants 下，也要自成一張首頁卡（見下方 _STANDALONE_IDS）。
+    standalone: !!t.standalone,
     grade: Number(t.grade) || 0,
     badgeVariant: _badgeOf(t.grade).variant,
     badgeLabel: _badgeOf(t.grade).label,
@@ -2581,8 +2588,11 @@ const ITEMS = adaptRegistry(window.WORKSHEET_REGISTRY);
 // registry.js 陣列順序＝新增題型附加的順序（舊到新），供「最新」排序使用；
 // 不可用 id 字串比較（如 addsub-v1 字母序在很多舊題型之前，會被誤判成「不是最新」）。
 const _ID_ORDER = new Map(ITEMS.map((it, i) => [it.id, i]));
+// standalone:true 的條目（分分看的 5 個版型）雖然仍掛在父題型 N203A 的 variants 下（保留管理端定價紀錄），
+// 但要各自成為一張首頁卡，所以不計入子版型、不被 TOP_ITEMS 排除（使用者 2026-11-09）。
+const _STANDALONE_IDS = new Set(ITEMS.filter(it => it.standalone).map(it => it.id));
 const _CHILD_VARIANT_IDS = new Set();
-ITEMS.forEach(it => { if (it.variants.length > 1) it.variants.forEach(v => { if (v.key !== it.id) _CHILD_VARIANT_IDS.add(v.key); }); });
+ITEMS.forEach(it => { if (it.variants.length > 1) it.variants.forEach(v => { if (v.key !== it.id && !_STANDALONE_IDS.has(v.key)) _CHILD_VARIANT_IDS.add(v.key); }); });
 
 // 版型預覽的「高提示／淡化提示／無提示」三欄（使用者 2026-10-06 指示）。
 // 版型 label 含「無提示」「淡化提示」者分別歸入第 3、2 欄；其餘（沒有提示字樣的原版）視為高提示、放第 1 欄。
@@ -3116,6 +3126,7 @@ const CATS = [
   { key:'sub', label:'➖ 減法' },
   { key:'mul', label:'✖️ 乘法' },
   { key:'div', label:'➗ 除法' },
+  { key:'fenfen', label:'🌼 分分看' },
   { key:'coin', label:'🪙 錢幣情境' },
   { key:'count', label:'🔢 數與計數' },
   { key:'geo', label:'📐 面積' },
