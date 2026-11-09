@@ -170,6 +170,7 @@ window.addEventListener('focus',()=>CAT&&render());
 async function load(){
   try{CAT=await fetch('../dashboard/catalog.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
     // 遊戲（kind＝game）不放在導覽樹，改成左側直式標籤、排在「易數教室」下方（使用者 2026-11-08）；catalog 仍收錄，供 check_catalog／縮圖使用
+    document.querySelectorAll('#edgetabs .edgetab.game').forEach(a=>a.remove());      // load() 每 2 分鐘重跑一次：先清掉舊標籤，否則會一直疊加（2026-11-09 修）
     CAT.items.filter(i=>i.kind==='game').forEach(g=>{const a=document.createElement('a');a.className='edgetab game';a.href=CAT.backend+g.endpoint+'?'+(g.params?g.params+'&':'')+'lv=2&mode=faded';a.target='_blank';a.rel='noopener';a.title=g.title;a.textContent=g.tab||'購物遊戲';$('#edgetabs').appendChild(a)});
     CAT.items=CAT.items.filter(i=>i.kind!=='game');
     render()}
