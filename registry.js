@@ -1415,7 +1415,7 @@ window.WORKSHEET_REGISTRY = [
       "平分",
       "九九乘法"
     ],
-    "desc": "用「分」建立除法概念：從畫圈、分到盤子，到加法與乘法算式提示，再逐步拿掉輔助，共 7 種版型，可依學生程度選擇。",
+    "desc": "用「分」建立除法概念：從畫圈平分，到畫盤子連結乘法，共 2 種版型：先畫一畫平分，再畫盤子寫「(　)×X＝總數」並用直式乘法格算出總數。",
     "sortKey": [
       4,
       2,
@@ -1423,12 +1423,12 @@ window.WORKSHEET_REGISTRY = [
     ],
     "home": {
       "icon": "➗",
-      "sub": "除法概念（7 種版型）",
-      "desc": "先動手把東西平分出去，再連到加法與九九乘法算式，鷹架由多到少，適合初學等分除法的學生。",
+      "sub": "除法概念（2 種版型）",
+      "desc": "先動手把東西畫出來平分，再畫盤子、寫「(　)×X＝總數」並用直式乘法格算出總數，適合初學等分除法的學生。",
       "features": [
-        "畫一畫 → 分到盤子 → 數字尺",
-        "移除輔助圖（除數 2–5、5–9）",
-        "連結九九乘法"
+        "階段一：畫一畫平分",
+        "階段二：畫盤子＋直式乘法格",
+        "連結「平分」與「乘法」"
       ]
     },
     "diffInfo": {
@@ -1436,16 +1436,11 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N210A",
-      "desc": "透過分分看建立除法概念：先畫、再算式、最後連到九九乘法，逐步撤掉輔助。"
+      "desc": "先畫一畫平分，再畫盤子寫出「(　)×X＝總數」，連結平分與乘法。"
     },
     "sample": [
       { "pdf": "assets/chufa_s1_sample.pdf", "name": "除法概念_階段一_畫一畫_範例.pdf", "label": "階段一 畫一畫", "key": "chufa-s1" },
-      { "pdf": "assets/chufa_s2_sample.pdf", "name": "除法概念_階段二_分到盤子_範例.pdf", "label": "階段二 分到盤子", "key": "chufa-s2" },
-      { "pdf": "assets/chufa_s3_sample.pdf", "name": "除法概念_階段三_數字尺_範例.pdf", "label": "階段三 數字尺", "key": "chufa-s3" },
-      { "pdf": "assets/chufa_s4_sample.pdf", "name": "除法概念_階段四_移除輔助圖_除數2至5_範例.pdf", "label": "階段四 移除輔助圖 2–5", "key": "chufa-s4" },
-      { "pdf": "assets/chufa_s5_sample.pdf", "name": "除法概念_階段五_移除輔助圖_除數5至9_範例.pdf", "label": "階段五 移除輔助圖 5–9", "key": "chufa-s5" },
-      { "pdf": "assets/chufa_s6_sample.pdf", "name": "除法概念_階段六_用九九乘法_範例.pdf", "label": "階段六 用九九乘法", "key": "chufa-s6" },
-      { "pdf": "assets/chufa_s7_sample.pdf", "name": "除法概念_階段七_除法概念_範例.pdf", "label": "階段七 除法概念", "key": "chufa-s7" }
+      { "pdf": "assets/chufa_s7_sample.pdf", "name": "除法概念_階段二_除法概念_範例.pdf", "label": "階段二 除法概念", "key": "chufa-s7" }
     ],
     "layout": {
       "panel": "chufaPanel",
@@ -1460,28 +1455,83 @@ window.WORKSHEET_REGISTRY = [
         "label": "階段一 畫一畫"
       },
       {
+        "key": "chufa-s7",
+        "label": "階段二 除法概念"
+      }
+    ]
+  },
+  {
+    "id": "chufa-old",
+    "code": "N210I",
+    "grade": "2",
+    "name": "除法概念_舊＿一步驟等分除（兩位數）",
+    "ops": [
+      "div"
+    ],
+    "keywords": [
+      "除法",
+      "除法概念",
+      "等分",
+      "平分",
+      "九九乘法"
+    ],
+    "desc": "用「分」建立除法概念：從分到盤子、數字尺，到加法與乘法算式提示，再逐步拿掉輔助，共 5 種版型，可依學生程度選擇（2026-11-09 自「除法概念」分出的舊版系列）。",
+    "sortKey": [
+      4,
+      2,
+      2
+    ],
+    "home": {
+      "icon": "➗",
+      "sub": "除法概念_舊（5 種版型）",
+      "desc": "先把東西分到盤子，再連到加法與九九乘法算式，鷹架由多到少，適合初學等分除法的學生。",
+      "features": [
+        "分到盤子 → 數字尺",
+        "移除輔助圖（除數 2–5、5–9）",
+        "連結九九乘法"
+      ]
+    },
+    "diffInfo": {
+      "grade": "二年級",
+      "level": "基礎",
+      "levelColor": "#22c55e",
+      "code": "N210I",
+      "desc": "透過分到盤子建立除法概念：先分盤子、再算式、最後連到九九乘法，逐步撤掉輔助。"
+    },
+    "sample": [
+      { "pdf": "assets/chufa_s2_sample.pdf", "name": "除法概念_舊_階段一_分到盤子_範例.pdf", "label": "階段一 分到盤子", "key": "chufa-s2" },
+      { "pdf": "assets/chufa_s3_sample.pdf", "name": "除法概念_舊_階段二_數字尺_範例.pdf", "label": "階段二 數字尺", "key": "chufa-s3" },
+      { "pdf": "assets/chufa_s4_sample.pdf", "name": "除法概念_舊_階段三_移除輔助圖_除數2至5_範例.pdf", "label": "階段三 移除輔助圖 2–5", "key": "chufa-s4" },
+      { "pdf": "assets/chufa_s5_sample.pdf", "name": "除法概念_舊_階段四_移除輔助圖_除數5至9_範例.pdf", "label": "階段四 移除輔助圖 5–9", "key": "chufa-s5" },
+      { "pdf": "assets/chufa_s6_sample.pdf", "name": "除法概念_舊_階段五_用九九乘法_範例.pdf", "label": "階段五 用九九乘法", "key": "chufa-s6" }
+    ],
+    "layout": {
+      "panel": "chufaPanel",
+      "themeSet": null,
+      "showTheme": false,
+      "prices": false,
+      "interactive": false
+    },
+    "variants": [
+      {
         "key": "chufa-s2",
-        "label": "階段二 分到盤子"
+        "label": "階段一 分到盤子"
       },
       {
         "key": "chufa-s3",
-        "label": "階段三 數字尺"
+        "label": "階段二 數字尺"
       },
       {
         "key": "chufa-s4",
-        "label": "階段四 移除輔助圖 2–5"
+        "label": "階段三 移除輔助圖 2–5"
       },
       {
         "key": "chufa-s5",
-        "label": "階段五 移除輔助圖 5–9"
+        "label": "階段四 移除輔助圖 5–9"
       },
       {
         "key": "chufa-s6",
-        "label": "階段六 用九九乘法"
-      },
-      {
-        "key": "chufa-s7",
-        "label": "階段七 除法概念"
+        "label": "階段五 用九九乘法"
       }
     ]
   },
@@ -1529,7 +1579,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s2",
     "code": "N210C",
     "grade": "2",
-    "name": "除法概念＿階段二 分到盤子（兩位數）",
+    "name": "除法概念_舊＿階段一 分到盤子（兩位數）",
     "ops": [
       "div"
     ],
@@ -1551,11 +1601,11 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N210C",
-      "desc": "概念建立的第二步：先動手分到盤子，再看提示把結果寫成 □＋□ 與 □×X，連結平分與加法、乘法。"
+      "desc": "概念建立的第一步：先動手分到盤子，再看提示把結果寫成 □＋□ 與 □×X，連結平分與加法、乘法。"
     },
     "sample": {
       "pdf": "assets/chufa_s2_sample.pdf",
-      "name": "除法概念_階段二_分到盤子_範例.pdf"
+      "name": "除法概念_舊_階段一_分到盤子_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
@@ -1569,7 +1619,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s3",
     "code": "N210D",
     "grade": "2",
-    "name": "除法概念＿階段三 數字尺（兩位數）",
+    "name": "除法概念_舊＿階段二 數字尺（兩位數）",
     "ops": [
       "div"
     ],
@@ -1591,11 +1641,11 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N210D",
-      "desc": "概念建立的第三步：加上 1～9 數字尺，讓學生從數字中找出「每份幾個」，再寫成 □＋□ 與 □×X。"
+      "desc": "概念建立的第二步：加上 1～9 數字尺，讓學生從數字中找出「每份幾個」，再寫成 □＋□ 與 □×X。"
     },
     "sample": {
       "pdf": "assets/chufa_s3_sample.pdf",
-      "name": "除法概念_階段三_數字尺_範例.pdf"
+      "name": "除法概念_舊_階段二_數字尺_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
@@ -1609,7 +1659,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s4",
     "code": "N210E",
     "grade": "2",
-    "name": "除法概念＿階段四 移除輔助圖 2–5（兩位數）",
+    "name": "除法概念_舊＿階段三 移除輔助圖 2–5（兩位數）",
     "ops": [
       "div"
     ],
@@ -1631,11 +1681,11 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N210E",
-      "desc": "概念建立的第四步：移除輔助圖，用分解圖與算式提示完成平分（除數 2～5）。"
+      "desc": "概念建立的第三步：移除輔助圖，用分解圖與算式提示完成平分（除數 2～5）。"
     },
     "sample": {
       "pdf": "assets/chufa_s4_sample.pdf",
-      "name": "除法概念_階段四_移除輔助圖_除數2至5_範例.pdf"
+      "name": "除法概念_舊_階段三_移除輔助圖_除數2至5_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
@@ -1649,7 +1699,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s5",
     "code": "N210F",
     "grade": "2",
-    "name": "除法概念＿階段五 移除輔助圖 5–9（兩位數）",
+    "name": "除法概念_舊＿階段四 移除輔助圖 5–9（兩位數）",
     "ops": [
       "div"
     ],
@@ -1671,11 +1721,11 @@ window.WORKSHEET_REGISTRY = [
       "level": "基礎",
       "levelColor": "#22c55e",
       "code": "N210F",
-      "desc": "概念建立的第五步：除數加大到 5～9，從「分給幾個人就是幾份」理解較大除數的平分。"
+      "desc": "概念建立的第四步：除數加大到 5～9，從「分給幾個人就是幾份」理解較大除數的平分。"
     },
     "sample": {
       "pdf": "assets/chufa_s5_sample.pdf",
-      "name": "除法概念_階段五_移除輔助圖_除數5至9_範例.pdf"
+      "name": "除法概念_舊_階段四_移除輔助圖_除數5至9_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
@@ -1689,7 +1739,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s6",
     "code": "N210G",
     "grade": "2",
-    "name": "除法概念＿階段六 用九九乘法（兩位數）",
+    "name": "除法概念_舊＿階段五 用九九乘法（兩位數）",
     "ops": [
       "div"
     ],
@@ -1699,7 +1749,7 @@ window.WORKSHEET_REGISTRY = [
       "平分",
       "除法概念"
     ],
-    "desc": "版面同階段四，標題「用九九乘法做做看」：先寫加法算式，再用九九乘法求出一個人分到幾個，6 題，數字每次隨機。",
+    "desc": "版面同階段三，標題「用九九乘法做做看」：先寫加法算式，再用九九乘法求出一個人分到幾個，6 題，數字每次隨機。",
     "sortKey": [
       4,
       2,
@@ -1715,7 +1765,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "sample": {
       "pdf": "assets/chufa_s6_sample.pdf",
-      "name": "除法概念_階段六_用九九乘法_範例.pdf"
+      "name": "除法概念_舊_階段五_用九九乘法_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
@@ -1729,7 +1779,7 @@ window.WORKSHEET_REGISTRY = [
     "id": "chufa-s7",
     "code": "N210H",
     "grade": "2",
-    "name": "除法概念＿階段七 除法概念（兩位數）",
+    "name": "除法概念＿階段二 除法概念（兩位數）",
     "ops": [
       "div"
     ],
@@ -1755,7 +1805,7 @@ window.WORKSHEET_REGISTRY = [
     },
     "sample": {
       "pdf": "assets/chufa_s7_sample.pdf",
-      "name": "除法概念_階段七_除法概念_範例.pdf"
+      "name": "除法概念_階段二_除法概念_範例.pdf"
     },
     "layout": {
       "panel": "fenfenPanel",
