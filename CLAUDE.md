@@ -70,3 +70,7 @@
 ## 推送前先同步 main 的踩坑（2026-10-21）
 
 本機前端 repo 的 `main` 可能落後遠端數百個 commit（別的 session 先推了 sample 圖與 `index.html`），`git fetch` 後才看得出。`git rebase` 會因「未追蹤的 `assets/img/*`、`assets/*_sample.pdf` 與遠端已收錄的檔案同名」而中止。做法：先把這些未追蹤檔移到暫存區備份（不要刪），再 `git rebase --autostash origin/main`（本機未提交的 `registry.js` 等用 autostash 帶過），推送前 `grep` 確認自己的改動仍在。`git fetch`／`push` 偶爾超過 120 秒，用 `timeout` 包起來。
+
+## 推上 `main` 但線上沒更新：先查 Pages 部署（2026-11-10）
+
+使用者回報「總覽頁只看得到早餐店」，但 `main` 的 `catalog.json` 已有麵包店、本機開 `games/` 也正常。原因是 GitHub Pages 的「pages build and deployment」**build 成功、deploy 步驟在 GitHub 那邊逾時失敗**（卡 10 分鐘後 failure），線上停在上一版。判斷：GitHub Actions 該次 run 的 `deploy` job 是 failure。修法：再推一個實際的 commit 觸發重新部署（不要推空 commit）。推完 `main` 後順手看一下最新一次 Pages run 是否 success。
