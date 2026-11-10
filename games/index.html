@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>互動遊戲</title>
+<!-- 互動遊戲導覽頁（使用者 2026-11-10 選模擬圖 C「商店街」：每個遊戲是一間店，右側欄選關卡與提示強弱）。
+     資料讀 dashboard/catalog.json 的 kind:'game' 項目（shop／tag／desc／stages），新增遊戲只要加一筆資料＋重產縮圖。 -->
+<style>
+@font-face{font-family:"芫荽";src:url('../fonts/Iansui-Regular.ttf') format('truetype');font-display:swap}
+:root{--L0:#3f8f8a;--L1:#2f4d6e;--bg:#f6f5f2;--card:#fff;--ink:#2b3440;--mute:#6b7683;--line:#e3e0d9;--ac:#e8863a;--game:#ea580c;--game-ink:#c2410c;--sky:#e0f2fe;--ground:#d6d3d1;--wood:#b45309;--roof1:#ef4444;--roof2:#fff;--tag:#e9f1f9;--tagt:#2f4d6e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--L0:#3a8a86;--L1:#27405c;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--game:#f97316;--game-ink:#fdba74;--sky:#1e2a3a;--ground:#2a2724;--wood:#d97706;--roof1:#dc2626;--roof2:#e5e7eb;--tag:#2f3b4a;--tagt:#dbe7f3}}
+:root[data-theme="dark"]{--L0:#3a8a86;--L1:#27405c;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--game:#f97316;--game-ink:#fdba74;--sky:#1e2a3a;--ground:#2a2724;--wood:#d97706;--roof1:#dc2626;--roof2:#e5e7eb;--tag:#2f3b4a;--tagt:#dbe7f3}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "芫荽","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+/* 左側邊緣直式標籤（與互動學習單總覽同款）：回易數教室、到互動學習單 */
+.edgetabs{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.edgetab{display:block;flex:none;height:max-content;writing-mode:vertical-rl;background:var(--L0);color:#fff;text-decoration:none;font-weight:800;letter-spacing:.25em;padding:16px 8px;border-radius:0 12px 12px 0;box-shadow:2px 2px 8px rgba(0,0,0,.2);font-size:16px}
+.edgetab.ws{background:var(--L1)}.edgetab:hover{filter:brightness(1.12)}
+.page{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:100vh}
+/* 街景：上面天空、下面地面 */
+.street{background:linear-gradient(var(--sky) 0 62%,var(--ground) 62%);padding:22px 28px 28px 72px;min-width:0}
+h1{margin:0;font-size:30px;color:var(--L1)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) h1{color:#dbe7f3}}
+:root[data-theme="dark"] h1{color:#dbe7f3}
+.sub{color:var(--mute);font-size:17px}
+.shops{display:flex;flex-wrap:wrap;gap:26px;margin-top:64px;align-items:flex-end}
+.shop{width:240px;border:0;padding:0;background:none;font:inherit;color:inherit;text-align:center;cursor:pointer}
+.shop .roof{height:34px;border-radius:12px 12px 0 0;background:repeating-linear-gradient(90deg,var(--roof1) 0 30px,var(--roof2) 30px 60px)}
+.shop .body{background:var(--card);border:3px solid var(--wood);border-top:0;border-radius:0 0 14px 14px;padding:12px;transition:box-shadow .2s,translate .2s}
+.shop .body img{display:block;width:100%;aspect-ratio:1.6;object-fit:cover;border-radius:10px;background:var(--line)}
+.shop .nm{font-size:24px;font-weight:800;margin-top:6px}
+.tag{display:inline-block;background:var(--tag);color:var(--tagt);border-radius:999px;padding:2px 12px;font-size:15px;font-weight:800}
+.shop:hover .body{translate:0 -3px}
+.shop.on .body{box-shadow:0 0 0 4px var(--game),0 10px 20px rgba(0,0,0,.18)}
+.shop:focus-visible{outline:3px solid var(--ac);outline-offset:4px;border-radius:14px}
+.shop.soon{cursor:default;opacity:.6}.shop.soon .roof{background:repeating-linear-gradient(90deg,#9ca3af 0 30px,#e5e7eb 30px 60px)}.shop.soon .body{border-color:#d1d5db}
+.shop.soon .ph{aspect-ratio:1.6;border-radius:10px;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:44px}
+/* 右側欄：選中的店、關卡、提示強弱 */
+aside{background:var(--bg);border-left:4px solid var(--game);padding:22px;position:sticky;top:0;height:100vh;overflow:auto}
+aside .nm{font-size:26px;font-weight:800}
+aside .ds{font-size:16px;color:var(--mute);margin-bottom:14px}
+.stage{display:block;text-decoration:none;color:inherit;border:3px solid var(--game);border-radius:14px;padding:10px 14px;margin-bottom:10px;background:var(--card);border-bottom-width:6px}
+.stage:hover{filter:brightness(1.04)}.stage:active{translate:0 2px;border-bottom-width:4px}
+.stage b{font-size:19px;color:var(--game-ink)}.stage span{font-size:19px;font-weight:800;margin-left:10px}
+.stage small{display:block;font-size:15px;color:var(--mute)}
+.lvlrow{display:flex;align-items:center;gap:8px;margin:6px 0 14px;font-size:17px}
+.lvl{display:inline-flex;border:2px solid var(--ac);border-radius:12px;overflow:hidden}
+.lvl button{border:0;background:none;font:inherit;font-size:17px;font-weight:800;color:var(--ac);padding:6px 14px;cursor:pointer}
+.lvl button.on{background:var(--ac);color:#fff}
+.empty{color:var(--mute);padding:40px 0}
+/* 平板直放／手機：右側欄移到下方 */
+@media (max-width:820px){.page{grid-template-columns:1fr}aside{position:static;height:auto;border-left:0;border-top:4px solid var(--game);padding:18px 16px 18px 56px}.street{padding:18px 16px 24px 56px}.shops{margin-top:28px;gap:16px}.shop{width:min(240px,calc(50% - 8px))}}
+</style>
+</head>
+<body>
+<div class="edgetabs"><a class="edgetab" href="../" title="回易數教室">易數教室</a><a class="edgetab ws" href="../interactive/" title="互動學習單">互動學習單</a></div>
+<div class="page">
+  <main class="street">
+    <h1>🎮 互動遊戲街</h1>
+    <div class="sub">走進一間店開始玩</div>
+    <div class="shops" id="shops"><div class="empty">載入中…</div></div>
+  </main>
+  <aside id="side"></aside>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LV=[{id:3,name:'強',mode:'full'},{id:2,name:'弱',mode:'faded'},{id:1,name:'無',mode:'free'}];
+let CAT=null,GAMES=[],SEL=null,LEVEL=2;
+try{const v=+localStorage.getItem('ys_game_lv');if([1,2,3].includes(v))LEVEL=v}catch(e){}      // 記住老師上次選的提示強弱（只是方便，讀不到就用弱提示）
+function url(g,n){const lv=LV.find(l=>l.id===LEVEL);const p=(g.params||'').split('&').filter(x=>x&&!/^stage=/.test(x));p.push('stage='+n,'lv='+LEVEL,'mode='+lv.mode);return CAT.backend+g.endpoint+'?'+p.join('&')}
+function side(){const g=GAMES.find(x=>x.id===SEL);if(!g){$('#side').innerHTML='';return}
+  $('#side').innerHTML=`<div class="nm">${esc(g.shop||g.title)}</div><div class="ds">${esc(g.desc||'')}</div>
+    <div class="lvlrow">提示：<span class="lvl">${LV.map(l=>`<button type="button" data-lv="${l.id}" class="${l.id===LEVEL?'on':''}" aria-pressed="${l.id===LEVEL}">${l.name}</button>`).join('')}</span></div>
+    ${(g.stages||[]).map(s=>`<a class="stage" href="${esc(url(g,s.n))}" target="_blank" rel="noopener"><b>第 ${s.n} 關</b><span>${esc(s.name)}</span><small>${esc(s.sub||'')}</small></a>`).join('')}`;
+  $('#side').querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{LEVEL=+b.dataset.lv;try{localStorage.setItem('ys_game_lv',LEVEL)}catch(e){}side()})}
+function shops(){
+  $('#shops').innerHTML=GAMES.map(g=>`<button type="button" class="shop${g.id===SEL?' on':''}" data-id="${esc(g.id)}" aria-pressed="${g.id===SEL}"><div class="roof"></div><div class="body"><img src="../interactive/thumbs/${esc(g.id)}.webp?v=${CAT.thumbsV||0}" alt="" loading="lazy"><div class="nm">${esc(g.shop||g.title)}</div>${g.tag?`<span class="tag">${esc(g.tag)}</span>`:''}</div></button>`).join('')
+    +`<div class="shop soon" aria-hidden="true"><div class="roof"></div><div class="body"><div class="ph">🚧</div><div class="nm">敬請期待</div><span class="tag">更多遊戲</span></div></div>`;
+  $('#shops').querySelectorAll('.shop[data-id]').forEach(b=>b.onclick=()=>{SEL=b.dataset.id;shops();side()})}
+async function load(){
+  try{CAT=await fetch('../dashboard/catalog.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
+    GAMES=CAT.items.filter(i=>i.kind==='game');if(!GAMES.find(g=>g.id===SEL))SEL=GAMES[0]?.id||null;
+    if(!GAMES.length){$('#shops').innerHTML='<div class="empty">目前還沒有遊戲</div>';side();return}
+    shops();side()}
+  catch(e){$('#shops').innerHTML='<div class="empty">載入失敗：請用 http(s) 開啟（'+esc(e.message)+'）</div>'}}
+load();
+</script>
+</body>
+</html>
