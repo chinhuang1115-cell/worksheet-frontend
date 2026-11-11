@@ -10,3 +10,5 @@
 
 重產：在後端產生 `shop_full.html`、`bk_s1_full.html`（見後端 `docs/guide/game-shop.md`「驗收」），把後端 `toolkit/test_game_shop.js` 的 `shot` 開頭插入 `if(global.HOOK) await global.HOOK(p,lv,n);`、只跑 lv3，存成 `test_mock.js` 放在 `mock.js` 旁，再
 `MOCKOUT=<輸出> MOCKTAG=bf node mock.js <S> <S>/shots`（麵包店 `MOCKTAG=bk … 1280 800 bk_s1_`）。
+
+**使用者選定（2026-11-11）**：按鈕用**甲＋丙**（左上文字鈕、遊戲中先確認；丁的完成畫面按鈕一起做）。零錢盤四邊縮窄約一半（內凹平台離外緣 26×32px → 13×16px）：`甲2_盤邊變窄_早餐店.png`、`戊2_盤邊變窄_麵包店.png`；`mock.js` 已是縮窄後的版本。
