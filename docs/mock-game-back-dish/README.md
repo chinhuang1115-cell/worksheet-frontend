@@ -12,3 +12,5 @@
 `MOCKOUT=<輸出> MOCKTAG=bf node mock.js <S> <S>/shots`（麵包店 `MOCKTAG=bk … 1280 800 bk_s1_`）。
 
 **使用者選定（2026-11-11）**：按鈕用**甲＋丙**（左上文字鈕、遊戲中先確認；丁的完成畫面按鈕一起做）。零錢盤四邊縮窄約一半（內凹平台離外緣 26×32px → 13×16px）：`甲2_盤邊變窄_早餐店.png`、`戊2_盤邊變窄_麵包店.png`；`mock.js` 已是縮窄後的版本。
+
+**已實作（2026-11-11）**：後端 `backend/templates/game_shop.html`，細節見後端 `docs/guide/game-shop.md`「回商店街＋長方形零錢盤」。
