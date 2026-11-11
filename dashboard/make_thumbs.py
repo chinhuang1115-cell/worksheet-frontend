@@ -31,6 +31,7 @@ def gen(item):
     if ep == 'mul-dial': return iw.generate_dial(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'place-value': return iw.generate_pv(th, N, 'full', 11, q.get('level', 'normal'))
     if ep == 'coin-carry': return iw.generate_cy(th, N, 'full', 11, q.get('level', 'normal'), q.get('base', 'one'))
+    if ep == 'take-money': return iw.generate_tm(th, N, 'full', 11, q.get('task', 'take'), q.get('coins', 'plain'), int(q.get('range', 200)), q.get('ver', 'basic'), int(q.get('cross', 0)))
     if ep == 'fenfen': return iw.generate_ff('水果', N, 'full', 11, q.get('level', 'normal'), q.get('ftype', 'share'))
     if ep == 'chufa': return iw.generate_cf('水果', N, 'full', 11, q.get('level', 'normal'), q.get('stage', 'plate'), q.get('div', 'small'))
     if ep == 'div-wordprob': return iw.generate_divwp('水果', N, 'full', 11, q.get('level', 'normal'), q.get('dtype', 'share'), int(q.get('rem', 0)), int(q.get('digits', 1)))
