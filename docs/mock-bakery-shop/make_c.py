@@ -71,9 +71,37 @@ P['C3'] = page('C3', '③ 便宜多少——多出來的錢幣就是答案', '�
 # C4 無提示：只有價卡上的數字；選錯兩次才出現錢幣排
 P['C4'] = page('C4', '② 選划算的——只看數字', '無提示（選錯才出現錢幣）', task + step(2, '選划算的', '哪一袋 1 個比較便宜？') + b3,
   bags(25, 20) + '<div class="hint" style="margin-top:40px;text-align:center;opacity:.75">（無提示：這裡不放錢幣；選錯兩次後才排出錢幣）</div>')
+# ───────── D1～D4（使用者 2026-11-11 思路）：算出單價 → 從袋子裡「拉出 1 個」→ 旁邊排出錢幣 → 兩排比多少 ─────────
+def rowD(c, nm, n, price, state, glow=False, lit=False):
+    # state: 'wait' 還沒算｜'calc' 正在算｜'out' 已拉出 1 個並排好錢幣
+    per = price // n; out = state == 'out'
+    ims = ''.join(f'<img src="{CR}" style="width:44px;margin:-3px;{"opacity:.22;filter:grayscale(1)" if out and i == n - 1 else ""}">' for i in range(n))
+    bagh = f'<div class="bag" style="--c:{c};width:176px;flex:none;{"box-shadow:0 0 0 5px #fde047,0 0 16px 6px #facc15" if lit else ""}"><div class="bt">{nm}</div><div class="bi">{ims}</div><div class="bp" style="white-space:nowrap;font-size:16px">一袋 {n} 個 <b style="font-size:21px">{price} 元</b></div></div>'
+    if out:
+        k = per // 5; mx = 5
+        cs = ''.join(f'<div class="slot" style="width:50px"><div class="coin {"glow" if glow and i >= 4 else ""}" style="width:42px;height:42px;line-height:38px;font-size:20px">5</div></div>' for i in range(k))
+        cs += ''.join('<div class="slot" style="width:50px"><div class="coin ghost" style="width:42px;height:42px">5</div></div>' for _ in range(mx - k))
+        right = f'<div style="font-size:26px;color:{c};margin:0 4px">➜</div><div style="text-align:center;flex:none;width:72px"><img src="{CR}" style="width:56px;display:block;margin:auto"><div style="white-space:nowrap;font-size:15px;font-weight:800;color:{c};margin-top:-4px">拿出 1 個</div></div>{cs}<div style="margin-left:8px;font-size:24px;font-weight:800;color:{c};white-space:nowrap">{per} 元</div>'
+    else:
+        right = f'<div style="font-size:26px;color:#cbd5e1;margin:0 4px">➜</div><div style="flex:1;height:70px;border:3px dashed #cbd5e1;border-radius:12px;font-size:19px;color:#94a3b8;display:flex;align-items:center;justify-content:center">{"先算 1 個多少元" if state == "calc" else "等一下再算"}</div>'
+    return f'<div style="background:#fff;border:4px solid #e5b4c2;border-radius:16px;padding:10px;display:flex;align-items:center;margin-bottom:12px;height:150px">{bagh}{right}</div>'
+def centerD(ra, rb, hint, glow=False, note=''):
+    return f'<div style="position:relative">{rowD(RED,"紅袋",3,75,ra,glow,ra=="calc")}{rowD(BLUE,"藍袋",4,80,rb,False,rb=="calc")}{note}</div><div class="hint">{hint}</div>'
+eqs = lambda a, b: f'<div class="eq"><span style="color:{RED}">紅袋</span> 75 ÷ 3 ＝ <span class="box {"ok" if a else ""}">{a or "？"}</span> 元</div><div class="eq"><span style="color:{BLUE}">藍袋</span> 80 ÷ 4 ＝ <span class="box {"ok" if b else ""}">{b or "？"}</span> 元</div>'
+calcbtn = '<div><span class="btn" style="background:#ea580c;box-shadow:0 4px 0 #9a3412;font-size:20px">📝 用直式算一算</span></div>'
+P['D1'] = page('D1', '① 算紅袋 1 個多少元', '袋子原樣：3 個、75 元', task + step(1, '比一比', '1 個多少元？') + eqs('', '') + calcbtn,
+  centerD('calc', 'wait', '先算紅袋：75 元買 3 個，1 個多少元？'))
+P['D2'] = page('D2', '① 算對了——從紅袋拿出 1 個、排出 25 元', '算對後自動播放', task + step(1, '比一比', '1 個多少元？') + eqs(25, '') + calcbtn,
+  centerD('out', 'calc', '紅袋 1 個 25 元：拿出 1 個，旁邊排出 25 元。接著算藍袋'))
+P['D3'] = page('D3', '② 選划算的——兩排錢幣比多少', '強／弱提示', task + step(2, '選划算的', '哪一袋 1 個比較便宜？') + b3,
+  centerD('out', 'out', '兩袋各拿出 1 個，錢一個對一個：錢比較少的比較便宜'))
+P['D4'] = page('D4', '③ 便宜多少——多出來的錢幣就是答案', '強提示自動發光；弱提示答錯才發光', task + step(3, '便宜多少', '藍袋 1 個便宜多少元？') +
+  '<div class="eq">25 － 20 ＝ <span class="box">？</span> 元</div>' + calcbtn,
+  centerD('out', 'out', '紅袋多出來的錢，就是藍袋便宜的錢', True, '<div style="position:absolute;left:440px;top:8px;font-size:18px;font-weight:800;color:#a16207;background:#fef9c3;border-radius:8px;padding:0 8px">多 5 元</div>'))
+NAME = {'C': '錢幣比長短', 'D': '拉出單個比錢幣'}
 files = []
 for k, h in P.items():
-    f = D / f'{k}_錢幣比長短.html'; f.write_text(h, encoding='utf-8'); files.append(str(f))
+    f = D / f'{k}_{NAME[k[0]]}.html'; f.write_text(h, encoding='utf-8'); files.append(str(f))
 try:
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
