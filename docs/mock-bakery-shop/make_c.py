@@ -8,8 +8,8 @@ RED, BLUE = '#ef4444', '#2563eb'
 CSS = f'''@font-face{{font-family:芫荽;src:url({FONT})}}*{{box-sizing:border-box}}body{{margin:0;width:1280px;height:800px;font-family:芫荽;background:#fdf1f4;color:#333}}
 #awn{{height:26px;background:repeating-linear-gradient(90deg,#f472b6 0 40px,#fff7ed 40px 80px);position:relative}}#awn b{{position:absolute;left:50%;top:0;transform:translateX(-50%);background:#5b3a29;color:#fff7ed;border:3px solid #f9a8d4;border-radius:16px;padding:0 20px;font-size:19px}}
 .top{{height:50px;background:#fff;border-bottom:3px solid #f9a8d4;display:flex;align-items:center;padding:0 14px;gap:12px;font-size:18px;font-weight:800}}.top .t{{border:2px solid #fdba74;border-radius:20px;padding:2px 14px;color:#9a3412;background:#fff7ed}}
-.main{{display:flex;gap:10px;padding:10px;height:714px}}.L{{width:430px;flex:none;border:4px solid #fb923c;border-radius:16px;background:#fff;padding:14px;display:flex;flex-direction:column;gap:12px}}
-.C{{flex:1;min-width:0;display:flex;flex-direction:column}}.R{{width:150px;flex:none;border:4px solid #cbd5e1;border-radius:16px;background:#f8fafc;opacity:.6;padding:10px;font-size:18px}}
+.main{{display:flex;gap:10px;padding:10px;height:714px}}.L{{width:410px;flex:none;border:4px solid #fb923c;border-radius:16px;background:#fff;padding:14px;display:flex;flex-direction:column;gap:12px}}
+.C{{flex:1;min-width:0;display:flex;flex-direction:column}}.R{{width:140px;flex:none;border:4px solid #cbd5e1;border-radius:16px;background:#f8fafc;opacity:.6;padding:10px;font-size:18px}}
 .sh{{font-size:22px;font-weight:800}}.sh .n{{display:inline-block;width:32px;height:32px;border-radius:50%;background:#ea580c;color:#fff;text-align:center;margin-right:6px}}.sh .s{{font-size:17px;color:#999;font-weight:400}}
 .eq{{font-size:28px;font-weight:800;display:flex;align-items:center;gap:6px;flex-wrap:wrap}}.box{{display:inline-block;min-width:64px;height:48px;border:3px dashed #fb923c;border-radius:10px;text-align:center;line-height:42px;color:#c2410c;background:#fff7ed}}.box.ok{{border:3px solid #22c55e;background:#f0fdf4;color:#15803d}}
 .btn{{color:#fff;border-radius:12px;padding:10px 18px;font-size:22px;font-weight:800;display:inline-block}}
@@ -19,8 +19,10 @@ CSS = f'''@font-face{{font-family:芫荽;src:url({FONT})}}*{{box-sizing:border-b
 .tag{{font-size:22px;font-weight:800;border:3px dashed #94a3b8;border-radius:10px;padding:2px 8px;background:#fffbeb;margin-top:6px}}
 .hint{{font-size:18px;color:#9a3412;background:#fff7ed;border-radius:10px;padding:6px 12px}}
 .coin{{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f8fafc,#cbd5e1 55%,#94a3b8);border:2px solid #64748b;box-shadow:inset 0 0 0 3px rgba(255,255,255,.55),0 2px 0 #475569;color:#334155;font:800 22px/42px 芫荽;text-align:center;flex:none}}
+.coin.c1{{background:radial-gradient(circle at 35% 30%,#e7c9a5,#b07a4a 60%,#8a5a33);border-color:#6b4423;color:#3f2a14;box-shadow:inset 0 0 0 2px rgba(255,255,255,.35),0 2px 0 #5a3a1e}}
 .coin.sm{{width:34px;height:34px;font-size:17px;line-height:30px}}
 .coin.ghost{{background:none;border:3px dashed #94a3b8;box-shadow:none;color:transparent}}
+.coin.ghost.c1{{background:none;border:2px dashed #94a3b8;box-shadow:none;color:transparent}}
 .coin.glow{{box-shadow:0 0 0 5px #fde047,0 0 18px 8px #facc15}}
 .board{{background:#fff;border:4px solid #e5b4c2;border-radius:16px;padding:14px 16px;margin-top:12px;position:relative}}
 .row{{display:flex;align-items:center;gap:0;height:66px}}.row .nm{{width:118px;font-size:20px;font-weight:800;color:#fff;background:var(--c);border-radius:10px;text-align:center;padding:4px 0;margin-right:14px}}
@@ -72,21 +74,25 @@ P['C3'] = page('C3', '③ 便宜多少——多出來的錢幣就是答案', '�
 P['C4'] = page('C4', '② 選划算的——只看數字', '無提示（選錯才出現錢幣）', task + step(2, '選划算的', '哪一袋 1 個比較便宜？') + b3,
   bags(25, 20) + '<div class="hint" style="margin-top:40px;text-align:center;opacity:.75">（無提示：這裡不放錢幣；選錯兩次後才排出錢幣）</div>')
 # ───────── D1～D4（使用者 2026-11-11 思路）：算出單價 → 從袋子裡「拉出 1 個」→ 旁邊排出錢幣 → 兩排比多少 ─────────
-def rowD(c, nm, n, price, state, glow=False, lit=False):
+def rowD(c, nm, n, price, state, glow=False, lit=False, other=0):
     # state: 'wait' 還沒算｜'calc' 正在算｜'out' 已拉出 1 個並排好錢幣
     per = price // n; out = state == 'out'
-    ims = ''.join(f'<img src="{CR}" style="width:44px;margin:-3px;{"opacity:.22;filter:grayscale(1)" if out and i == n - 1 else ""}">' for i in range(n))
-    bagh = f'<div class="bag" style="--c:{c};width:176px;flex:none;{"box-shadow:0 0 0 5px #fde047,0 0 16px 6px #facc15" if lit else ""}"><div class="bt">{nm}</div><div class="bi">{ims}</div><div class="bp" style="white-space:nowrap;font-size:16px">一袋 {n} 個 <b style="font-size:21px">{price} 元</b></div></div>'
+    ims = ''.join(f'<img src="{CR}" style="width:40px;margin:-3px;{"opacity:.22;filter:grayscale(1)" if out and i == n - 1 else ""}">' for i in range(n))
+    bagh = f'<div class="bag" style="--c:{c};width:160px;flex:none;{"box-shadow:0 0 0 5px #fde047,0 0 16px 6px #facc15" if lit else ""}"><div class="bt">{nm}</div><div class="bi">{ims}</div><div class="bp" style="white-space:nowrap;font-size:16px">一袋 {n} 個 <b style="font-size:21px">{price} 元</b></div></div>'
     if out:
-        k = per // 5; mx = 5
-        cs = ''.join(f'<div class="slot" style="width:50px"><div class="coin {"glow" if glow and i >= 4 else ""}" style="width:42px;height:42px;line-height:38px;font-size:20px">5</div></div>' for i in range(k))
-        cs += ''.join('<div class="slot" style="width:50px"><div class="coin ghost" style="width:42px;height:42px">5</div></div>' for _ in range(mx - k))
-        right = f'<div style="font-size:26px;color:{c};margin:0 4px">➜</div><div style="text-align:center;flex:none;width:72px"><img src="{CR}" style="width:56px;display:block;margin:auto"><div style="white-space:nowrap;font-size:15px;font-weight:800;color:{c};margin-top:-4px">拿出 1 個</div></div>{cs}<div style="margin-left:8px;font-size:24px;font-weight:800;color:{c};white-space:nowrap">{per} 元</div>'
+        # 只用普通幣（10 元、1 元，不用 5 元）：十元區、一元區分開，上下兩袋同一區對齊；一元五個一排
+        t, o, ot, oo = per // 10, per % 10, other // 10, other % 10
+        ten = lambda cls: f'<div style="width:42px;flex:none;display:flex;justify-content:center"><div class="coin {cls}" style="width:38px;height:38px;line-height:34px;font-size:17px">10</div></div>'
+        one = lambda cls: f'<div class="coin c1 {cls}" style="width:31px;height:31px;line-height:27px;font-size:15px;border-width:2px">1</div>'
+        tens = ''.join(ten('glow' if glow and i >= ot else '') for i in range(t)) + ''.join(ten('ghost') for _ in range(max(ot - t, 0)))
+        ones = ''.join(one('glow' if glow and i >= oo else '') for i in range(o)) + ''.join(one('ghost') for _ in range(max(oo - o, 0)))
+        zone = lambda w, inner, lab: f'<div style="width:{w}px;flex:none;height:112px;border:2px dashed #e2e8f0;border-radius:10px;padding:4px;position:relative"><div style="position:absolute;left:6px;top:0;font-size:13px;color:#94a3b8">{lab}</div><div style="display:flex;flex-wrap:wrap;gap:3px 2px;align-content:center;height:100%;padding-top:12px">{inner}</div></div>'
+        right = f'<div style="font-size:24px;color:{c};margin:0 2px">➜</div><div style="text-align:center;flex:none;width:66px"><img src="{CR}" style="width:52px;display:block;margin:auto"><div style="white-space:nowrap;font-size:14px;font-weight:800;color:{c};margin-top:-4px">拿出 1 個</div></div>{zone(104, tens, "10 元")}<div style="width:6px"></div>{zone(178, ones, "1 元")}<div style="margin-left:8px;font-size:23px;font-weight:800;color:{c};white-space:nowrap">{per} 元</div>'
     else:
         right = f'<div style="font-size:26px;color:#cbd5e1;margin:0 4px">➜</div><div style="flex:1;height:70px;border:3px dashed #cbd5e1;border-radius:12px;font-size:19px;color:#94a3b8;display:flex;align-items:center;justify-content:center">{"先算 1 個多少元" if state == "calc" else "等一下再算"}</div>'
     return f'<div style="background:#fff;border:4px solid #e5b4c2;border-radius:16px;padding:10px;display:flex;align-items:center;margin-bottom:12px;height:150px">{bagh}{right}</div>'
 def centerD(ra, rb, hint, glow=False, note=''):
-    return f'<div style="position:relative">{rowD(RED,"紅袋",3,75,ra,glow,ra=="calc")}{rowD(BLUE,"藍袋",4,80,rb,False,rb=="calc")}{note}</div><div class="hint">{hint}</div>'
+    return f'<div style="position:relative">{rowD(RED,"紅袋",3,75,ra,glow,ra=="calc",20 if rb=="out" else 25)}{rowD(BLUE,"藍袋",4,80,rb,False,rb=="calc",25)}{note}</div><div class="hint">{hint}</div>'
 eqs = lambda a, b: f'<div class="eq"><span style="color:{RED}">紅袋</span> 75 ÷ 3 ＝ <span class="box {"ok" if a else ""}">{a or "？"}</span> 元</div><div class="eq"><span style="color:{BLUE}">藍袋</span> 80 ÷ 4 ＝ <span class="box {"ok" if b else ""}">{b or "？"}</span> 元</div>'
 calcbtn = '<div><span class="btn" style="background:#ea580c;box-shadow:0 4px 0 #9a3412;font-size:20px">📝 用直式算一算</span></div>'
 P['D1'] = page('D1', '① 算紅袋 1 個多少元', '袋子原樣：3 個、75 元', task + step(1, '比一比', '1 個多少元？') + eqs('', '') + calcbtn,
@@ -94,10 +100,10 @@ P['D1'] = page('D1', '① 算紅袋 1 個多少元', '袋子原樣：3 個、75 
 P['D2'] = page('D2', '① 算對了——從紅袋拿出 1 個、排出 25 元', '算對後自動播放', task + step(1, '比一比', '1 個多少元？') + eqs(25, '') + calcbtn,
   centerD('out', 'calc', '紅袋 1 個 25 元：拿出 1 個，旁邊排出 25 元。接著算藍袋'))
 P['D3'] = page('D3', '② 選划算的——兩排錢幣比多少', '強／弱提示', task + step(2, '選划算的', '哪一袋 1 個比較便宜？') + b3,
-  centerD('out', 'out', '兩袋各拿出 1 個，錢一個對一個：錢比較少的比較便宜'))
+  centerD('out', 'out', '兩袋各拿出 1 個：先比 10 元，再比 1 元，錢比較少的比較便宜'))
 P['D4'] = page('D4', '③ 便宜多少——多出來的錢幣就是答案', '強提示自動發光；弱提示答錯才發光', task + step(3, '便宜多少', '藍袋 1 個便宜多少元？') +
   '<div class="eq">25 － 20 ＝ <span class="box">？</span> 元</div>' + calcbtn,
-  centerD('out', 'out', '紅袋多出來的錢，就是藍袋便宜的錢', True, '<div style="position:absolute;left:440px;top:8px;font-size:18px;font-weight:800;color:#a16207;background:#fef9c3;border-radius:8px;padding:0 8px">多 5 元</div>'))
+  centerD('out', 'out', '紅袋多出來的錢，就是藍袋便宜的錢', True, '<div style="position:absolute;left:436px;top:-4px;font-size:17px;font-weight:800;color:#a16207;background:#fef9c3;border-radius:8px;padding:0 8px">多 5 元</div>'))
 NAME = {'C': '錢幣比長短', 'D': '拉出單個比錢幣'}
 files = []
 for k, h in P.items():
