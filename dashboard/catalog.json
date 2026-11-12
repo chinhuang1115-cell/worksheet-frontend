@@ -41,11 +41,7 @@
   },
   {
    "id": "tm",
-   "name": "拿錢（基本版）"
-  },
-  {
-   "id": "tmshop",
-   "name": "拿錢（應用版）"
+   "name": "拿錢練習"
   },
   {
    "id": "divvc",
@@ -573,355 +569,25 @@
    "paper": ""
   },
   {
-   "id": "tm-basic-take-30",
+   "id": "tm-basic",
    "kind": "tm",
-   "title": "拿出指定的錢（11～30）",
+   "title": "拿錢練習（基本版：錢盒＋位值板）",
    "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=30&ver=basic",
-   "smoke": "interactive tm take plain basic graded",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "只用 1、10、100 元；拿好了才檢查（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
+   "params": "ver=basic&pick=1",
+   "smoke": "interactive tm",
+   "steps": "進頁面先選任務與金額 → ①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）",
+   "note": "一頁含 4 種任務（拿出指定的錢／加入 5、50、500 元／湊錢不跨位／湊錢跨位）× 4 段金額（11～30、31～99、101～200、201～999），在頁內任務選單選（2026-11-11 由 16 張卡整合成 1 張）；規劃見 docs/拿錢互動頁_規劃.md",
    "paper": ""
   },
   {
-   "id": "tm-basic-take-100",
+   "id": "tm-shop",
    "kind": "tm",
-   "title": "拿出指定的錢（31～99）",
+   "title": "拿錢練習（應用版：買東西付錢）",
    "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=100&ver=basic",
-   "smoke": "interactive tm take plain basic graded",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "只用 1、10、100 元；拿好了才檢查（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-take-200",
-   "kind": "tm",
-   "title": "拿出指定的錢（101～200）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=200&ver=basic",
-   "smoke": "interactive tm take plain basic graded",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "只用 1、10、100 元；拿好了才檢查（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-take-1000",
-   "kind": "tm",
-   "title": "拿出指定的錢（201～999）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=1000&ver=basic",
-   "smoke": "interactive tm take plain basic graded",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "只用 1、10、100 元；拿好了才檢查（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-special-30",
-   "kind": "tm",
-   "title": "拿出指定的錢：加入特殊幣（11～30）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=30&ver=basic",
-   "smoke": "interactive tm take special 100 shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "錢盒限量，要用 5、50、500 元（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-special-100",
-   "kind": "tm",
-   "title": "拿出指定的錢：加入特殊幣（31～99）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=100&ver=basic",
-   "smoke": "interactive tm take special 100 shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "錢盒限量，要用 5、50、500 元（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-special-200",
-   "kind": "tm",
-   "title": "拿出指定的錢：加入特殊幣（101～200）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=200&ver=basic",
-   "smoke": "interactive tm take special 100 shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "錢盒限量，要用 5、50、500 元（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-special-1000",
-   "kind": "tm",
-   "title": "拿出指定的錢：加入特殊幣（201～999）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=1000&ver=basic",
-   "smoke": "interactive tm take special 100 shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "錢盒限量，要用 5、50、500 元（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-nocross-30",
-   "kind": "tm",
-   "title": "湊到指定的錢：不跨位（11～30）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=30&ver=basic",
-   "smoke": "interactive tm makeup 100 nocross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-nocross-100",
-   "kind": "tm",
-   "title": "湊到指定的錢：不跨位（31～99）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=100&ver=basic",
-   "smoke": "interactive tm makeup 100 nocross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-nocross-200",
-   "kind": "tm",
-   "title": "湊到指定的錢：不跨位（101～200）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=200&ver=basic",
-   "smoke": "interactive tm makeup 100 nocross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-nocross-1000",
-   "kind": "tm",
-   "title": "湊到指定的錢：不跨位（201～999）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=1000&ver=basic",
-   "smoke": "interactive tm makeup 100 nocross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-cross-30",
-   "kind": "tm",
-   "title": "湊到指定的錢：跨位（11～30）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=30&ver=basic",
-   "smoke": "interactive tm makeup 100 cross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-cross-100",
-   "kind": "tm",
-   "title": "湊到指定的錢：跨位（31～99）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=100&ver=basic",
-   "smoke": "interactive tm makeup 100 cross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-cross-200",
-   "kind": "tm",
-   "title": "湊到指定的錢：跨位（101～200）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=200&ver=basic",
-   "smoke": "interactive tm makeup 100 cross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-cross-1000",
-   "kind": "tm",
-   "title": "湊到指定的錢：跨位（201～999）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=1000&ver=basic",
-   "smoke": "interactive tm makeup 100 cross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝錢盒＋位值板",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-take-30",
-   "kind": "tmshop",
-   "title": "拿出指定的錢（11～30）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=30&ver=shop",
-   "smoke": "interactive tm take plain basic graded",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "只用 1、10、100 元；拿好了才檢查（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-take-100",
-   "kind": "tmshop",
-   "title": "拿出指定的錢（31～99）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=100&ver=shop",
-   "smoke": "interactive tm take plain basic graded",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "只用 1、10、100 元；拿好了才檢查（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-take-200",
-   "kind": "tmshop",
-   "title": "拿出指定的錢（101～200）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=200&ver=shop",
-   "smoke": "interactive tm take plain basic graded",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "只用 1、10、100 元；拿好了才檢查（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-take-1000",
-   "kind": "tmshop",
-   "title": "拿出指定的錢（201～999）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=1000&ver=shop",
-   "smoke": "interactive tm take plain basic graded",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "只用 1、10、100 元；拿好了才檢查（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-special-30",
-   "kind": "tmshop",
-   "title": "拿出指定的錢：加入特殊幣（11～30）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=30&ver=shop",
-   "smoke": "interactive tm take special 100 shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "錢盒限量，要用 5、50、500 元（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-special-100",
-   "kind": "tmshop",
-   "title": "拿出指定的錢：加入特殊幣（31～99）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=100&ver=shop",
-   "smoke": "interactive tm take special 100 shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "錢盒限量，要用 5、50、500 元（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-special-200",
-   "kind": "tmshop",
-   "title": "拿出指定的錢：加入特殊幣（101～200）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=200&ver=shop",
-   "smoke": "interactive tm take special 100 shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "錢盒限量，要用 5、50、500 元（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-special-1000",
-   "kind": "tmshop",
-   "title": "拿出指定的錢：加入特殊幣（201～999）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=1000&ver=shop",
-   "smoke": "interactive tm take special 100 shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "錢盒限量，要用 5、50、500 元（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-nocross-30",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：不跨位（11～30）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=30&ver=shop",
-   "smoke": "interactive tm makeup 100 nocross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-nocross-100",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：不跨位（31～99）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=100&ver=shop",
-   "smoke": "interactive tm makeup 100 nocross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-nocross-200",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：不跨位（101～200）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=200&ver=shop",
-   "smoke": "interactive tm makeup 100 nocross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-nocross-1000",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：不跨位（201～999）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=1000&ver=shop",
-   "smoke": "interactive tm makeup 100 nocross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-cross-30",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：跨位（11～30）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=30&ver=shop",
-   "smoke": "interactive tm makeup 100 cross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-cross-100",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：跨位（31～99）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=100&ver=shop",
-   "smoke": "interactive tm makeup 100 cross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-cross-200",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：跨位（101～200）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=200&ver=shop",
-   "smoke": "interactive tm makeup 100 cross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-cross-1000",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：跨位（201～999）",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=1000&ver=shop",
-   "smoke": "interactive tm makeup 100 cross shop",
-   "steps": "①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百（2026-11-11）；規劃見 docs/拿錢互動頁_規劃.md",
+   "params": "ver=shop&pick=1",
+   "smoke": "interactive tm",
+   "steps": "進頁面先選任務與金額 → ①付錢（拖曳；按「付好了」檢查）→②數一數（由大到小點著數）",
+   "note": "商品價錢牌、收銀盤、錢包；任務與金額同基本版，在頁內任務選單選（2026-11-11 由 16 張卡整合成 1 張）",
    "paper": ""
   },
   {
@@ -1365,5 +1031,5 @@
    ]
   }
  ],
- "thumbsV": 1794405388
+ "thumbsV": 1794441599
 }
