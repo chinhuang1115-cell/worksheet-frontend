@@ -80,7 +80,7 @@ h2{font-size:22px;margin:2px 0 0}
 <div class="toast" id="toast"></div>
 <script>
 const FAMS=[['wordprob','加減'],['mul','乘法'],['div','除法'],['coin','錢幣'],['geo','角度']];
-const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',mulvc2:'mul',divvc:'div',divvc3:'div',divvcd:'div',divdec:'div',ff:'div',cf:'div',divwp:'div',dial:'mul',pv:'coin',cy:'coin',tm:'coin',tmshop:'coin',pro:'geo'};
+const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',mulvc2:'mul',divvc:'div',divvc3:'div',divvcd:'div',divdec:'div',ff:'div',cf:'div',divwp:'div',dial:'mul',pv:'coin',cy:'coin',tm:'coin',pro:'geo'};
 let CAT=null, q='', sel=localStorage.getItem('hub_sel')||'', list=localStorage.getItem('hub_view')==='list';   // sel：'fam:乘法主類 id' 或 次類 kind id；空＝第一個次類
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -103,7 +103,6 @@ function facets(it){
   if(it.kind==='pro')f['類別']={outer:'外圈',inner:'內圈',mix:'內外圈混合'}[o.ring||'mix'];      // 量角器：只練外圈／內圈／混合（2026-11-03）
   if(it.kind==='divdec')f['類別']=/div-int-dec/.test(it.endpoint)?'整數÷整數':'小數÷整數';      // 商是小數（小數關，2026-10-30）
   if(it.kind==='mulwp')f['類別']=/mul-concept/.test(it.endpoint)?'算數量':'算價錢';      // 乘法應用題 1*1 併入乘法概念後，用類別分「算數量／算價錢」（使用者 2026-10-17）
-  if(it.kind==='tm'||it.kind==='tmshop'){f['類別']=o.task==='makeup'?(o.cross==='1'?'湊錢：跨位':'湊錢：不跨位'):(o.coins==='special'?'拿錢：加入特殊幣':'拿錢：普通幣值'); f['金額']={30:'11～30',100:'31～99',200:'101～200',1000:'201～999'}[o.range]}      // 拿錢（2026-11-11）
   return f;
 }
 const inSel=it=>sel.startsWith('fam:')?FAM_OF[it.kind]===sel.slice(4):it.kind===sel;
