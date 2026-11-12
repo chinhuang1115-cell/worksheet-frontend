@@ -125,7 +125,7 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
             q = {k: v[0] for k, v in parse_qs(it['params']).items()}
             f = pathlib.Path(tmp) / (it['id'] + '.html'); shop = {'/game/bakery-shop': 'bakery'}.get(it['endpoint'], 'breakfast')      # 同一份遊戲程式、不同店家（2026-11-10 麵包店）
             f.write_bytes(game_shop.generate(int(q.get('stage', 1)), 3, 'full', 11, shop))
-            pg = b.new_page(viewport={'width': 1280, 'height': 800}); pg.goto('file://' + str(f) + '?lv=3'); pg.wait_for_selector('.ov .btn'); pg.click('.ov .btn'); pg.wait_for_timeout(600)
+            pg = b.new_page(viewport={'width': 1280, 'height': 800}); pg.goto('file://' + str(f) + '?lv=3&noanim=1'); pg.wait_for_selector('.ov .btn'); pg.click('.ov .btn'); pg.wait_for_timeout(600)
             im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); im.thumbnail((520, 520))
             im.save(out / (it['id'] + '.webp'), quality=82); pg.close(); print('OK', it['id'], '(遊戲整頁)'); continue
         f = pathlib.Path(tmp) / (it['id'] + '.html'); f.write_bytes(gen(it))
