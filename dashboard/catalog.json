@@ -476,100 +476,34 @@
   {
    "id": "cy-one",
    "kind": "cy",
-   "title": "錢幣進位：1 元換 10 元",
+   "title": "錢幣進位：滿十換一",
    "endpoint": "/interactive/coin-carry",
    "params": "base=one&level=normal",
    "smoke": "interactive cy graded",
-   "steps": "①圈一圈→②換一換→③④填寫",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "cy-ten",
-   "kind": "cy",
-   "title": "錢幣進位：10 元換 100 元",
-   "endpoint": "/interactive/coin-carry",
-   "params": "base=ten&level=normal",
-   "smoke": "interactive cy ten graded",
-   "steps": "①圈一圈→②換一換→③④填寫",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "cy-hun",
-   "kind": "cy",
-   "title": "錢幣進位：100 元換 1000 元",
-   "endpoint": "/interactive/coin-carry",
-   "params": "base=hun&level=normal",
-   "smoke": "interactive cy hun graded",
-   "steps": "①圈一圈→②換一換→③④填寫",
-   "note": "",
+   "steps": "①圈一圈→②換一換→③④填寫；剩下的錢整組拖",
+   "note": "頁面上方下拉選單可切換：1 元換 10 元／10 元換 100 元／100 元換 1000 元（勘誤表7，2026-11-12；原 cy-ten、cy-hun 併入）",
    "paper": ""
   },
   {
    "id": "cy-single",
    "kind": "cy",
-   "title": "錢幣進位：單次進位",
+   "title": "錢幣進位：單次／連續進位",
    "endpoint": "/interactive/coin-carry",
    "params": "base=single&level=normal",
    "smoke": "interactive cy single graded",
-   "steps": "①數1元→②換一換→③想一想→④填寫",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "cy-chain",
-   "kind": "cy",
-   "title": "錢幣進位：連續進位",
-   "endpoint": "/interactive/coin-carry",
-   "params": "base=chain&level=normal",
-   "smoke": "interactive cy chain easy free",
-   "steps": "①數一數→②換一換→③想一想→④填寫；滿 10 個 10 元，整組拖去百位",
-   "note": "十位欄 10 枚直向堆疊，平板上確認高度",
+   "steps": "①數一數→②換一換→③想一想→④填寫；連續進位滿 10 個 10 元整組拖去百位",
+   "note": "頁面上方下拉選單可切換：單次進位／連續進位（原 cy-chain 併入；十位欄 10 枚＝2 直行×5，平板上確認高度）；smoke 另跑 interactive cy chain easy free",
    "paper": ""
   },
   {
    "id": "cy-sp0",
    "kind": "cy",
-   "title": "認識湊十（特殊幣・基礎）",
+   "title": "特殊幣湊十",
    "endpoint": "/interactive/coin-carry",
    "params": "base=sp0&level=normal",
    "smoke": "interactive cy sp0 graded",
-   "steps": "①選一選→②換一換",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "cy-sp1",
-   "kind": "cy",
-   "title": "湊十換 10 元（特殊幣）",
-   "endpoint": "/interactive/coin-carry",
-   "params": "base=sp1&level=normal",
-   "smoke": "interactive cy sp1 graded",
-   "steps": "①數一數→②換一換→③填",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "cy-sp10",
-   "kind": "cy",
-   "title": "湊十換 100 元（10＋50）",
-   "endpoint": "/interactive/coin-carry",
-   "params": "base=sp10&level=easy",
-   "smoke": "interactive cy sp10 easy free",
-   "steps": "①數一數→②換一換→③填（單位放大）",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "cy-sp100",
-   "kind": "cy",
-   "title": "湊十換 1000 元（100＋500）",
-   "endpoint": "/interactive/coin-carry",
-   "params": "base=sp100&level=easy",
-   "smoke": "interactive cy sp100 graded",
-   "steps": "①數一數→②換一換→③填（單位放大）",
-   "note": "",
+   "steps": "①選一選→②換一換（每個綠框都要換）；其他次類①數一數→②換一換→③填",
+   "note": "頁面上方下拉選單可切換：認識湊十・基礎／湊十換 10 元／湊十換 100 元（進階，10＋50）／湊十換 1000 元（進階，100＋500）（原 cy-sp1、sp10、sp100 併入；sp10、sp100 用 level=easy，選單會帶對）",
    "paper": ""
   },
   {
@@ -1101,5 +1035,5 @@
    ]
   }
  ],
- "thumbsV": 1794459487
+ "thumbsV": 1794462347
 }
