@@ -80,7 +80,7 @@ h2{font-size:22px;margin:2px 0 0}
 <div class="toast" id="toast"></div>
 <script>
 const FAMS=[['wordprob','加減'],['mul','乘法'],['div','除法'],['coin','錢幣'],['geo','角度']];
-const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',mulvc2:'mul',divvc:'div',divvc3:'div',divvcd:'div',divdec:'div',ff:'div',cf:'div',divwp:'div',dial:'mul',pv:'coin',cy:'coin',tm:'coin',pro:'geo'};
+const FAM_OF={wordprob:'wordprob',wordprobc:'wordprob',mul:'mul',mulwp:'mul',mulv:'mul',mulvc:'mul',mulvc2:'mul',divvc:'div',divvc3:'div',divvcd:'div',divdec:'div',ff:'div',cf:'div',divwp:'div',dial:'mul',pv:'coin',cy:'coin',tm:'coin',tmshop:'coin',pro:'geo'};
 let CAT=null, q='', sel=localStorage.getItem('hub_sel')||'', list=localStorage.getItem('hub_view')==='list';   // sel：'fam:乘法主類 id' 或 次類 kind id；空＝第一個次類
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -88,7 +88,7 @@ const navName=n=>{const m=/^(.+?)[_ ](.+)$/.exec(n);return m?`${m[1]}<small clas
 const kindName=id=>(CAT.kinds.find(k=>k.id===id)||{}).name||id;
 const url=it=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+'lv=2&mode=faded';      // 從總覽進入一律弱提示（網址指定，優先於瀏覽器記住的難度）；進去後自行切換
 // 小次類（頂端篩選）：由題型參數推得，不另存資料
-const FACETS=['運算','位數','進位','難度','類別','幫手','餘數','金額'];
+const FACETS=['運算','位數','進位','難度','類別','幫手','餘數'];
 let FSEL={};
 function facets(it){
   const o=Object.fromEntries(new URLSearchParams(it.params||'')), f={};

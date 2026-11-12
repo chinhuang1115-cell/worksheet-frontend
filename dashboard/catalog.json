@@ -41,7 +41,11 @@
   },
   {
    "id": "tm",
-   "name": "拿錢練習"
+   "name": "拿錢（基本版）"
+  },
+  {
+   "id": "tmshop",
+   "name": "拿錢（應用版）"
   },
   {
    "id": "divvc",
@@ -569,25 +573,91 @@
    "paper": ""
   },
   {
-   "id": "tm-basic",
+   "id": "tm-basic-take",
    "kind": "tm",
-   "title": "拿錢練習（基本版：錢盒＋位值板）",
+   "title": "拿出指定的錢",
    "endpoint": "/interactive/take-money",
-   "params": "ver=basic&pick=1",
+   "params": "task=take&coins=plain&range=100&ver=basic",
    "smoke": "interactive tm",
-   "steps": "進頁面先選任務與金額 → ①拿一拿（拖曳；按「拿好了」檢查）→②數一數（由大到小點著數）",
-   "note": "一頁含 4 種任務（拿出指定的錢／加入 5、50、500 元／湊錢不跨位／湊錢跨位）× 4 段金額（11～30、31～99、101～200、201～999），在頁內任務選單選（2026-11-11 由 16 張卡整合成 1 張）；規劃見 docs/拿錢互動頁_規劃.md",
+   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「拿好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝錢盒＋位值板橫帶（每列 5 個）",
+   "note": "只用 1、10、100 元；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
    "paper": ""
   },
   {
-   "id": "tm-shop",
+   "id": "tm-basic-special",
    "kind": "tm",
-   "title": "拿錢練習（應用版：買東西付錢）",
+   "title": "拿出指定的錢：有 5 元、50 元",
    "endpoint": "/interactive/take-money",
-   "params": "ver=shop&pick=1",
+   "params": "task=take&coins=special&range=100&ver=basic",
    "smoke": "interactive tm",
-   "steps": "進頁面先選任務與金額 → ①付錢（拖曳；按「付好了」檢查）→②數一數（由大到小點著數）",
-   "note": "商品價錢牌、收銀盤、錢包；任務與金額同基本版，在頁內任務選單選（2026-11-11 由 16 張卡整合成 1 張）",
+   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「拿好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝錢盒＋位值板橫帶（每列 5 個）",
+   "note": "錢盒限量，要用 5、50（、500）元；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
+   "paper": ""
+  },
+  {
+   "id": "tm-basic-makeup",
+   "kind": "tm",
+   "title": "湊到指定的錢：不跨位",
+   "endpoint": "/interactive/take-money",
+   "params": "task=makeup&coins=plain&cross=0&range=100&ver=basic",
+   "smoke": "interactive tm",
+   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「拿好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝錢盒＋位值板橫帶（每列 5 個）",
+   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
+   "paper": ""
+  },
+  {
+   "id": "tm-basic-cross",
+   "kind": "tm",
+   "title": "湊到指定的錢：跨位",
+   "endpoint": "/interactive/take-money",
+   "params": "task=makeup&coins=plain&cross=1&range=100&ver=basic",
+   "smoke": "interactive tm",
+   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「拿好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝錢盒＋位值板橫帶（每列 5 個）",
+   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
+   "paper": ""
+  },
+  {
+   "id": "tm-shop-take",
+   "kind": "tmshop",
+   "title": "拿出指定的錢",
+   "endpoint": "/interactive/take-money",
+   "params": "task=take&coins=plain&range=100&ver=shop",
+   "smoke": "interactive tm",
+   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「付好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝商品價錢牌、收銀盤、錢包",
+   "note": "只用 1、10、100 元；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
+   "paper": ""
+  },
+  {
+   "id": "tm-shop-special",
+   "kind": "tmshop",
+   "title": "拿出指定的錢：有 5 元、50 元",
+   "endpoint": "/interactive/take-money",
+   "params": "task=take&coins=special&range=100&ver=shop",
+   "smoke": "interactive tm",
+   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「付好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝商品價錢牌、收銀盤、錢包",
+   "note": "錢盒限量，要用 5、50（、500）元；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
+   "paper": ""
+  },
+  {
+   "id": "tm-shop-makeup",
+   "kind": "tmshop",
+   "title": "湊到指定的錢：不跨位",
+   "endpoint": "/interactive/take-money",
+   "params": "task=makeup&coins=plain&cross=0&range=100&ver=shop",
+   "smoke": "interactive tm",
+   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「付好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝商品價錢牌、收銀盤、錢包",
+   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
+   "paper": ""
+  },
+  {
+   "id": "tm-shop-cross",
+   "kind": "tmshop",
+   "title": "湊到指定的錢：跨位",
+   "endpoint": "/interactive/take-money",
+   "params": "task=makeup&coins=plain&cross=1&range=100&ver=shop",
+   "smoke": "interactive tm",
+   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「付好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝商品價錢牌、收銀盤、錢包",
+   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
    "paper": ""
   },
   {
@@ -1031,5 +1101,5 @@
    ]
   }
  ],
- "thumbsV": 1794441599
+ "thumbsV": 1794459487
 }
