@@ -1,0 +1,75 @@
+/* 第 0 批裝潢覆寫 CSS（模擬圖用）；第 1 批以後實作時搬進後端 game_shop.html，格式同 body.shop-bakery。雨棚在實作時改用 Gemini 生的 awning.png。 */
+/* 飲料店：薄荷綠＋白條紋雨棚、深綠招牌、白綠磁磚牆與櫃台、青綠色零錢盤 */
+body.shop-drink{background:#ecfdf5;--hole:#b9e5d3}
+body.shop-drink #top{border-bottom-color:#6ee7b7}
+body.shop-drink #awn .sign{background:#14532d;color:#d1fae5;border-color:#34d399;border-radius:22px}
+body.shop-drink #C{background:repeating-linear-gradient(0deg,rgba(20,120,90,.13) 0 2px,transparent 2px 36px),repeating-linear-gradient(90deg,rgba(20,120,90,.10) 0 2px,transparent 2px 72px),linear-gradient(#e6f8ef,#d2f0e3)}
+body.shop-drink #board{background:#bfe9d6;border:3px solid #2f8f6b;border-radius:18px}
+body.shop-drink .counter::before{background:linear-gradient(rgba(10,90,70,.28),rgba(0,0,0,0) 28%),repeating-conic-gradient(#d3f1e3 0 25%,#aee0cb 0 50%) 0 0/54px 54px}
+body.shop-drink #slip{background:#f0fdf4}
+body.shop-drink .dish{--lt:#1f8a8a;--dk:#146065;--in1:#134f52;--in2:#17595c;--edge:#0c3a3d;--st:rgba(255,255,255,.75);--orn:#1b7476}
+
+/* 文具店：天空藍＋白條紋雨棚、海軍藍招牌、方格紙牆與藍色切割墊桌面、寶藍色零錢盤 */
+body.shop-stationery{background:#eef6ff;--hole:#c5dcf2}
+body.shop-stationery #top{border-bottom-color:#93c5fd}
+body.shop-stationery #awn .sign{background:#1e3a8a;color:#fef9c3;border-color:#93c5fd;border-radius:4px}
+body.shop-stationery #C{background:linear-gradient(rgba(59,130,246,.2) 1px,transparent 1px) 0 0/26px 26px,linear-gradient(90deg,rgba(59,130,246,.2) 1px,transparent 1px) 0 0/26px 26px,#f6faff}
+body.shop-stationery #board{background:#dbeafe;border:3px solid #1e40af;border-radius:4px}
+body.shop-stationery .counter::before{background:linear-gradient(rgba(20,40,120,.28),rgba(0,0,0,0) 28%),linear-gradient(rgba(30,64,175,.28) 1px,transparent 1px) 0 0/34px 34px,linear-gradient(90deg,rgba(30,64,175,.28) 1px,transparent 1px) 0 0/34px 34px,linear-gradient(#cfe3f8,#b3d0f0)}
+body.shop-stationery #slip{background:#fefce8}
+body.shop-stationery .dish{--lt:#2f56b8;--dk:#1c2f78;--in1:#1a2a6b;--in2:#203479;--edge:#101c4d;--st:rgba(254,240,138,.85);--orn:#2a46a0}
+
+/* 玩具店：紅黃相間雨棚、木頭招牌、彩色點點牆、藍黃積木墊桌面、紫色零錢盤 */
+body.shop-toy{background:#fffbe6;--hole:#8cc8f4}
+body.shop-toy #top{border-bottom-color:#fbbf24}
+body.shop-toy #awn .sign{background:linear-gradient(#c28a45,#9a6a2c);color:#fff7ed;border-color:#fde047;border-radius:12px;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+body.shop-toy #C{background:radial-gradient(circle,#f87171 6px,transparent 7px) 0 0/66px 66px,radial-gradient(circle,#60a5fa 6px,transparent 7px) 33px 33px/66px 66px,radial-gradient(circle,#34d399 5px,transparent 6px) 33px 0/66px 66px,#fff6cf}
+body.shop-toy #board{background:#fde68a;border:4px solid #ef4444;border-radius:22px}
+body.shop-toy .counter::before{background:linear-gradient(rgba(20,60,120,.28),rgba(0,0,0,0) 28%),repeating-conic-gradient(#6db8f2 0 25%,#ffe08a 0 50%) 0 0/72px 72px}
+body.shop-toy #slip{background:#fff7d6}
+body.shop-toy .dish{--lt:#7c4fd0;--dk:#4a2a96;--in1:#3f2383;--in2:#4a2a96;--edge:#2a1561;--st:rgba(253,224,71,.85);--orn:#6a40bd}
+
+/* 便當店：橘紅雨棚、黑底金字招牌、直條木板牆、黑漆金邊菜單框、深木桌面、黑漆金線零錢盤 */
+body.shop-bento{background:#f3e5d0;--hole:#62401f}
+body.shop-bento #top{border-bottom-color:#f97316}
+body.shop-bento #awn .sign{background:#111;color:#facc15;border-color:#facc15;border-radius:6px;letter-spacing:2px}
+body.shop-bento #C{background:repeating-linear-gradient(90deg,#d8b685 0 46px,#c9a46e 46px 48px)}
+body.shop-bento #board{background:#2a1f16;border:3px solid #e0b252;border-radius:6px}
+body.shop-bento .counter::before{background:linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,0) 28%),repeating-linear-gradient(90deg,#74492a 0 38px,#5e3a1e 38px 40px)}
+body.shop-bento #slip{background:#fffbeb}
+body.shop-bento .dish{--lt:#3a3a3a;--dk:#161616;--in1:#101010;--in2:#1c1c1c;--edge:#000;--st:rgba(250,204,21,.85);--orn:#a8841c}
+
+/* 中式餐館：中國紅雨棚＋金色回紋帶、紅底金字招牌、兩盞燈籠、米色格窗牆、紅漆金線桌面、墨綠色零錢盤 */
+body.shop-chinese{background:#fbf0dc;--hole:#a31a1a}
+body.shop-chinese #top{border-bottom-color:#dc2626}
+body.shop-chinese #awn .sign{background:#991b1b;color:#fcd34d;border-color:#fcd34d;border-radius:4px;letter-spacing:3px}
+body.shop-chinese #awn::before,body.shop-chinese #awn::after{content:'🏮';position:absolute;top:34px;font-size:46px;line-height:1;z-index:3;filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))}
+body.shop-chinese #awn::before{left:calc(37% + 14px)}body.shop-chinese #awn::after{right:calc(18% + 14px)}
+body.shop-chinese #C{background:linear-gradient(45deg,transparent 48%,rgba(185,28,28,.16) 49% 51%,transparent 52%) 0 0/34px 34px,linear-gradient(-45deg,transparent 48%,rgba(185,28,28,.16) 49% 51%,transparent 52%) 0 0/34px 34px,#f7e7c6}
+body.shop-chinese #board{background:#fff3d6;border:3px solid #b91c1c;border-radius:6px;box-shadow:0 0 0 3px #fbbf24,0 14px 10px -6px rgba(90,50,10,.35)}
+body.shop-chinese .counter::before{background:linear-gradient(rgba(60,0,0,.38),rgba(0,0,0,0) 28%),repeating-linear-gradient(90deg,transparent 0 78px,rgba(252,211,77,.38) 78px 80px),linear-gradient(#bd2020,#8f1414)}
+body.shop-chinese #slip{background:#fff7dd}
+body.shop-chinese .dish{--lt:#2f7a52;--dk:#16452e;--in1:#123b27;--in2:#184a32;--edge:#0a2a1b;--st:rgba(252,211,77,.85);--orn:#2a6a47}
+
+/* 糖果餅乾店：粉紫＋白條紋雨棚、桃紅招牌、粉紫圓點牆、薄荷綠配粉紅斜紋桌面、莓果紅紫色零錢盤 */
+body.shop-candy{background:#fbf0ff;--hole:#dfd9d6}
+body.shop-candy #top{border-bottom-color:#e9a8f5}
+body.shop-candy #awn .sign{background:#be185d;color:#fff;border-color:#f9a8d4;border-radius:22px}
+body.shop-candy #C{background:radial-gradient(circle,#f9a8d4 5px,transparent 6px) 0 0/48px 48px,radial-gradient(circle,#c4b5fd 5px,transparent 6px) 24px 24px/48px 48px,#f6eaff}
+body.shop-candy #board{background:#e9d5ff;border:3px solid #a855f7;border-radius:22px}
+body.shop-candy .counter::before{background:linear-gradient(rgba(120,30,100,.25),rgba(0,0,0,0) 28%),repeating-linear-gradient(135deg,#c4efdd 0 24px,#f9c9de 24px 48px)}
+body.shop-candy #slip{background:#fff1f8}
+body.shop-candy .dish{--lt:#c0307c;--dk:#7a1d4e;--in1:#6a1744;--in2:#7a1d4e;--edge:#4a0e30;--st:rgba(255,255,255,.8);--orn:#a02a6a}
+
+/* 服飾店：玫瑰粉＋灰條紋雨棚、白底黑字招牌、粉色牆面掛衣桿（菜單像掛在衣架上）、灰色地毯桌面、炭灰色玫瑰縫線零錢盤 */
+body.shop-clothes{background:#fff1f3;--hole:#cdd1d8}
+body.shop-clothes #top{border-bottom-color:#fda4af}
+body.shop-clothes #awn .sign{background:#fff;color:#111;border-color:#111;border-radius:3px;letter-spacing:2px}
+body.shop-clothes #C{background:repeating-linear-gradient(90deg,rgba(244,114,182,.14) 0 2px,transparent 2px 40px),linear-gradient(#ffe6ea,#ffd6de)}
+body.shop-clothes #board{background:transparent;border:0;box-shadow:none;padding:14px 3px 3px;position:relative;gap:6px;margin-top:6px}
+body.shop-clothes #board::before{content:'';position:absolute;top:2px;left:1%;right:1%;height:7px;background:linear-gradient(#e5e7eb,#6b7280);border-radius:4px;box-shadow:0 3px 3px rgba(0,0,0,.25)}
+body.shop-clothes .item{position:relative;border-radius:8px;border:2px solid #fda4af}
+body.shop-clothes .item::before{content:'';position:absolute;top:-13px;left:50%;margin-left:-12px;width:24px;height:11px;border:3px solid #6b7280;border-bottom:0;border-radius:14px 14px 0 0}
+body.shop-clothes .counter::before{background:linear-gradient(rgba(40,40,50,.3),rgba(0,0,0,0) 28%),repeating-linear-gradient(45deg,rgba(255,255,255,.28) 0 2px,transparent 2px 6px),linear-gradient(#d3d7de,#b6bbc4)}
+body.shop-clothes #slip{background:#fff}
+body.shop-clothes .dish{--lt:#555a66;--dk:#2a2d34;--in1:#22252b;--in2:#2d3037;--edge:#14161a;--st:rgba(253,164,175,.9);--orn:#8a5f67}
