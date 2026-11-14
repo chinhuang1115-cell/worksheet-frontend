@@ -3,7 +3,7 @@
 以 Chromium 截圖題目卡（只呈現題目，不含提示版本切換），存成 interactive/thumbs/<id>.webp（寬 520）。
 用法：python dashboard/make_thumbs.py <後端 repo 路徑> [id ...]      需要 playwright、Pillow；chromium 位置用 PW_CHROMIUM 指定。
 新增／改版互動頁後重跑（只重做指定的 id，沒指定就全部）。"""
-import io, json, os, pathlib, sys, tempfile
+import io, json, os, pathlib, re, sys, tempfile
 from urllib.parse import parse_qs
 backend = pathlib.Path(sys.argv[1]).resolve()
 only = set(sys.argv[2:])
@@ -123,7 +123,7 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
         if it['endpoint'].startswith('/game/'):      # 遊戲（獨立網頁，2026-11-08）：關掉換人畫面，拍整頁店面（點餐步驟、強提示）
             import game_shop
             q = {k: v[0] for k, v in parse_qs(it['params']).items()}
-            f = pathlib.Path(tmp) / (it['id'] + '.html'); shop = {'/game/bakery-shop': 'bakery'}.get(it['endpoint'], 'breakfast')      # 同一份遊戲程式、不同店家（2026-11-10 麵包店）
+            f = pathlib.Path(tmp) / (it['id'] + '.html'); shop = re.sub(r'^/game/(.+)-shop$', r'\1', it['endpoint']) if it['endpoint'].endswith('-shop') else 'breakfast'      # 同一份遊戲程式、不同店家（端點 /game/<店id>-shop，2026-11-14 起自動對應）
             f.write_bytes(game_shop.generate(int(q.get('stage', 1)), 3, 'full', 11, shop))
             pg = b.new_page(viewport={'width': 1280, 'height': 800}); pg.goto('file://' + str(f) + '?lv=3&noanim=1'); pg.wait_for_selector('.ov .btn'); pg.click('.ov .btn'); pg.wait_for_timeout(600)
             im = Image.open(io.BytesIO(pg.screenshot())).convert('RGB'); im.thumbnail((520, 520))
