@@ -82,5 +82,5 @@
 
 ## 首頁主分類與「細分」下拉（使用者 2026-11-15）
 
-首頁左側分類由 11 項收成 7 個主分類，其中 4 個（錢幣與購物、加減法、乘除法、圖形與面積）在工具列最左邊帶一個原生「細分」`<select>`（方案 A）。**分組以 `index.html` 的 `HOME_GROUPS`／`HOME_SUB_OVERRIDE`／`_homeOf` 為準**，新題型落到哪一組看 `_homeOf`（依 `_categoryOf` 的結果對應；購物找零 N204A／N207A／N207B／N207C／N208 與 N603 用 override）。**不要改 `_categoryOf`**——出版品庫與圖庫共用其輸出。state 用 `group`＋`sub`（取代舊 `category`）；搜尋時跨全部分類；題數一律執行期算（套年級、只算 `hasHome`）。手機／窄螢幕版面尚未做（首頁無 RWD，之後另做）。本機驗收：Playwright 把 `unpkg.com` 請求導到 npm 裝的 react／react-dom／@babel/standalone。
+首頁左側分類由 11 項收成 9 個主分類（分分看、因數與倍數各自獨立成類，使用者 2026-11-15 追加），其中 4 個（錢幣與購物、加減法、乘除法、圖形與面積）在工具列最左邊帶一個原生「細分」`<select>`（方案 A）。**分組以 `index.html` 的 `HOME_GROUPS`／`HOME_SUB_OVERRIDE`／`_homeOf` 為準**，新題型落到哪一組看 `_homeOf`（依 `_categoryOf` 的結果對應；購物找零 N204A／N207A／N207B／N207C／N208 與 N603 用 override）。**不要改 `_categoryOf`**——出版品庫與圖庫共用其輸出。state 用 `group`＋`sub`（取代舊 `category`）；搜尋時跨全部分類；題數一律執行期算（套年級、只算 `hasHome`）。手機／窄螢幕版面尚未做（首頁無 RWD，之後另做）。本機驗收：Playwright 把 `unpkg.com` 請求導到 npm 裝的 react／react-dom／@babel/standalone。
 

@@ -2522,7 +2522,9 @@ const HOME_GROUPS = [
   { key:'count', label:'🔢 數與計數' },
   { key:'money', label:'🪙 錢幣與購物', subs:[{key:'coinvalue',label:'認識錢幣'},{key:'coincarry',label:'錢幣進位'},{key:'shop',label:'購物找零'}] },
   { key:'addsub', label:'➕ 加減法', subs:[{key:'add',label:'加法'},{key:'sub',label:'減法'},{key:'addsub',label:'加減關係與混合'}] },
-  { key:'muldiv', label:'✖️ 乘除法', subs:[{key:'mul',label:'乘法'},{key:'div',label:'除法'},{key:'fenfen',label:'分分看'},{key:'factor',label:'因數與倍數'}] },
+  { key:'muldiv', label:'✖️ 乘除法', subs:[{key:'mul',label:'乘法'},{key:'div',label:'除法'}] },
+  { key:'fenfen', label:'🌼 分分看' },
+  { key:'factor', label:'🧮 因數與倍數' },
   { key:'geo', label:'📐 圖形與面積', subs:[{key:'area',label:'面積'},{key:'circle',label:'圓'}] },
   { key:'zonghe', label:'📚 綜合複習' },
 ];
@@ -2537,8 +2539,8 @@ function _homeOf(t, cat) {   // → [group, sub]
     case 'sub': return ['addsub', o.includes('add') ? 'addsub' : 'sub'];
     case 'mul': return ['muldiv', 'mul'];
     case 'div': return ['muldiv', 'div'];
-    case 'fenfen': return ['muldiv', 'fenfen'];
-    case 'factor': return ['muldiv', 'factor'];
+    case 'fenfen': return ['fenfen', null];
+    case 'factor': return ['factor', null];
     case 'geo': return ['geo', 'area'];
     case 'zonghe': return ['zonghe', null];
   }
