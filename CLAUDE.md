@@ -79,3 +79,8 @@
 ## 推上 `main` 但線上沒更新：先查 Pages 部署（2026-11-10）
 
 使用者回報「總覽頁只看得到早餐店」，但 `main` 的 `catalog.json` 已有麵包店、本機開 `games/` 也正常。原因是 GitHub Pages 的「pages build and deployment」**build 成功、deploy 步驟在 GitHub 那邊逾時失敗**（卡 10 分鐘後 failure），線上停在上一版。判斷：GitHub Actions 該次 run 的 `deploy` job 是 failure。修法：再推一個實際的 commit 觸發重新部署（不要推空 commit）。推完 `main` 後順手看一下最新一次 Pages run 是否 success。
+
+## 首頁主分類與「細分」下拉（使用者 2026-11-15）
+
+首頁左側分類由 11 項收成 7 個主分類，其中 4 個（錢幣與購物、加減法、乘除法、圖形與面積）在工具列最左邊帶一個原生「細分」`<select>`（方案 A）。**分組以 `index.html` 的 `HOME_GROUPS`／`HOME_SUB_OVERRIDE`／`_homeOf` 為準**，新題型落到哪一組看 `_homeOf`（依 `_categoryOf` 的結果對應；購物找零 N204A／N207A／N207B／N207C／N208 與 N603 用 override）。**不要改 `_categoryOf`**——出版品庫與圖庫共用其輸出。state 用 `group`＋`sub`（取代舊 `category`）；搜尋時跨全部分類；題數一律執行期算（套年級、只算 `hasHome`）。手機／窄螢幕版面尚未做（首頁無 RWD，之後另做）。本機驗收：Playwright 把 `unpkg.com` 請求導到 npm 裝的 react／react-dom／@babel/standalone。
+
