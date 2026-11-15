@@ -3,14 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>互動遊戲</title>
-<!-- 互動遊戲導覽頁（使用者 2026-11-10 選模擬圖 C「商店街」：每個遊戲是一間店，右側欄選關卡與提示強弱）。
-     資料讀 dashboard/catalog.json 的 kind:'game' 項目（shop／tag／desc／stages），新增遊戲只要加一筆資料＋重產縮圖。 -->
+<title>互動遊戲小鎮</title>
+<!-- 互動遊戲導覽頁「小鎮地圖」（使用者 2026-11-15：參考繪本地圖，一條彎彎的主街、店散在路兩邊；先用程式畫，版本確定後再換 Gemini 插畫）。
+     2026-11-10～11-14 是「商店街」版（模擬圖 C），右側欄選關卡與提示強弱的做法沿用。
+     資料讀 dashboard/catalog.json 的 kind:'game' 項目（shop／tag／desc／stages）：新增遊戲只要加一筆資料＋重產縮圖。
+     店的外觀（emoji、雨棚色）查下面的 LOOK 表（以 shop 店名對應，查不到用預設外觀）；位置依 catalog 順序填進 SLOTS（路邊的空位）。
+     PLANNED＝規劃中、還沒上線的店，畫成灰色「即將開幕」；上線後 catalog 有同名的 shop 就自動變彩色。模擬圖 docs/mock-game-map/。 -->
 <style>
 @font-face{font-family:"芫荽";src:url('../fonts/Iansui-Regular.ttf') format('truetype');font-display:swap}
-:root{--L0:#3f8f8a;--L1:#2f4d6e;--bg:#f6f5f2;--card:#fff;--ink:#2b3440;--mute:#6b7683;--line:#e3e0d9;--ac:#e8863a;--game:#ea580c;--game-ink:#c2410c;--sky:#e0f2fe;--ground:#d6d3d1;--wood:#b45309;--roof1:#ef4444;--roof2:#fff;--tag:#e9f1f9;--tagt:#2f4d6e}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--L0:#3a8a86;--L1:#27405c;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--game:#f97316;--game-ink:#fdba74;--sky:#1e2a3a;--ground:#2a2724;--wood:#d97706;--roof1:#dc2626;--roof2:#e5e7eb;--tag:#2f3b4a;--tagt:#dbe7f3}}
-:root[data-theme="dark"]{--L0:#3a8a86;--L1:#27405c;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--game:#f97316;--game-ink:#fdba74;--sky:#1e2a3a;--ground:#2a2724;--wood:#d97706;--roof1:#dc2626;--roof2:#e5e7eb;--tag:#2f3b4a;--tagt:#dbe7f3}
+:root{--L0:#3f8f8a;--L1:#2f4d6e;--bg:#f6f5f2;--card:#fff;--ink:#2b3440;--mute:#6b7683;--line:#e3e0d9;--ac:#e8863a;--game:#ea580c;--game-ink:#c2410c;--h1:#2f4d6e;--frame:#3b2f2f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--L0:#3a8a86;--L1:#27405c;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--game:#f97316;--game-ink:#fdba74;--h1:#dbe7f3;--frame:#0f1115}}
+:root[data-theme="dark"]{--L0:#3a8a86;--L1:#27405c;--bg:#1d2128;--card:#272c35;--ink:#e8eaee;--mute:#9aa4b1;--line:#3a414d;--ac:#f09a55;--game:#f97316;--game-ink:#fdba74;--h1:#dbe7f3;--frame:#0f1115}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:16px/1.5 "芫荽","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
@@ -18,49 +21,56 @@ body{background:var(--bg);color:var(--ink);font:16px/1.5 "芫荽","Noto Sans TC"
 .edgetabs{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
 .edgetab{display:block;flex:none;height:max-content;writing-mode:vertical-rl;background:var(--L0);color:#fff;text-decoration:none;font-weight:800;letter-spacing:.25em;padding:16px 8px;border-radius:0 12px 12px 0;box-shadow:2px 2px 8px rgba(0,0,0,.2);font-size:16px}
 .edgetab.ws{background:var(--L1)}.edgetab:hover{filter:brightness(1.12)}
-.page{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:100vh}
-/* 街景：上面天空、下面地面 */
-.street{background:linear-gradient(var(--sky) 0 62%,var(--ground) 62%);padding:22px 28px 28px 72px;min-width:0}
-h1{margin:0;font-size:30px;color:var(--L1)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) h1{color:#dbe7f3}}
-:root[data-theme="dark"] h1{color:#dbe7f3}
-.sub{color:var(--mute);font-size:17px}
-.shops{display:flex;flex-wrap:wrap;gap:26px;margin-top:64px;align-items:flex-end}
-.shop{width:240px;border:0;padding:0;background:none;font:inherit;color:inherit;text-align:center;cursor:pointer}
-.shop .roof{height:34px;border-radius:12px 12px 0 0;background:repeating-linear-gradient(90deg,var(--roof1) 0 30px,var(--roof2) 30px 60px)}
-.shop .body{background:var(--card);border:3px solid var(--wood);border-top:0;border-radius:0 0 14px 14px;padding:12px;transition:box-shadow .2s,translate .2s}
-.shop .body img{display:block;width:100%;aspect-ratio:1.6;object-fit:cover;border-radius:10px;background:var(--line)}
-.shop .nm{font-size:24px;font-weight:800;margin-top:6px}
-.tag{display:inline-block;background:var(--tag);color:var(--tagt);border-radius:999px;padding:2px 12px;font-size:15px;font-weight:800}
-.shop:hover .body{translate:0 -3px}
-.shop.on .body{box-shadow:0 0 0 4px var(--game),0 10px 20px rgba(0,0,0,.18)}
-.shop:focus-visible{outline:3px solid var(--ac);outline-offset:4px;border-radius:14px}
-.shop.soon{cursor:default;opacity:.6}.shop.soon .roof{background:repeating-linear-gradient(90deg,#9ca3af 0 30px,#e5e7eb 30px 60px)}.shop.soon .body{border-color:#d1d5db}
-.shop.soon .ph{aspect-ratio:1.6;border-radius:10px;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:44px}
+.page{display:grid;grid-template-columns:minmax(0,1fr) 320px;height:100vh}
+main{padding:14px 14px 14px 56px;display:flex;flex-direction:column;min-width:0;min-height:0}
+h1{margin:0;font-size:28px;color:var(--h1)}
+.sub{color:var(--mute);font-size:16px;margin-bottom:8px}
+/* 地圖：插畫本身固定用亮色（像一張紙本地圖），深色模式只換外框與頁面 */
+.map{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.map svg{display:block;max-width:100%;max-height:100%;border-radius:22px;border:4px solid var(--frame);box-shadow:0 6px 0 rgba(0,0,0,.12);background:#bbf7d0}
+.map svg text{font-family:"芫荽","Noto Sans TC",sans-serif}
+.shop{cursor:pointer;outline:none}
+.shop .lift{transition:transform .2s}
+.shop:hover .lift{transform:translateY(-6px)}
+.shop .ring{fill:none;stroke:transparent;stroke-width:6}
+.shop.on .ring{stroke:var(--game)}
+.shop:focus-visible .ring{stroke:var(--ac);stroke-dasharray:10 6}
+.shop .lb{fill:#fff}.shop .lbt{fill:#2b3440}
+.shop.on .lb{fill:#ea580c}.shop.on .lbt{fill:#fff}
+.shop.soon{cursor:default}.shop.soon .lb{fill:#f3f4f6}
+.shop.soon:hover .lift{transform:none}
 /* 右側欄：選中的店、關卡、提示強弱 */
-aside{background:var(--bg);border-left:4px solid var(--game);padding:22px;position:sticky;top:0;height:100vh;overflow:auto}
+aside{background:var(--bg);border-left:4px solid var(--game);padding:18px;overflow:auto}
 aside .nm{font-size:26px;font-weight:800}
-aside .ds{font-size:16px;color:var(--mute);margin-bottom:14px}
-.stage{display:block;text-decoration:none;color:inherit;border:3px solid var(--game);border-radius:14px;padding:10px 14px;margin-bottom:10px;background:var(--card);border-bottom-width:6px}
+aside .ds{font-size:16px;color:var(--mute);margin-bottom:10px}
+.stage{display:block;text-decoration:none;color:inherit;border:3px solid var(--game);border-radius:14px;padding:8px 14px;margin-bottom:9px;background:var(--card);border-bottom-width:6px}
 .stage:hover{filter:brightness(1.04)}.stage:active{translate:0 2px;border-bottom-width:4px}
 .stage b{font-size:19px;color:var(--game-ink)}.stage span{font-size:19px;font-weight:800;margin-left:10px}
 .stage small{display:block;font-size:15px;color:var(--mute)}
-.lvlrow{display:flex;align-items:center;gap:8px;margin:6px 0 14px;font-size:17px}
+.lvlrow{display:flex;align-items:center;gap:8px;margin:4px 0 12px;font-size:17px}
 .lvl{display:inline-flex;border:2px solid var(--ac);border-radius:12px;overflow:hidden}
 .lvl button{border:0;background:none;font:inherit;font-size:17px;font-weight:800;color:var(--ac);padding:6px 14px;cursor:pointer}
 .lvl button.on{background:var(--ac);color:#fff}
 .empty{color:var(--mute);padding:40px 0}
-/* 平板直放／手機：右側欄移到下方 */
-@media (max-width:820px){.page{grid-template-columns:1fr}aside{position:static;height:auto;border-left:0;border-top:4px solid var(--game);padding:18px 16px 18px 56px}.street{padding:18px 16px 24px 56px}.shops{margin-top:28px;gap:16px}.shop{width:min(240px,calc(50% - 8px))}}
+/* 手機：地圖上的店名太小，地圖下面另外給一排店名按鈕 */
+.chips{display:none;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chips button{font:inherit;font-size:17px;font-weight:800;border:3px solid var(--game);border-radius:999px;background:var(--card);color:var(--ink);padding:4px 14px;cursor:pointer}
+.chips button.on{background:var(--game);color:#fff}
+@media (max-width:600px){.chips{display:flex}}
+/* 平板橫放：右側欄改窄，讓地圖大一點 */
+@media (max-width:1100px){.page{grid-template-columns:minmax(0,1fr) 270px}main{padding:10px 10px 10px 50px}h1{font-size:24px}.sub{margin-bottom:4px}aside{padding:14px}.stage{padding:6px 12px}.stage b,.stage span{font-size:17px}}
+/* 平板直放／手機：右側欄移到地圖下方 */
+@media (max-width:820px){.page{grid-template-columns:1fr;height:auto}main{padding:14px 12px 10px 50px}.map svg{width:100%;max-height:none;height:auto}aside{border-left:0;border-top:4px solid var(--game);padding:16px 16px 18px 50px}}
 </style>
 </head>
 <body>
 <div class="edgetabs"><a class="edgetab" href="../" title="回易數教室">易數教室</a><a class="edgetab ws" href="../interactive/" title="互動學習單">互動學習單</a></div>
 <div class="page">
-  <main class="street">
-    <h1>🎮 互動遊戲街</h1>
-    <div class="sub">走進一間店開始玩</div>
-    <div class="shops" id="shops"><div class="empty">載入中…</div></div>
+  <main>
+    <h1>🗺️ 互動遊戲小鎮</h1>
+    <div class="sub">點一間店，選一個關卡開始玩</div>
+    <div class="map" id="map"><div class="empty">載入中…</div></div>
+    <div class="chips" id="chips"></div>
   </main>
   <aside id="side"></aside>
 </div>
@@ -68,24 +78,83 @@ aside .ds{font-size:16px;color:var(--mute);margin-bottom:14px}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LV=[{id:3,name:'強',mode:'full'},{id:2,name:'弱',mode:'faded'},{id:1,name:'無',mode:'free'}];
+// 店的外觀：emoji、雨棚兩色、牆色（雨棚色照 docs/商店街新增店家_規劃.md 的裝潢配色）
+const LOOK={'早餐店':['🍳','#ef4444','#fff','#fff7ed'],'麵包店':['🥐','#f472b6','#fff','#fdf2f8'],'文具店':['✏️','#38bdf8','#fff','#eff6ff'],
+  '糖果餅乾店':['🍭','#c084fc','#fff','#faf5ff'],'飲料店':['🧋','#34d399','#fff','#ecfdf5'],'玩具店':['🪀','#ef4444','#facc15','#fefce8'],
+  '便當店':['🍱','#f97316','#fff','#fff7ed'],'中式餐館':['🥢','#dc2626','#fbbf24','#fef3c7'],'服飾店':['🧢','#fb7185','#9ca3af','#fff1f2']};
+const LOOK0=['🏪','#f59e0b','#fff','#fffbeb'];
+// 規劃中、還沒上線的店（上線後 catalog 有同名 shop 就自動不再顯示成灰色）
+const PLANNED=['飲料店','玩具店','便當店','中式餐館','服飾店'];
+// 路邊的空位（地圖 1000×790 座標＝店門口），從入口沿著主街排；已上線的店照 catalog 順序先填
+const SLOTS=[[150,690],[385,668],[625,690],[790,590],[530,462],[280,428],[110,300],[390,268],[600,250]];
+const ROAD='M0,735 C43,736 180,743 260,738 C340,733 403,706 480,705 C557,704 650,743 720,735 C790,727 869,688 900,655 C931,622 935,565 905,540 C875,515 801,508 720,505 C639,502 508,524 420,520 C332,516 242,502 190,480 C138,458 98,413 105,385 C112,357 169,322 230,310 C291,298 392,313 470,310 C548,307 632,303 700,290 C768,277 837,243 880,230 C923,217 947,213 960,210';
+const RIVER='M760,140 C762,152 768,187 770,210 C772,233 765,257 770,280 C775,303 783,332 800,350 C817,368 848,378 870,385 C892,392 920,393 930,395';
+const TREES=[[40,250],[240,215],[420,420],[660,400],[980,300],[990,480],[30,560],[260,560],[520,600],[980,720],[700,600],[470,215]];
 let CAT=null,GAMES=[],SEL=null,LEVEL=2;
 try{const v=+localStorage.getItem('ys_game_lv');if([1,2,3].includes(v))LEVEL=v}catch(e){}      // 記住老師上次選的提示強弱（只是方便，讀不到就用弱提示）
 function url(g,n){const lv=LV.find(l=>l.id===LEVEL);const p=(g.params||'').split('&').filter(x=>x&&!/^stage=/.test(x));p.push('stage='+n,'lv='+LEVEL,'mode='+lv.mode);return CAT.backend+g.endpoint+'?'+p.join('&')}
+const nameOf=g=>g.shop||g.title;
 function side(){const g=GAMES.find(x=>x.id===SEL);if(!g){$('#side').innerHTML='';return}
-  $('#side').innerHTML=`<div class="nm">${esc(g.shop||g.title)}</div><div class="ds">${esc(g.desc||'')}</div>
+  const emo=(LOOK[nameOf(g)]||LOOK0)[0];
+  $('#side').innerHTML=`<div class="nm">${emo} ${esc(nameOf(g))}</div><div class="ds">${esc(g.desc||'')}</div>
     <div class="lvlrow">提示：<span class="lvl">${LV.map(l=>`<button type="button" data-lv="${l.id}" class="${l.id===LEVEL?'on':''}" aria-pressed="${l.id===LEVEL}">${l.name}</button>`).join('')}</span></div>
     ${(g.stages||[]).map(s=>`<a class="stage" href="${esc(url(g,s.n))}" target="_blank" rel="noopener"><b>第 ${s.n} 關</b><span>${esc(s.name)}</span><small>${esc(s.sub||'')}</small></a>`).join('')}`;
   $('#side').querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{LEVEL=+b.dataset.lv;try{localStorage.setItem('ys_game_lv',LEVEL)}catch(e){}side()})}
-function shops(){
-  $('#shops').innerHTML=GAMES.map(g=>`<button type="button" class="shop${g.id===SEL?' on':''}" data-id="${esc(g.id)}" aria-pressed="${g.id===SEL}"><div class="roof"></div><div class="body"><img src="../interactive/thumbs/${esc(g.id)}.webp?v=${CAT.thumbsV||0}" alt="" loading="lazy"><div class="nm">${esc(g.shop||g.title)}</div>${g.tag?`<span class="tag">${esc(g.tag)}</span>`:''}</div></button>`).join('')
-    +`<div class="shop soon" aria-hidden="true"><div class="roof"></div><div class="body"><div class="ph">🚧</div><div class="nm">敬請期待</div><span class="tag">更多遊戲</span></div></div>`;
-  $('#shops').querySelectorAll('.shop[data-id]').forEach(b=>b.onclick=()=>{SEL=b.dataset.id;shops();side()})}
+const tree=([x,y])=>`<g transform="translate(${x},${y})"><rect x="-5" y="-6" width="10" height="20" fill="#a16207" stroke="#3b2f2f" stroke-width="2"/><circle cx="0" cy="-22" r="22" fill="#4ade80" stroke="#3b2f2f" stroke-width="2.5"/><circle cx="-14" cy="-12" r="14" fill="#22c55e" stroke="#3b2f2f" stroke-width="2.5"/><circle cx="14" cy="-12" r="14" fill="#22c55e" stroke="#3b2f2f" stroke-width="2.5"/></g>`;
+// 一間店：屋頂、條紋雨棚、牆、門窗、emoji 招牌、店名牌；id＝null 表示即將開幕（灰色、不能點）
+function shopSvg(name,id,[x,y]){
+  const [emo,c1,c2,wall]=LOOK[name]||LOOK0,live=!!id,w=28+[...name].length*27;
+  const stripes=Array.from({length:7},(_,i)=>`<rect x="${-70+i*20}" y="-96" width="20" height="26" fill="${i%2?c2:c1}"/>`).join('');
+  const attr=live?` tabindex="0" role="button" data-id="${esc(id)}" aria-label="${esc(name)}" aria-pressed="${id===SEL}"`:' aria-hidden="true"';
+  return `<g transform="translate(${x},${y}) scale(.82)"><g class="shop${live?'':' soon'}${id&&id===SEL?' on':''}"${attr}>
+  <ellipse cx="0" cy="8" rx="82" ry="14" fill="#000" opacity=".1"/>
+  <rect class="ring" x="-92" y="-150" width="184" height="218" rx="22"/>
+  <g class="lift"${live?'':' filter="url(#gray)" opacity=".55"'}>
+    <polygon points="-78,-96 78,-96 64,-136 -64,-136" fill="${c1}" stroke="#3b2f2f" stroke-width="3" stroke-linejoin="round"/>
+    <rect x="-64" y="-70" width="128" height="76" rx="4" fill="${wall}" stroke="#3b2f2f" stroke-width="3"/>
+    <g clip-path="url(#aw)">${stripes}</g>
+    <path d="M-70,-70 q10,10 20,0 q10,10 20,0 q10,10 20,0 q10,10 20,0 q10,10 20,0 q10,10 20,0 q10,10 20,0" fill="none" stroke="#3b2f2f" stroke-width="3"/>
+    <rect x="-70" y="-96" width="140" height="26" fill="none" stroke="#3b2f2f" stroke-width="3"/>
+    <rect x="-16" y="-40" width="32" height="46" rx="4" fill="#b45309" stroke="#3b2f2f" stroke-width="3"/>
+    <rect x="-56" y="-48" width="30" height="26" rx="3" fill="#bae6fd" stroke="#3b2f2f" stroke-width="3"/>
+    <rect x="26" y="-48" width="30" height="26" rx="3" fill="#bae6fd" stroke="#3b2f2f" stroke-width="3"/>
+    <text x="0" y="-104" text-anchor="middle" font-size="30">${emo}</text>
+  </g>
+  <rect class="lb" x="${-w/2}" y="16" width="${w}" height="44" rx="22" stroke="#3b2f2f" stroke-width="2.5"/>
+  <text class="lbt" x="0" y="48" text-anchor="middle" font-size="26" font-weight="800">${esc(name)}</text>
+  ${live?'':'<text x="0" y="-150" text-anchor="middle" font-size="19" font-weight="800" fill="#6b7683">即將開幕</text>'}
+</g></g>`}
+function map(){
+  const live=GAMES.map(g=>[nameOf(g),g.id]),names=new Set(live.map(s=>s[0]));
+  const all=live.concat(PLANNED.filter(n=>!names.has(n)).map(n=>[n,null])).slice(0,SLOTS.length);   // 空位不夠時先放已上線的店
+  const placed=all.map((s,i)=>[s,SLOTS[i]]).sort((a,b)=>a[1][1]-b[1][1]);                       // 上面的先畫，前面的店才不會被後面的蓋住
+  $('#map').innerHTML=`<svg viewBox="0 0 1000 790" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="互動遊戲小鎮地圖">
+<defs><filter id="gray"><feColorMatrix type="saturate" values="0"/></filter><clipPath id="aw"><rect x="-70" y="-96" width="140" height="26"/></clipPath></defs>
+<rect width="1000" height="790" fill="#e0f2fe"/>
+<path d="M0,150 L120,60 L230,130 L360,30 L500,120 L620,50 L760,130 L880,70 L1000,140 L1000,790 L0,790Z" fill="#86efac" stroke="#3b2f2f" stroke-width="3"/>
+<ellipse cx="170" cy="70" rx="60" ry="18" fill="#fff" stroke="#3b2f2f" stroke-width="2"/><ellipse cx="820" cy="40" rx="70" ry="18" fill="#fff" stroke="#3b2f2f" stroke-width="2"/>
+<path d="M0,170 Q500,120 1000,170 L1000,790 L0,790Z" fill="#bbf7d0"/>
+<ellipse cx="935" cy="400" rx="70" ry="40" fill="#38bdf8" stroke="#3b2f2f" stroke-width="3"/>
+<path d="${RIVER}" fill="none" stroke="#38bdf8" stroke-width="40" stroke-linecap="round"/>
+<path d="${RIVER}" fill="none" stroke="#7dd3fc" stroke-width="14" stroke-dasharray="18 28"/>
+<path d="${ROAD}" fill="none" stroke="#fde68a" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="${ROAD}" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/>
+<g transform="translate(771,262) rotate(-18)"><rect x="-38" y="-18" width="76" height="36" rx="6" fill="#d97706" stroke="#3b2f2f" stroke-width="3"/><line x1="-38" y1="-6" x2="38" y2="-6" stroke="#3b2f2f" stroke-width="2"/><line x1="-38" y1="6" x2="38" y2="6" stroke="#3b2f2f" stroke-width="2"/></g>
+<g transform="translate(40,680)"><rect x="-4" y="0" width="8" height="60" fill="#a16207"/><rect x="-36" y="-34" width="72" height="38" rx="8" fill="#fff" stroke="#3b2f2f" stroke-width="2.5"/><text x="0" y="-8" text-anchor="middle" font-size="20" font-weight="800" fill="#2b3440">入口</text></g>
+${TREES.map(tree).join('')}
+<g transform="translate(900,190)" opacity=".75"><rect x="-80" y="-60" width="160" height="70" rx="14" fill="#f5f5f4" stroke="#a8a29e" stroke-width="3" stroke-dasharray="10 8"/><text y="-16" text-anchor="middle" font-size="26">🚧</text><text y="40" text-anchor="middle" font-size="20" font-weight="800" fill="#78716c">敬請期待</text></g>
+${placed.map(([[n,id],p])=>shopSvg(n,id,p)).join('')}
+</svg>`;
+  $('#map').querySelectorAll('.shop[data-id]').forEach(el=>{
+    const pick=()=>{SEL=el.dataset.id;map();side();$(`#map .shop[data-id="${CSS.escape(SEL)}"]`)?.focus()};
+    el.onclick=pick;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick()}}});
+  $('#chips').innerHTML=GAMES.map(g=>`<button type="button" data-id="${esc(g.id)}" class="${g.id===SEL?'on':''}" aria-pressed="${g.id===SEL}">${(LOOK[nameOf(g)]||LOOK0)[0]} ${esc(nameOf(g))}</button>`).join('');
+  $('#chips').querySelectorAll('button').forEach(b=>b.onclick=()=>{SEL=b.dataset.id;map();side()})}
 async function load(){
   try{CAT=await fetch('../dashboard/catalog.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
     GAMES=CAT.items.filter(i=>i.kind==='game');if(!GAMES.find(g=>g.id===SEL))SEL=GAMES[0]?.id||null;
-    if(!GAMES.length){$('#shops').innerHTML='<div class="empty">目前還沒有遊戲</div>';side();return}
-    shops();side()}
-  catch(e){$('#shops').innerHTML='<div class="empty">載入失敗：請用 http(s) 開啟（'+esc(e.message)+'）</div>'}}
+    map();side()}
+  catch(e){$('#map').innerHTML='<div class="empty">載入失敗：請用 http(s) 開啟（'+esc(e.message)+'）</div>'}}
 load();
 </script>
 </body>
