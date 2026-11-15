@@ -84,3 +84,7 @@
 
 首頁左側分類由 11 項收成 9 個主分類（分分看、因數與倍數各自獨立成類，使用者 2026-11-15 追加），其中 4 個（錢幣與購物、加減法、乘除法、圖形與面積）在工具列最左邊帶一個原生「細分」`<select>`（方案 A）。**分組以 `index.html` 的 `HOME_GROUPS`／`HOME_SUB_OVERRIDE`／`_homeOf` 為準**，新題型落到哪一組看 `_homeOf`（依 `_categoryOf` 的結果對應；購物找零 N204A／N207A／N207B／N207C／N208 與 N603 用 override）。**不要改 `_categoryOf`**——出版品庫與圖庫共用其輸出。state 用 `group`＋`sub`（取代舊 `category`）；搜尋時跨全部分類；題數一律執行期算（套年級、只算 `hasHome`）。手機／窄螢幕版面尚未做（首頁無 RWD，之後另做）。本機驗收：Playwright 把 `unpkg.com` 請求導到 npm 裝的 react／react-dom／@babel/standalone。
 
+## 互動學習單導覽次類與「範圍」下拉（使用者 2026-11-15）
+
+互動學習單總覽（`interactive/index.html`）左側導覽由 19 個 kind 併成 11 個**導覽次類**，多成員的（乘法應用題、乘法直式計算、除法直式計算、除法概念、錢幣位值與進位、拿錢）在標題旁用原生 `<select id="subsel">`「範圍」選成員；加減應用題與加減直式計算維持分開。**分組以 `index.html` 的 `NAVDEF` 為準，`catalog.json` 的 kind 不動**。新增 kind 時要決定放進 `NAVDEF` 哪個次類；沒列進去會自動補成單一成員次類（主類由 `FAM_OF` 決定，漏列會在 console 看到警告）。`sel` 存 `fam:主類` 或 `nav:次類 id`，舊版存 kind id 的 `hub_sel` 會自動轉換。頂端 chips 小次類篩選（`FACETS`）保留。手機版面尚未調整。
+
