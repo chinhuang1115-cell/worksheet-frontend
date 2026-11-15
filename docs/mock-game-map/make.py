@@ -7,15 +7,15 @@ FONT = (HERE / '../../fonts/Iansui-Regular.ttf').resolve()
 
 # (店名, emoji, 雨棚色1, 雨棚色2, 牆色, x, y, 已開幕)；座標＝地圖 1000×720 上的店門口
 SHOPS = [
-    ('早餐店', '🍳', '#ef4444', '#fff', '#fff7ed', 160, 700, True),
-    ('麵包店', '🥐', '#f472b6', '#fff', '#fdf2f8', 380, 700, True),
-    ('文具店', '✏️', '#38bdf8', '#fff', '#eff6ff', 160, 490, True),
-    ('糖果餅乾店', '🍭', '#c084fc', '#fff', '#faf5ff', 380, 490, True),
-    ('飲料店', '🧋', '#34d399', '#fff', '#ecfdf5', 700, 700, False),
-    ('玩具店', '🪀', '#ef4444', '#facc15', '#fefce8', 900, 700, False),
-    ('便當店', '🍱', '#f97316', '#fff', '#fff7ed', 700, 490, False),
-    ('中式餐館', '🥢', '#dc2626', '#fbbf24', '#fef3c7', 900, 490, False),
-    ('服飾店', '🧢', '#fb7185', '#9ca3af', '#fff1f2', 270, 280, False),
+    ('早餐店', '🍳', '#ef4444', '#fff', '#fff7ed', 150, 690, True),
+    ('麵包店', '🥐', '#f472b6', '#fff', '#fdf2f8', 385, 668, True),
+    ('文具店', '✏️', '#38bdf8', '#fff', '#eff6ff', 625, 690, True),
+    ('糖果餅乾店', '🍭', '#c084fc', '#fff', '#faf5ff', 790, 590, True),
+    ('飲料店', '🧋', '#34d399', '#fff', '#ecfdf5', 530, 462, False),
+    ('玩具店', '🪀', '#ef4444', '#facc15', '#fefce8', 280, 428, False),
+    ('便當店', '🍱', '#f97316', '#fff', '#fff7ed', 110, 300, False),
+    ('中式餐館', '🥢', '#dc2626', '#fbbf24', '#fef3c7', 390, 268, False),
+    ('服飾店', '🧢', '#fb7185', '#9ca3af', '#fff1f2', 600, 250, False),
 ]
 SEL = '早餐店'
 
@@ -28,7 +28,7 @@ def shop_svg(n, emo, c1, c2, wall, x, y, live):
     label_bg = '#ea580c' if on else ('#fff' if live else '#f3f4f6')
     label_fg = '#fff' if on else '#2b3440'
     soon = '' if live else '<text x="0" y="-150" text-anchor="middle" font-size="16" fill="#6b7683">即將開幕</text>'
-    return f'''<g transform="translate({x},{y}) scale(.9)" class="shop">
+    return f'''<g transform="translate({x},{y}) scale(.82)" class="shop">
   <ellipse cx="0" cy="8" rx="82" ry="14" fill="#000" opacity=".10"/>
   {ring}
   <g{g}>
@@ -50,7 +50,20 @@ def shop_svg(n, emo, c1, c2, wall, x, y, live):
 def tree(x, y, s=1):
     return f'<g transform="translate({x},{y}) scale({s})"><rect x="-5" y="-6" width="10" height="20" fill="#a16207" stroke="#3b2f2f" stroke-width="2"/><circle cx="0" cy="-22" r="22" fill="#4ade80" stroke="#3b2f2f" stroke-width="2.5"/><circle cx="-14" cy="-12" r="14" fill="#22c55e" stroke="#3b2f2f" stroke-width="2.5"/><circle cx="14" cy="-12" r="14" fill="#22c55e" stroke="#3b2f2f" stroke-width="2.5"/></g>'
 
-TREES = [(30,240),(120,230),(470,240),(620,250),(700,230),(980,250)]
+
+def smooth(pts):
+    d=f"M{pts[0][0]},{pts[0][1]}"
+    for i in range(len(pts)-1):
+        p0=pts[max(i-1,0)];p1=pts[i];p2=pts[i+1];p3=pts[min(i+2,len(pts)-1)]
+        c1=(p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6);c2=(p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6)
+        d+=f" C{c1[0]:.0f},{c1[1]:.0f} {c2[0]:.0f},{c2[1]:.0f} {p2[0]},{p2[1]}"
+    return d
+# 主街：入口（左下）→ 往右 → 右側彎上去 → 往左 → 左側彎上去 → 往右到街尾
+ROAD=smooth([(0,735),(260,738),(480,705),(720,735),(900,655),(905,540),(720,505),(420,520),(190,480),(105,385),(230,310),(470,310),(700,290),(880,230),(960,210)])
+RIVER=smooth([(760,140),(770,210),(770,280),(800,350),(870,385),(930,395)])
+TREES=[(40,250),(240,215),(420,420),(660,400),(980,300),(990,480),(30,560),(260,560),(520,600),(980,720),(700,600),(470,215)]
+
+
 
 MAP = f'''<svg viewBox="0 0 1000 790" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block" font-family="芫荽, Noto Color Emoji">
 <defs>
@@ -63,20 +76,18 @@ MAP = f'''<svg viewBox="0 0 1000 790" xmlns="http://www.w3.org/2000/svg" style="
 <ellipse cx="170" cy="70" rx="60" ry="18" fill="#fff" stroke="#3b2f2f" stroke-width="2"/><ellipse cx="820" cy="40" rx="70" ry="18" fill="#fff" stroke="#3b2f2f" stroke-width="2"/>
 <!-- 草地 -->
 <path d="M0,170 Q500,120 1000,170 L1000,790 L0,790Z" fill="#bbf7d0"/>
-<!-- 小河＋橋 -->
-<path d="M540,150 C565,300 515,420 545,560 C570,680 530,740 540,790" fill="none" stroke="#38bdf8" stroke-width="46" stroke-linecap="round"/>
-<path d="M540,150 C565,300 515,420 545,560 C570,680 530,740 540,790" fill="none" stroke="#7dd3fc" stroke-width="18" stroke-dasharray="20 30"/>
-<!-- 小路：每排店門口一條街，左邊一條直路把三排接起來，入口在左下 -->
-<g fill="none" stroke-linecap="round" stroke-linejoin="round">
-<path id="rd" d="M0,735 L980,735 M60,735 L60,315 L330,315 M60,525 L980,525" stroke="#fde68a" stroke-width="30"/>
-<path d="M0,735 L980,735 M60,735 L60,315 L330,315 M60,525 L980,525" stroke="#f59e0b" stroke-width="3" stroke-dasharray="2 14"/>
-</g>
-<rect x="506" y="718" width="72" height="34" rx="6" fill="#d97706" stroke="#3b2f2f" stroke-width="3"/>
-<rect x="506" y="508" width="72" height="34" rx="6" fill="#d97706" stroke="#3b2f2f" stroke-width="3"/>
+<!-- 小河（從山上流下來，流進右邊的小池塘）＋一座橋 -->
+<ellipse cx="935" cy="400" rx="70" ry="40" fill="#38bdf8" stroke="#3b2f2f" stroke-width="3"/>
+<path d="{RIVER}" fill="none" stroke="#38bdf8" stroke-width="40" stroke-linecap="round"/>
+<path d="{RIVER}" fill="none" stroke="#7dd3fc" stroke-width="14" stroke-dasharray="18 28"/>
+<!-- 彎彎的主街 -->
+<path d="{ROAD}" fill="none" stroke="#fde68a" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="{ROAD}" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/>
+<g transform="translate(771,262) rotate(-18)"><rect x="-38" y="-18" width="76" height="36" rx="6" fill="#d97706" stroke="#3b2f2f" stroke-width="3"/><line x1="-38" y1="-6" x2="38" y2="-6" stroke="#3b2f2f" stroke-width="2"/><line x1="-38" y1="6" x2="38" y2="6" stroke="#3b2f2f" stroke-width="2"/></g>
 <!-- 入口牌 -->
-<g transform="translate(30,660)"><rect x="-4" y="0" width="8" height="60" fill="#a16207"/><rect x="-36" y="-34" width="72" height="38" rx="8" fill="#fff" stroke="#3b2f2f" stroke-width="2.5"/><text x="0" y="-8" text-anchor="middle" font-size="20" font-weight="800">入口</text></g>
+<g transform="translate(40,680)"><rect x="-4" y="0" width="8" height="60" fill="#a16207"/><rect x="-36" y="-34" width="72" height="38" rx="8" fill="#fff" stroke="#3b2f2f" stroke-width="2.5"/><text x="0" y="-8" text-anchor="middle" font-size="20" font-weight="800">入口</text></g>
 {''.join(tree(x,y) for x,y in TREES)}
-<g transform="translate(850,300)" opacity=".7"><rect x="-80" y="-60" width="160" height="70" rx="14" fill="#f5f5f4" stroke="#a8a29e" stroke-width="3" stroke-dasharray="10 8"/><text y="-16" text-anchor="middle" font-size="26">🚧</text><text y="40" text-anchor="middle" font-size="20" font-weight="800" fill="#78716c">敬請期待</text></g>
+<g transform="translate(900,190)" opacity=".75"><rect x="-80" y="-60" width="160" height="70" rx="14" fill="#f5f5f4" stroke="#a8a29e" stroke-width="3" stroke-dasharray="10 8"/><text y="-16" text-anchor="middle" font-size="26">🚧</text><text y="40" text-anchor="middle" font-size="20" font-weight="800" fill="#78716c">敬請期待</text></g>
 {''.join(shop_svg(*s) for s in sorted(SHOPS, key=lambda s: s[6]))}
 </svg>'''
 
