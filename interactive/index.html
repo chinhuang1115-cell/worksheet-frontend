@@ -38,7 +38,8 @@ main{padding:20px 26px 60px;min-width:0}
 .bc{display:inline-block;text-decoration:none;border-radius:99px;padding:1px 11px;color:#fff;font-weight:700}.bc.l0{background:var(--L0)}.bc.l1{background:var(--L1)}.bc.l2{background:var(--L2)}.bc.l3{background:var(--ac)}.cs{color:var(--mute)}
 .head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 h2{font-size:22px;margin:2px 0 0}
-.ttl{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap}.rng{font-size:13px;font-weight:700;color:var(--mute)}
+.ttl{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap}.nmem{position:absolute;left:8px;bottom:8px;background:var(--ac);color:#fff;border-radius:99px;font-size:12px;font-weight:700;padding:1px 9px}.mems{font-size:12px;color:var(--mute);padding:0 12px 8px;line-height:1.5}
+.rng{font-size:13px;font-weight:700;color:var(--mute)}
 #subsel{font:inherit;font-size:16px;min-height:44px;padding:8px 12px;border:2px solid var(--ac);border-radius:10px;background:var(--card);color:var(--ink);max-width:100%;font-weight:700;color-scheme:light dark}
 .chip{font:inherit;font-size:13px;padding:3px 13px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--ink);cursor:pointer}
 .chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
@@ -110,6 +111,7 @@ const url=it=>CAT.backend+it.endpoint+'?'+(it.params?it.params+'&':'')+'lv=2&mod
 const FACETS=['運算','位數','進位','難度','類別','幫手','餘數'];
 let FSEL={};
 function facets(it){
+  if(it.members)return {};      /* 入口頁自帶「版型」下拉，不再用頂端 chips 篩選（2026-11-15） */
   const o=Object.fromEntries(new URLSearchParams(it.params||'')), f={};
   if(it.kind==='wordprob'||it.kind==='wordprobc'){f['運算']={sub:'減法',add:'加法',mix:'加減交錯'}[o.op]; f['位數']=o.digits==='3'?'三位數':'兩位數'}
   if(it.kind==='mulv'||it.kind==='mulvc'||it.kind==='mulvc2')f['進位']={none:'不進位',yes:'進位',mix:'交錯'}[o.regroup];
@@ -126,8 +128,9 @@ function facets(it){
 }
 const inSel=it=>sel.startsWith('fam:')?((NAVKIND[it.kind]||{nav:{}}).nav.fam===sel.slice(4)):!!(NAVBY[sel]&&NAVBY[sel].members.some(m=>m.kind===it.kind&&(SUBSEL==='all'||SUBSEL===it.kind)));
 function textOK(it){const s=q.trim().toLowerCase(); if(!s)return true;
-  return (it.title+it.paper+it.steps+it.note+it.endpoint+it.params+kindName(it.kind)+((NAVKIND[it.kind]||{}).nav?NAVKIND[it.kind].nav.name+NAVKIND[it.kind].label:'')+(FAMS.find(f=>f[0]===FAM_OF[it.kind])||[])[1]).toLowerCase().includes(s)}
+  return (it.title+it.paper+it.steps+it.note+it.endpoint+it.params+kindName(it.kind)+(it.members?it.members.map(m=>m.label+m.og+m.id+m.params).join(''):'')+(it.id==='mulvc-none'?' 2×1 2×2 二乘一 二乘二':'')+((NAVKIND[it.kind]||{}).nav?NAVKIND[it.kind].nav.name+NAVKIND[it.kind].label:'')+(FAMS.find(f=>f[0]===FAM_OF[it.kind])||[])[1]).toLowerCase().includes(s)}
 function rgTag(it){      // 直式計算題縮圖右上角的進退位標籤（使用者 2026-10-17）：綠＝不進退位、橘＝要進退位、藍＝交錯
+  if(it.members)return '';      /* 入口卡含多種版型，標籤只代表基礎版，不顯示（2026-11-15） */
   if(it.kind!=='wordprobc'&&it.kind!=='mulvc'&&it.kind!=='mulvc2'&&!it.kind.startsWith('divvc')&&it.kind!=='divdec')return '';
   const o=Object.fromEntries(new URLSearchParams(it.params||'')), rg=o.regroup, add=o.op==='add', mix=o.op==='mix';
   let t,c;
@@ -142,9 +145,10 @@ function rgTag(it){      // 直式計算題縮圖右上角的進退位標籤（�
 }
 function card(it){
   return `<div class="card"><a class="th" href="${url(it)}" target="_blank" rel="noopener" aria-label="開啟 ${esc(it.title)}">
-    <img src="thumbs/${it.id}.webp?v=${CAT.thumbsV||0}" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}${rgTag(it)}</a>
+    <img src="thumbs/${it.id}.webp?v=${CAT.thumbsV||0}" alt="" loading="lazy" onerror="this.remove()">${it.paper?`<span class="code">${esc(it.paper)}</span>`:''}${rgTag(it)}${it.members&&it.members.length>1?`<span class="nmem">${it.members.length} 種</span>`:''}</a>
    <div class="info"><a class="t" href="${url(it)}" target="_blank" rel="noopener">${esc(it.title)}</a>
-   <button class="cp" data-copy="${esc(url(it))}" title="複製連結" aria-label="複製連結">🔗</button></div></div>`;
+   <button class="cp" data-copy="${esc(url(it))}" title="複製連結" aria-label="複製連結">🔗</button></div>
+   ${it.members&&it.members.length>1?`<div class="mems">${esc([...new Set(it.members.map(m=>m.og))].join('・'))}</div>`:''}</div>`;
 }
 function render(){
   document.body.classList.toggle('list',list);
@@ -152,11 +156,12 @@ function render(){
   const NAVS=buildNavs(kinds); NAVBY=Object.fromEntries(NAVS.map(n=>[n.id,n])); NAVKIND={};
   NAVS.forEach(n=>n.members.forEach(m=>NAVKIND[m.kind]={nav:n,label:m.label}));
   if(sel&&!sel.startsWith('fam:')&&!sel.startsWith('nav:')){      // 舊版 hub_sel 存的是 kind id → 轉成導覽次類（多成員時保留到該成員）
+    if(sel==='mulvc2')sel='mulvc';      /* mulvc2 併入乘法直式計算入口（2026-11-15） */
     const o=NAVKIND[sel]; if(o){SUBSEL=o.nav.members.length>1?sel:'all';sel=o.nav.id;try{localStorage.setItem('hub_sel',sel)}catch(_){}} else sel=''}
   if(!sel||(!sel.startsWith('fam:')&&!NAVBY[sel]))sel=NAVS[0].id;
   if(SUBSEL!=='all'&&!(NAVBY[sel]&&NAVBY[sel].members.some(m=>m.kind===SUBSEL)))SUBSEL='all';
   const orderKinds=NAVS.flatMap(n=>n.members.map(m=>m.kind));
-  $('#meta').textContent=`共 ${CAT.items.length} 個頁面・更新 ${CAT.updated}`;
+  $('#meta').textContent=`共 ${CAT.items.length} 個練習・${CAT.items.reduce((a,i)=>a+(i.members?i.members.length:1),0)} 種版型・更新 ${CAT.updated}`;
   const cnt=id=>CAT.items.filter(i=>i.kind===id).length;
   const ncnt=n=>n.members.reduce((a,m)=>a+cnt(m.kind),0);
   $('#nav').innerHTML=FAMS.map(([fid,name])=>{const ns=NAVS.filter(n=>n.fam===fid);
@@ -175,13 +180,11 @@ function render(){
   const items=scope.filter(i=>textOK(i)&&(searching||FACETS.every(n=>!FSEL[n]||facets(i)[n]===FSEL[n])));
   const curNav=NAVBY[sel], fam=sel.startsWith('fam:')?sel.slice(4):curNav.fam, famName=(FAMS.find(f=>f[0]===fam)||[])[1];
   const title=searching?`搜尋「${esc(q.trim())}」`:sel.startsWith('fam:')?famName:curNav.name;
-  const rangeSel=(!searching&&curNav&&curNav.members.length>1)?`<label class="rng" for="subsel">範圍</label><select id="subsel">`+[`<option value="all"${SUBSEL==='all'?' selected':''}>全部・${curNav.members.reduce((a,m)=>a+cnt(m.kind),0)} 頁</option>`,...curNav.members.map(m=>`<option value="${m.kind}"${SUBSEL===m.kind?' selected':''}>${m.label}・${cnt(m.kind)} 頁</option>`)].join('')+`</select>`:'';
+  const rangeSel='';      /* 入口卡合併後，每個次類只剩 1～3 張卡，「範圍」下拉已無意義（2026-11-15，使用者同意隱藏） */
   let body;
   if(!items.length)body='<div class="empty">沒有符合的互動頁</div>';
   else if(searching||sel.startsWith('fam:')){      // 跨次類：依次類分段
     body=orderKinds.filter(id=>items.some(i=>i.kind===id)).map(id=>`<div class="sec"><h3>${kindName(id)}</h3><div class="grid">${items.filter(i=>i.kind===id).map(card).join('')}</div></div>`).join('');
-  } else if(curNav.members.length>1&&SUBSEL==='all'){      // 導覽次類「全部」：依成員分段，避免 2÷1、3÷1 混在一起
-    body=curNav.members.filter(m=>items.some(i=>i.kind===m.kind)).map(m=>`<div class="sec"><h3>${m.label}</h3><div class="grid">${items.filter(i=>i.kind===m.kind).map(card).join('')}</div></div>`).join('');
   } else body=`<div class="grid">${items.map(card).join('')}</div>`;
   $('#main').innerHTML=`<div class="head"><div><div class="crumb"><a class="bc l1" href="#" data-home>互動學習單</a>${searching?'':`<span class="cs">›</span><a class="bc l2" href="#" data-sel="fam:${fam}">${famName}</a>`+(sel.startsWith('fam:')?'':`<span class="cs">›</span><span class="bc l3">${curNav.name}</span>`)}</div><div class="ttl"><h2>${title}</h2>${rangeSel}</div></div><span><button class="chip" id="view">${list?'縮圖':'清單'}</button></span></div>
     <div class="facets">${fh.join('')}</div>${body}`;

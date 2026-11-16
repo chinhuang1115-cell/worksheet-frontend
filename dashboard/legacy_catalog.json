@@ -1,0 +1,302 @@
+{
+ "wp-sub-none": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=sub&regroup=none"
+ },
+ "wp-sub-yes": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=sub&regroup=yes"
+ },
+ "wp-add-none": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=add&regroup=none"
+ },
+ "wp-add-yes": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=add&regroup=yes"
+ },
+ "wp-mix": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=mix&regroup=mix"
+ },
+ "wp-3d-sub-double": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=sub&digits=3&regroup=double"
+ },
+ "wp-3d-sub-chain": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=sub&digits=3&regroup=chain"
+ },
+ "wp-3d-add-double": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=add&digits=3&regroup=double"
+ },
+ "wpc-sub-none": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=sub&regroup=none&calc=1"
+ },
+ "wpc-sub-yes": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=sub&regroup=yes&calc=1"
+ },
+ "wpc-add-none": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=add&regroup=none&calc=1"
+ },
+ "wpc-add-yes": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=add&regroup=yes&calc=1"
+ },
+ "wpc-mix": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=mix&regroup=mix&calc=1"
+ },
+ "wpc-3d-sub-double": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=sub&digits=3&regroup=double&calc=1"
+ },
+ "wpc-3d-sub-chain": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=sub&digits=3&regroup=chain&calc=1"
+ },
+ "wpc-3d-add-double": {
+  "endpoint": "/interactive/sub2noreg-app",
+  "params": "op=add&digits=3&regroup=double&calc=1"
+ },
+ "mul-concept-easy": {
+  "endpoint": "/interactive/mul-concept",
+  "params": "level=easy"
+ },
+ "mul-concept-normal": {
+  "endpoint": "/interactive/mul-concept",
+  "params": "level=normal"
+ },
+ "mulwp-easy": {
+  "endpoint": "/interactive/mul-wordprob",
+  "params": "level=easy"
+ },
+ "mulwp-normal": {
+  "endpoint": "/interactive/mul-wordprob",
+  "params": "level=normal"
+ },
+ "mulv-none": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=none"
+ },
+ "mulv-yes": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=yes"
+ },
+ "mulv-mix": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=mix"
+ },
+ "mulvc-none": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=none&calc=1"
+ },
+ "mulvc-yes": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=yes&calc=1"
+ },
+ "mulvc-mix": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=mix&calc=1"
+ },
+ "mulvc2-none": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=none&calc=1&mdig=2"
+ },
+ "mulvc2-yes": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=yes&calc=1&mdig=2"
+ },
+ "mulvc2-mix": {
+  "endpoint": "/interactive/mul-vertical",
+  "params": "regroup=mix&calc=1&mdig=2"
+ },
+ "dial-easy": {
+  "endpoint": "/interactive/mul-dial",
+  "params": "level=easy"
+ },
+ "dial-normal": {
+  "endpoint": "/interactive/mul-dial",
+  "params": "level=normal"
+ },
+ "pv-easy": {
+  "endpoint": "/interactive/place-value",
+  "params": "level=easy"
+ },
+ "pv-normal": {
+  "endpoint": "/interactive/place-value",
+  "params": "level=normal"
+ },
+ "cy-one": {
+  "endpoint": "/interactive/coin-carry",
+  "params": "base=one&level=normal"
+ },
+ "cy-single": {
+  "endpoint": "/interactive/coin-carry",
+  "params": "base=single&level=normal"
+ },
+ "cy-sp0": {
+  "endpoint": "/interactive/coin-carry",
+  "params": "base=sp0&level=normal"
+ },
+ "tm-basic-take": {
+  "endpoint": "/interactive/take-money",
+  "params": "task=take&coins=plain&range=100&ver=basic"
+ },
+ "tm-basic-special": {
+  "endpoint": "/interactive/take-money",
+  "params": "task=take&coins=special&range=100&ver=basic"
+ },
+ "tm-basic-makeup": {
+  "endpoint": "/interactive/take-money",
+  "params": "task=makeup&coins=plain&cross=0&range=100&ver=basic"
+ },
+ "tm-basic-cross": {
+  "endpoint": "/interactive/take-money",
+  "params": "task=makeup&coins=plain&cross=1&range=100&ver=basic"
+ },
+ "tm-shop-take": {
+  "endpoint": "/interactive/take-money",
+  "params": "task=take&coins=plain&range=100&ver=shop"
+ },
+ "tm-shop-special": {
+  "endpoint": "/interactive/take-money",
+  "params": "task=take&coins=special&range=100&ver=shop"
+ },
+ "tm-shop-makeup": {
+  "endpoint": "/interactive/take-money",
+  "params": "task=makeup&coins=plain&cross=0&range=100&ver=shop"
+ },
+ "tm-shop-cross": {
+  "endpoint": "/interactive/take-money",
+  "params": "task=makeup&coins=plain&cross=1&range=100&ver=shop"
+ },
+ "divvc-none": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "divtype=none"
+ },
+ "divvc-help": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "divtype=help"
+ },
+ "divvc-big": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "divtype=big"
+ },
+ "divvc-mix": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "divtype=mix"
+ },
+ "divvc-rem": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "rem=1"
+ },
+ "divvc3-mix": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "digits=3&divtype=mix"
+ },
+ "divvc3-zero": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "digits=3&divtype=zero"
+ },
+ "divvc3-rem": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "digits=3&rem=1&divtype=mix"
+ },
+ "divvcd-tens": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "ddig=2&dstage=tens"
+ },
+ "divvcd-near": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "ddig=2&dstage=near"
+ },
+ "divvcd-tens-q2": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "ddig=2&digits=3&dstage=tens&qdig=2"
+ },
+ "divvcd-near-q2": {
+  "endpoint": "/interactive/div-vertical",
+  "params": "ddig=2&digits=3&dstage=near&qdig=2"
+ },
+ "divdec-int": {
+  "endpoint": "/interactive/div-int-dec",
+  "params": ""
+ },
+ "divdec-dec": {
+  "endpoint": "/interactive/div-dec-int",
+  "params": ""
+ },
+ "ff-share": {
+  "endpoint": "/interactive/fenfen",
+  "params": "ftype=share&level=normal"
+ },
+ "ff-group": {
+  "endpoint": "/interactive/fenfen",
+  "params": "ftype=group&level=normal"
+ },
+ "ff-rem": {
+  "endpoint": "/interactive/fenfen",
+  "params": "ftype=rem&level=normal"
+ },
+ "cf-plate": {
+  "endpoint": "/interactive/chufa",
+  "params": "stage=plate&level=normal"
+ },
+ "cf-tree": {
+  "endpoint": "/interactive/chufa",
+  "params": "stage=tree&div=small&level=normal"
+ },
+ "divwp-share0": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "dtype=share&rem=0&level=normal"
+ },
+ "divwp-share1": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "dtype=share&rem=1&level=normal"
+ },
+ "divwp-group0": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "dtype=group&rem=0&level=normal"
+ },
+ "divwp-group1": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "dtype=group&rem=1&level=normal"
+ },
+ "divwp-mix1": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "dtype=mix&rem=1&level=normal"
+ },
+ "divwp2-share0": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "digits=2&dtype=share&rem=0"
+ },
+ "divwp2-share1": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "digits=2&dtype=share&rem=1"
+ },
+ "divwp2-group0": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "digits=2&dtype=group&rem=0"
+ },
+ "divwp2-group1": {
+  "endpoint": "/interactive/div-wordprob",
+  "params": "digits=2&dtype=group&rem=1"
+ },
+ "pro-outer": {
+  "endpoint": "/interactive/protractor",
+  "params": "ring=outer"
+ },
+ "pro-inner": {
+  "endpoint": "/interactive/protractor",
+  "params": "ring=inner"
+ },
+ "pro-measure": {
+  "endpoint": "/interactive/protractor",
+  "params": "ring=mix"
+ }
+}

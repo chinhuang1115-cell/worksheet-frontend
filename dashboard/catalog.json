@@ -113,827 +113,909 @@
   {
    "id": "wp-sub-none",
    "kind": "wordprob",
-   "title": "兩位數減法（不退位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=sub&regroup=none",
    "smoke": "interactive wordprob graded／full／free",
    "steps": "①找關鍵字→②橫式→③直式→④答句",
    "note": "試點題型",
-   "paper": "N202"
-  },
-  {
-   "id": "wp-sub-yes",
-   "kind": "wordprob",
-   "title": "兩位數減法（退位）",
+   "paper": "N202",
+   "title": "加減應用題：減法",
    "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=sub&regroup=yes",
-   "smoke": "interactive wordprob sub borrow",
-   "steps": "①找關鍵字→②橫式→③直式→④答句；退位圈圈 10、分步算式",
-   "note": "",
-   "paper": ""
+   "params": "op=sub&regroup=none",
+   "members": [
+    {
+     "id": "wp-sub-none",
+     "label": "不退位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&regroup=none"
+    },
+    {
+     "id": "wp-sub-yes",
+     "label": "退位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&regroup=yes"
+    },
+    {
+     "id": "wp-3d-sub-double",
+     "label": "雙重退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=double"
+    },
+    {
+     "id": "wp-3d-sub-chain",
+     "label": "連續退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=chain"
+    }
+   ]
   },
   {
    "id": "wp-add-none",
    "kind": "wordprob",
-   "title": "兩位數加法（不進位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=add&regroup=none",
    "smoke": "interactive wordprob add",
    "steps": "①找關鍵字→②橫式→③直式→④答句",
    "note": "",
-   "paper": ""
-  },
-  {
-   "id": "wp-add-yes",
-   "kind": "wordprob",
-   "title": "兩位數加法（進位）",
+   "paper": "",
+   "title": "加減應用題：加法",
    "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=add&regroup=yes",
-   "smoke": "interactive wordprob add carry",
-   "steps": "①找關鍵字→②橫式→③直式→④答句；進位拉出數字 1",
-   "note": "",
-   "paper": ""
+   "params": "op=add&regroup=none",
+   "members": [
+    {
+     "id": "wp-add-none",
+     "label": "不進位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&regroup=none"
+    },
+    {
+     "id": "wp-add-yes",
+     "label": "進位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&regroup=yes"
+    },
+    {
+     "id": "wp-3d-add-double",
+     "label": "雙重進位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=double"
+    }
+   ]
   },
   {
    "id": "wp-mix",
    "kind": "wordprob",
-   "title": "兩位數加減交錯（含進退位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=mix&regroup=mix",
    "smoke": "interactive wordprob mix",
    "steps": "①找關鍵字→②橫式→③直式→④答句",
    "note": "",
-   "paper": ""
-  },
-  {
-   "id": "wp-3d-sub-double",
-   "kind": "wordprob",
-   "title": "三位數減法（雙重退位）",
+   "paper": "",
+   "title": "加減應用題：加減交錯",
    "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=sub&digits=3&regroup=double",
-   "smoke": "interactive wordprob 3d sub double",
-   "steps": "①找關鍵字→②橫式→③直式（三位數）→④答句；由個位做到百位、整欄聚焦",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "wp-3d-sub-chain",
-   "kind": "wordprob",
-   "title": "三位數減法（連續退位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=sub&digits=3&regroup=chain",
-   "smoke": "interactive wordprob 3d sub chain",
-   "steps": "①找關鍵字→②橫式→③直式（三位數）→④答句；十位是 0，百位圈圈接力",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "wp-3d-add-double",
-   "kind": "wordprob",
-   "title": "三位數加法（雙重進位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=add&digits=3&regroup=double",
-   "smoke": null,
-   "steps": "①找關鍵字→②橫式→③直式（三位數）→④答句；十位和、百位和各拆兩步",
-   "note": "smoke 未涵蓋，建議補測項",
-   "paper": ""
+   "params": "op=mix&regroup=mix",
+   "members": [
+    {
+     "id": "wp-mix",
+     "label": "含進退位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&regroup=mix"
+    },
+    {
+     "id": "wp-mix-none",
+     "label": "不進位不退位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&regroup=none"
+    },
+    {
+     "id": "wp-3d-mix",
+     "label": "含進退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=mix"
+    }
+   ]
   },
   {
    "id": "wpc-sub-none",
    "kind": "wordprobc",
-   "title": "兩位數減法直式計算（不退位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=sub&regroup=none&calc=1",
    "smoke": "interactive wordprob calc",
    "steps": "直式計算；題目只有橫式，從加減應用題擷取",
    "note": "試點題型",
-   "paper": ""
-  },
-  {
-   "id": "wpc-sub-yes",
-   "kind": "wordprobc",
-   "title": "兩位數減法直式計算（退位）",
+   "paper": "",
+   "title": "加減直式計算：減法",
    "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=sub&regroup=yes&calc=1",
-   "smoke": "interactive wordprob calc",
-   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
-   "note": "",
-   "paper": ""
+   "params": "op=sub&regroup=none&calc=1",
+   "members": [
+    {
+     "id": "wpc-sub-none",
+     "label": "不退位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&regroup=none&calc=1"
+    },
+    {
+     "id": "wpc-sub-yes",
+     "label": "退位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&regroup=yes&calc=1"
+    },
+    {
+     "id": "wpc-3d-sub-double",
+     "label": "雙重退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=double&calc=1"
+    },
+    {
+     "id": "wpc-3d-sub-chain",
+     "label": "連續退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=chain&calc=1"
+    }
+   ]
   },
   {
    "id": "wpc-add-none",
    "kind": "wordprobc",
-   "title": "兩位數加法直式計算（不進位）",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "",
+   "paper": "",
+   "title": "加減直式計算：加法",
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=add&regroup=none&calc=1",
-   "smoke": "interactive wordprob calc",
-   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "wpc-add-yes",
-   "kind": "wordprobc",
-   "title": "兩位數加法直式計算（進位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=add&regroup=yes&calc=1",
-   "smoke": "interactive wordprob calc",
-   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
-   "note": "",
-   "paper": ""
+   "members": [
+    {
+     "id": "wpc-add-none",
+     "label": "不進位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&regroup=none&calc=1"
+    },
+    {
+     "id": "wpc-add-yes",
+     "label": "進位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&regroup=yes&calc=1"
+    },
+    {
+     "id": "wpc-3d-add-double",
+     "label": "雙重進位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=double&calc=1"
+    }
+   ]
   },
   {
    "id": "wpc-mix",
    "kind": "wordprobc",
-   "title": "兩位數加減交錯直式計算（含進退位）",
+   "smoke": "interactive wordprob calc",
+   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
+   "note": "",
+   "paper": "",
+   "title": "加減直式計算：加減交錯",
    "endpoint": "/interactive/sub2noreg-app",
    "params": "op=mix&regroup=mix&calc=1",
-   "smoke": "interactive wordprob calc",
-   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "wpc-3d-sub-double",
-   "kind": "wordprobc",
-   "title": "三位數減法直式計算（雙重退位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=sub&digits=3&regroup=double&calc=1",
-   "smoke": "interactive wordprob calc",
-   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "wpc-3d-sub-chain",
-   "kind": "wordprobc",
-   "title": "三位數減法直式計算（連續退位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=sub&digits=3&regroup=chain&calc=1",
-   "smoke": "interactive wordprob calc",
-   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "wpc-3d-add-double",
-   "kind": "wordprobc",
-   "title": "三位數加法直式計算（雙重進位）",
-   "endpoint": "/interactive/sub2noreg-app",
-   "params": "op=add&digits=3&regroup=double&calc=1",
-   "smoke": "interactive wordprob calc",
-   "steps": "直式計算；題目只有橫式，從加減應用題擷取",
-   "note": "smoke 未涵蓋，建議補測項",
-   "paper": ""
+   "members": [
+    {
+     "id": "wpc-mix",
+     "label": "含進退位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&regroup=mix&calc=1"
+    },
+    {
+     "id": "wpc-mix-none",
+     "label": "不進位不退位",
+     "og": "兩位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&regroup=none&calc=1"
+    },
+    {
+     "id": "wpc-3d-mix",
+     "label": "含進退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=mix&calc=1"
+    }
+   ]
   },
   {
    "id": "mul-concept-easy",
    "kind": "mulwp",
-   "title": "乘法概念：幾個幾（簡單）",
-   "endpoint": "/interactive/mul-concept",
-   "params": "level=easy",
    "smoke": "interactive mul concept easy",
    "steps": "分盤→連加→幾個幾→乘法算式→答句（每盤 2～3 個、2～3 盤）",
    "note": "",
-   "paper": "N209A"
-  },
-  {
-   "id": "mul-concept-normal",
-   "kind": "mulwp",
-   "title": "乘法概念：幾個幾（一般）",
+   "paper": "N209A",
+   "title": "乘法概念：幾個幾",
    "endpoint": "/interactive/mul-concept",
-   "params": "level=normal",
-   "smoke": "interactive mul concept normal",
-   "steps": "分盤→連加→幾個幾→乘法算式→答句（每盤 2～5 個、2～5 盤）",
-   "note": "",
-   "paper": "N209A"
+   "params": "level=easy",
+   "members": [
+    {
+     "id": "mul-concept-easy",
+     "label": "簡單",
+     "og": "難度",
+     "endpoint": "/interactive/mul-concept",
+     "params": "level=easy"
+    },
+    {
+     "id": "mul-concept-normal",
+     "label": "一般",
+     "og": "難度",
+     "endpoint": "/interactive/mul-concept",
+     "params": "level=normal"
+    }
+   ]
   },
   {
    "id": "mulwp-easy",
    "kind": "mulwp",
-   "title": "乘法應用題：算價錢（簡單）",
-   "endpoint": "/interactive/mul-wordprob",
-   "params": "level=easy",
    "smoke": "interactive mul wordprob easy",
    "steps": "關鍵字→連加→乘法算式→答句（單價、個數 2～5）",
    "note": "",
-   "paper": ""
-  },
-  {
-   "id": "mulwp-normal",
-   "kind": "mulwp",
-   "title": "乘法應用題：算價錢（一般）",
+   "paper": "",
+   "title": "乘法應用題：算價錢",
    "endpoint": "/interactive/mul-wordprob",
-   "params": "level=normal",
-   "smoke": "interactive mul wordprob normal",
-   "steps": "關鍵字→連加→乘法算式→答句（單價、個數 2～9）",
-   "note": "",
-   "paper": ""
+   "params": "level=easy",
+   "members": [
+    {
+     "id": "mulwp-easy",
+     "label": "簡單",
+     "og": "難度",
+     "endpoint": "/interactive/mul-wordprob",
+     "params": "level=easy"
+    },
+    {
+     "id": "mulwp-normal",
+     "label": "一般",
+     "og": "難度",
+     "endpoint": "/interactive/mul-wordprob",
+     "params": "level=normal"
+    }
+   ]
   },
   {
    "id": "mulv-none",
    "kind": "mulv",
-   "title": "直式乘法（不進位）",
-   "endpoint": "/interactive/mul-vertical",
-   "params": "regroup=none",
    "smoke": "interactive mul vertical",
    "steps": "關鍵字→橫式→直式（每欄查九九乘法表）→答句",
    "note": "",
-   "paper": ""
-  },
-  {
-   "id": "mulv-yes",
-   "kind": "mulv",
-   "title": "直式乘法（進位）",
+   "paper": "",
+   "title": "乘法應用題 2×1",
    "endpoint": "/interactive/mul-vertical",
-   "params": "regroup=yes",
-   "smoke": "interactive mul vertical carry",
-   "steps": "關鍵字→橫式→直式（每欄查九九乘法表）→答句；進位",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "mulv-mix",
-   "kind": "mulv",
-   "title": "直式乘法（進位／不進位交錯）",
-   "endpoint": "/interactive/mul-vertical",
-   "params": "regroup=mix",
-   "smoke": "interactive mul vertical mix",
-   "steps": "關鍵字→橫式→直式（每欄查九九乘法表）→答句",
-   "note": "",
-   "paper": ""
+   "params": "regroup=none",
+   "members": [
+    {
+     "id": "mulv-none",
+     "label": "不進位",
+     "og": "進位",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=none"
+    },
+    {
+     "id": "mulv-yes",
+     "label": "進位",
+     "og": "進位",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=yes"
+    },
+    {
+     "id": "mulv-mix",
+     "label": "進位與不進位交錯",
+     "og": "進位",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=mix"
+    }
+   ]
   },
   {
    "id": "mulvc-none",
    "kind": "mulvc",
-   "title": "直式乘法計算（不進位）",
+   "smoke": "interactive mul vertical calc",
+   "steps": "直式計算（每欄查九九乘法表）；題目只有橫式，從乘法應用題 2*1 擷取",
+   "note": "",
+   "paper": "",
+   "title": "乘法直式計算",
    "endpoint": "/interactive/mul-vertical",
    "params": "regroup=none&calc=1",
-   "smoke": "interactive mul vertical calc",
-   "steps": "直式計算（每欄查九九乘法表）；題目只有橫式，從乘法應用題 2*1 擷取",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "mulvc-yes",
-   "kind": "mulvc",
-   "title": "直式乘法計算（進位）",
-   "endpoint": "/interactive/mul-vertical",
-   "params": "regroup=yes&calc=1",
-   "smoke": "interactive mul vertical calc",
-   "steps": "直式計算（每欄查九九乘法表）；題目只有橫式，從乘法應用題 2*1 擷取",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "mulvc-mix",
-   "kind": "mulvc",
-   "title": "直式乘法計算（進位／不進位交錯）",
-   "endpoint": "/interactive/mul-vertical",
-   "params": "regroup=mix&calc=1",
-   "smoke": "interactive mul vertical calc",
-   "steps": "直式計算（每欄查九九乘法表）；題目只有橫式，從乘法應用題 2*1 擷取",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "mulvc2-none",
-   "kind": "mulvc2",
-   "title": "直式乘法計算 2×2（不進位）",
-   "endpoint": "/interactive/mul-vertical",
-   "params": "regroup=none&calc=1&mdig=2",
-   "smoke": "interactive mul vertical 2x2",
-   "steps": "兩層蛋糕：先用個位乘（橘）、墊 0（小幫手）、再用十位乘（藍），最後兩層相加；聚光燈＋螢光箭頭",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "mulvc2-yes",
-   "kind": "mulvc2",
-   "title": "直式乘法計算 2×2（進位）",
-   "endpoint": "/interactive/mul-vertical",
-   "params": "regroup=yes&calc=1&mdig=2",
-   "smoke": "interactive mul vertical 2x2",
-   "steps": "兩層蛋糕：先用個位乘（橘）、墊 0（小幫手）、再用十位乘（藍），最後兩層相加；聚光燈＋螢光箭頭",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "mulvc2-mix",
-   "kind": "mulvc2",
-   "title": "直式乘法計算 2×2（進位／不進位交錯）",
-   "endpoint": "/interactive/mul-vertical",
-   "params": "regroup=mix&calc=1&mdig=2",
-   "smoke": "interactive mul vertical 2x2",
-   "steps": "兩層蛋糕：先用個位乘（橘）、墊 0（小幫手）、再用十位乘（藍），最後兩層相加；聚光燈＋螢光箭頭",
-   "note": "",
-   "paper": ""
+   "members": [
+    {
+     "id": "mulvc-none",
+     "label": "不進位",
+     "og": "二位數 × 一位數",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=none&calc=1"
+    },
+    {
+     "id": "mulvc-yes",
+     "label": "進位",
+     "og": "二位數 × 一位數",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=yes&calc=1"
+    },
+    {
+     "id": "mulvc-mix",
+     "label": "進位與不進位交錯",
+     "og": "二位數 × 一位數",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=mix&calc=1"
+    },
+    {
+     "id": "mulvc2-none",
+     "label": "不進位",
+     "og": "二位數 × 二位數",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=none&calc=1&mdig=2"
+    },
+    {
+     "id": "mulvc2-yes",
+     "label": "進位",
+     "og": "二位數 × 二位數",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=yes&calc=1&mdig=2"
+    },
+    {
+     "id": "mulvc2-mix",
+     "label": "進位與不進位交錯",
+     "og": "二位數 × 二位數",
+     "endpoint": "/interactive/mul-vertical",
+     "params": "regroup=mix&calc=1&mdig=2"
+    }
+   ]
   },
   {
    "id": "dial-easy",
    "kind": "dial",
-   "title": "乘法圓盤（簡單）",
-   "endpoint": "/interactive/mul-dial",
-   "params": "level=easy",
    "smoke": "interactive mul dial easy",
    "steps": "填圓盤缺漏格；找房子→放大（簡單）",
    "note": "與紙本同構，不寫作答紙",
-   "paper": "N209C"
-  },
-  {
-   "id": "dial-normal",
-   "kind": "dial",
-   "title": "乘法圓盤（一般）",
+   "paper": "N209C",
+   "title": "乘法圓盤",
    "endpoint": "/interactive/mul-dial",
-   "params": "level=normal",
-   "smoke": "interactive mul dial",
-   "steps": "填圓盤缺漏格；找房子→放大（一般）",
-   "note": "",
-   "paper": "N209C"
+   "params": "level=easy",
+   "members": [
+    {
+     "id": "dial-easy",
+     "label": "簡單（房子 2～5）",
+     "og": "難度",
+     "endpoint": "/interactive/mul-dial",
+     "params": "level=easy"
+    },
+    {
+     "id": "dial-normal",
+     "label": "一般（房子 2～9）",
+     "og": "難度",
+     "endpoint": "/interactive/mul-dial",
+     "params": "level=normal"
+    }
+   ]
   },
   {
    "id": "pv-easy",
    "kind": "pv",
-   "title": "錢幣位值（簡單）",
-   "endpoint": "/interactive/place-value",
-   "params": "level=easy",
    "smoke": "interactive pv easy full",
    "steps": "①分一分→②數一數→③填寫（151～199 元，數量較少）",
    "note": "",
-   "paper": "N101G"
-  },
-  {
-   "id": "pv-normal",
-   "kind": "pv",
-   "title": "錢幣位值（一般）",
+   "paper": "N101G",
+   "title": "錢幣位值",
    "endpoint": "/interactive/place-value",
-   "params": "level=normal",
-   "smoke": "interactive pv graded",
-   "steps": "①分一分→②數一數→③填寫（151～199 元）",
-   "note": "",
-   "paper": "N101G"
+   "params": "level=easy",
+   "members": [
+    {
+     "id": "pv-easy",
+     "label": "簡單",
+     "og": "難度",
+     "endpoint": "/interactive/place-value",
+     "params": "level=easy"
+    },
+    {
+     "id": "pv-normal",
+     "label": "一般",
+     "og": "難度",
+     "endpoint": "/interactive/place-value",
+     "params": "level=normal"
+    }
+   ]
   },
   {
    "id": "cy-one",
    "kind": "cy",
-   "title": "錢幣進位：滿十換一",
-   "endpoint": "/interactive/coin-carry",
-   "params": "base=one&level=normal",
    "smoke": "interactive cy graded",
    "steps": "①圈一圈→②換一換→③④填寫；剩下的錢整組拖",
    "note": "頁面上方下拉選單可切換：1 元換 10 元／10 元換 100 元／100 元換 1000 元（勘誤表7，2026-11-12；原 cy-ten、cy-hun 併入）",
-   "paper": ""
-  },
-  {
-   "id": "cy-single",
-   "kind": "cy",
-   "title": "錢幣進位：單次／連續進位",
+   "paper": "",
+   "title": "錢幣進位",
    "endpoint": "/interactive/coin-carry",
-   "params": "base=single&level=normal",
-   "smoke": "interactive cy single graded",
-   "steps": "①數一數→②換一換→③想一想→④填寫；連續進位滿 10 個 10 元整組拖去百位",
-   "note": "頁面上方下拉選單可切換：單次進位／連續進位（原 cy-chain 併入；十位欄 10 枚＝2 直行×5，平板上確認高度）；smoke 另跑 interactive cy chain easy free",
-   "paper": ""
-  },
-  {
-   "id": "cy-sp0",
-   "kind": "cy",
-   "title": "特殊幣湊十",
-   "endpoint": "/interactive/coin-carry",
-   "params": "base=sp0&level=normal",
-   "smoke": "interactive cy sp0 graded",
-   "steps": "①選一選→②換一換（每個綠框都要換）；其他次類①數一數→②換一換→③填",
-   "note": "頁面上方下拉選單可切換：認識湊十・基礎／湊十換 10 元／湊十換 100 元（進階，10＋50）／湊十換 1000 元（進階，100＋500）（原 cy-sp1、sp10、sp100 併入；sp10、sp100 用 level=easy，選單會帶對）",
-   "paper": ""
+   "params": "base=one&level=normal",
+   "members": [
+    {
+     "id": "cy-one",
+     "label": "1 元換 10 元",
+     "og": "滿十換一",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=one&level=normal"
+    },
+    {
+     "id": "cy-ten",
+     "label": "10 元換 100 元",
+     "og": "滿十換一",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=ten&level=normal"
+    },
+    {
+     "id": "cy-hun",
+     "label": "100 元換 1000 元",
+     "og": "滿十換一",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=hun&level=normal"
+    },
+    {
+     "id": "cy-single",
+     "label": "單次進位",
+     "og": "進位",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=single&level=normal"
+    },
+    {
+     "id": "cy-chain",
+     "label": "連續進位",
+     "og": "進位",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=chain&level=normal"
+    },
+    {
+     "id": "cy-sp0",
+     "label": "認識湊十・基礎",
+     "og": "特殊幣湊十",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=sp0&level=normal"
+    },
+    {
+     "id": "cy-sp1",
+     "label": "湊十換 10 元",
+     "og": "特殊幣湊十",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=sp1&level=normal"
+    },
+    {
+     "id": "cy-sp10",
+     "label": "湊十換 100 元（進階）",
+     "og": "特殊幣湊十",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=sp10&level=easy"
+    },
+    {
+     "id": "cy-sp100",
+     "label": "湊十換 1000 元（進階）",
+     "og": "特殊幣湊十",
+     "endpoint": "/interactive/coin-carry",
+     "params": "base=sp100&level=easy"
+    }
+   ]
   },
   {
    "id": "tm-basic-take",
    "kind": "tm",
-   "title": "拿出指定的錢",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=100&ver=basic",
    "smoke": "interactive tm",
    "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「拿好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝錢盒＋位值板橫帶（每列 5 個）",
    "note": "只用 1、10、100 元；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-special",
-   "kind": "tm",
-   "title": "拿出指定的錢：有 5 元、50 元",
+   "paper": "",
+   "title": "拿錢（基本版）",
    "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=100&ver=basic",
-   "smoke": "interactive tm",
-   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「拿好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝錢盒＋位值板橫帶（每列 5 個）",
-   "note": "錢盒限量，要用 5、50（、500）元；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-makeup",
-   "kind": "tm",
-   "title": "湊到指定的錢：不跨位",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=100&ver=basic",
-   "smoke": "interactive tm",
-   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「拿好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝錢盒＋位值板橫帶（每列 5 個）",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
-   "paper": ""
-  },
-  {
-   "id": "tm-basic-cross",
-   "kind": "tm",
-   "title": "湊到指定的錢：跨位",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=100&ver=basic",
-   "smoke": "interactive tm",
-   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「拿好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝錢盒＋位值板橫帶（每列 5 個）",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
-   "paper": ""
+   "params": "task=take&coins=plain&ver=basic",
+   "members": [
+    {
+     "id": "tm-basic-take",
+     "label": "一般錢幣",
+     "og": "拿出指定的錢",
+     "endpoint": "/interactive/take-money",
+     "params": "task=take&coins=plain&ver=basic"
+    },
+    {
+     "id": "tm-basic-special",
+     "label": "有 5 元、50 元",
+     "og": "拿出指定的錢",
+     "endpoint": "/interactive/take-money",
+     "params": "task=take&coins=special&ver=basic"
+    },
+    {
+     "id": "tm-basic-makeup",
+     "label": "不跨位",
+     "og": "湊到指定的錢",
+     "endpoint": "/interactive/take-money",
+     "params": "task=makeup&coins=plain&cross=0&ver=basic"
+    },
+    {
+     "id": "tm-basic-cross",
+     "label": "跨位",
+     "og": "湊到指定的錢",
+     "endpoint": "/interactive/take-money",
+     "params": "task=makeup&coins=plain&cross=1&ver=basic"
+    }
+   ]
   },
   {
    "id": "tm-shop-take",
    "kind": "tmshop",
-   "title": "拿出指定的錢",
-   "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=plain&range=100&ver=shop",
    "smoke": "interactive tm",
    "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「付好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝商品價錢牌、收銀盤、錢包",
    "note": "只用 1、10、100 元；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-special",
-   "kind": "tmshop",
-   "title": "拿出指定的錢：有 5 元、50 元",
+   "paper": "",
+   "title": "拿錢（應用版）",
    "endpoint": "/interactive/take-money",
-   "params": "task=take&coins=special&range=100&ver=shop",
-   "smoke": "interactive tm",
-   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「付好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "錢盒限量，要用 5、50（、500）元；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-makeup",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：不跨位",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=0&range=100&ver=shop",
-   "smoke": "interactive tm",
-   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「付好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "已經有一些錢（灰色不能動），往上加到指定金額，各位都夠放；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
-   "paper": ""
-  },
-  {
-   "id": "tm-shop-cross",
-   "kind": "tmshop",
-   "title": "湊到指定的錢：跨位",
-   "endpoint": "/interactive/take-money",
-   "params": "task=makeup&coins=plain&cross=1&range=100&ver=shop",
-   "smoke": "interactive tm",
-   "steps": "①拿一拿（拖曳、先拿大的錢；錢上標出數到多少元；按「付好了」）→②數一數、寫下每一種錢有幾個（可點錢打勾）→送出才一起檢查；左欄＝商品價錢牌、收銀盤、錢包",
-   "note": "加了之後某一位滿 10 個以上，要往上數過整十／整百；金額範圍在頁面上方的下拉選單換（11～30／31～99／101～200／201～999，預設 31～99）；規劃見 docs/拿錢互動頁_規劃.md（2026-11-12）",
-   "paper": ""
+   "params": "task=take&coins=plain&ver=shop",
+   "members": [
+    {
+     "id": "tm-shop-take",
+     "label": "一般錢幣",
+     "og": "拿出指定的錢",
+     "endpoint": "/interactive/take-money",
+     "params": "task=take&coins=plain&ver=shop"
+    },
+    {
+     "id": "tm-shop-special",
+     "label": "有 5 元、50 元",
+     "og": "拿出指定的錢",
+     "endpoint": "/interactive/take-money",
+     "params": "task=take&coins=special&ver=shop"
+    },
+    {
+     "id": "tm-shop-makeup",
+     "label": "不跨位",
+     "og": "湊到指定的錢",
+     "endpoint": "/interactive/take-money",
+     "params": "task=makeup&coins=plain&cross=0&ver=shop"
+    },
+    {
+     "id": "tm-shop-cross",
+     "label": "跨位",
+     "og": "湊到指定的錢",
+     "endpoint": "/interactive/take-money",
+     "params": "task=makeup&coins=plain&cross=1&ver=shop"
+    }
+   ]
   },
   {
    "id": "divvc-none",
    "kind": "divvc",
-   "title": "直式除法計算（沒有幫手）",
+   "smoke": "interactive div vertical",
+   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
+   "note": "",
+   "paper": "",
+   "title": "直式除法 2÷1",
    "endpoint": "/interactive/div-vertical",
    "params": "divtype=none",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvc-help",
-   "kind": "divvc",
-   "title": "直式除法計算（找幫手）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "divtype=help",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvc-big",
-   "kind": "divvc",
-   "title": "直式除法計算（不能大欺小）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "divtype=big",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvc-mix",
-   "kind": "divvc",
-   "title": "直式除法計算（三種混合）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "divtype=mix",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、招式＝九九乘法；找幫手、不能大欺小）",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvc-rem",
-   "kind": "divvc",
-   "title": "直式除法計算（二位數÷一位數，有餘數）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "rem=1",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、玩家＝除數、招式＝九九乘法；找幫手、不能大欺小；餘數要判斷妖怪是否「打不動了」，招式太弱會被妖怪笑）",
-   "note": "",
-   "paper": ""
+   "members": [
+    {
+     "id": "divvc-none",
+     "label": "沒有幫手",
+     "og": "整除",
+     "endpoint": "/interactive/div-vertical",
+     "params": "divtype=none"
+    },
+    {
+     "id": "divvc-help",
+     "label": "找幫手",
+     "og": "整除",
+     "endpoint": "/interactive/div-vertical",
+     "params": "divtype=help"
+    },
+    {
+     "id": "divvc-big",
+     "label": "不能大欺小",
+     "og": "整除",
+     "endpoint": "/interactive/div-vertical",
+     "params": "divtype=big"
+    },
+    {
+     "id": "divvc-mix",
+     "label": "三種混合",
+     "og": "整除",
+     "endpoint": "/interactive/div-vertical",
+     "params": "divtype=mix"
+    },
+    {
+     "id": "divvc-rem",
+     "label": "三種混合・有餘數",
+     "og": "有餘數",
+     "endpoint": "/interactive/div-vertical",
+     "params": "rem=1"
+    }
+   ]
   },
   {
    "id": "divvc3-mix",
    "kind": "divvc3",
-   "title": "直式除法計算（三位數÷一位數，混合）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "digits=3&divtype=mix",
    "smoke": "interactive div vertical",
    "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、玩家＝除數、招式＝九九乘法；三位數妖怪，找幫手、不能大欺小輪流出現）",
    "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvc3-zero",
-   "kind": "divvc3",
-   "title": "直式除法計算（三位數÷一位數，商要補 0）",
+   "paper": "",
+   "title": "直式除法 3÷1",
    "endpoint": "/interactive/div-vertical",
-   "params": "digits=3&divtype=zero",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、玩家＝除數、招式＝九九乘法；中間那一位打不到，商補 0）",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvc3-rem",
-   "kind": "divvc3",
-   "title": "直式除法計算（三位數÷一位數，有餘數）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "digits=3&rem=1&divtype=mix",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：除號＝房子、妖怪＝被除數、玩家＝除數、招式＝九九乘法；找幫手、不能大欺小；餘數要判斷妖怪是否「打不動了」，招式太弱會被妖怪笑）",
-   "note": "",
-   "paper": ""
+   "params": "digits=3&divtype=mix",
+   "members": [
+    {
+     "id": "divvc3-mix",
+     "label": "三種混合",
+     "og": "整除",
+     "endpoint": "/interactive/div-vertical",
+     "params": "digits=3&divtype=mix"
+    },
+    {
+     "id": "divvc3-zero",
+     "label": "商要補 0",
+     "og": "整除",
+     "endpoint": "/interactive/div-vertical",
+     "params": "digits=3&divtype=zero"
+    },
+    {
+     "id": "divvc3-rem",
+     "label": "三種混合・有餘數",
+     "og": "有餘數",
+     "endpoint": "/interactive/div-vertical",
+     "params": "digits=3&rem=1&divtype=mix"
+    }
+   ]
   },
   {
    "id": "divvcd-tens",
    "kind": "divvcd",
-   "title": "直式除法計算（除數二位數：整十）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "ddig=2&dstage=tens",
    "smoke": "interactive div vertical",
    "steps": "直式計算（打怪遊戲：玩家是整十；最高位打不動，兩隻妖怪合體找幫手；選招式、在試算格直接乘）",
    "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvcd-near",
-   "kind": "divvcd",
-   "title": "直式除法計算（除數二位數：看成整十）",
+   "paper": "",
+   "title": "直式除法 ÷二位數",
    "endpoint": "/interactive/div-vertical",
-   "params": "ddig=2&dstage=near",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：玩家不是整十，先用數線磁鐵看成整十，再選招式、用試算格算真的乘積；找幫手、不能大欺小）",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvcd-tens-q2",
-   "kind": "divvcd",
-   "title": "直式除法計算（三位數÷二位數：整十，商兩位數）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "ddig=2&digits=3&dstage=tens&qdig=2",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：三位數÷整十，商兩位數；前兩隻妖怪合體找幫手、連打兩招；選招式、在試算格直接乘）",
-   "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divvcd-near-q2",
-   "kind": "divvcd",
-   "title": "直式除法計算（三位數÷二位數：看成整十，商兩位數）",
-   "endpoint": "/interactive/div-vertical",
-   "params": "ddig=2&digits=3&dstage=near&qdig=2",
-   "smoke": "interactive div vertical",
-   "steps": "直式計算（打怪遊戲：三位數÷非整十，商兩位數；數線只接一次，每一局先看成整十試算、判斷通過後在右邊「② 真的算」算真的乘積；找幫手、不能大欺小）",
-   "note": "",
-   "paper": ""
+   "params": "ddig=2&dstage=tens",
+   "members": [
+    {
+     "id": "divvcd-tens",
+     "label": "整十",
+     "og": "二位數 ÷ 二位數",
+     "endpoint": "/interactive/div-vertical",
+     "params": "ddig=2&dstage=tens"
+    },
+    {
+     "id": "divvcd-near",
+     "label": "看成整十",
+     "og": "二位數 ÷ 二位數",
+     "endpoint": "/interactive/div-vertical",
+     "params": "ddig=2&dstage=near"
+    },
+    {
+     "id": "divvcd-tens-q2",
+     "label": "整十",
+     "og": "三位數 ÷ 二位數（商兩位數）",
+     "endpoint": "/interactive/div-vertical",
+     "params": "ddig=2&digits=3&dstage=tens&qdig=2"
+    },
+    {
+     "id": "divvcd-near-q2",
+     "label": "看成整十",
+     "og": "三位數 ÷ 二位數（商兩位數）",
+     "endpoint": "/interactive/div-vertical",
+     "params": "ddig=2&digits=3&dstage=near&qdig=2"
+    }
+   ]
   },
   {
    "id": "divdec-int",
    "kind": "divdec",
-   "title": "直式除法計算（整數÷整數，商是小數）",
-   "endpoint": "/interactive/div-int-dec",
-   "params": "",
    "smoke": "interactive div decimal",
    "steps": "直式計算（打怪遊戲：被除數後面的灰色隱藏版妖怪；後面沒有妖怪時判斷「打完了嗎」，進小數關點上小數點，商的個位 ✗ 變身成 0，一直打到除盡）",
    "note": "",
-   "paper": ""
-  },
-  {
-   "id": "divdec-dec",
-   "kind": "divdec",
-   "title": "直式除法計算（小數÷整數）",
-   "endpoint": "/interactive/div-dec-int",
+   "paper": "",
+   "title": "直式除法：商是小數",
+   "endpoint": "/interactive/div-int-dec",
    "params": "",
-   "smoke": "interactive div decimal",
-   "steps": "直式計算（打怪遊戲：下一隻妖怪在小數點後面就直接進小數關，商的小數點對齊被除數；商的個位 ✗ 變身成 0；剩下沒打完叫醒灰色隱藏版妖怪，一直打到除盡）",
-   "note": "",
-   "paper": ""
+   "members": [
+    {
+     "id": "divdec-int",
+     "label": "整數 ÷ 整數",
+     "og": "商是小數",
+     "endpoint": "/interactive/div-int-dec",
+     "params": ""
+    },
+    {
+     "id": "divdec-dec",
+     "label": "小數 ÷ 整數",
+     "og": "商是小數",
+     "endpoint": "/interactive/div-dec-int",
+     "params": ""
+    }
+   ]
   },
   {
    "id": "ff-share",
    "kind": "ff",
-   "title": "分分看：平分給幾個人",
-   "endpoint": "/interactive/fenfen",
-   "params": "ftype=share&level=normal",
    "smoke": "interactive ff share graded",
    "steps": "① 一人一個輪流發 → ② 填一個人有幾個",
    "note": "對應紙本 N203A 分分看",
-   "paper": "N203A 分分看"
-  },
-  {
-   "id": "ff-group",
-   "kind": "ff",
-   "title": "分分看：每幾個包成一包",
+   "paper": "N203A 分分看",
+   "title": "分分看",
    "endpoint": "/interactive/fenfen",
-   "params": "ftype=group&level=normal",
-   "smoke": "interactive ff group graded",
-   "steps": "① 一把一把放進盒子（長出加法算式）→ ② 填共可包成幾包",
-   "note": "對應紙本 N203A 分分看",
-   "paper": "N203A 分分看"
-  },
-  {
-   "id": "ff-rem",
-   "kind": "ff",
-   "title": "分分看：有餘數（幾盤、剩幾個）",
-   "endpoint": "/interactive/fenfen",
-   "params": "ftype=rem&level=normal",
-   "smoke": "interactive ff rem graded",
-   "steps": "① 點著數圈成一盤 → ② 拉去盤子 → ③ 填幾盤、剩幾個",
-   "note": "對應紙本 N203A 分分看",
-   "paper": "N203A 分分看"
+   "params": "ftype=share",
+   "members": [
+    {
+     "id": "ff-share",
+     "label": "平分給幾個人",
+     "og": "分分看",
+     "endpoint": "/interactive/fenfen",
+     "params": "ftype=share"
+    },
+    {
+     "id": "ff-group",
+     "label": "每幾個包成一包",
+     "og": "分分看",
+     "endpoint": "/interactive/fenfen",
+     "params": "ftype=group"
+    },
+    {
+     "id": "ff-rem",
+     "label": "有餘數：幾盤、剩幾個",
+     "og": "分分看",
+     "endpoint": "/interactive/fenfen",
+     "params": "ftype=rem"
+    }
+   ]
   },
   {
    "id": "cf-plate",
    "kind": "cf",
-   "title": "除法概念：分到盤子，連到算式",
-   "endpoint": "/interactive/chufa",
-   "params": "stage=plate&level=normal",
    "smoke": "interactive cf plate graded",
    "steps": "① 猜一個人幾個（　）× X ＝ 袋子 → 系統發盤子 → 減減看，剩 0 才成立（不成立就再猜）→ ② 填一個人有幾個",
    "note": "對應紙本 N210A 除法概念",
-   "paper": "N210H 階段七 除法概念（先畫再乘）"
-  },
-  {
-   "id": "cf-tree",
-   "kind": "cf",
-   "title": "除法概念：分解圖試一試（2–5 人）",
+   "paper": "N210H 階段七 除法概念（先畫再乘）",
+   "title": "除法概念：平分連到算式",
    "endpoint": "/interactive/chufa",
-   "params": "stage=tree&div=small&level=normal",
-   "smoke": "interactive cf tree small graded",
-   "steps": "① 猜一個人幾個（　）× X ＝ 袋子 → 格子一格一格填好 → 減減看，剩 0 才成立（不成立就再猜）→ ② 填一個人有幾個",
-   "note": "對應紙本 N210A 除法概念",
-   "paper": "N210E 移除輔助圖（除數 2–5）"
+   "params": "stage=plate",
+   "members": [
+    {
+     "id": "cf-plate",
+     "label": "分到盤子，連到算式",
+     "og": "除法概念",
+     "endpoint": "/interactive/chufa",
+     "params": "stage=plate"
+    },
+    {
+     "id": "cf-tree",
+     "label": "分解圖試一試（2～5 人）",
+     "og": "除法概念",
+     "endpoint": "/interactive/chufa",
+     "params": "stage=tree&div=small"
+    }
+   ]
   },
   {
    "id": "divwp-share0",
    "kind": "divwp",
-   "title": "除法應用題：平分（沒有剩）",
-   "endpoint": "/interactive/div-wordprob",
-   "params": "dtype=share&rem=0&level=normal",
    "smoke": "interactive divwp",
    "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
    "note": "九九範圍（除數、商 2～9）；平分＝一個人有幾個，分組＝可以裝幾盒",
-   "paper": ""
-  },
-  {
-   "id": "divwp-share1",
-   "kind": "divwp",
-   "title": "除法應用題：平分（有剩）",
+   "paper": "",
+   "title": "除法應用題（九九範圍）",
    "endpoint": "/interactive/div-wordprob",
-   "params": "dtype=share&rem=1&level=normal",
-   "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
-   "note": "九九範圍（除數、商 2～9）；平分＝一個人有幾個，分組＝可以裝幾盒",
-   "paper": ""
-  },
-  {
-   "id": "divwp-group0",
-   "kind": "divwp",
-   "title": "除法應用題：分組（沒有剩）",
-   "endpoint": "/interactive/div-wordprob",
-   "params": "dtype=group&rem=0&level=normal",
-   "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
-   "note": "九九範圍（除數、商 2～9）；平分＝一個人有幾個，分組＝可以裝幾盒",
-   "paper": ""
-  },
-  {
-   "id": "divwp-group1",
-   "kind": "divwp",
-   "title": "除法應用題：分組（有剩）",
-   "endpoint": "/interactive/div-wordprob",
-   "params": "dtype=group&rem=1&level=normal",
-   "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
-   "note": "九九範圍（除數、商 2～9）；平分＝一個人有幾個，分組＝可以裝幾盒",
-   "paper": ""
-  },
-  {
-   "id": "divwp-mix1",
-   "kind": "divwp",
-   "title": "除法應用題：平分與分組混合（有剩）",
-   "endpoint": "/interactive/div-wordprob",
-   "params": "dtype=mix&rem=1&level=normal",
-   "smoke": "interactive divwp",
-   "steps": "① 這題要算什麼 →（強提示：選方法）→ 猜一猜、減減看（只用乘法與減法）→ 答句；強、弱提示一開題就有袋子與盤子圖例",
-   "note": "第 1、3、5 題平分，2、4 題分組",
-   "paper": ""
+   "params": "dtype=share&rem=0",
+   "members": [
+    {
+     "id": "divwp-share0",
+     "label": "平分",
+     "og": "沒有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "dtype=share&rem=0"
+    },
+    {
+     "id": "divwp-group0",
+     "label": "分組",
+     "og": "沒有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "dtype=group&rem=0"
+    },
+    {
+     "id": "divwp-share1",
+     "label": "平分",
+     "og": "有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "dtype=share&rem=1"
+    },
+    {
+     "id": "divwp-group1",
+     "label": "分組",
+     "og": "有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "dtype=group&rem=1"
+    },
+    {
+     "id": "divwp-mix1",
+     "label": "平分與分組混合",
+     "og": "有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "dtype=mix&rem=1"
+    }
+   ]
   },
   {
    "id": "divwp2-share0",
    "kind": "divwp",
-   "title": "除法應用題：二位數直式・平分（沒有剩）",
+   "smoke": "interactive divwp2",
+   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
+   "note": "二位數÷一位數、商兩位數，直式打怪",
+   "paper": "",
+   "title": "除法應用題（二位數直式）",
    "endpoint": "/interactive/div-wordprob",
    "params": "digits=2&dtype=share&rem=0",
-   "smoke": "interactive divwp2",
-   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
-   "note": "二位數÷一位數、商兩位數，直式打怪",
-   "paper": ""
-  },
-  {
-   "id": "divwp2-share1",
-   "kind": "divwp",
-   "title": "除法應用題：二位數直式・平分（有剩）",
-   "endpoint": "/interactive/div-wordprob",
-   "params": "digits=2&dtype=share&rem=1",
-   "smoke": "interactive divwp2",
-   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
-   "note": "二位數÷一位數、商兩位數，直式打怪",
-   "paper": ""
-  },
-  {
-   "id": "divwp2-group0",
-   "kind": "divwp",
-   "title": "除法應用題：二位數直式・分組（沒有剩）",
-   "endpoint": "/interactive/div-wordprob",
-   "params": "digits=2&dtype=group&rem=0",
-   "smoke": "interactive divwp2",
-   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
-   "note": "二位數÷一位數、商兩位數，直式打怪",
-   "paper": ""
-  },
-  {
-   "id": "divwp2-group1",
-   "kind": "divwp",
-   "title": "除法應用題：二位數直式・分組（有剩）",
-   "endpoint": "/interactive/div-wordprob",
-   "params": "digits=2&dtype=group&rem=1",
-   "smoke": "interactive divwp2",
-   "steps": "① 這題要算什麼 → ② 直式打怪 → ③ 答句（有剩寫兩句）",
-   "note": "二位數÷一位數、商兩位數，直式打怪",
-   "paper": ""
+   "members": [
+    {
+     "id": "divwp2-share0",
+     "label": "平分",
+     "og": "沒有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "digits=2&dtype=share&rem=0"
+    },
+    {
+     "id": "divwp2-group0",
+     "label": "分組",
+     "og": "沒有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "digits=2&dtype=group&rem=0"
+    },
+    {
+     "id": "divwp2-share1",
+     "label": "平分",
+     "og": "有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "digits=2&dtype=share&rem=1"
+    },
+    {
+     "id": "divwp2-group1",
+     "label": "分組",
+     "og": "有剩",
+     "endpoint": "/interactive/div-wordprob",
+     "params": "digits=2&dtype=group&rem=1"
+    }
+   ]
   },
   {
    "id": "pro-outer",
    "kind": "pro",
-   "title": "量角器：外圈（黑色數字）",
-   "endpoint": "/interactive/protractor",
-   "params": "ring=outer",
    "smoke": "interactive pro graded",
    "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推桿往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
    "note": "四年級角度：邊在左邊，從左邊的 0 數外圈黑字",
-   "paper": "（無對應紙本）"
-  },
-  {
-   "id": "pro-inner",
-   "kind": "pro",
-   "title": "量角器：內圈（紅色數字）",
+   "paper": "（無對應紙本）",
+   "title": "量角器",
    "endpoint": "/interactive/protractor",
-   "params": "ring=inner",
-   "smoke": "interactive pro graded",
-   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推桿往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
-   "note": "四年級角度：邊在右邊，從右邊的 0 數內圈紅字",
-   "paper": "（無對應紙本）"
-  },
-  {
-   "id": "pro-measure",
-   "kind": "pro",
-   "title": "量角器：內外圈混合",
-   "endpoint": "/interactive/protractor",
-   "params": "ring=mix",
-   "smoke": "interactive pro graded",
-   "steps": "① 紅點拖到角的尖尖 → ② 轉一轉，黑線貼住開始邊 → ③ 推桿往上推到終點邊 → 整理動畫（點→邊→邊）→ ④ 填這個角幾度",
-   "note": "四年級角度：邊在左右各半",
-   "paper": "（無對應紙本）"
+   "params": "ring=outer",
+   "members": [
+    {
+     "id": "pro-outer",
+     "label": "外圈（黑色數字）",
+     "og": "量角器",
+     "endpoint": "/interactive/protractor",
+     "params": "ring=outer"
+    },
+    {
+     "id": "pro-inner",
+     "label": "內圈（紅色數字）",
+     "og": "量角器",
+     "endpoint": "/interactive/protractor",
+     "params": "ring=inner"
+    },
+    {
+     "id": "pro-measure",
+     "label": "內外圈混合",
+     "og": "量角器",
+     "endpoint": "/interactive/protractor",
+     "params": "ring=mix"
+    }
+   ]
   },
   {
    "id": "game-breakfast-1",
