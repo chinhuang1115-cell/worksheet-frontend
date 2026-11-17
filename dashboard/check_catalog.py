@@ -19,7 +19,9 @@ errs = []
 listed = set()
 for i in cat['items']:
     listed.add(i['endpoint']); [listed.add(m['endpoint']) for m in i.get('members', [])]
-for m in sorted(routes - listed): errs.append(f'漏列端點：{m}')
+offline = set(cat.get('offline', {}))      # 刻意下架、後端端點先留著的（catalog.json 的 offline：端點 → 原因）
+for m in sorted(routes - listed - offline): errs.append(f'漏列端點：{m}')
+for m in sorted(offline - routes): errs.append(f'offline 列了後端沒有的端點：{m}')
 for s in sorted(listed - routes): errs.append(f'後端已不存在：{s}')
 ids = [i['id'] for i in cat['items']] + [m['id'] for i in cat['items'] for m in i.get('members', []) if m['id'] != i['id']]
 for d in {x for x in ids if ids.count(x) > 1}: errs.append(f'id 重複：{d}')
