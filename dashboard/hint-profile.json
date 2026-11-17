@@ -151,6 +151,24 @@
    "2": false,
    "1": false,
    "desc": "購物遊戲：算好總價後，先把錢包的錢放到「需要的錢」虛線錢幣比一比夠不夠，再付錢（比照第 5 關自由配；自由配三種提示都有）"
+  },
+  "selfWhere": {
+   "3": true,
+   "2": true,
+   "1": false,
+   "desc": "自助選購店：走道上方圓點告訴學生「還有東西沒拿齊的是哪一段」（發亮）；強提示另外在全景把那排貨架框起來、架上要拿的東西發光（發光沿用 flash）（使用者 2026-11-17）"
+  },
+  "selfSay": {
+   "3": true,
+   "2": false,
+   "1": false,
+   "desc": "自助選購店：每拿一個就念「鉛筆，1 枝」（強有；弱、無只有音效）（使用者 2026-11-17）"
+  },
+  "selfCheck": {
+   "3": true,
+   "2": true,
+   "1": false,
+   "desc": "自助選購店：拿錯／多拿立刻說，任務卡打勾或變紅，「去結帳」要任務完成才亮（強、弱有）；無提示沒有打勾變紅，「去結帳」一直可以按，按了才檢查（使用者 2026-11-17）"
   }
  },
  "adopted": [
@@ -176,7 +194,8 @@
    "proRing",
    "wpArt",
    "tmGhost",
-   "tmTally"
+   "tmTally",
+   "selfWhere"
   ],
   "say": [
    "tipbox",
@@ -187,7 +206,9 @@
    "readAsk",
    "calcTip",
    "readWrongMsg",
-   "proBubble"
+   "proBubble",
+   "selfSay",
+   "selfCheck"
   ],
   "do": [
    "autoDo",
