@@ -4,15 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>互動遊戲小鎮</title>
-<!-- 互動遊戲導覽頁「小鎮地圖」。2026-11-18 起改成「半圓三扇」（價位街區批次 Z1，docs/價位街區_規劃.md）：入口在下方中央，往上展開成半圓、切三片 60° 扇形，
-     左＝巷口小街（100 元以內）、中＝熱鬧大街（1000 元以內）、右＝百貨商場（10000 元以內）；兩條交界靠入口處各一間銀行（還不能點）。
-     店的位置不再手填：依各扇區的形狀自動排開（layoutZone：貪婪取點＋微調，店牌不重疊、不出扇形；放不下就把整張地圖的店一起縮小）。
-     新增店＝catalog 的 kind:'game' 加一筆（district 預設 100）；規劃中的店寫進下面的 PLACES；解鎖街區＝改 LOCKED。
-     （2026-11-15 的舊版：參考繪本地圖，一條彎彎的主街、店散在路兩邊。）
-     2026-11-10～11-14 是「商店街」版（模擬圖 C），右側欄選關卡與提示強弱的做法沿用。
-     資料讀 dashboard/catalog.json 的 kind:'game' 項目（shop／tag／desc／stages）：新增遊戲只要加一筆資料＋重產縮圖。
-     店的外觀（emoji、雨棚色）查下面的 LOOK 表（以 shop 店名對應，查不到用預設外觀）。
-     PLACES＝各街區規劃中的店與買票場所（灰色「即將開幕」）；上線後同街區的 catalog 有同名 shop 就自動變彩色。模擬圖 docs/mock-district-map/。 -->
+<!-- 互動遊戲導覽頁「小鎮地圖」。2026-11-18 起是 Gemini 插畫版（docs/價位街區_規劃.md 第 10 節）：底圖 games/town/bg.webp（1376×768），
+     店家是去背、依 alpha 裁邊的 games/town/shop_*.webp（meta.json 記檔名與寬高），由程式放在空地上；店名牌、區名牌、「即將開幕」、銀行字都由程式寫。
+     左＝巷口小街（100 元以內）、中＝熱鬧大街（1000 元以內）、右＝百貨商場（10000 元以內）；銀行（河上木橋旁、山丘小路旁）還不能點。
+     店的位置＝下面的 PLOTS 手調表；新增店＝catalog 的 kind:'game' 加一筆（district 預設 100）＋PLOTS 加位置（沒加會自動拿空地）＋games/town 補圖（沒圖用施工中）；
+     規劃中的店寫進 PLACES；解鎖街區＝改 LOCKED。資料讀 dashboard/catalog.json 的 kind:'game' 項目（shop／tag／desc／stages）。
+     注意：load() 只跑一次；map() 每次整個重畫，不會疊加元素。 -->
 <style>
 @font-face{font-family:"芫荽";src:url('../fonts/Iansui-Regular.ttf') format('truetype');font-display:swap}
 :root{--L0:#3f8f8a;--L1:#2f4d6e;--bg:#f6f5f2;--card:#fff;--ink:#2b3440;--mute:#6b7683;--line:#e3e0d9;--ac:#e8863a;--game:#ea580c;--game-ink:#c2410c;--h1:#2f4d6e;--frame:#3b2f2f}
@@ -31,18 +28,23 @@ h1{margin:0;font-size:28px;color:var(--h1)}
 .sub{color:var(--mute);font-size:16px;margin-bottom:8px}
 /* 地圖：插畫本身固定用亮色（像一張紙本地圖），深色模式只換外框與頁面 */
 .map{flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:center}
-.map svg{display:block;max-width:100%;max-height:100%;border-radius:22px;border:4px solid var(--frame);box-shadow:0 6px 0 rgba(0,0,0,.12);background:#dcfce7}
+.map svg{display:block;max-width:100%;max-height:100%;border-radius:22px;border:4px solid var(--frame);box-shadow:0 6px 0 rgba(0,0,0,.12);background:#bfe3f0}
 .map svg text{font-family:"芫荽","Noto Sans TC",sans-serif}
 .shop{cursor:pointer;outline:none}
 .shop .lift{transition:transform .2s}
-.shop:hover .lift{transform:translateY(-6px)}
-.shop .ring{fill:none;stroke:transparent;stroke-width:6}
+.shop:hover .lift{transform:translateY(-5px)}
+.shop .ring{fill:none;stroke:transparent;stroke-width:5}
 .shop.on .ring{stroke:var(--game)}
-.shop:focus-visible .ring{stroke:var(--ac);stroke-dasharray:10 6}
-.shop .lb{fill:#fff}.shop .lbt{fill:#2b3440}
-.shop.on .lb{fill:#ea580c}.shop.on .lbt{fill:#fff}
-.shop.soon{cursor:default}.shop.soon .lb{fill:#f3f4f6}.shop.soon .lbt{fill:#6b7683}
-.shop.soon:hover .lift{transform:none}
+.shop.on .simg{filter:drop-shadow(0 0 7px #fb923c) drop-shadow(0 0 3px #fb923c)}
+.shop:focus-visible .ring{stroke:#1d4ed8;stroke-dasharray:12 7}
+.plt .lb{fill:#fff;stroke:#3b2f2f;stroke-width:2}.plt .lbt{fill:#2b3440}
+.plt.on .lb{fill:#ea580c}.plt.on .lbt{fill:#fff}
+.plt.soon .lb{fill:#f3f4f6;stroke:#6b7683}.plt.soon .lbt{fill:#6b7683}
+.plt.lock .lb{fill:#e5e7eb;stroke:#9ca3af}.plt.lock .lbt{fill:#6b7280}
+.shop.soon,.shop.lock{cursor:default}.shop.soon:hover .lift,.shop.lock:hover .lift{transform:none}
+.shop.soon .simg{filter:saturate(.45) brightness(1.06);opacity:.9}
+.shop.lock .simg,.simg.site.lock{filter:grayscale(1) brightness(1.08)}
+.bank .lb{stroke:#3b2f2f;stroke-width:2}
 /* 右側欄：選中的店、關卡、提示強弱 */
 aside{background:var(--bg);border-left:4px solid var(--game);padding:18px;overflow:auto}
 aside .nm{font-size:26px;font-weight:800}
@@ -89,159 +91,96 @@ aside .ds{font-size:16px;color:var(--mute);margin-bottom:10px}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LV=[{id:3,name:'強',mode:'full'},{id:2,name:'弱',mode:'faded'},{id:1,name:'無',mode:'free'}];
-/* 店的外觀：emoji、雨棚兩色、牆色（雨棚色照 docs/商店街新增店家_規劃.md 的裝潢配色）；買票的場所另用圓頂屋頂區分 */
-const LOOK={'早餐店':['🍳','#ef4444','#fff','#fff7ed'],'麵包店':['🥐','#f472b6','#fff','#fdf2f8'],'文具店':['✏️','#38bdf8','#fff','#eff6ff'],
-  '糖果餅乾店':['🍭','#c084fc','#fff','#faf5ff'],'飲料店':['🧋','#34d399','#fff','#ecfdf5'],'玩具店':['🪀','#ef4444','#facc15','#fefce8'],
-  '便當店':['🍱','#f97316','#fff','#fff7ed'],'中式餐館':['🥢','#dc2626','#fbbf24','#fef3c7'],'服飾店':['🧦','#fb7185','#9ca3af','#fff1f2'],
-  '鞋店':['👟','#a78bfa','#fff','#f5f3ff'],'書店':['📚','#0d9488','#fff','#f0fdfa'],'運動用品店':['⚽','#22c55e','#fff','#f0fdf4'],'水果行':['🍎','#ef4444','#fde68a','#fef2f2'],
-  '家電行':['📺','#64748b','#fff','#f1f5f9'],'腳踏車店':['🚲','#16a34a','#fff','#f0fdf4'],'電腦用品店':['💻','#0ea5e9','#fff','#f0f9ff'],'家具行':['🛋️','#b45309','#fde68a','#fffbeb'],'樂器行':['🎹','#e11d48','#fff','#fff1f2'],
-  '公車站':['🚌','#0ea5e9','#fff','#f0f9ff'],'動物園':['🦁','#65a30d','#fff','#f7fee7'],'電影院':['🎬','#7c3aed','#fff','#f5f3ff'],'博物館':['🏛️','#78716c','#fff','#fafaf9'],'火車站':['🚆','#0284c7','#fff','#f0f9ff'],
-  '高鐵站':['🚄','#f97316','#fff','#fff7ed'],'遊樂園':['🎢','#db2777','#fff','#fdf2f8'],'飯店':['🏨','#0f766e','#fff','#f0fdfa']};
-const LOOK0=['🏪','#f59e0b','#fff','#fffbeb'];
-/* 三個價位街區（左→右）。LOCKED＝街區是否鎖住：true＝灰色＋🔒、整區不能點。
+/* 三個價位街區（左→右）。LOCKED＝街區是否鎖住：true＝整區灰階＋🔒、不能點。
    ⚠️ 解鎖機制（銀行換錢、老師設定、localStorage 進度）是批次 Z3，現在先手動改這裡；要開放某一區，把它改成 false 就好。 */
 const LOCKED={100:false,1000:true,10000:true};
 const DISTRICTS=[
-  {d:100,name:'巷口小街',lim:'100 元以內',money:'1・5・10・50 元',c:'#f97316',bg:'#fff7ed'},
-  {d:1000,name:'熱鬧大街',lim:'1000 元以內',money:'＋100・500 元鈔',c:'#2563eb',bg:'#eff6ff'},
-  {d:10000,name:'百貨商場',lim:'10000 元以內',money:'＋1000 元鈔',c:'#9333ea',bg:'#faf5ff'}];
-/* 各街區規劃中的店（灰色「即將開幕」）與買票場所（圓頂）。['店名','emoji 換成別的']＝同名店在不同街區用不同圖（服飾店三區都有）。
-   上線後 catalog 有同名、同街區的 shop 就自動變彩色可點。便當店等三位數的套餐便當，所以在熱鬧大街、不在巷口小街。 */
-const PLACES={
-  100:{shops:['飲料店','中式餐館','服飾店'],venues:['公車站','動物園']},
-  1000:{shops:[['服飾店','👕'],'鞋店','便當店','書店','運動用品店','水果行'],venues:['電影院','博物館','火車站']},
-  10000:{shops:['家電行','腳踏車店','電腦用品店','家具行','樂器行',['服飾店','🧥']],venues:['高鐵站','遊樂園','飯店']}};
-/* 地圖幾何（viewBox 1000×530）：圓心在下方中央，半徑 R0 以內是入口，R0～R1 切三片 60° 扇形（zone i 的角度 180-60(i+1)～180-60i） */
-const GEO={cx:500,cy:508,R0:80,R1:492,W:1000,H:530};
-const BS=.78,BANK={r:158,w:76*BS,h:124*BS},GAP=3;   /* 銀行縮放 BS；方塊＝本體加上兩顆小標籤 */
-const rad=d=>d*Math.PI/180;
-const P=(r,d)=>[GEO.cx+r*Math.cos(rad(d)),GEO.cy-r*Math.sin(rad(d))];
-let CAT=null,GAMES=[],SEL=null,LEVEL=2,LAYOUT=null;
+  {d:100,name:'巷口小街',lim:'100 元以內',money:'用到：1・5・10・50 元',c:'#f97316'},
+  {d:1000,name:'熱鬧大街',lim:'1000 元以內',money:'用到：＋100・500 元鈔',c:'#2563eb'},
+  {d:10000,name:'百貨商場',lim:'10000 元以內',money:'用到：＋1000 元鈔',c:'#9333ea'}];
+/* 各街區規劃中的店與買票場所（淡色＋「即將開幕」）。上線後 catalog 有同名、同街區的 shop 就自動變彩色可點。
+   圖檔對照：店名 → games/town/meta.json 的 key；服飾店三區不同圖（服飾店_100／_1000／_10000），其他同名。 */
+const PLACES={100:['飲料店','中式餐館','服飾店','公車站','動物園'],1000:['服飾店','鞋店','便當店','書店','運動用品店','水果行','電影院','博物館','火車站'],
+  10000:['家電行','腳踏車店','電腦用品店','家具行','樂器行','服飾店','高鐵站','遊樂園','飯店']};
+const imgKey=(n,d)=>n==='服飾店'?'服飾店_'+d:n;
+/* ===== 小鎮地圖座標表（viewBox 1376×768，同底圖 bg.webp 的像素座標）=====
+   plots[店名]＝[x,y,w]：x＝店圖中心、y＝店圖底邊（地面）、w＝店圖寬（高度依圖比例自動算）；店名牌貼在 y 下方。
+   spare＝空地（沒有指定店的時候畫「施工中」；catalog 新增、plots 沒有的店會自動拿一個空地，用自己的圖或施工中圖）。
+   怎麼調：python3 docs/mock-town-gemini/place_town.py（自動排＋統計違規），再用 node docs/mock-town-gemini/town_check.js 驗收。 */
+const PLOTS={
+  100:{plots:{"早餐店":[167,321,89],"麵包店":[121,516,125],"文具店":[339,659,118],"糖果餅乾店":[69,351,113],"玩具店":[468,332,100],"飲料店":[226,470,71],"中式餐館":[479,531,104],"服飾店":[374,389,71],"公車站":[305,215,56],"動物園":[257,352,101]},spare:[[384,174,82],[345,279,67],[284,514,42],[231,599,80]]},
+  1000:{plots:{"服飾店":[733,384,65],"鞋店":[797,335,68],"便當店":[663,373,83],"書店":[744,220,80],"運動用品店":[589,428,68],"水果行":[575,245,95],"電影院":[712,518,56],"博物館":[798,543,92],"火車站":[597,550,85]},spare:[]},
+  10000:{plots:{"家電行":[1144,443,86],"腳踏車店":[1261,274,107],"電腦用品店":[997,304,92],"家具行":[1117,231,83],"樂器行":[1247,439,85],"服飾店":[1061,500,92],"高鐵站":[979,387,71],"遊樂園":[1063,636,118],"飯店":[891,503,83]},spare:[[969,445,57]]}};
+const ZPLATE=[[260,16],[688,10],[1150,16]],ZW=250,ZH=82;       /* 區名牌：中心 x、上緣 y */
+const BANKS=[[490,600],[905,600]],BANKW=78;                      /* 銀行（河上木橋旁、山丘小路旁）：中心 x、y */
+const FS=17,PH=22;                                               /* 店名牌字級（地圖單位；1024 寬時約 11.9px）、高度 */
+const W=1376,H=768;
+let CAT=null,GAMES=[],META={},SEL=null,LEVEL=2;
 try{const v=+localStorage.getItem('ys_game_lv');if([1,2,3].includes(v))LEVEL=v}catch(e){}      /* 記住老師上次選的提示強弱（只是方便，讀不到就用弱提示） */
 function url(g,n){const lv=LV.find(l=>l.id===LEVEL);const p=(g.params||'').split('&').filter(x=>x&&!/^stage=/.test(x));p.push('stage='+n,'lv='+LEVEL,'mode='+lv.mode);return CAT.backend+g.endpoint+'?'+p.join('&')}
 const nameOf=g=>g.shop||g.title;
 const distOf=g=>DISTRICTS.some(z=>z.d===g.district)?g.district:100;
-const emoOf=g=>(LOOK[nameOf(g)]||LOOK0)[0];
 /* 關卡欄在地圖下方時（≤1100px），點店後捲到關卡欄讓學生看得到 */
 function toSide(){if(matchMedia('(max-width:1100px)').matches)$('#side').scrollIntoView({behavior:'smooth',block:'end'})}
 function side(){const g=GAMES.find(x=>x.id===SEL);if(!g){$('#side').innerHTML='';return}
-  $('#side').innerHTML=`<div class="sidehead"><div class="nm">${emoOf(g)} ${esc(nameOf(g))}</div><div class="ds">${esc(g.desc||'')}</div>
+  $('#side').innerHTML=`<div class="sidehead"><div class="nm">${esc(nameOf(g))}</div><div class="ds">${esc(g.desc||'')}</div>
     <div class="lvlrow">提示：<span class="lvl">${LV.map(l=>`<button type="button" data-lv="${l.id}" class="${l.id===LEVEL?'on':''}" aria-pressed="${l.id===LEVEL}">${l.name}</button>`).join('')}</span></div></div>
     <div class="stages">${(g.stages||[]).map(s=>`<a class="stage" href="${esc(url(g,s.n))}" target="_blank" rel="noopener"><b>第 ${s.n} 關</b><span>${esc(s.name)}</span><small>${esc(s.sub||'')}</small></a>`).join('')}</div>`;
   $('#side').querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{LEVEL=+b.dataset.lv;try{localStorage.setItem('ys_game_lv',LEVEL)}catch(e){}side()})}
 
-/* ---------- 版面：每個扇區自動排店 ---------- */
-/* 一間店的「佔位方塊」：建築縮放 s、店名牌字級隨 s 縮小；原點＝門口地面，方塊中心相對原點的 y 位移＝cyoff */
-function dims(name,s){const fs=Math.max(11.5,Math.min(15,s*30+1.5)),ph=fs+6,lw=[...name].length*fs+10;
-  const w=Math.max(150*s,lw),top=-158*s,bot=4+ph;return{fs,ph,lw,w,h:bot-top,top,bot,cyoff:(top+bot)/2}}
-function zoneItems(zi){const D=DISTRICTS[zi],live=GAMES.filter(g=>distOf(g)===D.d),names=new Set(live.map(nameOf));
-  const planned=(list,venue)=>list.map(e=>Array.isArray(e)?{name:e[0],emo:e[1],venue}:{name:e,venue}).filter(x=>!names.has(x.name));
-  const pl=PLACES[D.d]||{shops:[],venues:[]};
-  return live.map(g=>({name:nameOf(g),id:g.id,venue:false})).concat(planned(pl.shops,false),planned(pl.venues,true))}
-function zoneGeo(zi){const lo=180-60*(zi+1),hi=lo+60,a=rad(lo),b=rad(hi);
-  const inS=(x,y,m)=>{const dx=x-GEO.cx,dy=GEO.cy-y;return Math.hypot(dx,dy)<=GEO.R1-m&&Math.cos(a)*dy-Math.sin(a)*dx>=m&&dx*Math.sin(b)-dy*Math.cos(b)>=m};
-  const fits=(x,y,w,h,m)=>{if(!(inS(x-w/2,y-h/2,m)&&inS(x+w/2,y-h/2,m)&&inS(x-w/2,y+h/2,m)&&inS(x+w/2,y+h/2,m)))return false;
-    const nx=Math.min(Math.max(GEO.cx,x-w/2),x+w/2),ny=Math.min(Math.max(GEO.cy,y-h/2),y+h/2);return Math.hypot(nx-GEO.cx,ny-GEO.cy)>=GEO.R0+m};
-  return{lo,hi,inS,fits}}
-const clear=(p,q)=>Math.max(Math.abs(p.x-q.x)-(p.w+q.w)/2,Math.abs(p.y-q.y)-(p.h+q.h)/2);   /* ≥ 0 才沒重疊；越大離得越開 */
-function plateOf(zi){const D=DISTRICTS[zi],t=D.name+(LOCKED[D.d]?'🔒':'');
-  return{lines:[t,D.lim,'用到：'+D.money],w:Math.max(t.length*22+40,(D.lim.length*10)+16,('用到：'+D.money).length*12+16),h:76}}
-function layoutZone(zi,s,items){const G=zoneGeo(zi),mid=(G.lo+G.hi)/2,pl=plateOf(zi);
-  const banks=[120,60].map(a=>{const[x,y]=P(BANK.r,a);return{x,y,w:BANK.w,h:BANK.h}});
-  let plate=null;for(let r=GEO.R1-40;r>GEO.R0+100;r-=3){const[x,y]=P(r,mid),q={x,y,w:pl.w,h:pl.h};
-    if(G.fits(x,y,q.w,q.h,4)&&banks.every(k=>clear(q,k)>=GAP)){plate=q;break}}
-  if(!plate)return null;
-  const obs=banks.concat([plate]),ds=items.map(it=>dims(it.name,s));
-  const cand=[];for(let x=GEO.cx-GEO.R1;x<=GEO.cx+GEO.R1;x+=6)for(let y=GEO.cy-GEO.R1;y<=GEO.cy;y+=6)if(G.inS(x,y,10))cand.push([x,y]);
-  const placed=[],box=(i,x,y)=>({x,y,w:ds[i].w,h:ds[i].h});
-  const score=(i,x,y,others)=>{const q=box(i,x,y);let m=1e9;for(const o of others){const c=clear(q,o);if(c<m)m=c}return m};
-  const best=(i,others)=>{let bx=null,bs=-1e9;for(const[x,y]of cand){if(!G.fits(x,y,ds[i].w,ds[i].h,GAP))continue;const sc=score(i,x,y,others);if(sc>bs){bs=sc;bx=[x,y]}}return bx&&{x:bx[0],y:bx[1],sc:bs}};
-  const order=items.map((_,i)=>i).sort((i,j)=>ds[j].w-ds[i].w);
-  for(const i of order){const b=best(i,obs.concat(Object.values(placed).map(p=>box(p.i,p.x,p.y))));if(!b)return null;placed[i]={i,x:b.x,y:b.y}}
-  for(let pass=0;pass<8;pass++)for(const i of order){const others=obs.concat(items.map((_,j)=>j).filter(j=>j!==i).map(j=>box(j,placed[j].x,placed[j].y)));
-    const b=best(i,others);if(b)placed[i]={i,x:b.x,y:b.y}}
-  let mc=1e9;const all=obs.concat(items.map((_,i)=>box(i,placed[i].x,placed[i].y)));
-  for(let i=0;i<all.length;i++)for(let j=i+1;j<all.length;j++){mc=Math.min(mc,clear(all[i],all[j]))}
-  return{ok:mc>=GAP-.01,plate,banks,pl,pos:items.map((it,i)=>({it,x:placed[i].x,y:placed[i].y,d:ds[i]}))}}
-/* 找「所有扇區都排得下」的最大縮放 s；店很多時自動縮小（排不下就用最小的） */
-function computeLayout(){const zs=DISTRICTS.map((_,i)=>zoneItems(i));let res=null,sUsed=0;
-  for(let s=.56;s>=.24;s=Math.round((s-.02)*100)/100){const r=zs.map((it,i)=>layoutZone(i,s,it));if(r.every(x=>x&&x.ok)){res=r;sUsed=s;break}if(s<=.241){res=r;sUsed=s}}
-  return{s:sUsed,zones:res,items:zs}}
-
-/* ---------- 畫 ---------- */
-/* 一間店（buildings 縮放 s）：屋頂、條紋雨棚、牆、門窗、emoji 招牌、店名牌；mode＝live（彩色可點）｜soon（灰色即將開幕）｜lock（街區鎖住） */
-function shopSvg(p,s,mode,sel){
-  const it=p.it,[emo0,c1,c2,wall]=LOOK[it.name]||LOOK0,emo=it.emo||emo0,d=p.d,sw=(2/s).toFixed(2),live=mode==='live';
-  const ox=p.x.toFixed(1),oy=(p.y-d.cyoff).toFixed(1);
-  const stripes=Array.from({length:7},(_,i)=>`<rect x="${-70+i*20}" y="-96" width="20" height="26" fill="${i%2?c2:c1}"/>`).join('');
-  const roof=it.venue?`<path d="M-74,-96 A74,56 0 0 1 74,-96 Z" fill="${c1}" stroke="#3b2f2f" stroke-width="${sw}"/><circle cx="0" cy="-153" r="6" fill="#facc15" stroke="#3b2f2f" stroke-width="${sw}"/>`
-    :`<polygon points="-78,-96 78,-96 64,-136 -64,-136" fill="${c1}" stroke="#3b2f2f" stroke-width="${sw}" stroke-linejoin="round"/>`;
-  const attr=live?` tabindex="0" role="button" data-id="${esc(it.id)}" aria-label="${esc(it.name)}" aria-pressed="${it.id===sel}"`:' aria-hidden="true"';
-  const ribbon=mode==='soon'?`<g transform="rotate(-8 0 -34)"><rect x="-62" y="-52" width="124" height="34" rx="6" fill="#6b7683" stroke="#3b2f2f" stroke-width="${sw}"/><text x="0" y="-27" text-anchor="middle" font-size="25" font-weight="800" fill="#fff">即將開幕</text></g>`:'';
-  return `<g transform="translate(${ox},${oy})"><g class="shop it${live?'':' soon'}${it.id&&it.id===sel?' on':''}"${attr}>
-  <rect class="ring" x="${(-d.w/2).toFixed(1)}" y="${d.top.toFixed(1)}" width="${d.w.toFixed(1)}" height="${(d.bot-d.top).toFixed(1)}" rx="10" stroke-width="3"/>
-  <g class="lift"${live?'':' filter="url(#gray)" opacity=".55"'}>
-    <g transform="scale(${s})">
-      <ellipse cx="0" cy="6" rx="80" ry="10" fill="#000" opacity=".1"/>
-      ${roof}
-      <rect x="-64" y="-70" width="128" height="76" rx="4" fill="${wall}" stroke="#3b2f2f" stroke-width="${sw}"/>
-      <g clip-path="url(#aw)">${stripes}</g>
-      <path d="M-70,-70 q10,10 20,0 q10,10 20,0 q10,10 20,0 q10,10 20,0 q10,10 20,0 q10,10 20,0 q10,10 20,0" fill="none" stroke="#3b2f2f" stroke-width="${sw}"/>
-      <rect x="-70" y="-96" width="140" height="26" fill="none" stroke="#3b2f2f" stroke-width="${sw}"/>
-      <rect x="-16" y="-40" width="32" height="46" rx="4" fill="#b45309" stroke="#3b2f2f" stroke-width="${sw}"/>
-      <rect x="-56" y="-48" width="30" height="26" rx="3" fill="#bae6fd" stroke="#3b2f2f" stroke-width="${sw}"/>
-      <rect x="26" y="-48" width="30" height="26" rx="3" fill="#bae6fd" stroke="#3b2f2f" stroke-width="${sw}"/>
-      <text x="0" y="-104" text-anchor="middle" font-size="34">${emo}</text>${ribbon}
-    </g>
-    <rect class="lb" x="${(-d.lw/2).toFixed(1)}" y="4" width="${d.lw.toFixed(1)}" height="${d.ph.toFixed(1)}" rx="${(d.ph/2).toFixed(1)}" stroke="#3b2f2f" stroke-width="1.8"/>
-    <text class="lbt" x="0" y="${(4+d.ph*.74).toFixed(1)}" text-anchor="middle" font-size="${d.fs.toFixed(1)}" font-weight="800">${esc(it.name)}</text>
-  </g></g></g>`}
-function bankSvg(b){return `<g transform="translate(${b.x.toFixed(1)},${b.y.toFixed(1)}) scale(${BS})" aria-hidden="true">
-  <polygon points="-36,-28 36,-28 0,-60" fill="#ca8a04" stroke="#3b2f2f" stroke-width="2.4" stroke-linejoin="round"/>
-  <text y="-32" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">$</text>
-  <rect x="-30" y="-28" width="60" height="36" fill="#fef3c7" stroke="#3b2f2f" stroke-width="2.4"/>
-  ${[-20,-7,7,20].map(x=>`<line x1="${x}" y1="-24" x2="${x}" y2="4" stroke="#a16207" stroke-width="4"/>`).join('')}
-  <rect x="-34" y="8" width="68" height="6" fill="#d6d3d1" stroke="#3b2f2f" stroke-width="2"/>
-  <rect x="-25" y="19" width="50" height="22" rx="11" fill="#facc15" stroke="#3b2f2f" stroke-width="1.8"/><text y="35" text-anchor="middle" font-size="15" font-weight="900" fill="#2b3440">銀行</text>
-  <rect x="-37" y="44" width="74" height="18" rx="9" fill="#e5e7eb" stroke="#3b2f2f" stroke-width="1.5"/><text y="58" text-anchor="middle" font-size="14" font-weight="800" fill="#6b7683">即將開放</text></g>`}
-function plateSvg(zi,pt,pl){const D=DISTRICTS[zi],lock=LOCKED[D.d],nw=pl.lines[0].length*22+30;
-  return `<g class="plate" transform="translate(${pt.x.toFixed(1)},${pt.y.toFixed(1)})">
-  <rect x="${-pt.w/2}" y="${-pt.h/2}" width="${pt.w}" height="${pt.h}" rx="16" fill="#fff" opacity=".78"/>
-  <rect x="${-nw/2}" y="${-pt.h/2+4}" width="${nw}" height="32" rx="16" fill="${lock?'#9ca3af':D.c}" stroke="#3b2f2f" stroke-width="2.5"/>
-  <text y="${-pt.h/2+27}" text-anchor="middle" font-size="22" font-weight="900" fill="#fff">${pl.lines[0]}</text>
-  <text y="${-pt.h/2+51}" text-anchor="middle" font-size="15" font-weight="800" fill="#1f2937">${pl.lines[1]}</text>
-  <text y="${-pt.h/2+68}" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">${pl.lines[2]}</text></g>`}
-function sectorPath(zi){const lo=180-60*(zi+1),hi=lo+60,a=P(GEO.R1,lo),b=P(GEO.R1,hi);
-  return `M${GEO.cx},${GEO.cy} L${a[0].toFixed(1)},${a[1].toFixed(1)} A${GEO.R1},${GEO.R1} 0 0 0 ${b[0].toFixed(1)},${b[1].toFixed(1)} Z`}
+/* 每個街區的項目：已上線（catalog）＋規劃中（PLACES），各自對到 PLOTS 的位置；沒有位置的拿空地，空地用完就不畫（手機按鈕列仍會列出） */
+function zoneItems(zi){const D=DISTRICTS[zi],pl=PLOTS[D.d]||{plots:{},spare:[]},spare=pl.spare.slice();
+  const live=GAMES.filter(g=>distOf(g)===D.d).map(g=>({name:nameOf(g),id:g.id})),names=new Set(live.map(i=>i.name));
+  const items=live.concat((PLACES[D.d]||[]).filter(n=>!names.has(n)).map(n=>({name:n})));
+  items.forEach(it=>{it.key=imgKey(it.name,D.d);it.m=META[it.key]||META['施工中'];it.noimg=!META[it.key];
+    const p=pl.plots[it.name];it.pos=p?p.slice():(spare.shift()||null);if(it.pos)it.pos.push(it.pos[2]*it.m.h/it.m.w)});   /* pos＝[x,y,w,h] */
+  const rest=spare.map(p=>[p[0],p[1],p[2],p[2]*META['施工中'].h/META['施工中'].w]);
+  return{items,rest}}
+const labW=n=>[...n].length*FS+16;
+function imgEl(it,cls,extra){const[x,y,w,h]=it.pos;return `<image class="${cls}" href="town/${it.m.f}" x="${(x-w/2).toFixed(1)}" y="${(y-h).toFixed(1)}" width="${w}" height="${h.toFixed(1)}"${extra||''}/>`}
+/* 一間店：店圖（image）、店名牌（rect＋text）；全部店圖先畫、再畫名牌，名牌就不會被別的店蓋住 */
+function shopImg(it,mode,sel){const[x,y,w,h]=it.pos,live=mode==='live',on=live&&it.id===sel;
+  const ribbon=mode==='soon'?`<g transform="rotate(-8 ${x} ${y-h*.45})" pointer-events="none"><rect x="${x-38}" y="${y-h*.45-12}" width="76" height="24" rx="6" fill="#6b7683" stroke="#3b2f2f" stroke-width="2"/><text x="${x}" y="${y-h*.45+5}" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">即將開幕</text></g>`:'';
+  const attr=live?` tabindex="0" role="button" data-id="${esc(it.id)}" aria-label="${esc(it.name)}" aria-pressed="${on}"`:' aria-hidden="true"';
+  return `<g class="shop ${mode}${on?' on':''}"${attr} data-n="${esc(it.name)}"><g class="lift"><rect class="ring" x="${(x-w/2-5).toFixed(1)}" y="${(y-h-5).toFixed(1)}" width="${w+10}" height="${(h+10).toFixed(1)}" rx="12"/>${imgEl(it,'simg')}${ribbon}</g></g>`}
+function shopPlate(it,mode,sel){const[x,y]=it.pos,lw=labW(it.name),on=mode==='live'&&it.id===sel;
+  return `<g class="plt ${mode}${on?' on':''}" pointer-events="none"><rect class="lb" x="${(x-lw/2).toFixed(1)}" y="${y-3}" width="${lw}" height="${PH}" rx="${PH/2}"/><text class="lbt" x="${x}" y="${y+13.2}" text-anchor="middle" font-size="${FS}" font-weight="800">${esc(it.name)}</text></g>`}
+function plateSvg(zi){const D=DISTRICTS[zi],lock=LOCKED[D.d],[cx,ty]=ZPLATE[zi],t=D.name+(lock?'🔒':''),nw=t.length*26+44;
+  return `<g class="zone${lock?' lock':''}" aria-hidden="true"><rect x="${cx-ZW/2}" y="${ty}" width="${ZW}" height="${ZH}" rx="16" fill="#fff" opacity=".82"/>
+  <rect x="${cx-nw/2}" y="${ty+4}" width="${nw}" height="34" rx="17" fill="${lock?'#9ca3af':D.c}" stroke="#3b2f2f" stroke-width="2.5"/>
+  <text x="${cx}" y="${ty+29}" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">${t}</text>
+  <text x="${cx}" y="${ty+58}" text-anchor="middle" font-size="18" font-weight="800" fill="#1f2937">${D.lim}</text>
+  <text x="${cx}" y="${ty+76}" text-anchor="middle" font-size="14" font-weight="700" fill="#374151">${D.money}</text></g>`}
+function bankSvg([bx,by]){const m=META['銀行'],w=BANKW,h=w*m.h/m.w,it={name:'銀行',m,pos:[bx,by+h/2,w,h]};
+  return `<g class="bank" aria-hidden="true">${imgEl(it,'simg')}<rect class="lb" x="${bx-62}" y="${by+h/2-3}" width="124" height="${PH}" rx="${PH/2}" fill="#facc15"/><text x="${bx}" y="${by+h/2+13.2}" text-anchor="middle" font-size="15" font-weight="900" fill="#2b3440">銀行・即將開放</text></g>`}
 function map(){
-  const L=LAYOUT,all=[];
-  const body=DISTRICTS.map((D,zi)=>{const z=L.zones[zi],lock=LOCKED[D.d];
-    z.pos.forEach(p=>all.push([p,lock?'lock':(p.it.id?'live':'soon')]));return ''}).join('');
-  const shops=all.sort((a,b)=>a[0].y-b[0].y).map(([p,m])=>shopSvg(p,L.s,m,SEL)).join('');
-  const secs=DISTRICTS.map((D,zi)=>`<path d="${sectorPath(zi)}" fill="${LOCKED[D.d]?'#e5e7eb':D.bg}" stroke="#3b2f2f" stroke-width="4" stroke-linejoin="round"/>`).join('');
-  $('#map').innerHTML=`<svg id="mapsvg" viewBox="0 0 ${GEO.W} ${GEO.H}" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="互動遊戲小鎮地圖">
-<defs><filter id="gray"><feColorMatrix type="saturate" values="0"/></filter><clipPath id="aw"><rect x="-70" y="-96" width="140" height="26"/></clipPath></defs>
-${secs}
-${DISTRICTS.map((D,zi)=>plateSvg(zi,L.zones[zi].plate,L.zones[zi].pl)).join('')}
-<path d="M${GEO.cx-GEO.R0},${GEO.cy} A${GEO.R0},${GEO.R0} 0 0 1 ${GEO.cx+GEO.R0},${GEO.cy} Z" fill="#9ca3af" stroke="#3b2f2f" stroke-width="4"/>
-<text class="gate" x="${GEO.cx}" y="${GEO.cy-26}" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">🚶 入口</text>
-${L.zones[0].banks.map(bankSvg).join('')}
-${shops}
+  const Z=DISTRICTS.map((_,i)=>zoneItems(i)),shops=[],rest=[];
+  Z.forEach((z,zi)=>{const lock=LOCKED[DISTRICTS[zi].d];
+    z.rest.forEach(p=>rest.push(`<image class="simg site${lock?' lock':''}" href="town/${META['施工中'].f}" x="${(p[0]-p[2]/2).toFixed(1)}" y="${(p[1]-p[3]).toFixed(1)}" width="${p[2]}" height="${p[3].toFixed(1)}" aria-hidden="true"/>`));
+    z.items.forEach(it=>{if(it.pos)shops.push([it,lock?'lock':(it.id?'live':'soon')])})});
+  shops.sort((a,b)=>a[0].pos[1]-b[0].pos[1]);
+  $('#map').innerHTML=`<svg id="mapsvg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="互動遊戲小鎮地圖">
+<image href="town/bg.webp" x="0" y="0" width="${W}" height="${H}" aria-hidden="true"/>
+${rest.join('')}
+${BANKS.map(bankSvg).join('')}
+${shops.map(([it,m])=>shopImg(it,m,SEL)).join('')}
+${shops.map(([it,m])=>shopPlate(it,m,SEL)).join('')}
+${DISTRICTS.map((_,zi)=>plateSvg(zi)).join('')}
 </svg>`;
   $('#map').querySelectorAll('.shop[data-id]').forEach(el=>{
     const pick=()=>{SEL=el.dataset.id;map();side();toSide();$(`#map .shop[data-id="${CSS.escape(SEL)}"]`)?.focus({preventScroll:true})};
     el.onclick=pick;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick()}}});
-  const chip=(n,emo,id,dis)=>`<button type="button" ${id?`data-id="${esc(id)}"`:''} ${dis?'disabled':''} class="${id&&id===SEL?'on':''}" aria-pressed="${id===SEL}">${emo} ${esc(n)}</button>`;
-  $('#chips').innerHTML=DISTRICTS.map((D,zi)=>{const lock=LOCKED[D.d],its=L.items[zi];
-    const btns=lock?its.map(it=>chip(it.name,(it.emo||(LOOK[it.name]||LOOK0)[0]),null,true)):its.filter(it=>it.id).map(it=>chip(it.name,(LOOK[it.name]||LOOK0)[0],it.id,false));
+  const chip=(n,id,dis)=>`<button type="button" ${id?`data-id="${esc(id)}"`:''} ${dis?'disabled':''} class="${id&&id===SEL?'on':''}" aria-pressed="${id===SEL}">${esc(n)}</button>`;
+  $('#chips').innerHTML=DISTRICTS.map((D,zi)=>{const lock=LOCKED[D.d],its=Z[zi].items;
+    const btns=lock?its.map(it=>chip(it.name,null,true)):its.filter(it=>it.id).map(it=>chip(it.name,it.id,false));
     return `<div><div class="gt">${esc(D.name)}・${esc(D.lim)}${lock?' 🔒':''}</div><div class="row">${btns.join('')||'<span class="empty" style="padding:0">即將開幕</span>'}</div></div>`}).join('');
   $('#chips').querySelectorAll('button[data-id]').forEach(b=>b.onclick=()=>{SEL=b.dataset.id;map();side();toSide()})}
 async function load(){
-  try{CAT=await fetch('../dashboard/catalog.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
+  try{META=await fetch('town/meta.json').then(r=>r.json());
+    CAT=await fetch('../dashboard/catalog.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
     GAMES=CAT.items.filter(i=>i.kind==='game');
     const sel=GAMES.find(g=>g.id===SEL);if(!sel||LOCKED[distOf(sel)])SEL=(GAMES.find(g=>!LOCKED[distOf(g)])||{}).id||null;
-    LAYOUT=computeLayout();window.__GEO=GEO;window.__LAYOUT=LAYOUT;window.__LOCKED=LOCKED;
-    map();side()}
+    map();side()}                                       /* map() 每次整個重畫 #map，不會疊加 */
   catch(e){$('#map').innerHTML='<div class="empty">載入失敗：請用 http(s) 開啟（'+esc(e.message)+'）</div>'}}
 load();
 </script>
