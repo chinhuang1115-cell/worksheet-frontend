@@ -145,6 +145,41 @@
      "og": "三位數",
      "endpoint": "/interactive/sub2noreg-app",
      "params": "op=sub&digits=3&regroup=chain"
+    },
+    {
+     "id": "wp-3d-sub-none",
+     "label": "不退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=none"
+    },
+    {
+     "id": "wp-3d-sub-ones",
+     "label": "個位退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=ones"
+    },
+    {
+     "id": "wp-3d-sub-tens",
+     "label": "十位退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=tens"
+    },
+    {
+     "id": "wp-3d-sub-any",
+     "label": "各種情形",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=any"
+    },
+    {
+     "id": "wp-3d2-sub-any",
+     "label": "三位數－二位數（各種情形）",
+     "og": "三位數和二位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=any&bdig=2"
     }
    ],
    "title": "加減應用題：減法",
@@ -179,6 +214,41 @@
      "og": "三位數",
      "endpoint": "/interactive/sub2noreg-app",
      "params": "op=add&digits=3&regroup=double"
+    },
+    {
+     "id": "wp-3d-add-none",
+     "label": "不進位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=none"
+    },
+    {
+     "id": "wp-3d-add-ones",
+     "label": "個位進位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=ones"
+    },
+    {
+     "id": "wp-3d-add-tens",
+     "label": "十位進位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=tens"
+    },
+    {
+     "id": "wp-3d-add-any",
+     "label": "各種情形",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=any"
+    },
+    {
+     "id": "wp-3d2-add-any",
+     "label": "三位數＋二位數（各種情形）",
+     "og": "三位數和二位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=any&bdig=2"
     }
    ],
    "title": "加減應用題：加法",
@@ -213,6 +283,41 @@
      "og": "三位數",
      "endpoint": "/interactive/sub2noreg-app",
      "params": "op=mix&digits=3&regroup=mix"
+    },
+    {
+     "id": "wp-3d-mix-none",
+     "label": "不進退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=none"
+    },
+    {
+     "id": "wp-3d-mix-ones",
+     "label": "個位進退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=ones"
+    },
+    {
+     "id": "wp-3d-mix-tens",
+     "label": "十位進退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=tens"
+    },
+    {
+     "id": "wp-3d-mix-any",
+     "label": "各種情形",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=any"
+    },
+    {
+     "id": "wp-3d2-mix-any",
+     "label": "三位數與二位數（各種情形）",
+     "og": "三位數和二位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=any&bdig=2"
     }
    ],
    "title": "加減應用題：加減交錯",
@@ -254,6 +359,41 @@
      "og": "三位數",
      "endpoint": "/interactive/sub2noreg-app",
      "params": "op=sub&digits=3&regroup=chain&calc=1"
+    },
+    {
+     "id": "wpc-3d-sub-none",
+     "label": "不退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=none&calc=1"
+    },
+    {
+     "id": "wpc-3d-sub-ones",
+     "label": "個位退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=ones&calc=1"
+    },
+    {
+     "id": "wpc-3d-sub-tens",
+     "label": "十位退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=tens&calc=1"
+    },
+    {
+     "id": "wpc-3d-sub-any",
+     "label": "各種情形",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=any&calc=1"
+    },
+    {
+     "id": "wpc-3d2-sub-any",
+     "label": "三位數－二位數（各種情形）",
+     "og": "三位數和二位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=sub&digits=3&regroup=any&bdig=2&calc=1"
     }
    ],
    "title": "加減直式計算：減法",
@@ -288,6 +428,41 @@
      "og": "三位數",
      "endpoint": "/interactive/sub2noreg-app",
      "params": "op=add&digits=3&regroup=double&calc=1"
+    },
+    {
+     "id": "wpc-3d-add-none",
+     "label": "不進位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=none&calc=1"
+    },
+    {
+     "id": "wpc-3d-add-ones",
+     "label": "個位進位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=ones&calc=1"
+    },
+    {
+     "id": "wpc-3d-add-tens",
+     "label": "十位進位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=tens&calc=1"
+    },
+    {
+     "id": "wpc-3d-add-any",
+     "label": "各種情形",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=any&calc=1"
+    },
+    {
+     "id": "wpc-3d2-add-any",
+     "label": "三位數＋二位數（各種情形）",
+     "og": "三位數和二位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=add&digits=3&regroup=any&bdig=2&calc=1"
     }
    ],
    "title": "加減直式計算：加法",
@@ -322,6 +497,41 @@
      "og": "三位數",
      "endpoint": "/interactive/sub2noreg-app",
      "params": "op=mix&digits=3&regroup=mix&calc=1"
+    },
+    {
+     "id": "wpc-3d-mix-none",
+     "label": "不進退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=none&calc=1"
+    },
+    {
+     "id": "wpc-3d-mix-ones",
+     "label": "個位進退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=ones&calc=1"
+    },
+    {
+     "id": "wpc-3d-mix-tens",
+     "label": "十位進退位",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=tens&calc=1"
+    },
+    {
+     "id": "wpc-3d-mix-any",
+     "label": "各種情形",
+     "og": "三位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=any&calc=1"
+    },
+    {
+     "id": "wpc-3d2-mix-any",
+     "label": "三位數與二位數（各種情形）",
+     "og": "三位數和二位數",
+     "endpoint": "/interactive/sub2noreg-app",
+     "params": "op=mix&digits=3&regroup=any&bdig=2&calc=1"
     }
    ],
    "title": "加減直式計算：加減交錯",
