@@ -14,7 +14,7 @@ def cutout(src, dst, min_hole=3000, thr=232):
     rgb = Image.open(src).convert("RGB")
     w, h = rgb.size
     a = (np.array(rgb).min(axis=2) > thr).astype(np.uint8) * 255
-    m = Image.fromarray(a)
+    m = Image.fromarray(a).copy()   # fromarray 可能唯讀，floodfill 會靜默失敗（2026-11-18 店家試作圖整張沒去背）
     for p in [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)]:
         if m.getpixel(p) == 255:
             ImageDraw.floodfill(m, p, 128)
