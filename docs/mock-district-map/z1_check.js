@@ -9,6 +9,7 @@ const ROOT=path.resolve(__dirname,'../..');
     const p=await b.newPage({viewport:{width:w,height:h},deviceScaleFactor:2});
     const errs=[];p.on('pageerror',e=>errs.push(e.message));
     await p.goto('http://localhost:8765/games/index.html');await p.waitForSelector('#mapsvg .it');await p.waitForTimeout(600);
+    if(tag==='1024')await p.screenshot({path:path.join(__dirname,'z1b_1024.png')});
     const r=await p.evaluate(()=>{
       const svg=document.querySelector('#mapsvg'),inv=svg.getScreenCTM().inverse(),G=window.__GEO,pt=svg.createSVGPoint();
       const toU=(x,y)=>{pt.x=x;pt.y=y;const q=pt.matrixTransform(inv);return[q.x,q.y]};
@@ -40,12 +41,19 @@ const ROOT=path.resolve(__dirname,'../..');
     // 點店 → 右側欄 + 關卡連結
     const first=await p.$('#mapsvg .shop[data-id]');await first.scrollIntoViewIfNeeded();
     if(tag!=='390'){await p.click('#mapsvg .shop[data-id="game-toy-1"]');}else{await p.click('#chips button[data-id="game-toy-1"]')}
-    await p.waitForTimeout(200);
+    await p.waitForTimeout(900);
+    if(tag==='1024'||tag==='1280'||tag==='390'){ // 平板／窄螢幕：關卡欄在地圖下方、按鈕夠大、點店後已捲到可見；寬螢幕：關卡欄仍在右側
+      const lay=await p.evaluate(()=>{const m=document.querySelector('#mapsvg').getBoundingClientRect(),a=document.querySelector('#side').getBoundingClientRect(),st=[...document.querySelectorAll('#side .stage')].map(e=>e.getBoundingClientRect());
+        return{below:a.top>=m.bottom-1,right:a.left>=m.right-1,minH:Math.min(...st.map(r=>r.height)),cols:new Set(st.map(r=>Math.round(r.left))).size,vis:a.bottom<=innerHeight+2&&a.bottom>0}});
+      const want=w<=1100?(lay.below&&lay.minH>=56&&lay.vis&&(w>600?lay.cols===3:true)):(lay.right&&!lay.below);
+      console.log(`   關卡欄位置：${w<=1100?'地圖下方':'右側'}=${want}，按鈕最小高 ${lay.minH.toFixed(0)}px，欄數 ${lay.cols}，捲到可見=${lay.vis}`);if(!want)bad++}
     const side=await p.evaluate(()=>({nm:document.querySelector('#side .nm').textContent,links:[...document.querySelectorAll('#side .stage')].map(a=>a.getAttribute('href'))}));
     const ok=/玩具店/.test(side.nm)&&side.links.length===6&&side.links.every((h,i)=>h.includes('/game/toy-shop?')&&h.includes('stage='+(i+1))&&h.includes('lv=2')&&h.includes('mode=faded'));
     console.log(`   點玩具店 → ${side.nm}，${side.links.length} 關，連結${ok?'正確':'有誤'}：${side.links[0]}`);if(!ok)bad++;
     // 點鎖住區的店不應有反應
     const lockedClickable=await p.evaluate(()=>document.querySelectorAll('#mapsvg .shop.soon[data-id]').length);if(lockedClickable)bad++;
     await p.screenshot({path:path.join(__dirname,`z1_${tag}.png`),fullPage:tag==='390'});
+    if(tag==='1024')await p.screenshot({path:path.join(__dirname,'z1b_1024_sel.png')});
+    if(tag==='1280')await p.screenshot({path:path.join(__dirname,'z1b_1280.png')});
     await p.close()}
   await b.close();srv.kill();console.log(bad?`FAIL ${bad}`:'ALL OK');process.exit(bad?1:0)})();
