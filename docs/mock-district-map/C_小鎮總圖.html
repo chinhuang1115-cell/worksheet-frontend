@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8"><title>C</title><style>
+*{box-sizing:border-box}body{margin:0;font-family:'Noto Sans TC',sans-serif;background:#f8fafc;width:1100px;height:660px;overflow:hidden;color:#1f2937}
+.tag{position:absolute;left:12px;top:10px;background:#111827;color:#fff;font-weight:800;padding:4px 12px;border-radius:8px;font-size:16px;z-index:9}
+.shop{width:118px;text-align:center;position:relative}
+.shop .roof{height:22px;border:3px solid #3b2f2f;border-bottom:0;border-radius:10px 10px 0 0;background:repeating-linear-gradient(90deg,var(--c) 0 14px,#fff 14px 28px)}
+.shop .wall{height:62px;border:3px solid #3b2f2f;background:#fff;display:flex;align-items:center;justify-content:center;font-size:36px}
+.shop .nm{margin-top:4px;font-weight:800;font-size:15px;background:#fff;border:2px solid #3b2f2f;border-radius:14px;padding:2px 4px}
+.venue .roof{background:var(--c);border-radius:40px 40px 0 0;height:26px}
+.venue .wall{background:#f1f5f9}
+.venue .nm{background:#fef9c3}
+.lock{filter:grayscale(1);opacity:.45}
+.street{position:absolute;left:0;right:0;bottom:0;height:150px;background:#9ca3af}
+.street:after{content:'';position:absolute;left:0;right:0;top:72px;border-top:6px dashed #fff}
+.hdr{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;justify-content:center;gap:14px;color:#fff;font-weight:900;font-size:28px}
+.hdr small{font-size:16px;font-weight:700;background:#fff3;border-radius:12px;padding:3px 10px}
+.money{position:absolute;right:16px;top:74px;background:#fff;border:2px solid #3b2f2f;border-radius:12px;padding:4px 10px;font-weight:800;font-size:14px}
+.arrow{position:absolute;top:290px;width:74px;height:120px;border-radius:16px;background:#f97316;color:#fff;font-size:44px;display:flex;align-items:center;justify-content:center;border:3px solid #3b2f2f;font-weight:900}
+.arrow small{position:absolute;bottom:-44px;width:150px;text-align:center;color:#1f2937;font-size:14px;font-weight:800;line-height:1.2}
+.arrow.off{background:#d1d5db}
+.bank{width:130px;text-align:center}
+.bank .wall{height:84px;background:#fef3c7;border:3px solid #3b2f2f;font-size:40px;display:flex;align-items:center;justify-content:center;border-top:0}
+.bank .roof{height:30px;background:#ca8a04;border:3px solid #3b2f2f;clip-path:polygon(0 100%,50% 0,100% 100%);border:0}
+.bank .nm{margin-top:4px;font-weight:900;font-size:16px;background:#facc15;border:2px solid #3b2f2f;border-radius:14px;padding:2px 4px}
+.fence{position:absolute;background:repeating-linear-gradient(90deg,#fff 0 18px,#ef4444 18px 36px);border:3px solid #3b2f2f;border-radius:8px;height:34px;font-weight:900;text-align:center;line-height:28px;font-size:15px;color:#7f1d1d}
+.dots{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;gap:10px;z-index:3}
+.dots span{background:#fff;border:2px solid #3b2f2f;border-radius:14px;padding:2px 12px;font-weight:800;font-size:14px}
+.dots span.on{background:#f97316;color:#fff}
+.dots span.lk{background:#e5e7eb;color:#6b7280}
+.note{position:absolute;left:12px;bottom:-1px;font-size:13px;color:#374151}
+</style><body><div style="position:absolute;inset:0;background:#dcfce7"></div><div class="hdr" style="background:#16a34a">互動遊戲小鎮</div><svg style="position:absolute;inset:0" width="1100" height="660"><path d="M60,470 C250,560 330,380 550,430 S850,560 1060,420" stroke="#9ca3af" stroke-width="46" fill="none"/><path d="M60,470 C250,560 330,380 550,430 S850,560 1060,420" stroke="#fff" stroke-width="4" stroke-dasharray="16 14" fill="none"/></svg><div style="position:absolute;left:40px;top:110px;width:270px;height:250px;border-radius:26px;background:#fff7ed;border:5px solid #f97316;text-align:center;padding-top:16px"><div style="font-size:28px;font-weight:900;color:#f97316">巷口小街</div><div style="font-weight:800">100 元以內</div><div style="font-size:34px;margin:14px 0;letter-spacing:4px">🍳🥐✏️🍭🚌🦁</div><div style="font-weight:800;font-size:14px">💰 1・5・10・50 元</div><div style=margin-top:8px;background:#f97316;color:#fff;border-radius:14px;display:inline-block;padding:4px 18px;font-weight:900>走進去 ▶</div></div><div style="position:absolute;left:415px;top:110px;width:270px;height:250px;border-radius:26px;background:#eff6ff;border:5px solid #2563eb;text-align:center;padding-top:16px;filter:grayscale(1);opacity:.5"><div style="font-size:28px;font-weight:900;color:#2563eb">熱鬧大街</div><div style="font-weight:800">1000 元以內</div><div style="font-size:34px;margin:14px 0;letter-spacing:4px">👕👟🍱📚🎬🏛️</div><div style="font-weight:800;font-size:14px">💰 ＋100・500 元鈔</div><div style=font-size:40px>🔒</div></div><div style="position:absolute;left:790px;top:110px;width:270px;height:250px;border-radius:26px;background:#faf5ff;border:5px solid #9333ea;text-align:center;padding-top:16px;filter:grayscale(1);opacity:.5"><div style="font-size:28px;font-weight:900;color:#9333ea">百貨商場</div><div style="font-weight:800">10000 元以內</div><div style="font-size:34px;margin:14px 0;letter-spacing:4px">📺🚲💻🛋️🚄🎢</div><div style="font-weight:800;font-size:14px">💰 ＋1000 元鈔</div><div style=font-size:40px>🔒</div></div><div style="position:absolute;left:315px;top:410px;transform:scale(.8)"><div class="bank"><div class="roof"></div><div class="wall">🏦</div><div class="nm">銀行</div></div></div><div style="position:absolute;left:690px;top:430px;transform:scale(.8)"><div class="bank"><div class="roof"></div><div class="wall">🏦</div><div class="nm">銀行</div></div></div><div style="position:absolute;left:40px;bottom:16px;font-weight:800;font-size:15px">點一個街區 → 進到那一區的街道（像現在的小鎮地圖）</div><div class="tag" style="top:72px">C 先看小鎮總圖，點一區再進去</div></body>
