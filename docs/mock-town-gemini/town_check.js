@@ -38,7 +38,11 @@ const ROOT=path.resolve(__dirname,'../..');
         for(let x=Math.ceil(bx0);x<=Math.floor(bx1);x+=2)for(let dy=-22;dy<=22;dy++)for(let dx=-22;dx<=22;dx++){const d=Math.hypot(dx,dy);if(d<dmin&&TT(x+dx,by-3+dy,1))dmin=d}
         const cx=(bx0+bx1)/2,dc=1e9;let dcen=1e9;for(let dy=-60;dy<=60;dy+=1)for(let dx=-60;dx<=60;dx+=1){const d=Math.hypot(dx,dy);if(d<dcen&&TT(cx+dx,by-3+dy,1))dcen=d}
         if(hitT>0)tprobs.push(`底座壓到道路／河／樹／固定物（${hitT} 點）：${i.kind}:${i.name}`);
-        if(dmin>16)tprobs.push(`底座離道路太遠（${dmin.toFixed(0)}px）：${i.name}`);
+        if(dmin>20)tprobs.push(`底座離道路太遠（${dmin.toFixed(0)}px）：${i.name}`);
+        { /* 底座＋一樓（店圖最下面 22%、最多 20px）壓到道路的比例 ≤4%（量的是瀏覽器縮放後的像素，和 fix_plots.py 的 2% 有誤差；使用者 2026-11-18：家具行、家電行底部壓在馬路上） */
+          const band=Math.min(ih*.22,20);let tot=0,onR=0;
+          for(let y=Math.ceil(i.y1-band);y<Math.floor(i.y1);y++)for(let x=Math.ceil(i.x0);x<Math.floor(i.x1);x++)if(hit(i,x+.5,y+.5)){tot++;if(TT(x,y,1))onR++}
+          if(tot&&onR/tot>.04)tprobs.push(`底座／一樓壓到道路 ${(onR/tot*100).toFixed(1)}%：${i.kind}:${i.name}`)}
         if(i.kind==='shop'||i.kind==='site'){const dz=dOf(cx,by);if(dz!==i.d)tprobs.push(`街區不符：${i.name} 位置屬於 ${dz}、設定 ${i.d}`)}
         i.baseC=[+cx.toFixed(1),+dcen.toFixed(0)];
         if(i.kind==='shop'){const m=i.meta||{},cls=m.vsign?'v':m.awning?'a':'n',k=i.d+cls;(widths[k]=widths[k]||[]).push(Math.round(iw))}});
