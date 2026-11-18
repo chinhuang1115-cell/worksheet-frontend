@@ -3,7 +3,7 @@
 import json, glob, os
 from PIL import Image
 src='docs/mock-town-gemini/'; out='games/town/'; os.makedirs(out,exist_ok=True)
-bg=Image.open(src+'bgA.png').convert('RGB'); bg.save(out+'bg.webp',quality=80,method=6)
+bg=Image.open(src+'bgA_nolots.png').convert('RGB'); bg.save(out+'bg.webp',quality=80,method=6)
 
 # 名字錨點（店圖內的比例座標，0～1）。awning＝雨棚（條紋）正面範圍，店名寫在裡面；vsign＝[中心x,上緣y,下緣y] 直式招牌（三層樓以上）；
 # name＝沒有雨棚的場所（公車站、動物園…）寫名字的範圍。新店圖要補一筆，否則 games/index.html 退回名牌貼底邊。
